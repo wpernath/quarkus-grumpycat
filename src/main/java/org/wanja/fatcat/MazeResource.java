@@ -25,7 +25,7 @@ public class MazeResource {
             # # # # # # # # # # # # # # # #
             # # # # # # # # # # # # # # # #
             # # # # # # # # # # # # # # # #
-            # # #   # # #  #  # # #   # # #
+            # # #   # # #     # # #   # # #
             # # ##### # ####### # ##### # #
             # #     # #         # #     # #
             # ##### # ##### ##### # ##### #
@@ -42,11 +42,45 @@ public class MazeResource {
             #                             #
             ###############################"""      
     );
+
+    m = new Maze("Standard", "Wanja", 31, 23);
+    mazes.add(m);
+    m.parseMap(
+        """
+            ###############################
+            #              m              #
+            #              #              #
+            #              #              #
+            #  #########################  #
+            #                             #
+            #       #                     #
+            #       #                     #
+            #       #                     #
+            #       #                     #
+            #       #                     #
+            #       #                     #
+            #       #                     #
+            #       #                     #
+            #       #                     #
+            # #######     ##              #
+            #                             #
+            #                             #
+            #                      # ######
+            #                      #      #
+            #                      #      #
+            #                      #     c#
+            ###############################""");
+
   }
 
   @GET
   @Path("{id}")
   public Maze mazeById( @PathParam Long id) {
-    return mazes.get(0);
+    return mazes.get(id.intValue());
+  }
+
+  @GET
+  public int numLevels() {
+    return mazes.size();
   }
 }

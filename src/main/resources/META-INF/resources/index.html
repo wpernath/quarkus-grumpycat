@@ -277,6 +277,9 @@
     }
 
         // global variables
+        const MAZE_WIDTH = 992;
+        const MAZE_HEIGHT = 756;
+
         const TILE_WIDTH = 32;
         const TILE_HEIGHT = 32;
         const CAT_SPEED = 2
@@ -285,11 +288,18 @@
         let leftPressed = false;
         let upPressed = false;
         let downPressed = false;
+        let spacePressed = false;
+
+        // global game states
         let gamePaused = true;
         let gameOver = false;
+        let levelWon = false;
         let catSpeed = CAT_SPEED;
         let lastTimestamp = 0;
         let visitedMazeData = [];
+        let numPoints = 0;
+        let currentLevel = 0;
+        let numLevels = 2;
         let score = 0;
         let maze;
         let ctx;
@@ -306,8 +316,10 @@
             tenPoints   = loader.addImage('images/10-points.png'),
             fivPoints   = loader.addImage('images/5-points.jpg'),
             pauseImg    = loader.addImage('images/pause.png'),
-            gameOverImg = loader.addImage('images/gameOver.png');
-            mouseImg    = loader.addImage('images/sensa_jaa.png');
+            gameOverImg = loader.addImage('images/gameOver.png'),
+            mouseImg    = loader.addImage('images/sensa_jaa.png'),
+            gameOverDog = loader.addImage('images/sensa_nee.png'),
+            levelWonDog = loader.addImage('images/sensa_jaa.png');
 
         // add a completion listener to the image loader which inits the game
         loader.addCompletionListener(initGame);
@@ -327,28 +339,13 @@
             if (event.code == 'ArrowRight' || event.code == 'KeyD') rightPressed = false;
             if (event.code == 'ArrowDown' || event.code == 'KeyS') downPressed = false;
             if (event.code == 'KeyP') gamePaused = !gamePaused;
+            if( event.code == 'Space') spacePressed = true;
         }
 
         // init game
         function initGame() {
             canvas = document.getElementById('maze');
             if (canvas.getContext) {
-
-                maze = { "name": "Standard", "description": null, "author": "Wanja", "tileSet": null, "width": 31, "height": 23, "mazeData": [[10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10], [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0, 10], [10, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 0, 0, 10, 0, 10, 0, 10, 0, 0, 10, 0, 0, 10, 0, 10, 0, 10, 0, 0, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10], [10, 0, 10, 0, 0, 0, 0, 0, 10, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 10, 0, 0, 0, 0, 0, 10, 0, 10], [10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10], [10, 0, 10, 0, 0, 0, 0, 0, 10, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 10, 0, 0, 0, 0, 0, 10, 0, 10], [10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 0, 0, 10, 0, 10, 0, 10, 0, 0, 0, 0, 0, 10, 0, 10, 0, 10, 0, 0, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 10], [10, 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]], "logicData": [[true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true], [true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, false, true], [true, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, true], [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true], [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true], [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true], [true, false, true, false, true, false, false, false, true, false, true, false, true, false, false, true, false, false, true, false, true, false, true, false, false, false, true, false, true, false, true], [true, false, true, false, true, true, true, true, true, false, true, false, true, true, true, true, true, true, true, false, true, false, true, true, true, true, true, false, true, false, true], [true, false, true, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, false, true, false, true, false, false, false, false, false, true, false, true], [true, false, true, true, true, true, true, false, true, false, true, true, true, true, true, false, true, true, true, true, true, false, true, false, true, true, true, true, true, false, true], [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true], [true, false, true, true, true, true, true, false, true, false, true, true, true, true, true, false, true, true, true, true, true, false, true, false, true, true, true, true, true, false, true], [true, false, true, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, false, true, false, true, false, false, false, false, false, true, false, true], [true, false, true, false, true, true, true, true, true, false, true, false, true, true, true, true, true, true, true, false, true, false, true, true, true, true, true, false, true, false, true], [true, false, true, false, true, false, false, false, true, false, true, false, true, false, false, false, false, false, true, false, true, false, true, false, false, false, true, false, true, false, true], [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true], [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true], [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true], [true, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, true], [true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, false, true], [true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]], "mouseX": 15, "mouseY": 1, "catX": 15, "catY": 15 };
-                catX = maze.catX;
-                catY = maze.catY;
-                mouseX = maze.mouseX;
-                mouseY = maze.mouseY;
-                visitedMazeData = new Array(maze.height);
-
-                for( var y = 0; y < maze.height; y++){
-                    visitedMazeData[y] = new Array(maze.width);
-                    for( var x = 0; x < maze.width; x++) {
-                        var tile = maze.mazeData[y][x];
-                        if( tile < 10 ) visitedMazeData[y][x] = 10;
-                        else visitedMazeData[y][x]=0;
-                    }
-                }
                 ctx = canvas.getContext('2d');
 
                 ctx.imageSmoothingEnabled = true;
@@ -357,11 +354,37 @@
                 document.addEventListener('keydown', keyDownHandler, false);
                 document.addEventListener('keyup', keyUpHandler, false);
 
+                initLevel();
                 window.requestAnimationFrame(gameLoop);
-
             }
         }
 
+
+        function initLevel() {
+            maze = { "name": "Standard", "description": null, "author": "Wanja", "tileSet": null, "width": 31, "height": 23, "mazeData": [[10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10], [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 10, 10, 10, 10, 10, 10, 10, 0, 0, 0, 0, 0, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 10, 10, 10, 10, 10, 10], [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 10], [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]], "logicData": [[true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true], [true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false, true], [true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, true, true, true, true, true, true, true, false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, true, true, true, true, true, true], [true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true], [true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true], [true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true], [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]], "mouseX": 15, "mouseY": 1, "catX": 29, "catY": 21 };
+            catX = maze.catX;
+            catY = maze.catY;
+            mouseX = maze.mouseX;
+            mouseY = maze.mouseY;
+            catSpeed = CAT_SPEED;
+            visitedMazeData = new Array(maze.height);
+            numPoints = 0;
+            for (var y = 0; y < maze.height; y++) {
+                visitedMazeData[y] = new Array(maze.width);
+                for (var x = 0; x < maze.width; x++) {
+                    var tile = maze.mazeData[y][x];
+                    if (tile < 10) {
+                        visitedMazeData[y][x] = 10;
+                        numPoints++;
+                    }
+                    else visitedMazeData[y][x] = 0;
+                }
+            }
+
+            gameOver = false;
+            gamePaused = true;
+            levelWon = false;
+        }
 
         // main game loop: move player, move enemy, update maze
         function gameLoop(timestamp) {
@@ -379,18 +402,69 @@
                     drawMaze();
                     drawStatus();
                 }
-                else if( gamePaused ) {
-                    ctx.drawImage(pauseImg, 0, 0);
+
+                if( gamePaused && !gameOver ) {
+                    ctx.drawImage(pauseImg, (MAZE_WIDTH - pauseImg.width)/2, (MAZE_HEIGHT-pauseImg.height)/2);
                 }
                 
                 if( gameOver ) {
-                    ctx.drawImage(gameOverImg, 0, 0, 620, 400);
-                    
+                    drawGameOver();
+                }
+
+                if( levelWon ) {
+                    drawLevelWon();
                 }
             }
             window.requestAnimationFrame(gameLoop);
         }
 
+        function drawLevelWon() {
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, MAZE_WIDTH, MAZE_HEIGHT);
+
+            ctx.drawImage(levelWonDog, (MAZE_WIDTH - levelWonDog.width) / 2, (MAZE_HEIGHT - levelWonDog.height) / 2);            
+
+            ctx.font = '16px Arial';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'bottom';
+            ctx.fillStyle = "white";
+
+            ctx.fillText("Press <space> to play next level", (MAZE_WIDTH - 620), (MAZE_HEIGHT - 20));
+
+            if (spacePressed) {
+                ctx.fillStyle = 'black';
+                ctx.fillRect(0, 0, MAZE_WIDTH, MAZE_HEIGHT);
+
+                initLevel();
+                spacePressed = false;
+                gameOver = false;
+            }
+        }
+
+        function drawGameOver() {
+            score = 0;
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, MAZE_WIDTH, MAZE_HEIGHT);
+
+            ctx.drawImage(gameOverDog, (MAZE_WIDTH - gameOverDog.width) / 2, (MAZE_HEIGHT - gameOverDog.height) / 2);
+            ctx.drawImage(gameOverImg, (MAZE_WIDTH - 620) / 2, 10, 620, 400);
+
+            ctx.font = '16px Arial';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'bottom';
+            ctx.fillStyle = "white";
+
+            ctx.fillText("Press <space> to start again", (MAZE_WIDTH - 620), (MAZE_HEIGHT - 20));
+
+            if (spacePressed) {
+                ctx.fillStyle = 'black';
+                ctx.fillRect(0, 0, MAZE_WIDTH, MAZE_HEIGHT);
+
+                initLevel();
+                spacePressed = false;
+                gameOver = false;
+            }
+        }
 
         // draws the currently loaded maze 
         function drawMaze() {
@@ -419,13 +493,14 @@
 
         function drawStatus() {
             ctx.fillStyle = 'black';
-            ctx.fillRect(0, 736, 736, 20);
+            ctx.fillRect(0, MAZE_HEIGHT-20, MAZE_WIDTH, 20);
 
             ctx.font = '16px Arial';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'bottom';
             ctx.fillStyle = "white";
-            ctx.fillText("SCORE: " + score, 10, 754);
+            ctx.fillText("SCORE: " + score, 10, MAZE_HEIGHT-2);
+            ctx.fillText("LEVEL: " + currentLevel+1, 300, MAZE_HEIGHT-2);
         }
 
         function updatePlayer() {
@@ -463,6 +538,10 @@
             if( visitedMazeData[mouseY][mouseX] != 0 ) {
                 visitedMazeData[mouseY][mouseX] = 0;
                 score += 10;
+                --numPoints;
+                if( numPoints <= 0 ) {
+                    levelWon = true;                    
+                }
             }
 
             if( mouseX == catX && mouseY == catY ) {
