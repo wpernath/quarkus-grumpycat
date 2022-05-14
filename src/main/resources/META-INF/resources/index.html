@@ -279,12 +279,15 @@
         // global variables
         const TILE_WIDTH = 32;
         const TILE_HEIGHT = 32;
+        const CAT_SPEED = 2
+
         let rightPressed = false;
         let leftPressed = false;
         let upPressed = false;
         let downPressed = false;
         let gamePaused = true;
         let gameOver = false;
+        let catSpeed = CAT_SPEED;
         let lastTimestamp = 0;
         let visitedMazeData = [];
         let score = 0;
@@ -368,7 +371,10 @@
                 lastTimestamp = timestamp;
                 
                 if( !gamePaused && !gameOver){
-                    updateEnemy();
+                    if( --catSpeed == 0 ) {
+                        updateEnemy();
+                        catSpeed = CAT_SPEED;
+                    }
                     updatePlayer();
                     drawMaze();
                     drawStatus();
