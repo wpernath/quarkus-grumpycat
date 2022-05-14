@@ -221,7 +221,7 @@
                     <img src="/images/grumpy_cat_right.png" height="250" />
                 </div>
                 <div >
-                    <canvas id="maze" width="620" height="480">
+                    <canvas id="maze" width="992" height="756">
                         <p>Maze is loading.. Cat is crawling.. Mouse is yawning..</p>
                     </canvas>
                 </div>
@@ -234,9 +234,51 @@
     </body>
 
     <script>
+    class Direction {
+        constructor(dx, dy) {
+            this.dx = dx;
+            this.dy = dy;
+        }
+    }
+
+    class Node {
+        constructor( x, y, dir) {
+            this.x = x;
+            this.y = y;
+            this.initialDir = dir;
+        }
+    }
+
+    class Queue {
+        constructor() {
+            this.elements = {};
+            this.head = 0;
+            this.tail = 0;
+        }
+        enqueue(element) {
+            this.elements[this.tail] = element;
+            this.tail++;
+        }
+        dequeue() {
+            const item = this.elements[this.head];
+            delete this.elements[this.head];
+            this.head++;
+            return item;
+        }
+        peek() {
+            return this.elements[this.head];
+        }
+        get length() {
+            return this.tail - this.head;
+        }
+        get isEmpty() {
+            return this.length === 0;
+        }
+    }
+
         // global variables
-        const TILE_WIDTH = 20;
-        const TILE_HEIGHT = 20;
+        const TILE_WIDTH = 32;
+        const TILE_HEIGHT = 32;
         let rightPressed = false;
         let leftPressed = false;
         let upPressed = false;
@@ -249,6 +291,7 @@
         let maze;
         let ctx;
         let canvas;
+        let catX, catY, mouseX, mouseY;
 
         // load images
         let loader   = new PxLoader(),
@@ -264,9 +307,7 @@
             mouseImg    = loader.addImage('images/sensa_jaa.png');
 
         // add a completion listener to the image loader which inits the game
-        loader.addCompletionListener(function() {
-            initGame();
-        });
+        loader.addCompletionListener(initGame);
         loader.start();
 
         // we need to get key downs / ups
@@ -290,7 +331,11 @@
             canvas = document.getElementById('maze');
             if (canvas.getContext) {
 
-                maze = { "name": "Standard", "description": null, "author": "Wanja", "tileSet": null, "width": 31, "height": 23, "mazeData": [[10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10], [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0, 10], [10, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 0, 0, 10, 0, 10, 0, 10, 0, 0, 0, 0, 0, 10, 0, 10, 0, 10, 0, 0, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10], [10, 0, 10, 0, 0, 0, 0, 0, 10, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 10, 0, 0, 0, 0, 0, 10, 0, 10], [10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10], [10, 0, 10, 0, 0, 0, 0, 0, 10, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 10, 0, 0, 0, 0, 0, 10, 0, 10], [10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 0, 0, 10, 0, 10, 0, 10, 0, 0, 0, 0, 0, 10, 0, 10, 0, 10, 0, 0, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 10], [10, 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]], "logicData": [[true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true], [true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, false, true], [true, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, true], [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true], [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true], [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true], [true, false, true, false, true, false, false, false, true, false, true, false, true, false, false, false, false, false, true, false, true, false, true, false, false, false, true, false, true, false, true], [true, false, true, false, true, true, true, true, true, false, true, false, true, true, true, true, true, true, true, false, true, false, true, true, true, true, true, false, true, false, true], [true, false, true, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, false, true, false, true, false, false, false, false, false, true, false, true], [true, false, true, true, true, true, true, false, true, false, true, true, true, true, true, false, true, true, true, true, true, false, true, false, true, true, true, true, true, false, true], [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true], [true, false, true, true, true, true, true, false, true, false, true, true, true, true, true, false, true, true, true, true, true, false, true, false, true, true, true, true, true, false, true], [true, false, true, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, false, true, false, true, false, false, false, false, false, true, false, true], [true, false, true, false, true, true, true, true, true, false, true, false, true, true, true, true, true, true, true, false, true, false, true, true, true, true, true, false, true, false, true], [true, false, true, false, true, false, false, false, true, false, true, false, true, false, false, false, false, false, true, false, true, false, true, false, false, false, true, false, true, false, true], [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true], [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true], [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true], [true, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, true], [true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, false, true], [true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]], "mouseX": 15, "mouseY": 1, "catX": 15, "catY": 15 };
+                maze = { "name": "Standard", "description": null, "author": "Wanja", "tileSet": null, "width": 31, "height": 23, "mazeData": [[10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10], [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0, 10], [10, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 0, 0, 10, 0, 10, 0, 10, 0, 0, 10, 0, 0, 10, 0, 10, 0, 10, 0, 0, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10], [10, 0, 10, 0, 0, 0, 0, 0, 10, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 10, 0, 0, 0, 0, 0, 10, 0, 10], [10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 10], [10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10], [10, 0, 10, 0, 0, 0, 0, 0, 10, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 10, 0, 0, 0, 0, 0, 10, 0, 10], [10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 10, 10, 0, 10, 0, 10, 10, 10, 10, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 0, 0, 10, 0, 10, 0, 10, 0, 0, 0, 0, 0, 10, 0, 10, 0, 10, 0, 0, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10], [10, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 10], [10, 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0, 10], [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10], [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]], "logicData": [[true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true], [true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, false, true], [true, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, true], [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true], [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true], [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true], [true, false, true, false, true, false, false, false, true, false, true, false, true, false, false, true, false, false, true, false, true, false, true, false, false, false, true, false, true, false, true], [true, false, true, false, true, true, true, true, true, false, true, false, true, true, true, true, true, true, true, false, true, false, true, true, true, true, true, false, true, false, true], [true, false, true, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, false, true, false, true, false, false, false, false, false, true, false, true], [true, false, true, true, true, true, true, false, true, false, true, true, true, true, true, false, true, true, true, true, true, false, true, false, true, true, true, true, true, false, true], [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true], [true, false, true, true, true, true, true, false, true, false, true, true, true, true, true, false, true, true, true, true, true, false, true, false, true, true, true, true, true, false, true], [true, false, true, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, false, true, false, true, false, false, false, false, false, true, false, true], [true, false, true, false, true, true, true, true, true, false, true, false, true, true, true, true, true, true, true, false, true, false, true, true, true, true, true, false, true, false, true], [true, false, true, false, true, false, false, false, true, false, true, false, true, false, false, false, false, false, true, false, true, false, true, false, false, false, true, false, true, false, true], [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true], [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true], [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true], [true, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, true], [true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, false, true], [true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]], "mouseX": 15, "mouseY": 1, "catX": 15, "catY": 15 };
+                catX = maze.catX;
+                catY = maze.catY;
+                mouseX = maze.mouseX;
+                mouseY = maze.mouseY;
                 visitedMazeData = new Array(maze.height);
 
                 for( var y = 0; y < maze.height; y++){
@@ -318,12 +363,13 @@
         // main game loop: move player, move enemy, update maze
         function gameLoop(timestamp) {
             var elapsed = timestamp - lastTimestamp;
+
             if( elapsed > 80 ) {
                 lastTimestamp = timestamp;
                 
                 if( !gamePaused && !gameOver){
-                    updatePlayer();
                     updateEnemy();
+                    updatePlayer();
                     drawMaze();
                     drawStatus();
                 }
@@ -359,67 +405,106 @@
             }
 
             // draw cat
-            ctx.drawImage(catLeft, maze.catX * TILE_WIDTH, maze.catY * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+            ctx.drawImage(catLeft, catX * TILE_WIDTH, catY * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
 
             // draw mouse
-            ctx.drawImage(mouseImg, maze.mouseX * TILE_WIDTH, maze.mouseY * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+            ctx.drawImage(mouseImg, mouseX * TILE_WIDTH, mouseY * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
         }
 
         function drawStatus() {
             ctx.fillStyle = 'black';
-            ctx.fillRect(0, 460, 620, 20);
-            
+            ctx.fillRect(0, 736, 736, 20);
+
             ctx.font = '16px Arial';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'bottom';
             ctx.fillStyle = "white";
-            ctx.fillText("SCORE: " + score, 10, 478);
+            ctx.fillText("SCORE: " + score, 10, 754);
         }
 
         function updatePlayer() {
-            var oldX = maze.mouseX, 
-                oldY = maze.mouseY,
+            var oldX = mouseX, 
+                oldY = mouseY,
                 tile;
 
             if (upPressed) {
-                maze.mouseY -= 1;
-                if (maze.mouseY <= 0) maze.mouseY = 0;
+                mouseY -= 1;
+                if (mouseY <= 0) mouseY = 0;
             }
 
             if (downPressed) {
-                maze.mouseY += 1;
-                if (maze.mouseY >= maze.height) maze.mouseY = maze.height;
+                mouseY += 1;
+                if (mouseY >= maze.height) mouseY = maze.height;
             }
 
             if (leftPressed) {
-                maze.mouseX -= 1;
-                if (maze.mouseX <= 0) maze.mouseX = 0;
+                mouseX -= 1;
+                if (mouseX <= 0) mouseX = 0;
             }
 
             if (rightPressed) {
-                maze.mouseX += 1;
-                if (maze.mouseX >= maze.width) maze.mouseX = maze.width;
+                mouseX += 1;
+                if (mouseX >= maze.width) mouseX = maze.width;
             }
 
             // get tile and check if it's walkable
-            tile = maze.mazeData[maze.mouseY][maze.mouseX];
+            tile = maze.mazeData[mouseY][mouseX];
             if( tile == 10 ) { // wall
-                maze.mouseX = oldX;
-                maze.mouseY = oldY;
+                mouseX = oldX;
+                mouseY = oldY;
             }
 
-            if( visitedMazeData[maze.mouseY][maze.mouseX] != 0 ) {
-                visitedMazeData[maze.mouseY][maze.mouseX] = 0;
+            if( visitedMazeData[mouseY][mouseX] != 0 ) {
+                visitedMazeData[mouseY][mouseX] = 0;
                 score += 10;
             }
 
-            if( maze.mouseX == maze.catX && maze.mouseY == maze.catY ) {
+            if( mouseX == catX && mouseY == catY ) {
                 gameOver = true;
             }
         }
 
+        // calculate the next step, the cat does
         function updateEnemy() {
+            var dirs = [
+                new Direction(-1,0),
+                new Direction(0,-1),
+                new Direction(+1,0),
+                new Direction(0,+1)
+            ];
+            var queue = new Queue();
+            var discovered = new Array(maze.height);
+            for (var y = 0; y < maze.height; y++) {
+                discovered[y] = new Array(maze.width);
+                for( var x = 0; x < maze.width; x++) {
+                    discovered[y][x] = false;
+                }
+            }
+            // mark the current pos as visited 
+            discovered[catY][catX] = true;
 
+            queue.enqueue(new Node(catX, catY, null));
+            while( !queue.isEmpty ) {
+                var node = queue.dequeue();
+
+                for( var d = 0; d < dirs.length; d++ ){
+                    var dir  = dirs[d];
+                    var newX = node.x + dir.dx;
+                    var newY = node.y + dir.dy;
+                    var newDir = node.initialDir == null ? dir : node.initialDir;
+                    
+                    if( newX == mouseX && newY == mouseY) {
+                        catX = catX + newDir.dx;
+                        catY = catY + newDir.dy;
+                        return;
+                    }
+
+                    if( !maze.logicData[newY][newX] && !discovered[newY][newX]) {
+                        discovered[newY][newX] = true;
+                        queue.enqueue( new Node(newX, newY, newDir));
+                    }
+                }
+            }
         }
     </script>
 </html>
