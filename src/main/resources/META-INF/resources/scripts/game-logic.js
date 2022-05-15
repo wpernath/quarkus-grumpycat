@@ -1,11 +1,4 @@
-// global variables
-const MAZE_WIDTH = 992;
-const MAZE_HEIGHT = 756;
-
-const TILE_WIDTH = 32;
-const TILE_HEIGHT = 32;
-const CAT_SPEED = 3;
-
+// global key states
 let rightPressed = false;
 let leftPressed = false;
 let upPressed = false;
@@ -27,6 +20,7 @@ let maze;
 let ctx;
 let canvas;
 let catX, catY, mouseX, mouseY;
+let camera;
 
 // load images
 let loader = new PxLoader(),
@@ -88,6 +82,7 @@ function initGame() {
 function initLevel() {
 
 	// download a new level
+	console.log("initalizing level " + (currentLevel+1) + " / " + numLevels);
 	$.ajax({
 		url: "/maze/" + currentLevel,
 		success: function(result) {
@@ -98,6 +93,8 @@ function initLevel() {
 			mouseX = maze.mouseX;
 			mouseY = maze.mouseY;
 			catSpeed = CAT_SPEED;
+			camera = new Camera(maze, MAZE_WIDTH, MAZE_HEIGHT);
+
 			visitedMazeData = new Array(maze.height);
 			numPoints = 0;
 			for (var y = 0; y < maze.height; y++) {
@@ -170,7 +167,8 @@ function drawLevelWon() {
 		spacePressed = false;
 		gameOver = false;
 
-		if( ++currentLevel < numLevels ) {
+		currentLevel++;
+		if( currentLevel < numLevels ) {
 			initLevel();
 		}
 		else {
@@ -208,27 +206,52 @@ function drawGameOver() {
 
 // draws the currently loaded maze
 function drawMaze() {
-	for (var y = 0; y < maze.height; y++) {
-		for (var x = 0; x < maze.width; x++) {
+	var startX = Math.floor(camera.x / TILE_WIDTH);
+	var endX = startX + camera.width / TILE_WIDTH;
+	var startY = Math.floor(camera.y / TILE_HEIGHT);
+	var endY = startY + camera.height / TILE_HEIGHT;
+	var offsetX = -camera.x + startX * TILE_WIDTH;
+	var offsetY = -camera.y + startY * TILE_HEIGHT;
+
+	for (var y = startY; y <= endY; y++) {
+		for (var x = startX; x <= endX; x++) {
+			var xPos = Math.round((x - startX) * TILE_WIDTH + offsetX);
+			var yPos = Math.round((y - startY) * TILE_HEIGHT + offsetY);
+
 			var tile = maze.mazeData[y][x];
 			var imgToDraw;
 			if (tile == 0) imgToDraw = floorImg;
 			else if (tile == 10) imgToDraw = wallImg;
 			else imgToDraw = floor;
 
-			ctx.drawImage(imgToDraw, x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+			ctx.drawImage(imgToDraw, xPos, yPos, TILE_WIDTH, TILE_HEIGHT);
 
 			if (visitedMazeData[y][x] != 0) {
-				ctx.drawImage(tenPoints, x * TILE_WIDTH + 2, y * TILE_HEIGHT + 5, 16, 9);
+				ctx.drawImage(tenPoints, xPos + 2, yPos + 5, 16, 9);
 			}
 		}
 	}
 
 	// draw cat
-	ctx.drawImage(catImg, catX * TILE_WIDTH, catY * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
-
+	if( camera.isInView(catX, catY)) {
+		ctx.drawImage(
+			catImg, 
+			catX * TILE_WIDTH, 
+			catY * TILE_HEIGHT, 
+			TILE_WIDTH, 
+			TILE_HEIGHT
+		);
+	}
+	
 	// draw mouse
-	ctx.drawImage(mouseImg, mouseX * TILE_WIDTH, mouseY * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+	ctx.drawImage(
+		mouseImg, 
+		mouseX * TILE_WIDTH, 
+		mouseY * TILE_HEIGHT, 
+		TILE_WIDTH, 
+		TILE_HEIGHT
+	);
+	
 }
 
 function drawStatus() {
@@ -247,25 +270,31 @@ function drawStatus() {
 function updatePlayer() {
 	var oldX = mouseX,
 		oldY = mouseY,
+		dirX = 0,
+		dirY = 0,
 		tile;
 
 	if (upPressed) {
 		mouseY -= 1;
+		dirY = -1;
 		if (mouseY <= 0) mouseY = 0;
 	}
 
 	if (downPressed) {
 		mouseY += 1;
+		dirY = +1;
 		if (mouseY >= maze.height) mouseY = maze.height;
 	}
 
 	if (leftPressed) {
 		mouseX -= 1;
+		dirX = -1;
 		if (mouseX <= 0) mouseX = 0;
 	}
 
 	if (rightPressed) {
 		mouseX += 1;
+		dirX = +1;
 		if (mouseX >= maze.width) mouseX = maze.width;
 	}
 
@@ -275,6 +304,9 @@ function updatePlayer() {
 		// wall
 		mouseX = oldX;
 		mouseY = oldY;
+	}
+	else {
+		camera.move(dirX, dirY);
 	}
 
 	if (visitedMazeData[mouseY][mouseX] != 0) {
