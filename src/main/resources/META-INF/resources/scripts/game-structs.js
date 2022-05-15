@@ -1,9 +1,9 @@
 // global variables
-const MAZE_WIDTH = 930;
-const MAZE_HEIGHT = 710;
+const MAZE_WIDTH = 1000;
+const MAZE_HEIGHT = 800;
 
-const TILE_WIDTH = 60;
-const TILE_HEIGHT = 60;
+const TILE_WIDTH = 40;
+const TILE_HEIGHT = 40;
 const CAT_SPEED = 3;
 
 class Direction {
@@ -84,4 +84,18 @@ Camera.prototype.isInView = function(x, y) {
 		return false;
 	}
 	return true;
+}
+
+Camera.prototype.centerAround = function(x, y) {
+	var posX = x * TILE_WIDTH;
+	var posY = y * TILE_HEIGHT;
+	var w = this.width / TILE_WIDTH;
+	var h = this.height / TILE_HEIGHT;
+
+	this.x = (x - (w / 2)) * TILE_WIDTH ;
+	this.y = (y - (h / 2)) * TILE_HEIGHT;	
+
+	// clip values
+	this.x = Math.max(0, Math.min(this.x, this.maxX));
+	this.y = Math.max(0, Math.min(this.y, this.maxY));
 }

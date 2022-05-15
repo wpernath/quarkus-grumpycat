@@ -24,10 +24,10 @@ let camera;
 
 // load images
 let loader = new PxLoader(),
-	floorImg = loader.addImage("images/tiles/night.png"),
-	wallImg = loader.addImage("images/tiles/rock.png"),
-	catLeft = loader.addImage("images/grumpy_cat_left.png"),
-	catRight = loader.addImage("images/grumpy_cat_right.png"),
+	floorImg = loader.addImage("images/tiles/water.png"),
+	wallImg = loader.addImage("images/tiles/tile_2.png"),
+	catLeft = loader.addImage("images/cat_left.png"),
+	catRight = loader.addImage("images/cat_right.png"),
 	tenPoints = loader.addImage("images/10-points.png"),
 	fivPoints = loader.addImage("images/5-points.jpg"),
 	pauseImg = loader.addImage("images/pause.png"),
@@ -94,6 +94,7 @@ function initLevel() {
 			mouseY = maze.mouseY;
 			catSpeed = CAT_SPEED;
 			camera = new Camera(maze, MAZE_WIDTH, MAZE_HEIGHT);
+			camera.centerAround(mouseX, mouseY);
 
 			visitedMazeData = new Array(maze.height);
 			numPoints = 0;
@@ -213,16 +214,19 @@ function drawMaze() {
 	var offsetX = -camera.x + startX * TILE_WIDTH;
 	var offsetY = -camera.y + startY * TILE_HEIGHT;
 
-	for (var y = startY; y <= endY; y++) {
-		for (var x = startX; x <= endX; x++) {
+	console.log( "start (" + startX + "/" + startY + ") - end (" + endX + " / " + endY + ")" );
+
+	for (var y = startY; y < endY; y++) {
+		for (var x = startX; x < endX; x++) {
 			var xPos = Math.round((x - startX) * TILE_WIDTH + offsetX);
 			var yPos = Math.round((y - startY) * TILE_HEIGHT + offsetY);
 
 			var tile = maze.mazeData[y][x];
+			console.log("tile: " + tile);
 			var imgToDraw;
 			if (tile == 0) imgToDraw = floorImg;
 			else if (tile == 10) imgToDraw = wallImg;
-			else imgToDraw = floor;
+			else imgToDraw = floorImg;
 
 			ctx.drawImage(imgToDraw, xPos, yPos, TILE_WIDTH, TILE_HEIGHT);
 
@@ -234,20 +238,22 @@ function drawMaze() {
 
 	// draw cat
 	if( camera.isInView(catX, catY)) {
+		var xPos = Math.round((catX - startX) * TILE_WIDTH + offsetX);
+		var yPos = Math.round((catY - startY) * TILE_HEIGHT + offsetY);
+
 		ctx.drawImage(
 			catImg, 
-			catX * TILE_WIDTH, 
-			catY * TILE_HEIGHT, 
-			TILE_WIDTH, 
-			TILE_HEIGHT
+			xPos, yPos,
+			catImg.width, 
+			catImg.height
 		);
 	}
 	
 	// draw mouse
 	ctx.drawImage(
 		mouseImg, 
-		mouseX * TILE_WIDTH, 
-		mouseY * TILE_HEIGHT, 
+		Math.round((mouseX - startX) * TILE_WIDTH + offsetX),
+		Math.round((mouseY - startY) * TILE_HEIGHT + offsetY),
 		TILE_WIDTH, 
 		TILE_HEIGHT
 	);
@@ -305,9 +311,8 @@ function updatePlayer() {
 		mouseX = oldX;
 		mouseY = oldY;
 	}
-	else {
-		camera.move(dirX, dirY);
-	}
+
+	camera.centerAround(mouseX, mouseY);
 
 	if (visitedMazeData[mouseY][mouseX] != 0) {
 		visitedMazeData[mouseY][mouseX] = 0;
