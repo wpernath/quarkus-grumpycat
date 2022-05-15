@@ -1,45 +1,3 @@
-class Direction {
-	constructor(dx, dy) {
-		this.dx = dx;
-		this.dy = dy;
-	}
-}
-
-class Node {
-	constructor(x, y, dir) {
-		this.x = x;
-		this.y = y;
-		this.initialDir = dir;
-	}
-}
-
-class Queue {
-	constructor() {
-		this.elements = {};
-		this.head = 0;
-		this.tail = 0;
-	}
-	enqueue(element) {
-		this.elements[this.tail] = element;
-		this.tail++;
-	}
-	dequeue() {
-		const item = this.elements[this.head];
-		delete this.elements[this.head];
-		this.head++;
-		return item;
-	}
-	peek() {
-		return this.elements[this.head];
-	}
-	get length() {
-		return this.tail - this.head;
-	}
-	get isEmpty() {
-		return this.length === 0;
-	}
-}
-
 // global variables
 const MAZE_WIDTH = 992;
 const MAZE_HEIGHT = 756;
@@ -72,9 +30,8 @@ let catX, catY, mouseX, mouseY;
 
 // load images
 let loader = new PxLoader(),
-	floorImg = loader.addImage("images/tiles/rock.png"),
-	floorVisitedImg = loader.addImage("images/visited.png"),
-	wallImg = loader.addImage("images/tiles/tile_2.png"),
+	floorImg = loader.addImage("images/tiles/night.png"),
+	wallImg = loader.addImage("images/tiles/rock.png"),
 	catLeft = loader.addImage("images/grumpy_cat_left.png"),
 	catRight = loader.addImage("images/grumpy_cat_right.png"),
 	tenPoints = loader.addImage("images/10-points.png"),
@@ -83,7 +40,8 @@ let loader = new PxLoader(),
 	gameOverImg = loader.addImage("images/gameOver.png"),
 	mouseImg = loader.addImage("images/sensa_jaa.png"),
 	gameOverDog = loader.addImage("images/sensa_nee.png"),
-	levelWonDog = loader.addImage("images/sensa_jaa.png");
+	levelWonDog = loader.addImage("images/sensa_jaa.png"),
+	catImg = catLeft;
 
 // This is the entry point of the game.   
 function setupGame() {
@@ -188,7 +146,6 @@ function gameLoop(timestamp) {
 
 		if (levelWon) {
 			drawLevelWon();
-			return;
 		}
 	}
 	window.requestAnimationFrame(gameLoop);
@@ -200,7 +157,7 @@ function drawLevelWon() {
 
 	ctx.drawImage(levelWonDog, (MAZE_WIDTH - levelWonDog.width) / 2, (MAZE_HEIGHT - levelWonDog.height) / 2);
 
-	ctx.font = "16px Arial";
+	ctx.font = "24px Arial";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "bottom";
 	ctx.fillStyle = "white";
@@ -232,7 +189,7 @@ function drawGameOver() {
 	ctx.drawImage(gameOverDog, (MAZE_WIDTH - gameOverDog.width) / 2, (MAZE_HEIGHT - gameOverDog.height) / 2);
 	ctx.drawImage(gameOverImg, (MAZE_WIDTH - 620) / 2, 10, 620, 400);
 
-	ctx.font = "16px Arial";
+	ctx.font = "24px Arial";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "bottom";
 	ctx.fillStyle = "white";
@@ -268,7 +225,7 @@ function drawMaze() {
 	}
 
 	// draw cat
-	ctx.drawImage(catLeft, catX * TILE_WIDTH, catY * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+	ctx.drawImage(catImg, catX * TILE_WIDTH, catY * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
 
 	// draw mouse
 	ctx.drawImage(mouseImg, mouseX * TILE_WIDTH, mouseY * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
@@ -279,6 +236,7 @@ function drawStatus() {
 	ctx.fillRect(0, MAZE_HEIGHT - 20, MAZE_WIDTH, 20);
 
 	ctx.font = "16px Arial";
+	ctx.fontWeight= 32;
 	ctx.textAlign = "left";
 	ctx.textBaseline = "bottom";
 	ctx.fillStyle = "white";
@@ -360,6 +318,9 @@ function updateEnemy() {
 			if (newX == mouseX && newY == mouseY) {
 				catX = catX + newDir.dx;
 				catY = catY + newDir.dy;
+
+				if( newDir.dx < 0 )    catImg=catLeft;
+				else if( newDir.dx > 0)catImg=catRight;
 				return;
 			}
 
