@@ -7,7 +7,7 @@ public class Maze {
   public String tileSet;
   public int width;
   public int height;
-
+  
   public int[][] mazeData;
   public boolean[][] logicData;
 
