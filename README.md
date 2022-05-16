@@ -1,8 +1,16 @@
-# quarkus-fatcat Project
+# quarkus-grumpycat game
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+This Game uses Quarkus, the Supersonic Subatomic Java Framework and HTML 5 / JavaScript.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+
+## The Game
+
+This game was inspired by the old Fat-Cat game and by PacMan. You're controlling a dog in a maze which needs to eat all food without being caught by a grumpy cat. 
+
+Right now you can control the dog with arrow keys UP, DOWN, LEFT & RIGHT and with W, A, S, D. Game logic is currently coded with JavaScript. 
+
+![the game](docs/the-game.png)
 
 ## Running the application in dev mode
 
@@ -11,46 +19,31 @@ You can run your application in dev mode that enables live coding using:
 ./mvnw compile quarkus:dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+## Game Server
+The server part currently only consists of a HTML server serving index.html and the various scripts in JavaScript. It also contains `MazeResource.java` which will be called to download a level. 
 
-## Packaging and running the application
+Future of this project is to let the enemy's new positions be calculated by the server as well (`EnemyResource.java`).
 
-The application can be packaged using:
-```shell script
-./mvnw package
-```
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+## Game Logic
+Currently, the complete game logic (including drawing the silly graphics) is being done in JavaScript. 
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+- `game-structs.js` contains some helper classes and global constants for the game like the size of the maze canvas and the size of the tiles. 
 
-If you want to build an _über-jar_, execute the following command:
-```shell script
-./mvnw package -Dquarkus.package.type=uber-jar
-```
+- `game-logic.js` contains the full game logic
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+### initLevel()
+This function will be called whenever the level needs to be initialized (upon game start, after gameover or gamewon). It calls the `MazeResource.java` to download the level and prepares the local game logic. 
 
-## Creating a native executable
+### gameLoop()
+This function will be called by `window.requestAnimationFrame()` whenever the browser has time to play the game. It acts as the main game method and makes sure, the player moves, the cat tries to catch the dog, etc.
 
-You can create a native executable using: 
-```shell script
-./mvnw package -Pnative
-```
+### drawMaze() 
+This function draws the currently visible part of the maze based on level data read from server. After drawing the maze, it places the enemies in the maze (if visible) and draws the dog (the player).
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
-```shell script
-./mvnw package -Pnative -Dquarkus.native.container-build=true
-```
 
-You can then execute your native executable with: `./target/quarkus-fatcat-0.0.1-runner`
+### updatePlayer()
+This function makes sure, the dog moves according to the keys pressed. It also makes sure, the dog doesn't move on tiles which should act as walls etc. 
 
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
+### updateEnemy() 
+This function calculates the shortest path between each enemy and the dog. It just calculates the next possible move for each cat based on a simple Lee Algorythm. 
 
-## Provided Code
-
-### RESTEasy Reactive
-
-Easily start your Reactive RESTful Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
