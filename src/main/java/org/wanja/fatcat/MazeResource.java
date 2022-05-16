@@ -14,7 +14,7 @@ public class MazeResource {
   
 
   public MazeResource() {
-    Maze m = new Maze("Standard", "Wanja", 31, 23);
+    Maze m = new Maze("Level 1", "Wanja", 31, 23);
     mazes.add(m);
     m.parseMap(
         """
@@ -33,17 +33,17 @@ public class MazeResource {
             # ##### # ##### ##### # ##### #
             # #     # #         # #     # #
             # # ##### # ####### # ##### # #
-            # # #   # # #  c  # # #   # # #
+            # # #c  # # #     # # #   # # #
             # # # # # # # # # # # # # # # #
             # # # # # # # # # # # # # # # #
             # # # # # # # # # # # # # # # #
-            # #   #   #   # #   #   #   # #
+            # #   #   #   # #   #   #  c# #
             # ############# ############# #
             #                             #
             ###############################"""      
     );
 
-    m = new Maze("Standard", "Wanja", 31, 23);
+    m = new Maze("Level 2", "Wanja", 31, 23);
     mazes.add(m);
     m.parseMap(
         """
@@ -65,10 +65,10 @@ public class MazeResource {
             # #######     ##      ####### #
             #                             #
             #                             #
-            #                      # ######
-            #                      #      #
-            #                      #      #
-            #                      #     c#
+            # #######              # ######
+            #       #              #      #
+            #       #              #      #
+            #      c#              #     c#
             ###############################""");
 
   }

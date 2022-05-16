@@ -6,4 +6,9 @@ public class Cat {
     public int speed = 3;
 
     public int catX, catY;
+
+    public Cat(int catX, int catY){
+        this.catX = catX;
+        this.catY = catY;
+    }
 }

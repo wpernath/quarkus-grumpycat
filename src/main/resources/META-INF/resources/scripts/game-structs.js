@@ -48,10 +48,12 @@ class Queue {
 	}
 }
 
-class CatPos {
-	constructor(x, y) {
+class Enemy {
+	constructor(x, y, speed) {
 		this.catX = x;
 		this.catY = y;
+		this.speed = speed;
+		this.image = new Image();
 	}
 }
 
