@@ -261,16 +261,15 @@ function drawMaze() {
 }
 
 function drawStatus() {
-	ctx.fillStyle = "black";
-	ctx.fillRect(0, MAZE_HEIGHT - 20, MAZE_WIDTH, 20);
+	ctx.clearRect(0, MAZE_HEIGHT, MAZE_WIDTH, 20);
 
 	ctx.font = "16px Arial";
 	ctx.fontWeight= 32;
 	ctx.textAlign = "left";
-	ctx.textBaseline = "bottom";
+	ctx.textBaseline = "top";
 	ctx.fillStyle = "white";
-	ctx.fillText("SCORE: " + score, 10, MAZE_HEIGHT - 2);
-	ctx.fillText("LEVEL: " + currentLevel + 1, 300, MAZE_HEIGHT - 2);
+	ctx.fillText("SCORE: " + score, 10, MAZE_HEIGHT + 2);
+	ctx.fillText("LEVEL: " + currentLevel + 1, 300, MAZE_HEIGHT + 2);
 }
 
 function updatePlayer() {

@@ -1,6 +1,6 @@
 // global variables
-const MAZE_WIDTH = 1000;
-const MAZE_HEIGHT = 800;
+const MAZE_WIDTH = 960;
+const MAZE_HEIGHT = 660;
 
 const TILE_WIDTH = 40;
 const TILE_HEIGHT = 40;
@@ -12,7 +12,7 @@ class Direction {
 		this.dy = dy;
 	}
 }
-
+ 
 class Node {
 	constructor(x, y, dir) {
 		this.x = x;
