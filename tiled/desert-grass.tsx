@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.8" tiledversion="1.8.4" name="desert-grass" tilewidth="32" tileheight="32" tilecount="50" columns="10">
+<tileset version="1.8" tiledversion="1.8.90" name="desert-grass" tilewidth="32" tileheight="32" tilecount="50" columns="10">
  <editorsettings>
   <export target="desert-grass..tsj" format="json"/>
  </editorsettings>
- <image source="../../../Downloads/Reyoh EASY Tileset/Reyoh TileSet.png" width="320" height="160"/>
+ <image source="../src/main/resources/META-INF/resources/images/tilesets/desert.png" width="320" height="160"/>
  <tile id="0">
   <properties>
    <property name="walkable" type="bool" value="false"/>
