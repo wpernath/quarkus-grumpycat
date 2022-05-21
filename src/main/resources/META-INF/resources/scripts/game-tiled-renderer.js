@@ -13,6 +13,12 @@ class TiledMapRenderer {
 	mapHeight = 30;
 	tileWidth = 32;
 	tileHeight = 32;
+
+    // next 3 vars should be read from tileset
+    tilesetColumns = 11;
+    tilesetSpacing = 1;
+    tilesetMargin = 1;
+    tilesetWidth = 363;
 	layers = [];
 	tileset = "";
 	tilesetImage = new Image();
@@ -79,8 +85,8 @@ class TiledMapRenderer {
 			if (layer.name != "Persons") {
 				for (var y = startY; y < endY; y++) {
 					for (var x = startX; x < endX; x++) {
-						var xPos = Math.round((x - startX) * this.tileWidth + offsetX);
-						var yPos = Math.round((y - startY) * this.tileHeight + offsetY);
+						var xPos = Math.round((x - startX) * this.tileWidth );
+						var yPos = Math.round((y - startY) * this.tileHeight);
 
 						var t = this.tileAt(layer, x, y);
 						var tile = t & ~(FLIPPED_DIAGONALLY_FLAG | FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | ROTATED_HEXAGONAL_120_FLAG);
@@ -93,8 +99,13 @@ class TiledMapRenderer {
                                 console.log("  wrong tile at (" + x + ", " + y + ")");
                             }
                             // calculate position on tileset
-                            var srcX = (tile % (this.tilesetImage.width / (this.tileWidth+1))) * (this.tileWidth +1) + 1;
-                            var srcY = ~~(tile / (this.tilesetImage.width / (this.tileWidth+1))) * (this.tileWidth +1) + 1;
+                            if( tile == 12) {
+                                console.log("tile == 13")
+                            }
+                            var tileX= Math.round(tile % this.tilesetColumns);
+                            var tileY= Math.round(tile / this.tilesetColumns);
+                            var srcX = Math.round((tileX * this.tileWidth) + (this.tilesetSpacing * (tileX)));
+                            var srcY = Math.round((tileY * this.tileHeight) + (this.tilesetMargin * (tileY)));
                             var w = this.tileWidth;
                             var h = this.tileHeight;
                             ctx.save();
@@ -105,7 +116,17 @@ class TiledMapRenderer {
                                 //if( flippedVertically )   srcX *= -1;
                                 //console.log("flipped: " + flippedHorizontally + " / " + flippedVertically);
                             }
-                            ctx.drawImage(this.tilesetImage, srcX, srcY, w, h, xPos, yPos, this.tileWidth, this.tileHeight);
+                            ctx.drawImage(
+                                this.tilesetImage, 
+                                srcX, 
+                                srcY, 
+                                w, 
+                                h, 
+                                xPos, 
+                                yPos, 
+                                this.tileWidth, 
+                                this.tileHeight
+                            );
                             ctx.restore();
 						}
 					}
