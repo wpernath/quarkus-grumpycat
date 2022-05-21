@@ -95,12 +95,10 @@ class TiledMapRenderer {
         
 						if (tile != 0) {
                             tile -= 1;
-                            if( tile > 100 || tile < 0 )  {
-                                console.log("  wrong tile at (" + x + ", " + y + ")");
-                            }
+
                             // calculate position on tileset
                             if( tile == 12) {
-                                console.log("tile == 13")
+                                //console.log("tile == 13")
                             }
                             var tileX= Math.round(tile % this.tilesetColumns);
                             var tileY= Math.round(tile / this.tilesetColumns);
