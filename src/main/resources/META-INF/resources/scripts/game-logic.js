@@ -11,17 +11,16 @@ let gameOver = false;
 let levelWon = false;
 let catSpeed = CAT_SPEED;
 let lastTimestamp = 0;
-let visitedMazeData = [];
 let numPoints = 0;
 let currentLevel = 0;
 let numLevels = 2;
 let score = 0;
-let maze;
 let ctx;
 let canvas;
-let mouseX, mouseY;
+var gameWorld;
 let enemies;
 let camera;
+
 
 // load images
 let loader = new PxLoader(),
@@ -36,6 +35,7 @@ let loader = new PxLoader(),
 	mouseImg = loader.addImage("images/sensa_jaa.png"),
 	gameOverDog = loader.addImage("images/sensa_nee.png"),
 	levelWonDog = loader.addImage("images/sensa_jaa.png"),
+	tilesetImage = loader.addImage("/images/tilesets/desert-water.png"),
 	catImg = catLeft;
 
 // This is the entry point of the game.   
@@ -84,42 +84,41 @@ function initLevel() {
 
 	// download a new level
 	console.log("initalizing level " + (currentLevel+1) + " / " + numLevels);
+	var name = "Level" + (currentLevel+1);
 	$.ajax({
-		url: "/maze/" + currentLevel,
-		success: function(result) {
+		url: "/maps/" + name + ".tmj",
+		contentType: "application/json",
+		dataType: "json",
+		context: this,
+
+		success: function (result) {
 			console.log("current level loaded: " + result);
-			maze = result;
-			mouseX = maze.mouseX;
-			mouseY = maze.mouseY;
+			renderer = new TiledMapRenderer();
+			renderer.parse(result);
+
+
+			renderer.tilesetImage = tilesetImage;
+			renderer.player.image = mouseImg;
+			mouseX = renderer.player.x
+			mouseY = renderer.player.y;
+
 			catSpeed = CAT_SPEED;
 
-			enemies = new Array(maze.enemies.length);
-			for( var e = 0; e < maze.enemies.length; e++ ) {
-				enemies[e] = new Enemy(maze.enemies[e].catX, maze.enemies[e].catY, maze.enemies[e].speed);
-				enemies[e].image = catLeft;
+			enemies = renderer.enemies;
+			for(var i = 0; i < enemies; i++ ) {
+				enemies[i].image = catLeft;
 			}
 
-			camera = new Camera(maze, MAZE_WIDTH, MAZE_HEIGHT);
+			camera = renderer.camera;
+			console.log(camera);
 			camera.centerAround(mouseX, mouseY);
 
-			visitedMazeData = new Array(maze.height);
 			numPoints = 0;
-			for (var y = 0; y < maze.height; y++) {
-				visitedMazeData[y] = new Array(maze.width);
-				for (var x = 0; x < maze.width; x++) {
-					var tile = maze.mazeData[y][x];
-					if (tile < 10) {
-						visitedMazeData[y][x] = 10;
-						numPoints++;
-					} else visitedMazeData[y][x] = 0;
-				}
-			}
-
 			gameOver = false;
 			gamePaused = true;
 			levelWon = false;
 			window.requestAnimationFrame(gameLoop);
-		}
+		},
 	});	
 }
 
@@ -199,7 +198,7 @@ function drawGameOver() {
 
 	if (spacePressed) {
 		ctx.clearRect(0, 0, MAZE_WIDTH, MAZE_HEIGHT+20);
-
+		currentLevel = 0;
 		initLevel();
 		spacePressed = false;
 		gameOver = false;
@@ -208,57 +207,8 @@ function drawGameOver() {
 
 // draws the currently loaded maze
 function drawMaze() {
-	var startX = Math.floor(camera.x / TILE_WIDTH);
-	var endX = startX + camera.width / TILE_WIDTH;
-	var startY = Math.floor(camera.y / TILE_HEIGHT);
-	var endY = startY + camera.height / TILE_HEIGHT;
-	var offsetX = -camera.x + startX * TILE_WIDTH;
-	var offsetY = -camera.y + startY * TILE_HEIGHT;
-
-	for (var y = startY; y < endY; y++) {
-		for (var x = startX; x < endX; x++) {
-			var xPos = Math.round((x - startX) * TILE_WIDTH + offsetX);
-			var yPos = Math.round((y - startY) * TILE_HEIGHT + offsetY);
-
-			var tile = maze.mazeData[y][x];
-			var imgToDraw;
-			if (tile == 0) imgToDraw = floorImg;
-			else if (tile == 10) imgToDraw = wallImg;
-			else imgToDraw = floorImg;
-
-			ctx.drawImage(imgToDraw, xPos, yPos, TILE_WIDTH, TILE_HEIGHT);
-
-			if (visitedMazeData[y][x] != 0) {
-				ctx.drawImage(tenPoints, xPos + 2, yPos + 5, 16, 9);
-			}
-		}
-	}
-
-	// draw enemies 
-	for( var e = 0; e < enemies.length; e++ ) {
-		var enemy = enemies[e];
-
-		if( camera.isInView(enemy.catX, enemy.catY)) {
-			var xPos = Math.round((enemy.catX - startX) * TILE_WIDTH + offsetX);
-			var yPos = Math.round((enemy.catY - startY) * TILE_HEIGHT + offsetY);
-
-			ctx.drawImage(
-				enemy.image, 
-				xPos, yPos,
-				enemy.image.width, 
-				enemy.image.height
-			);
-		}
-	}
-	// draw mouse
-	ctx.drawImage(
-		mouseImg, 
-		Math.round((mouseX - startX) * TILE_WIDTH + offsetX),
-		Math.round((mouseY - startY) * TILE_HEIGHT + offsetY),
-		TILE_WIDTH, 
-		TILE_HEIGHT
-	);
-	
+	ctx.clearRect(0, 0, MAZE_WIDTH, MAZE_HEIGHT + 20);
+	renderer.draw(ctx);	
 }
 
 function drawStatus() {
@@ -273,76 +223,73 @@ function drawStatus() {
 }
 
 function updatePlayer() {
-	var oldX = mouseX,
-		oldY = mouseY,
+	var oldX = renderer.player.x,
+		oldY = renderer.player.y,
 		dirX = 0,
 		dirY = 0,
 		tile;
 
 	if (upPressed) {
-		mouseY -= 1;
+		renderer.player.y -= 1;
 		dirY = -1;
-		if (mouseY <= 0) mouseY = 0;
+		if( renderer.player.y < 0) renderer.player.y = 0;
 	}
 
 	if (downPressed) {
-		mouseY += 1;
+		renderer.player.y += 1;
 		dirY = +1;
-		if (mouseY >= maze.height) mouseY = maze.height;
+		if (renderer.player.y > renderer.mapHeight) renderer.player.y = renderer.mapHeight;
 	}
 
 	if (leftPressed) {
-		mouseX -= 1;
+		renderer.player.x -= 1;
 		dirX = -1;
-		if (mouseX <= 0) mouseX = 0;
+		if (renderer.player.x <= 0) renderer.player.x = 0;
 	}
 
 	if (rightPressed) {
-		mouseX += 1;
+		renderer.player.x += 1;
 		dirX = +1;
-		if (mouseX >= maze.width) mouseX = maze.width;
+		if (renderer.player.x >= renderer.mapWidth) renderer.player.x = renderer.player.x;
 	}
 
 	// get tile and check if it's walkable
-	tile = maze.mazeData[mouseY][mouseX];
-	if (tile >= 10) {
+	if( !renderer.isWalkable(renderer.player.x, renderer.player.y) ){
 		// wall
-		mouseX = oldX;
-		mouseY = oldY;
+		renderer.player.x = oldX;
+		renderer.player.y = oldY;
 	}
 
-	camera.centerAround(mouseX, mouseY);
+	camera.centerAround(renderer.player.x, renderer.player.y);
 
-	if (visitedMazeData[mouseY][mouseX] != 0) {
-		visitedMazeData[mouseY][mouseX] = 0;
+	if (!renderer.checkPositionVisitedAndChange(renderer.player.x, renderer.player.y)) {
 		score += 10;
-		--numPoints;
-		if (numPoints <= 0) {
-			levelWon = true;
-		}
 	}
 
 	// check to see if ANY cat reached mouse
+	/*
 	for( var e = 0; e < enemies.length; e++) {
 		if (mouseX == enemies[e].catX && mouseY == enemies[e].catY) {
 			gameOver = true;
 			break;
 		}
-	}
+	}*/
 }
 
 // calculate the next step, the cat does
 function updateEnemy() {
+	var mouseX = renderer.player.x;
+	var mouseY = renderer.player.y;
 	for( var e = 0; e < enemies.length; e++ ) {
 		var catX = enemies[e].catX;
 		var catY = enemies[e].catY;
 	
 		var dirs = [new Direction(-1, 0), new Direction(0, -1), new Direction(+1, 0), new Direction(0, +1)];
 		var queue = new Queue();
-		var discovered = new Array(maze.height);
-		for (var y = 0; y < maze.height; y++) {
-			discovered[y] = new Array(maze.width);
-			for (var x = 0; x < maze.width; x++) {
+		var discovered = new Array(renderer.mapHeight);
+		for (var y = 0; y < renderer.mapHeight; y++) {
+			discovered[y] = new Array(renderer.mapWidth);
+			for (var x = 0; x < renderer.mapWidth; x++) {
 				discovered[y][x] = false;
 			}
 		}
@@ -372,7 +319,7 @@ function updateEnemy() {
 					break;
 				}
 
-				if (!maze.logicData[newY][newX] && !discovered[newY][newX]) {
+				if (renderer.isWalkable(newX, newY) && !discovered[newY][newX]) {
 					discovered[newY][newX] = true;
 					queue.enqueue(new Node(newX, newY, newDir));
 				}
