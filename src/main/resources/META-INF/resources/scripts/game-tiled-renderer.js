@@ -13,7 +13,7 @@ class TiledMapRenderer {
 	mapHeight = 30;
 	tileWidth = 32;
 	tileHeight = 32;
-
+ 
     // next 3 vars should be read from tileset
     tilesetColumns = 11;
     tilesetSpacing = 1;
@@ -85,8 +85,8 @@ class TiledMapRenderer {
 			if (layer.name != "Persons") {
 				for (var y = startY; y < endY; y++) {
 					for (var x = startX; x < endX; x++) {
-						var xPos = Math.round((x - startX) * this.tileWidth );
-						var yPos = Math.round((y - startY) * this.tileHeight);
+						var xPos = Math.floor((x - startX) * this.tileWidth );
+						var yPos = Math.floor((y - startY) * this.tileHeight);
 
 						var t = this.tileAt(layer, x, y);
 						var tile = t & ~(FLIPPED_DIAGONALLY_FLAG | FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | ROTATED_HEXAGONAL_120_FLAG);
@@ -97,13 +97,10 @@ class TiledMapRenderer {
                             tile -= 1;
 
                             // calculate position on tileset
-                            if( tile == 12) {
-                                //console.log("tile == 13")
-                            }
-                            var tileX= Math.round(tile % this.tilesetColumns);
-                            var tileY= Math.round(tile / this.tilesetColumns);
-                            var srcX = Math.round((tileX * this.tileWidth) + (this.tilesetSpacing * (tileX)));
-                            var srcY = Math.round((tileY * this.tileHeight) + (this.tilesetMargin * (tileY)));
+                            var tileX= Math.floor(tile % this.tilesetColumns);
+                            var tileY= Math.floor(tile / this.tilesetColumns);
+                            var srcX = Math.floor((tileX * this.tileWidth) + (this.tilesetSpacing * (tileX)));
+                            var srcY = Math.floor((tileY * this.tileHeight) + (this.tilesetMargin * (tileY)));
                             var w = this.tileWidth;
                             var h = this.tileHeight;
                             ctx.save();
@@ -136,8 +133,8 @@ class TiledMapRenderer {
                     var enemy = this.enemies[e];
 
                     if (camera.isInView(enemy.catX, enemy.catY)) {
-                        var xPos = Math.round((enemy.catX - startX) * TILE_WIDTH + offsetX);
-                        var yPos = Math.round((enemy.catY - startY) * TILE_HEIGHT + offsetY);
+                        var xPos = Math.floor((enemy.catX - startX) * TILE_WIDTH + offsetX);
+                        var yPos = Math.floor((enemy.catY - startY) * TILE_HEIGHT + offsetY);
 
                         ctx.drawImage(enemy.image, xPos, yPos, TILE_WIDTH, TILE_WIDTH);
                     }
@@ -146,8 +143,8 @@ class TiledMapRenderer {
                 // draw mouse
                 ctx.drawImage(
                     this.player.image, 
-                    Math.round((this.player.x - startX) * TILE_WIDTH + offsetX), 
-                    Math.round((this.player.y - startY) * TILE_HEIGHT + offsetY), 
+                    Math.floor((this.player.x - startX) * TILE_WIDTH + offsetX), 
+                    Math.floor((this.player.y - startY) * TILE_HEIGHT + offsetY), 
                     TILE_WIDTH, 
                     TILE_HEIGHT
                 );

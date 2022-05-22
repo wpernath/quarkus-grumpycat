@@ -74,6 +74,7 @@ function initGame() {
 		document.addEventListener("keydown", keyDownHandler, false);
 		document.addEventListener("keyup", keyUpHandler, false);
 
+		currentLevel = 1;
 		initLevel();
 	}
 }
