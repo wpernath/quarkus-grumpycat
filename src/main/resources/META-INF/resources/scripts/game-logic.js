@@ -210,12 +210,27 @@ function drawGameOver() {
 // draws the currently loaded maze
 function drawMaze() {
 	ctx.clearRect(0, 0, MAZE_WIDTH, MAZE_HEIGHT + 20);
-	//renderer.draw(ctx);	
+	renderer.draw(ctx);	
+
+	/*
+	var x = tilesetImage.width + 16;
+	var y = 0;
+	var w = tilesetImage.width;
+	var h = tilesetImage.height;
+
 	ctx.drawImage(tilesetImage, 0, 0);
 	ctx.save();
-	ctx.scale(0,-1);
-	ctx.drawImage(tilesetImage, tilesetImage.width+5,0);
+
+	var flipH = false;
+	var flipV = true;
+	
+	ctx.scale(flipH,flipV);
+	x = flipH ? x+(w*-1) : x;
+	y = flipV ? y+(h*-1) : y;
+	
+	ctx.drawImage(tilesetImage, x,y + 250);
 	ctx.restore();
+	*/
 }
 
 function drawStatus() {
@@ -233,8 +248,7 @@ function updatePlayer() {
 	var oldX = renderer.player.x,
 		oldY = renderer.player.y,
 		dirX = 0,
-		dirY = 0,
-		tile;
+		dirY = 0;
 
 	if (upPressed) {
 		renderer.player.y -= 1;
