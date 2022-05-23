@@ -94,7 +94,7 @@ class Camera {
 		this.height = canvasHeight;
 		this.maxX = mapWidth * TILE_WIDTH - canvasWidth;
 		this.maxY = mapHeight * TILE_HEIGHT - canvasHeight;
-		this.SPEED = TILE_WIDTH;
+		this.SPEED = TILE_WIDTH/4;
 		this.centerAround(0,0);
 	}
 
@@ -127,7 +127,7 @@ class Camera {
 		this.x = Math.max(0, Math.min(this.x, this.maxX));
 		this.y = Math.max(0, Math.min(this.y, this.maxY));
 
-		console.log("Camera.pos = " + this.x + " / " + this.y + " ");
+		//console.log("Camera.pos = " + this.x + " / " + this.y + " ");
 	}
 }
 

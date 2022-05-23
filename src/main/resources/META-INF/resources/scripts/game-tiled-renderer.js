@@ -85,8 +85,8 @@ class TiledMapRenderer {
 			if (layer.name != "Persons") {
 				for (var y = startY; y < endY; y++) {
 					for (var x = startX; x < endX; x++) {
-						var xPos = Math.floor((x - startX) * this.tileWidth );
-						var yPos = Math.floor((y - startY) * this.tileHeight);
+						var xPos = Math.floor((x - startX) * this.tileWidth ) + offsetX;
+						var yPos = Math.floor((y - startY) * this.tileHeight) + offsetY;
 
 						var t = this.tileAt(layer, x, y);
 						var tile = t & ~(FLIPPED_DIAGONALLY_FLAG | FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | ROTATED_HEXAGONAL_120_FLAG);
@@ -107,8 +107,8 @@ class TiledMapRenderer {
 
                             if( flippedHorizontally || flippedVertically) {
                                 //ctx.scale(flippedVertically ? -1 : 0, flippedHorizontally ? -1 : 0);
-                                //if( flippedHorizontally ) srcY *= -1;
-                                //if( flippedVertically )   srcX *= -1;
+                                //if( flippedHorizontally ) h *= -1;
+                                //if( flippedVertically )   w *= -1;
                                 //console.log("flipped: " + flippedHorizontally + " / " + flippedVertically);
                             }
                             ctx.drawImage(
@@ -119,8 +119,8 @@ class TiledMapRenderer {
                                 h, 
                                 xPos, 
                                 yPos, 
-                                this.tileWidth, 
-                                this.tileHeight
+                                w, 
+                                h
                             );
                             ctx.restore();
 						}

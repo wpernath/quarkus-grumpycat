@@ -74,7 +74,7 @@ function initGame() {
 		document.addEventListener("keydown", keyDownHandler, false);
 		document.addEventListener("keyup", keyUpHandler, false);
 
-		currentLevel = 1;
+		currentLevel = 0;
 		initLevel();
 	}
 }
@@ -141,6 +141,7 @@ function gameLoop(timestamp) {
 		}
 
 		if (gamePaused && !gameOver) {
+			ctx.clearRect(0, 0, MAZE_WIDTH, MAZE_HEIGHT );
 			ctx.drawImage(pauseImg, (MAZE_WIDTH - pauseImg.width) / 2, (MAZE_HEIGHT - pauseImg.height) / 2);
 		}
 
@@ -209,7 +210,12 @@ function drawGameOver() {
 // draws the currently loaded maze
 function drawMaze() {
 	ctx.clearRect(0, 0, MAZE_WIDTH, MAZE_HEIGHT + 20);
-	renderer.draw(ctx);	
+	//renderer.draw(ctx);	
+	ctx.drawImage(tilesetImage, 0, 0);
+	ctx.save();
+	ctx.scale(0,-1);
+	ctx.drawImage(tilesetImage, tilesetImage.width+5,0);
+	ctx.restore();
 }
 
 function drawStatus() {
