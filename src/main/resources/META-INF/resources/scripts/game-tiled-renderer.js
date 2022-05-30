@@ -4,6 +4,12 @@ const FLIPPED_VERTICALLY_FLAG = 0x40000000;
 const FLIPPED_DIAGONALLY_FLAG = 0x20000000;
 const ROTATED_HEXAGONAL_120_FLAG = 0x10000000;
 
+//const PLAYER_TILE=61;
+//const ENEMY_TILE=62;
+
+const PLAYER_TILE = 622;
+const ENEMY_TILE = 621;
+
 class TiledMapRenderer {
 	camera;
 	enemies = [];
@@ -14,14 +20,16 @@ class TiledMapRenderer {
 	tileWidth = 32;
 	tileHeight = 32;
  
-    // next 3 vars should be read from tileset
-    tilesetColumns = 11;
-    tilesetSpacing = 1;
-    tilesetMargin = 1;
-    tilesetWidth = 363;
+    // next 4 vars should be read from tileset
+    tilesetColumns = 32;
+    tilesetSpacing = 0;
+    tilesetMargin = 0;
+    tilesetWidth = 1024;
 	layers = [];
 	tileset = "";
 	tilesetImage = new Image();
+    bombImageSet = new Image();
+    placedBombs = [];
 
 	constructor() {}
 
@@ -56,7 +64,7 @@ class TiledMapRenderer {
 			var x = i % this.mapWidth;
 			var y = ~~(i / this.mapWidth);
 
-			if (tile == 61) {
+			if (tile == PLAYER_TILE) {
 				// player
 				this.player = new Player(x, y, 1);
                 this.camera = new Camera(this.mapWidth, this.mapHeight, MAZE_WIDTH, MAZE_HEIGHT);
@@ -64,13 +72,28 @@ class TiledMapRenderer {
                 console.log("  player at(" + x + ", " + y + ")");
 
 			} 
-            else if (tile == 64) {
+            else if (tile == ENEMY_TILE) {
 				// enemy
 				this.enemies.push(new Enemy(x, y, 3));
                 console.log("  enemy at(" + x + ", " + y + ")");
 			}
 		}
 	}
+
+    countMaxScore() {
+        var layer = this.getLayer("Bonus");
+        var maxScore = 0;
+        for( var t = 0; t < layer.data.length; t++ ) {
+            var tile = layer.data[t];
+            if(tile != 0) maxScore+=10;
+        }
+        return maxScore;
+    }
+
+    placeBomb(bomb) {
+        var layer = this.getLayer("Persons");
+        this.placedBombs.push(bomb);
+    }
 
 	draw(ctx) {
 		var startX = Math.floor(this.camera.x / this.tileWidth);
@@ -106,10 +129,9 @@ class TiledMapRenderer {
                             ctx.save();
 
                             if( flippedHorizontally || flippedVertically) {
-                                //ctx.scale(flippedVertically ? -1 : 0, flippedHorizontally ? -1 : 0);
-                                //if( flippedHorizontally ) h *= -1;
-                                //if( flippedVertically )   w *= -1;
-                                //console.log("flipped: " + flippedHorizontally + " / " + flippedVertically);
+                                ctx.scale(flippedVertically ? -1 : 1, flippedHorizontally ? -1 : 1);
+                                if( flippedHorizontally ) yPos = (yPos + h) * -1;
+                                if( flippedVertically )   xPos = (xPos + w) * -1;
                             }
                             ctx.drawImage(
                                 this.tilesetImage, 
@@ -148,6 +170,45 @@ class TiledMapRenderer {
                     TILE_WIDTH, 
                     TILE_HEIGHT
                 );
+
+                // draw bombs
+                var explodedBombs = [];
+                for( var b = 0; b < this.placedBombs.length; b++) {
+                    var bomb = this.placedBombs[b];
+                    bomb.draw(ctx);     
+                    if( bomb.exploded) {
+                        explodedBombs.push(b);
+                        var frame = this.getLayer("Frame");
+                        this.setTileAt(frame, bomb.x + 0, bomb.y, 0);
+                        this.setTileAt(frame, bomb.x - 1, bomb.y, 0);
+                        this.setTileAt(frame, bomb.x + 1, bomb.y, 0);
+                        
+                        this.setTileAt(frame, bomb.x + 0, bomb.y + 1, 0);
+                        this.setTileAt(frame, bomb.x - 1, bomb.y + 1, 0);
+                        this.setTileAt(frame, bomb.x + 1, bomb.y + 1, 0);
+
+                        this.setTileAt(frame, bomb.x + 0, bomb.y - 1, 0);
+						this.setTileAt(frame, bomb.x - 1, bomb.y - 1, 0);
+						this.setTileAt(frame, bomb.x + 1, bomb.y - 1, 0);
+
+                        // was an enemy in radius?
+                        for( var e=0; e < this.enemies.length; e++) {
+                            var enemy = this.enemies[e];
+                            if( bomb.x - 2 < enemy.catX && bomb.x + 2 > enemy.catX && bomb.y - 2 < enemy.catY && bomb.y + 2 > enemy.catY) {
+                                if( !enemy.stunned ) {
+                                    enemy.stunned = true;
+                                    enemy.stunnedTime = Date.now();
+                                    console.log("enemy stunned for 3 sec");
+                                }
+                            }
+                        }
+                    }               
+                }
+
+                // remove exploded bombs from array
+                for( var b = 0; b < explodedBombs.length; b++) {
+                    this.placedBombs.splice(explodedBombs[b], 1);
+                }
 		    }
 		}
 	}
@@ -163,8 +224,10 @@ class TiledMapRenderer {
 	}
 
 	setTileAt(layer, x, y, newSet) {
-		var pos = y * this.mapWidth + x;
-		layer.data[pos] = newSet;
+        if (x >= 0 && y >= 0 && x < this.mapWidth && y < this.mapHeight) {
+    		var pos = y * this.mapWidth + x;
+	    	layer.data[pos] = newSet;
+        }
 	}
 
 	tileAt(layer, x, y) {
@@ -173,6 +236,8 @@ class TiledMapRenderer {
 	}
 
 	isWalkable(x, y) {
+        if( x < 0 || y < 0 || x > this.mapWidth || y > this.mapHeight) return false;
+
 		var layer = this.getLayer("Frame");
 		return this.tileAt(layer, x, y) == 0;
 	}

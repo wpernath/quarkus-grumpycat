@@ -15,6 +15,8 @@ let numPoints = 0;
 let currentLevel = 0;
 let numLevels = 2;
 let score = 0;
+let maxScore = 0;
+let numBombs = 5;
 let ctx;
 let canvas;
 var gameWorld;
@@ -36,6 +38,8 @@ let loader = new PxLoader(),
 	gameOverDog = loader.addImage("images/sensa_nee.png"),
 	levelWonDog = loader.addImage("images/sensa_jaa.png"),
 	tilesetImage = loader.addImage("/images/tilesets/desert-water.png"),
+	bombTiles = loader.addImage("/images/tilesets/BombExploding.png"),
+	terrainTiles = loader.addImage("/images/tilesets/terrain.png"),
 	catImg = catLeft;
 
 // This is the entry point of the game.   
@@ -51,6 +55,7 @@ function keyDownHandler(event) {
 	if (event.code == "ArrowLeft" || event.code == "KeyA") leftPressed = true;
 	if (event.code == "ArrowRight" || event.code == "KeyD") rightPressed = true;
 	if (event.code == "ArrowDown" || event.code == "KeyS") downPressed = true;
+	if (event.code == "Space") spacePressed = true;
 }
 
 function keyUpHandler(event) {
@@ -59,7 +64,7 @@ function keyUpHandler(event) {
 	if (event.code == "ArrowRight" || event.code == "KeyD") rightPressed = false;
 	if (event.code == "ArrowDown" || event.code == "KeyS") downPressed = false;
 	if (event.code == "KeyP") gamePaused = !gamePaused;
-	if (event.code == "Space") spacePressed = true;
+	if (event.code == "Space") spacePressed = false;
 }
 
 // init game
@@ -74,7 +79,7 @@ function initGame() {
 		document.addEventListener("keydown", keyDownHandler, false);
 		document.addEventListener("keyup", keyUpHandler, false);
 
-		currentLevel = 0;
+		currentLevel = 2;
 		initLevel();
 	}
 }
@@ -97,8 +102,8 @@ function initLevel() {
 			renderer = new TiledMapRenderer();
 			renderer.parse(result);
 
-
-			renderer.tilesetImage = tilesetImage;
+			renderer.tilesetImage = terrainTiles;
+			renderer.bombImageSet = bombTiles;
 			renderer.player.image = mouseImg;
 			mouseX = renderer.player.x
 			mouseY = renderer.player.y;
@@ -114,7 +119,10 @@ function initLevel() {
 			console.log(camera);
 			camera.centerAround(mouseX, mouseY);
 
+
 			numPoints = 0;
+			maxScore = renderer.countMaxScore();
+
 			gameOver = false;
 			gamePaused = true;
 			levelWon = false;
@@ -127,7 +135,7 @@ function initLevel() {
 function gameLoop(timestamp) {
 	var elapsed = timestamp - lastTimestamp;
 
-	if (elapsed > 80) {
+	if (elapsed > 100) {
 		lastTimestamp = timestamp;
 
 		if (!gamePaused && !gameOver) {
@@ -210,12 +218,7 @@ function drawGameOver() {
 // draws the currently loaded maze
 function drawMaze() {
 	ctx.clearRect(0, 0, MAZE_WIDTH, MAZE_HEIGHT + 20);
-	//renderer.draw(ctx);	
-	ctx.drawImage(tilesetImage, 0, 0);
-	ctx.save();
-	ctx.scale(0,-1);
-	ctx.drawImage(tilesetImage, tilesetImage.width+5,0);
-	ctx.restore();
+	renderer.draw(ctx);	
 }
 
 function drawStatus() {
@@ -225,8 +228,8 @@ function drawStatus() {
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	ctx.fillStyle = "white";
-	ctx.fillText("SCORE: " + score, 10, MAZE_HEIGHT);
-	ctx.fillText("LEVEL: " + currentLevel + 1, 300, MAZE_HEIGHT);
+	ctx.fillText("SCORE: " + score + " of " + maxScore , 10, MAZE_HEIGHT);
+	ctx.fillText("LEVEL: " + (currentLevel + 1), 300, MAZE_HEIGHT);
 }
 
 function updatePlayer() {
@@ -271,16 +274,29 @@ function updatePlayer() {
 
 	if (!renderer.checkPositionVisitedAndChange(renderer.player.x, renderer.player.y)) {
 		score += 10;
+		if( score >= maxScore ) {
+			levelWon = true;
+		}
 	}
 
+	// check to see if player wants to place a bomb
+	if( spacePressed ) {
+		renderer.placeBomb(
+			new PlacedBomb(
+				renderer.player.x, 
+				renderer.player.y,
+				bombTiles,
+				camera
+			)
+		);
+	}
 	// check to see if ANY cat reached mouse
-	/*
 	for( var e = 0; e < enemies.length; e++) {
-		if (mouseX == enemies[e].catX && mouseY == enemies[e].catY) {
+		if (renderer.player.x == enemies[e].catX && renderer.player.y == enemies[e].catY) {
 			gameOver = true;
 			break;
 		}
-	}*/
+	}
 }
 
 // calculate the next step, the cat does
@@ -288,48 +304,57 @@ function updateEnemy() {
 	var mouseX = renderer.player.x;
 	var mouseY = renderer.player.y;
 	for( var e = 0; e < enemies.length; e++ ) {
-		var catX = enemies[e].catX;
-		var catY = enemies[e].catY;
-	
-		var dirs = [new Direction(-1, 0), new Direction(0, -1), new Direction(+1, 0), new Direction(0, +1)];
-		var queue = new Queue();
-		var discovered = new Array(renderer.mapHeight);
-		for (var y = 0; y < renderer.mapHeight; y++) {
-			discovered[y] = new Array(renderer.mapWidth);
-			for (var x = 0; x < renderer.mapWidth; x++) {
-				discovered[y][x] = false;
+		if(!enemies[e].stunned ) {
+			var catX = enemies[e].catX;
+			var catY = enemies[e].catY;
+		
+			var dirs = [new Direction(-1, 0), new Direction(0, -1), new Direction(+1, 0), new Direction(0, +1)];
+			var queue = new Queue();
+			var discovered = new Array(renderer.mapHeight);
+			for (var y = 0; y < renderer.mapHeight; y++) {
+				discovered[y] = new Array(renderer.mapWidth);
+				for (var x = 0; x < renderer.mapWidth; x++) {
+					discovered[y][x] = false;
+				}
+			}
+			// mark the current pos as visited
+			discovered[catY][catX] = true;
+
+			queue.enqueue(new Node(catX, catY, null));
+			while (!queue.isEmpty) {
+				var node = queue.dequeue();
+
+				for (var d = 0; d < dirs.length; d++) {
+					var dir = dirs[d];
+					var newX = node.x + dir.dx;
+					var newY = node.y + dir.dy;
+					var newDir = node.initialDir == null ? dir : node.initialDir;
+
+					if (newX == mouseX && newY == mouseY) {
+						catX = catX + newDir.dx;
+						catY = catY + newDir.dy;
+
+						enemies[e].catX = catX;
+						enemies[e].catY = catY;
+						if( newDir.dx < 0 )    enemies[e].image=catLeft;
+						else if( newDir.dx > 0)enemies[e].image=catRight;
+
+						queue = new Queue();
+						break;
+					}
+
+					if (renderer.isWalkable(newX, newY) && !discovered[newY][newX]) {
+						discovered[newY][newX] = true;
+						queue.enqueue(new Node(newX, newY, newDir));
+					}
+				}
 			}
 		}
-		// mark the current pos as visited
-		discovered[catY][catX] = true;
-
-		queue.enqueue(new Node(catX, catY, null));
-		while (!queue.isEmpty) {
-			var node = queue.dequeue();
-
-			for (var d = 0; d < dirs.length; d++) {
-				var dir = dirs[d];
-				var newX = node.x + dir.dx;
-				var newY = node.y + dir.dy;
-				var newDir = node.initialDir == null ? dir : node.initialDir;
-
-				if (newX == mouseX && newY == mouseY) {
-					catX = catX + newDir.dx;
-					catY = catY + newDir.dy;
-
-					enemies[e].catX = catX;
-					enemies[e].catY = catY;
-					if( newDir.dx < 0 )    enemies[e].image=catLeft;
-					else if( newDir.dx > 0)enemies[e].image=catRight;
-
-					queue = new Queue();
-					break;
-				}
-
-				if (renderer.isWalkable(newX, newY) && !discovered[newY][newX]) {
-					discovered[newY][newX] = true;
-					queue.enqueue(new Node(newX, newY, newDir));
-				}
+		else { // stunned
+			var currentTimeStamp = Date.now();
+			//console.log("enemy stunned since: " + (currentTimeStamp - enemies[e].stunnedTime));
+			if( (currentTimeStamp - enemies[e].stunnedTime) > 3000 ) {
+				enemies[e].stunned = false;
 			}
 		}
 	}

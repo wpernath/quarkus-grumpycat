@@ -81,7 +81,10 @@ class Enemy {
 		this.catY = y;
 		this.speed = speed;
 		this.image = new Image();
+		this.stunned = false;
+		this.stunnedTime = 0;
 	}
+
 }
 
 class Camera {
@@ -131,19 +134,221 @@ class Camera {
 	}
 }
 
-
-class TiledMapLayer {
-	constructor(layerData, width, height) {
-		this.layerData = layerData;
-		this.width = width;
-		this.height = height;
+class PlacedBomb {
+	constructor(x, y, imageSet, camera ) {
+		this.x = x;
+		this.y = y;
+		this.image = imageSet;
+		this.camera = camera;
+		this.exploded = false;
+		this.timeToExplode = 3;
+		this.currentFrame = 0;
 	}
-}
-class TiledMap {
-	constructor() {
-		
-		this.layers = undefined;
 
+	explode(ctx, x, y) {
+		var startX = Math.floor(this.camera.x / 32);
+		var startY = Math.floor(this.camera.y / 32);
+		var offsetX = -this.camera.x + startX * 32;
+		var offsetY = -this.camera.y + startY * 32;
+
+		ctx.drawImage(
+			this.image,
+			this.currentFrame * 32,
+			32,
+			32,
+			32,
+			Math.floor((x * TILE_WIDTH) + offsetX),
+			Math.floor((y * TILE_HEIGHT) + offsetY),
+			TILE_WIDTH,
+			TILE_HEIGHT
+		);
 
 	}
+
+	draw(ctx) {
+		if( !this.exploded ) {
+			var startX = Math.floor(this.camera.x / 32);
+			var startY = Math.floor(this.camera.y / 32);
+			var offsetX = -this.camera.x + startX * 32;
+			var offsetY = -this.camera.y + startY * 32;
+
+			if( this.currentFrame < animatedBomb.tiles[1].animation.length ) {
+				// draw main part
+				ctx.drawImage(
+					this.image,
+					this.currentFrame * 32 ,
+					32,
+					32,
+					32,
+					Math.floor((this.x - startX) * TILE_WIDTH + offsetX),
+					Math.floor((this.y - startY) * TILE_HEIGHT + offsetY),
+					TILE_WIDTH,
+					TILE_HEIGHT
+				);
+
+				ctx.drawImage(
+					this.image,
+					this.currentFrame * 32,
+					0,
+					32,
+					32,
+					Math.floor((this.x - startX) * TILE_WIDTH + offsetX),
+					Math.floor((this.y-1 - startY) * TILE_HEIGHT + offsetY),
+					TILE_WIDTH,
+					TILE_HEIGHT
+				);
+
+				if( this.currentFrame > 6 ) {
+					this.explode(ctx, this.x -startX -1, this.y - startY -1);
+					this.explode(ctx, this.x -startX, this.y-1-startY);
+					this.explode(ctx, this.x+1-startX, this.y - 1-startY);
+
+					this.explode(ctx, this.x - 1-startX, this.y - startY);
+					this.explode(ctx, this.x + 1-startX, this.y-startY);
+
+					this.explode(ctx, this.x - 1 - startX, this.y +1 -startY);
+					this.explode(ctx, this.x - startX, this.y -startY+ 1);
+					this.explode(ctx, this.x + 1 -startX, this.y + 1 -startY);
+				}
+				this.currentFrame++;
+			}
+			else {
+				this.currentFrame = 0;
+				this.exploded = true;
+			}
+		}
+	}
+
 }
+
+const animatedBomb = {
+	columns: 13,
+	image: "../../../../../../../../Downloads/opengameart/BombExploding.png",
+	imageheight: 64,
+	imagewidth: 416,
+	margin: 0,
+	name: "bomb",
+	spacing: 0,
+	tilecount: 26,
+	tiledversion: "1.8.5",
+	tileheight: 32,
+	tiles: [
+		{
+			animation: [
+				{
+					duration: 100,
+					tileid: 0,
+				},
+				{
+					duration: 100,
+					tileid: 1,
+				},
+				{
+					duration: 100,
+					tileid: 2,
+				},
+				{
+					duration: 100,
+					tileid: 3,
+				},
+				{
+					duration: 100,
+					tileid: 4,
+				},
+				{
+					duration: 100,
+					tileid: 5,
+				},
+				{
+					duration: 100,
+					tileid: 6,
+				},
+				{
+					duration: 100,
+					tileid: 7,
+				},
+				{
+					duration: 100,
+					tileid: 8,
+				},
+				{
+					duration: 100,
+					tileid: 9,
+				},
+				{
+					duration: 100,
+					tileid: 10,
+				},
+				{
+					duration: 100,
+					tileid: 11,
+				},
+				{
+					duration: 100,
+					tileid: 12,
+				},
+			],
+			id: 0,
+		},
+		{
+			animation: [
+				{
+					duration: 100,
+					tileid: 13,
+				},
+				{
+					duration: 100,
+					tileid: 14,
+				},
+				{
+					duration: 100,
+					tileid: 15,
+				},
+				{
+					duration: 100,
+					tileid: 16,
+				},
+				{
+					duration: 100,
+					tileid: 17,
+				},
+				{
+					duration: 100,
+					tileid: 18,
+				},
+				{
+					duration: 100,
+					tileid: 19,
+				},
+				{
+					duration: 100,
+					tileid: 20,
+				},
+				{
+					duration: 100,
+					tileid: 21,
+				},
+				{
+					duration: 100,
+					tileid: 22,
+				},
+				{
+					duration: 100,
+					tileid: 23,
+				},
+				{
+					duration: 100,
+					tileid: 24,
+				},
+				{
+					duration: 100,
+					tileid: 25,
+				},
+			],
+			id: 13,
+		},
+	],
+	tilewidth: 32,
+	type: "tileset",
+	version: "1.8",
+};
