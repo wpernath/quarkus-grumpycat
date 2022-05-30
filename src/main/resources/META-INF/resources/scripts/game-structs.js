@@ -1,6 +1,6 @@
 // global variables
-const MAZE_WIDTH = 960;
-const MAZE_HEIGHT = 640;
+const MAZE_WIDTH = 1024;
+const MAZE_HEIGHT = 736;
 
 const TILE_WIDTH = 32;
 const TILE_HEIGHT = 32;
@@ -83,6 +83,8 @@ class Enemy {
 		this.image = new Image();
 		this.stunned = false;
 		this.stunnedTime = 0;
+		this.nextPositionFound = false;
+		this.currentWalkingDir = null;
 	}
 
 }

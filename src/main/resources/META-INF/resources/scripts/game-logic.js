@@ -16,7 +16,8 @@ let currentLevel = 0;
 let numLevels = 2;
 let score = 0;
 let maxScore = 0;
-let numBombs = 5;
+let numBombs = 10;
+let bombsThrown = 0;
 let ctx;
 let canvas;
 var gameWorld;
@@ -79,7 +80,7 @@ function initGame() {
 		document.addEventListener("keydown", keyDownHandler, false);
 		document.addEventListener("keyup", keyUpHandler, false);
 
-		currentLevel = 2;
+		currentLevel = 0;
 		initLevel();
 	}
 }
@@ -123,6 +124,8 @@ function initLevel() {
 			numPoints = 0;
 			maxScore = renderer.countMaxScore();
 
+			numBombs = 15;
+			bombsThrown = 0;
 			gameOver = false;
 			gamePaused = true;
 			levelWon = false;
@@ -222,14 +225,15 @@ function drawMaze() {
 }
 
 function drawStatus() {
-	ctx.clearRect(0, MAZE_HEIGHT, MAZE_WIDTH, 20);
+	ctx.clearRect(0, MAZE_HEIGHT, MAZE_WIDTH, 32);
 
 	ctx.font = "20px Arial";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	ctx.fillStyle = "white";
-	ctx.fillText("SCORE: " + score + " of " + maxScore , 10, MAZE_HEIGHT);
-	ctx.fillText("LEVEL: " + (currentLevel + 1), 300, MAZE_HEIGHT);
+	ctx.fillText("SCORE: " + score + " of " + maxScore , 10, MAZE_HEIGHT + 8);
+	ctx.fillText("LEVEL: " + (currentLevel + 1), 300, MAZE_HEIGHT + 8);
+	ctx.fillText("BOMBS: " + bombsThrown + " of " + numBombs, 600, MAZE_HEIGHT + 8)
 }
 
 function updatePlayer() {
@@ -280,14 +284,17 @@ function updatePlayer() {
 
 	// check to see if player wants to place a bomb
 	if( spacePressed ) {
-		renderer.placeBomb(
-			new PlacedBomb(
-				renderer.player.x, 
-				renderer.player.y,
-				bombTiles,
-				camera
-			)
-		);
+		if( bombsThrown < numBombs ) {
+			renderer.placeBomb(
+				new PlacedBomb(
+					renderer.player.x, 
+					renderer.player.y,
+					bombTiles,
+					camera
+				)
+			);
+			bombsThrown++;
+		}
 	}
 	// check to see if ANY cat reached mouse
 	for( var e = 0; e < enemies.length; e++) {
@@ -302,13 +309,17 @@ function updatePlayer() {
 function updateEnemy() {
 	var mouseX = renderer.player.x;
 	var mouseY = renderer.player.y;
+	var dirs = [new Direction(-1, 0), new Direction(0, -1), new Direction(0, +1), new Direction(+1, 0), new Direction(-1,-1), new Direction(+1,+1), new Direction(+1,-1), new Direction(-1,+1)];
+
 	for( var e = 0; e < enemies.length; e++ ) {
+		enemies[e].nextPositionFound = false;
 		if(!enemies[e].stunned ) {
 			var catX = enemies[e].catX;
 			var catY = enemies[e].catY;
 		
-			var dirs = [new Direction(-1, 0), new Direction(0, -1), new Direction(+1, 0), new Direction(0, +1)];
 			var queue = new Queue();
+
+			// prepare discovered places
 			var discovered = new Array(renderer.mapHeight);
 			for (var y = 0; y < renderer.mapHeight; y++) {
 				discovered[y] = new Array(renderer.mapWidth);
@@ -329,6 +340,7 @@ function updateEnemy() {
 					var newY = node.y + dir.dy;
 					var newDir = node.initialDir == null ? dir : node.initialDir;
 
+					// found mouse
 					if (newX == mouseX && newY == mouseY) {
 						catX = catX + newDir.dx;
 						catY = catY + newDir.dy;
@@ -339,6 +351,7 @@ function updateEnemy() {
 						else if( newDir.dx > 0)enemies[e].image=catRight;
 
 						queue = new Queue();
+						enemies[e].nextPositionFound = true;
 						break;
 					}
 
@@ -351,9 +364,35 @@ function updateEnemy() {
 		}
 		else { // stunned
 			var currentTimeStamp = Date.now();
-			//console.log("enemy stunned since: " + (currentTimeStamp - enemies[e].stunnedTime));
 			if( (currentTimeStamp - enemies[e].stunnedTime) > 3000 ) {
 				enemies[e].stunned = false;
+				enemies[e].nextPositionFound = true;
+			}
+		}
+
+		if( !enemies[e].nextPositionFound ) {
+			var enemy = enemies[e];			
+			//console.log("  enemy " + e + " can't currently reach mouse. (" + enemy.catX + " / " + enemy.catY);
+			var enemyWalked = false;
+			// just walk along a direction until cat reaches a border, then change to the 
+			// next possible direction and walk along that
+			if( enemy.currentWalkingDir != null ) {
+				if( renderer.isWalkable(enemy.catX + enemy.currentWalkingDir.dx, enemy.catY + enemy.currentWalkingDir.dy)) {
+					enemy.catX += enemy.currentWalkingDir.dx;
+					enemy.catY += enemy.currentWalkingDir.dy;
+					enemyWalked = true;
+				}
+			}
+			if( !enemyWalked ) {
+				for( var d = 0; d < dirs.length; d++) {
+					var dir = dirs[d];
+					if( renderer.isWalkable(enemy.catX + dir.dx, enemy.catY + dir.dy)) {
+						enemy.currentWalkingDir = dir;
+						enemy.catX += enemy.currentWalkingDir.dx;
+						enemy.catY += enemy.currentWalkingDir.dy;
+						break;
+					}
+				}
 			}
 		}
 	}
