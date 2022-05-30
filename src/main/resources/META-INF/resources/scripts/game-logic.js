@@ -236,8 +236,7 @@ function updatePlayer() {
 	var oldX = renderer.player.x,
 		oldY = renderer.player.y,
 		dirX = 0,
-		dirY = 0,
-		tile;
+		dirY = 0;
 
 	if (upPressed) {
 		renderer.player.y -= 1;
