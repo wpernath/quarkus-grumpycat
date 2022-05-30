@@ -7,8 +7,11 @@ const ROTATED_HEXAGONAL_120_FLAG = 0x10000000;
 //const PLAYER_TILE=61;
 //const ENEMY_TILE=62;
 
-const PLAYER_TILE = 622;
-const ENEMY_TILE = 621;
+const BONUS_10PT = 963;
+const BONUS_BOMB = 961;
+
+const PLAYER_TILE = 993;
+const ENEMY_TILE = 994;
 
 class TiledMapRenderer {
 	camera;
@@ -218,13 +221,13 @@ class TiledMapRenderer {
 		}
 	}
 
-	checkPositionVisitedAndChange(x, y) {
+	checkForBonus(x, y) {
 		var layer = this.getLayer("Bonus");
 		var tile = this.tileAt(layer, x, y);
-		if (tile == 0) return true;
+		if (tile == 0) return 0;
 		else {
 			this.setTileAt(layer, x, y, 0);
-			return false;
+			return tile;
 		}
 	}
 

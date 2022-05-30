@@ -16,7 +16,7 @@ let currentLevel = 0;
 let numLevels = 2;
 let score = 0;
 let maxScore = 0;
-let numBombs = 10;
+let numBombs = 5;
 let bombsThrown = 0;
 let ctx;
 let canvas;
@@ -81,6 +81,7 @@ function initGame() {
 		document.addEventListener("keyup", keyUpHandler, false);
 
 		currentLevel = 0;
+		numBombs = 5;
 		initLevel();
 	}
 }
@@ -124,7 +125,6 @@ function initLevel() {
 			numPoints = 0;
 			maxScore = renderer.countMaxScore();
 
-			numBombs = 15;
 			bombsThrown = 0;
 			gameOver = false;
 			gamePaused = true;
@@ -275,8 +275,13 @@ function updatePlayer() {
 
 	camera.centerAround(renderer.player.x, renderer.player.y);
 
-	if (!renderer.checkPositionVisitedAndChange(renderer.player.x, renderer.player.y)) {
+	var bonus = renderer.checkForBonus(renderer.player.x, renderer.player.y);
+	if (bonus != 0) {
 		score += 10;
+		if( bonus == BONUS_BOMB ) {
+			numBombs += 5;
+		}
+		
 		if( score >= maxScore ) {
 			levelWon = true;
 		}
@@ -366,13 +371,12 @@ function updateEnemy() {
 			var currentTimeStamp = Date.now();
 			if( (currentTimeStamp - enemies[e].stunnedTime) > 3000 ) {
 				enemies[e].stunned = false;
-				enemies[e].nextPositionFound = true;
 			}
+			break;
 		}
 
 		if( !enemies[e].nextPositionFound ) {
 			var enemy = enemies[e];			
-			//console.log("  enemy " + e + " can't currently reach mouse. (" + enemy.catX + " / " + enemy.catY);
 			var enemyWalked = false;
 			// just walk along a direction until cat reaches a border, then change to the 
 			// next possible direction and walk along that
