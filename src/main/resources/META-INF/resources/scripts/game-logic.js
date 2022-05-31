@@ -12,8 +12,8 @@ let levelWon = false;
 let catSpeed = CAT_SPEED;
 let lastTimestamp = 0;
 let numPoints = 0;
-let currentLevel = 0;
-let numLevels = 2;
+let currentLevel = 1;
+let numLevels = 3;
 let score = 0;
 let maxScore = 0;
 let numBombs = 5;
@@ -40,8 +40,7 @@ let loader = new PxLoader(),
 	levelWonDog = loader.addImage("images/sensa_jaa.png"),
 	tilesetImage = loader.addImage("/images/tilesets/desert-water.png"),
 	bombTiles = loader.addImage("/images/tilesets/BombExploding.png"),
-	terrainTiles = loader.addImage("/images/tilesets/terrain.png"),
-	catImg = catLeft;
+	terrainTiles = loader.addImage("/images/tilesets/terrain.png");	
 
 // This is the entry point of the game.   
 function setupGame() {
@@ -80,8 +79,9 @@ function initGame() {
 		document.addEventListener("keydown", keyDownHandler, false);
 		document.addEventListener("keyup", keyUpHandler, false);
 
-		currentLevel = 0;
+		currentLevel = 1;
 		numBombs = 5;
+		maxScore = 0;
 		initLevel();
 	}
 }
@@ -107,23 +107,23 @@ function initLevel() {
 			renderer.tilesetImage = terrainTiles;
 			renderer.bombImageSet = bombTiles;
 			renderer.player.image = mouseImg;
-			mouseX = renderer.player.x
-			mouseY = renderer.player.y;
 
 			catSpeed = CAT_SPEED;
 
 			enemies = renderer.enemies;
-			for(var i = 0; i < enemies; i++ ) {
+			for(var i = 0; i < enemies.length; i++ ) {
 				enemies[i].image = catLeft;
+				enemies[i].catLeft = catLeft;
+				enemies[i].catRight = catRight;
 			}
 
 			camera = renderer.camera;
 			console.log(camera);
-			camera.centerAround(mouseX, mouseY);
+			camera.centerAround(renderer.player.x, renderer.player.y);
 
 
 			numPoints = 0;
-			maxScore = renderer.countMaxScore();
+			maxScore += renderer.countMaxScore();
 
 			bombsThrown = 0;
 			gameOver = false;
@@ -197,7 +197,8 @@ function drawLevelWon() {
 
 function drawGameOver() {
 	score = 0;
-	ctx.clearRect(0, 0, MAZE_WIDTH, MAZE_HEIGHT+20);
+	maxScore = 0;
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	ctx.drawImage(gameOverDog, (MAZE_WIDTH - gameOverDog.width) / 2, (MAZE_HEIGHT - gameOverDog.height) / 2);
 	ctx.drawImage(gameOverImg, (MAZE_WIDTH - 620) / 2, 10, 620, 400);
@@ -207,20 +208,20 @@ function drawGameOver() {
 	ctx.textBaseline = "top";
 	ctx.fillStyle = "white";
 
-	ctx.fillText("Press <space> to start again", MAZE_WIDTH - 620, MAZE_HEIGHT);
+	ctx.fillText("Press <space> to start again", MAZE_WIDTH - 620, MAZE_HEIGHT + 8);
 
 	if (spacePressed) {
-		ctx.clearRect(0, 0, MAZE_WIDTH, MAZE_HEIGHT+20);
-		currentLevel = 0;
-		initLevel();
 		spacePressed = false;
 		gameOver = false;
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		currentLevel = 0;
+		initLevel();
 	}
 }
 
 // draws the currently loaded maze
 function drawMaze() {
-	ctx.clearRect(0, 0, MAZE_WIDTH, MAZE_HEIGHT + 20);
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	renderer.draw(ctx);	
 }
 
@@ -232,7 +233,7 @@ function drawStatus() {
 	ctx.textBaseline = "top";
 	ctx.fillStyle = "white";
 	ctx.fillText("SCORE: " + score + " of " + maxScore , 10, MAZE_HEIGHT + 8);
-	ctx.fillText("LEVEL: " + (currentLevel + 1), 300, MAZE_HEIGHT + 8);
+	ctx.fillText("LEVEL: " + (currentLevel + 1) + " of " + numLevels, 300, MAZE_HEIGHT + 8);
 	ctx.fillText("BOMBS: " + bombsThrown + " of " + numBombs, 600, MAZE_HEIGHT + 8)
 }
 
@@ -312,92 +313,8 @@ function updatePlayer() {
 
 // calculate the next step, the cat does
 function updateEnemy() {
-	var mouseX = renderer.player.x;
-	var mouseY = renderer.player.y;
-	var dirs = [new Direction(-1, 0), new Direction(0, -1), new Direction(0, +1), new Direction(+1, 0), new Direction(-1,-1), new Direction(+1,+1), new Direction(+1,-1), new Direction(-1,+1)];
-
 	for( var e = 0; e < enemies.length; e++ ) {
-		enemies[e].nextPositionFound = false;
-		if(!enemies[e].stunned ) {
-			var catX = enemies[e].catX;
-			var catY = enemies[e].catY;
-		
-			var queue = new Queue();
-
-			// prepare discovered places
-			var discovered = new Array(renderer.mapHeight);
-			for (var y = 0; y < renderer.mapHeight; y++) {
-				discovered[y] = new Array(renderer.mapWidth);
-				for (var x = 0; x < renderer.mapWidth; x++) {
-					discovered[y][x] = false;
-				}
-			}
-			// mark the current pos as visited
-			discovered[catY][catX] = true;
-
-			queue.enqueue(new Node(catX, catY, null));
-			while (!queue.isEmpty) {
-				var node = queue.dequeue();
-
-				for (var d = 0; d < dirs.length; d++) {
-					var dir = dirs[d];
-					var newX = node.x + dir.dx;
-					var newY = node.y + dir.dy;
-					var newDir = node.initialDir == null ? dir : node.initialDir;
-
-					// found mouse
-					if (newX == mouseX && newY == mouseY) {
-						catX = catX + newDir.dx;
-						catY = catY + newDir.dy;
-
-						enemies[e].catX = catX;
-						enemies[e].catY = catY;
-						if( newDir.dx < 0 )    enemies[e].image=catLeft;
-						else if( newDir.dx > 0)enemies[e].image=catRight;
-
-						queue = new Queue();
-						enemies[e].nextPositionFound = true;
-						break;
-					}
-
-					if (renderer.isWalkable(newX, newY) && !discovered[newY][newX]) {
-						discovered[newY][newX] = true;
-						queue.enqueue(new Node(newX, newY, newDir));
-					}
-				}
-			}
-		}
-		else { // stunned
-			var currentTimeStamp = Date.now();
-			if( (currentTimeStamp - enemies[e].stunnedTime) > 3000 ) {
-				enemies[e].stunned = false;
-			}
-			break;
-		}
-
-		if( !enemies[e].nextPositionFound ) {
-			var enemy = enemies[e];			
-			var enemyWalked = false;
-			// just walk along a direction until cat reaches a border, then change to the 
-			// next possible direction and walk along that
-			if( enemy.currentWalkingDir != null ) {
-				if( renderer.isWalkable(enemy.catX + enemy.currentWalkingDir.dx, enemy.catY + enemy.currentWalkingDir.dy)) {
-					enemy.catX += enemy.currentWalkingDir.dx;
-					enemy.catY += enemy.currentWalkingDir.dy;
-					enemyWalked = true;
-				}
-			}
-			if( !enemyWalked ) {
-				for( var d = 0; d < dirs.length; d++) {
-					var dir = dirs[d];
-					if( renderer.isWalkable(enemy.catX + dir.dx, enemy.catY + dir.dy)) {
-						enemy.currentWalkingDir = dir;
-						enemy.catX += enemy.currentWalkingDir.dx;
-						enemy.catY += enemy.currentWalkingDir.dy;
-						break;
-					}
-				}
-			}
-		}
+		var enemy = enemies[e];
+		enemy.calculateNextMove(renderer);
 	}
 }

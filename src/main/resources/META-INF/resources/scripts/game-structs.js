@@ -49,23 +49,6 @@ class Queue {
 }
 
 
-/**
- * 
- */
-class GameWorld {
-	constructor(context, map, enemies, player, camera, canvasWidth, canvasHeight) {
-		this.context = context;
-		this.map=map;
-		this.enemies = enemies;
-		this.player = player;
-		this.camera = camera;
-		this.canvasWidth = canvasWidth;
-		this.canvasHeight = canvasHeight;
-	}
-}
-
-
-
 class Player {
 	constructor(x, y, speed) {
 		this.x = x;
@@ -75,20 +58,126 @@ class Player {
 	}
 }
 
+/**
+ * Enemy Object: Every enemy is represented by this class
+ */
 class Enemy {
 	constructor(x, y, speed) {
 		this.catX = x;
 		this.catY = y;
 		this.speed = speed;
 		this.image = new Image();
+		this.catLeft = this.image;
+		this.catRight = this.image;
 		this.stunned = false;
 		this.stunnedTime = 0;
 		this.nextPositionFound = false;
 		this.currentWalkingDir = null;
 	}
 
+	calculateNextMove(renderer) {
+		var mouseX = renderer.player.x;
+		var mouseY = renderer.player.y;
+		var dirs = [
+			new Direction(-1, 0),
+			new Direction(0, -1),
+			new Direction(0, +1),
+			new Direction(+1, 0),
+			new Direction(-1, -1),
+			new Direction(+1, +1),
+			new Direction(+1, -1),
+			new Direction(-1, +1),
+		];
+
+		this.nextPositionFound = false;
+		if(!this.stunned ) {
+			var catX = this.catX;
+			var catY = this.catY;
+		
+			var queue = new Queue();
+
+			// prepare discovered places
+			var discovered = new Array(renderer.mapHeight);
+			for (var y = 0; y < renderer.mapHeight; y++) {
+				discovered[y] = new Array(renderer.mapWidth);
+				for (var x = 0; x < renderer.mapWidth; x++) {
+					discovered[y][x] = false;
+				}
+			}
+			// mark the current pos as visited
+			discovered[catY][catX] = true;
+
+			queue.enqueue(new Node(catX, catY, null));
+			while (!queue.isEmpty) {
+				var node = queue.dequeue();
+
+				for (var d = 0; d < dirs.length; d++) {
+					var dir = dirs[d];
+					var newX = node.x + dir.dx;
+					var newY = node.y + dir.dy;
+					var newDir = node.initialDir == null ? dir : node.initialDir;
+
+					// found mouse
+					if (newX == mouseX && newY == mouseY) {
+						catX = catX + newDir.dx;
+						catY = catY + newDir.dy;
+
+						this.catX = catX;
+						this.catY = catY;
+						if( newDir.dx < 0 )    this.image=this.catLeft;
+						else if( newDir.dx > 0)this.image=this.catRight;
+
+						queue = new Queue();
+						this.nextPositionFound = true;
+						break;
+					}
+
+					if (renderer.isWalkable(newX, newY) && !discovered[newY][newX]) {
+						discovered[newY][newX] = true;
+						queue.enqueue(new Node(newX, newY, newDir));
+					}
+				}
+			}
+		}
+		else { // stunned
+			var currentTimeStamp = Date.now();
+			if( (currentTimeStamp - this.stunnedTime) > 4000 ) {
+				this.stunned = false;
+			}
+			return;
+		}
+
+		if( !this.nextPositionFound ) {
+			var enemyWalked = false;
+			// just walk along a direction until cat reaches a border, then change to the 
+			// next possible direction and walk along that
+			if( this.currentWalkingDir != null ) {
+				if( renderer.isWalkable(this.catX + this.currentWalkingDir.dx, this.catY + this.currentWalkingDir.dy)) {
+					this.catX += this.currentWalkingDir.dx;
+					this.catY += this.currentWalkingDir.dy;
+					enemyWalked = true;
+				}
+			}
+			if( !enemyWalked ) {
+				for( var d = 0; d < dirs.length; d++) {
+					var dir = dirs[d];
+					if( renderer.isWalkable(this.catX + dir.dx, this.catY + dir.dy)) {
+						this.currentWalkingDir = dir;
+						this.catX += this.currentWalkingDir.dx;
+						this.catY += this.currentWalkingDir.dy;
+					}
+				}
+			}
+		}
+
+	}
+
 }
 
+/**
+ * Camera Object: This is used to display the current part of the map
+ * The player is always in the center of the cam (if possible)
+ */
 class Camera {
 	constructor(mapWidth, mapHeight, canvasWidth, canvasHeight) {
 		this.x = 0;
@@ -131,8 +220,6 @@ class Camera {
 		// clip values
 		this.x = Math.max(0, Math.min(this.x, this.maxX));
 		this.y = Math.max(0, Math.min(this.y, this.maxY));
-
-		//console.log("Camera.pos = " + this.x + " / " + this.y + " ");
 	}
 }
 
