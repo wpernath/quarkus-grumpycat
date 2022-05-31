@@ -4,6 +4,7 @@ let leftPressed = false;
 let upPressed = false;
 let downPressed = false;
 let spacePressed = false;
+let dropStonePressed = false;
 
 // global game states
 let gamePaused = true;
@@ -23,6 +24,9 @@ let canvas;
 var gameWorld;
 let enemies;
 let camera;
+let dirX = 0, 
+	dirY = 0;
+
 
 
 // load images
@@ -56,6 +60,7 @@ function keyDownHandler(event) {
 	if (event.code == "ArrowRight" || event.code == "KeyD") rightPressed = true;
 	if (event.code == "ArrowDown" || event.code == "KeyS") downPressed = true;
 	if (event.code == "Space") spacePressed = true;
+	if( event.code == "KeyQ") dropStonePressed = true;
 }
 
 function keyUpHandler(event) {
@@ -65,6 +70,7 @@ function keyUpHandler(event) {
 	if (event.code == "ArrowDown" || event.code == "KeyS") downPressed = false;
 	if (event.code == "KeyP") gamePaused = !gamePaused;
 	if (event.code == "Space") spacePressed = false;
+	if (event.code == "KeyQ") dropStonePressed = false;
 }
 
 // init game
@@ -129,6 +135,8 @@ function initLevel() {
 			gameOver = false;
 			gamePaused = true;
 			levelWon = false;
+			dirX = 0;
+			dirY = 0;
 			window.requestAnimationFrame(gameLoop);
 		},
 	});	
@@ -239,10 +247,10 @@ function drawStatus() {
 
 function updatePlayer() {
 	var oldX = renderer.player.x,
-		oldY = renderer.player.y,
-		dirX = 0,
-		dirY = 0;
+		oldY = renderer.player.y;
 
+		dirX = 0;
+		dirY = 0;
 	if (upPressed) {
 		renderer.player.y -= 1;
 		dirY = -1;
@@ -302,6 +310,11 @@ function updatePlayer() {
 			bombsThrown++;
 		}
 	}
+
+	if( dropStonePressed ) {
+		renderer.placeBarrier(renderer.player.x + dirX, renderer.player.y + dirY);
+	}
+
 	// check to see if ANY cat reached mouse
 	for( var e = 0; e < enemies.length; e++) {
 		if (renderer.player.x == enemies[e].catX && renderer.player.y == enemies[e].catY) {

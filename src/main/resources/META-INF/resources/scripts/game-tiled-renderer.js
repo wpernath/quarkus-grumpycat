@@ -4,14 +4,19 @@ const FLIPPED_VERTICALLY_FLAG = 0x40000000;
 const FLIPPED_DIAGONALLY_FLAG = 0x20000000;
 const ROTATED_HEXAGONAL_120_FLAG = 0x10000000;
 
-//const PLAYER_TILE=61;
-//const ENEMY_TILE=62;
-
 const BONUS_10PT = 963;
 const BONUS_BOMB = 961;
 
 const PLAYER_TILE = 993;
 const ENEMY_TILE = 994;
+
+const STONES = [
+    510,
+    479,
+    511,
+    607,
+    640
+];
 
 class TiledMapRenderer {
 	camera;
@@ -96,6 +101,15 @@ class TiledMapRenderer {
     placeBomb(bomb) {
         var layer = this.getLayer("Persons");
         this.placedBombs.push(bomb);
+    }
+
+    placeBarrier(x, y) {
+        var layer = this.getLayer("Frame");
+        if( this.isWalkable(x,y)) {
+            this.setTileAt(layer, x, y, Math.floor(Math.random() * STONES.length));
+            return true;
+        }
+        return false;
     }
 
 	draw(ctx) {
