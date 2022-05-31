@@ -79,7 +79,7 @@ function initGame() {
 		document.addEventListener("keydown", keyDownHandler, false);
 		document.addEventListener("keyup", keyUpHandler, false);
 
-		currentLevel = 1;
+		currentLevel = 2;
 		numBombs = 5;
 		maxScore = 0;
 		initLevel();

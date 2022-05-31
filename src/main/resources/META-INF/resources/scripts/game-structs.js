@@ -60,6 +60,7 @@ class Player {
 
 /**
  * Enemy Object: Every enemy is represented by this class
+ * It contains methods for calculating the next movement
  */
 class Enemy {
 	constructor(x, y, speed) {
@@ -73,8 +74,36 @@ class Enemy {
 		this.stunnedTime = 0;
 		this.nextPositionFound = false;
 		this.currentWalkingDir = null;
+
+		// allocate an array of booleans for the path finder
+		this.discovered = new Array(renderer.mapHeight);
+		for (var y = 0; y < renderer.mapHeight; y++) {
+			this.discovered[y] = new Array(renderer.mapWidth);
+			for (var x = 0; x < renderer.mapWidth; x++) {
+				this.discovered[y][x] = false;
+			}
+		}
 	}
 
+	draw(ctx, renderer, camera) {
+		if (camera.isInView(this.catX, this.catY)) {
+			var startX = Math.floor(camera.x / renderer.tileWidth);
+			var startY = Math.floor(camera.y / renderer.tileHeight);
+			var offsetX = -camera.x + startX * renderer.tileWidth;
+			var offsetY = -camera.y + startY * renderer.tileHeight;
+
+			var xPos = Math.floor((this.catX - startX) * TILE_WIDTH + offsetX);
+			var yPos = Math.floor((this.catY - startY) * TILE_HEIGHT + offsetY);
+
+			ctx.drawImage(this.image, xPos, yPos, TILE_WIDTH, TILE_WIDTH);
+		}
+	}
+
+	/**
+	 * Pathfinding for this enemy
+	 * @param {*} renderer 
+	 * @returns 
+	 */
 	calculateNextMove(renderer) {
 		var mouseX = renderer.player.x;
 		var mouseY = renderer.player.y;
@@ -97,9 +126,8 @@ class Enemy {
 			var queue = new Queue();
 
 			// prepare discovered places
-			var discovered = new Array(renderer.mapHeight);
+			var discovered = this.discovered;
 			for (var y = 0; y < renderer.mapHeight; y++) {
-				discovered[y] = new Array(renderer.mapWidth);
 				for (var x = 0; x < renderer.mapWidth; x++) {
 					discovered[y][x] = false;
 				}
@@ -165,6 +193,10 @@ class Enemy {
 						this.currentWalkingDir = dir;
 						this.catX += this.currentWalkingDir.dx;
 						this.catY += this.currentWalkingDir.dy;
+						if( dir.dx == -1 ) this.image = this.catLeft;
+						else if( dir.dx == +1) this.image = this.catRight;
+
+						break;
 					}
 				}
 			}

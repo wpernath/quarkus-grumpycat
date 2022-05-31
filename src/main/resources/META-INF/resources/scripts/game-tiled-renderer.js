@@ -156,18 +156,7 @@ class TiledMapRenderer {
                 // draw enemies and player
                 for(var e = 0; e < this.enemies.length; e++ ) {
                     var enemy = this.enemies[e];
-
-                    if (camera.isInView(enemy.catX, enemy.catY)) {
-                        var xPos = Math.floor((enemy.catX - startX) * TILE_WIDTH + offsetX);
-                        var yPos = Math.floor((enemy.catY - startY) * TILE_HEIGHT + offsetY);
-
-
-                        ctx.drawImage(enemy.image, xPos, yPos, TILE_WIDTH, TILE_WIDTH);
-                        //console.log("enemy " + e + " is in range of cam. Pos (" + xPos + "/" + yPos);
-                    }
-                    else {
-                        //console.log("enemy " + e + " is not within camera (" + enemy.catX + "/" + enemy.catY+ ")");
-                    }
+                    enemy.draw(ctx, this, this.camera);
                 }
 
                 // draw mouse
