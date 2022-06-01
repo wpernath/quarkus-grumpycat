@@ -12,9 +12,16 @@ const ENEMY_TILE = 994;
 
 const STONES = [
     510,
-    479,
     511,
+    575,
+    576,
     607,
+    608,
+    183,
+    184,
+    4,
+    7,
+    479,
     640
 ];
 
@@ -174,14 +181,8 @@ class TiledMapRenderer {
                 }
 
                 // draw mouse
-                ctx.drawImage(
-                    this.player.image, 
-                    Math.floor((this.player.x - startX) * TILE_WIDTH + offsetX), 
-                    Math.floor((this.player.y - startY) * TILE_HEIGHT + offsetY), 
-                    TILE_WIDTH, 
-                    TILE_HEIGHT
-                );
-
+                this.player.draw(ctx, this, this.camera);
+                
                 // draw bombs
                 var explodedBombs = [];
                 for( var b = 0; b < this.placedBombs.length; b++) {
@@ -189,6 +190,8 @@ class TiledMapRenderer {
                     bomb.draw(ctx);     
                     if( bomb.exploded) {
                         explodedBombs.push(b);
+
+                        // destroy borders in a 3x3 tile section around bomb
                         var frame = this.getLayer("Frame");
                         this.setTileAt(frame, bomb.x + 0, bomb.y, 0);
                         this.setTileAt(frame, bomb.x - 1, bomb.y, 0);
@@ -209,7 +212,6 @@ class TiledMapRenderer {
                                 if( !enemy.stunned ) {
                                     enemy.stunned = true;
                                     enemy.stunnedTime = Date.now();
-                                    console.log("enemy stunned for 3 sec");
                                 }
                             }
                         }

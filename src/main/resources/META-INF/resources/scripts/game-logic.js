@@ -24,8 +24,6 @@ let canvas;
 var gameWorld;
 let enemies;
 let camera;
-let dirX = 0, 
-	dirY = 0;
 
 
 
@@ -60,7 +58,7 @@ function keyDownHandler(event) {
 	if (event.code == "ArrowRight" || event.code == "KeyD") rightPressed = true;
 	if (event.code == "ArrowDown" || event.code == "KeyS") downPressed = true;
 	if (event.code == "Space") spacePressed = true;
-	if( event.code == "KeyQ") dropStonePressed = true;
+	if( event.code == "ShiftLeft" || event.code == "ShiftRight") dropStonePressed = true;
 }
 
 function keyUpHandler(event) {
@@ -70,7 +68,8 @@ function keyUpHandler(event) {
 	if (event.code == "ArrowDown" || event.code == "KeyS") downPressed = false;
 	if (event.code == "KeyP") gamePaused = !gamePaused;
 	if (event.code == "Space") spacePressed = false;
-	if (event.code == "KeyQ") dropStonePressed = false;
+	if (event.code == "ShiftLeft" || event.code == "ShiftRight") dropStonePressed = false;
+	//console.log("KeyUp with " + event.code);
 }
 
 // init game
@@ -85,7 +84,7 @@ function initGame() {
 		document.addEventListener("keydown", keyDownHandler, false);
 		document.addEventListener("keyup", keyUpHandler, false);
 
-		currentLevel = 2;
+		currentLevel = 0;
 		numBombs = 5;
 		maxScore = 0;
 		initLevel();
@@ -126,7 +125,6 @@ function initLevel() {
 			camera = renderer.camera;
 			console.log(camera);
 			camera.centerAround(renderer.player.x, renderer.player.y);
-
 
 			numPoints = 0;
 			maxScore += renderer.countMaxScore();
@@ -249,69 +247,70 @@ function updatePlayer() {
 	var oldX = renderer.player.x,
 		oldY = renderer.player.y;
 
-		dirX = 0;
-		dirY = 0;
-	if (upPressed) {
-		renderer.player.y -= 1;
-		dirY = -1;
-		if( renderer.player.y < 0) renderer.player.y = 0;
-	}
-
-	if (downPressed) {
-		renderer.player.y += 1;
-		dirY = +1;
-		if (renderer.player.y > renderer.mapHeight) renderer.player.y = renderer.mapHeight;
-	}
-
-	if (leftPressed) {
-		renderer.player.x -= 1;
-		dirX = -1;
-		if (renderer.player.x <= 0) renderer.player.x = 0;
-	}
-
-	if (rightPressed) {
-		renderer.player.x += 1;
-		dirX = +1;
-		if (renderer.player.x >= renderer.mapWidth) renderer.player.x = renderer.player.x;
-	}
-
-	// get tile and check if it's walkable
-	if( !renderer.isWalkable(renderer.player.x, renderer.player.y) ){
-		// wall
-		renderer.player.x = oldX;
-		renderer.player.y = oldY;
-	}
-
-	camera.centerAround(renderer.player.x, renderer.player.y);
-
-	var bonus = renderer.checkForBonus(renderer.player.x, renderer.player.y);
-	if (bonus != 0) {
-		score += 10;
-		if( bonus == BONUS_BOMB ) {
-			numBombs += 5;
+	if( !dropStonePressed ) {
+		if (upPressed) {
+			renderer.player.y -= 1;
+			if( renderer.player.y < 0) renderer.player.y = 0;
 		}
-		
-		if( score >= maxScore ) {
-			levelWon = true;
-		}
-	}
 
-	// check to see if player wants to place a bomb
-	if( spacePressed ) {
-		if( bombsThrown < numBombs ) {
-			renderer.placeBomb(
-				new PlacedBomb(
-					renderer.player.x, 
-					renderer.player.y,
-					bombTiles,
-					camera
-				)
-			);
-			bombsThrown++;
+		if (downPressed) {
+			renderer.player.y += 1;
+			if (renderer.player.y > renderer.mapHeight) renderer.player.y = renderer.mapHeight;
+		}
+
+		if (leftPressed) {
+			renderer.player.x -= 1;
+			if (renderer.player.x <= 0) renderer.player.x = 0;
+		}
+
+		if (rightPressed) {
+			renderer.player.x += 1;
+			if (renderer.player.x >= renderer.mapWidth) renderer.player.x = renderer.player.x;
+		}
+
+		// get tile and check if it's walkable
+		if( !renderer.isWalkable(renderer.player.x, renderer.player.y) ){
+			// wall
+			renderer.player.x = oldX;
+			renderer.player.y = oldY;
+		}
+
+		camera.centerAround(renderer.player.x, renderer.player.y);
+	
+
+		var bonus = renderer.checkForBonus(renderer.player.x, renderer.player.y);
+		if (bonus != 0) {
+			score += 10;
+			if( bonus == BONUS_BOMB ) {
+				numBombs += 5;
+			}
+			
+			if( score >= maxScore ) {
+				levelWon = true;
+			}
+		}
+
+		// check to see if player wants to place a bomb
+		if( spacePressed ) {
+			if( bombsThrown < numBombs ) {
+				renderer.placeBomb(
+					new PlacedBomb(
+						renderer.player.x, 
+						renderer.player.y,
+						bombTiles,
+						camera
+					)
+				);
+				bombsThrown++;
+			}
 		}
 	}
-
-	if( dropStonePressed ) {
+	else {
+		var dirX = 0, dirY = 0;
+		if( leftPressed ) dirX =-1;
+		if( rightPressed) dirX =+1;
+		if( upPressed)	  dirY =-1;
+		if( downPressed)  dirY =+1;
 		renderer.placeBarrier(renderer.player.x + dirX, renderer.player.y + dirY);
 	}
 

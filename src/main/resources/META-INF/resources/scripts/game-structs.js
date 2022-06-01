@@ -56,6 +56,21 @@ class Player {
 		this.speed = speed;
 		this.image = new Image();
 	}
+
+	draw(ctx, renderer, camera) {
+		var startX = Math.floor(camera.x / renderer.tileWidth);
+		var startY = Math.floor(camera.y / renderer.tileHeight);
+		var offsetX = -camera.x + startX * renderer.tileWidth;
+		var offsetY = -camera.y + startY * renderer.tileHeight;
+
+		ctx.drawImage(
+			this.image,
+			Math.floor((this.x - startX) * renderer.tileWidth + offsetX),
+			Math.floor((this.y - startY) * renderer.tileHeight + offsetY),
+			renderer.tileWidth,
+			renderer.tileHeight
+		);
+	}
 }
 
 /**
