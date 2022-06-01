@@ -98,13 +98,14 @@ function initLevel() {
 	// download a new level
 	console.log("initalizing level " + (currentLevel+1) + " / " + numLevels);
 	let name = "Level" + (currentLevel+1);
-	$.ajax({
-		url: "/maps/" + name + ".tmj",
-		contentType: "application/json",
-		dataType: "json",
-		context: this,
-
-		success: function (result) {
+	fetch("/maps/" + name + ".tmj")
+		.then(function(response) {
+			if( !response.ok) {
+				throw new Error("Could not load map file /maps/" + name + ".tmj" );
+			}
+			return response.json();
+		})
+		.then(function(result) {
 			console.log("current level loaded: " + result);
 			renderer = new TiledMapRenderer();
 			renderer.parse(result);
@@ -116,7 +117,7 @@ function initLevel() {
 			catSpeed = CAT_SPEED;
 
 			enemies = renderer.enemies;
-			for(let i = 0; i < enemies.length; i++ ) {
+			for (let i = 0; i < enemies.length; i++) {
 				enemies[i].image = catLeft;
 				enemies[i].catLeft = catLeft;
 				enemies[i].catRight = catRight;
@@ -133,11 +134,12 @@ function initLevel() {
 			gameOver = false;
 			gamePaused = true;
 			levelWon = false;
-			dirX = 0;
-			dirY = 0;
 			window.requestAnimationFrame(gameLoop);
-		},
-	});	
+		})
+		.catch(function(error) {
+			console.log("Error loading game map: " + error);
+		});
+
 }
 
 // main game loop: move player, move enemy, update maze
