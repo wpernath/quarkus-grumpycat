@@ -110,8 +110,8 @@ function initLevel() {
 			renderer = new TiledMapRenderer();
 			renderer.parse(result);
 
-			renderer.tilesetImage = terrainTiles;
-			renderer.bombImageSet = bombTiles;
+			//renderer.tilesetImage = terrainTiles;
+			//renderer.bombImageSet = bombTiles;
 			renderer.player.image = mouseImg;
 
 			catSpeed = CAT_SPEED;

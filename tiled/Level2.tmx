@@ -3,7 +3,7 @@
  <editorsettings>
   <export target="../src/main/resources/META-INF/resources/maps/Level2.tmj" format="json"/>
  </editorsettings>
- <tileset firstgid="1" source="../../../Downloads/opengameart/LPC_Terrain/Terrain.tsx"/>
+ <tileset firstgid="1" source="Terrain.tsx"/>
  <layer id="1" name="Ground" width="33" height="40">
   <data encoding="csv">
 65,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,67,65,66,67,

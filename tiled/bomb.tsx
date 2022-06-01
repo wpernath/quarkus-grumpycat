@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.8" tiledversion="1.8.5" name="bomb" tilewidth="32" tileheight="32" tilecount="26" columns="13">
- <image source="../../../Downloads/opengameart/BombExploding.png" width="416" height="64"/>
+ <image source="images/tilesets/BombExploding.png" width="416" height="64"/>
  <tile id="0">
   <animation>
    <frame tileid="0" duration="100"/>

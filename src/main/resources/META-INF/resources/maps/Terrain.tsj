@@ -1,5 +1,5 @@
 { "columns":32,
- "image":"..\/..\/..\/..\/..\/..\/..\/..\/Downloads\/opengameart\/LPC_Terrain\/terrain.png",
+ "image":"images/tilesets/terrain.png",
  "imageheight":1024,
  "imagewidth":1024,
  "margin":0,

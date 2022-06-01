@@ -25,7 +25,7 @@ const STONES = [
     640
 ];
 
-class TiledMapRenderer {
+class TiledMapRenderer  {
 	camera;
 	enemies = [];
 	player;
@@ -36,14 +36,14 @@ class TiledMapRenderer {
 	tileHeight = 32;
  
     // next 4 vars should be read from tileset
+    tilesets = [];
     tilesetColumns = 32;
     tilesetSpacing = 0;
     tilesetMargin = 0;
     tilesetWidth = 1024;
 	layers = [];
-	tileset = "";
+
 	tilesetImage = new Image();
-    bombImageSet = new Image();
     placedBombs = [];
 
 	constructor() {}
@@ -69,7 +69,16 @@ class TiledMapRenderer {
 		this.tileWidth = this.mapData.tilewidth;
 		this.tileHeight = this.mapData.tileheight;
 		this.layers = this.mapData.layers;
-		this.tileset = this.mapData.tilesets[0].source;
+		this.tileset = this.mapData.tilesets[0];
+
+        // prepare tileset parameters
+        this.tilesetColumns = this.tileset.columns;
+        this.tilesetSpacing = this.tileset.spacing;
+        this.tilesetMargin  = this.tileset.margin;
+        this.tilesetWidth   = this.tileset.imagewidth;
+
+        // load tileset image
+        this.tilesetImage.src = this.tileset.image;
 
 		// get all enemies and initialize player;
 		let personLayer = this.getLayer("Persons");
@@ -105,8 +114,7 @@ class TiledMapRenderer {
         return maxScore;
     }
 
-    placeBomb(bomb) {
-        let layer = this.getLayer("Persons");
+    placeBomb(bomb) {        
         this.placedBombs.push(bomb);
     }
 
