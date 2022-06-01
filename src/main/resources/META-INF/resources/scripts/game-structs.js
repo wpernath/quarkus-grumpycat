@@ -1,4 +1,4 @@
-// global variables
+// global letiables
 const MAZE_WIDTH = 1024;
 const MAZE_HEIGHT = 736;
 
@@ -58,10 +58,10 @@ class Player {
 	}
 
 	draw(ctx, renderer, camera) {
-		var startX = Math.floor(camera.x / renderer.tileWidth);
-		var startY = Math.floor(camera.y / renderer.tileHeight);
-		var offsetX = -camera.x + startX * renderer.tileWidth;
-		var offsetY = -camera.y + startY * renderer.tileHeight;
+		let startX = Math.floor(camera.x / renderer.tileWidth);
+		let startY = Math.floor(camera.y / renderer.tileHeight);
+		let offsetX = -camera.x + startX * renderer.tileWidth;
+		let offsetY = -camera.y + startY * renderer.tileHeight;
 
 		ctx.drawImage(
 			this.image,
@@ -92,9 +92,9 @@ class Enemy {
 
 		// allocate an array of booleans for the path finder
 		this.discovered = new Array(renderer.mapHeight);
-		for (var y = 0; y < renderer.mapHeight; y++) {
+		for (let y = 0; y < renderer.mapHeight; y++) {
 			this.discovered[y] = new Array(renderer.mapWidth);
-			for (var x = 0; x < renderer.mapWidth; x++) {
+			for (let x = 0; x < renderer.mapWidth; x++) {
 				this.discovered[y][x] = false;
 			}
 		}
@@ -102,13 +102,13 @@ class Enemy {
 
 	draw(ctx, renderer, camera) {
 		if (camera.isInView(this.catX, this.catY)) {
-			var startX = Math.floor(camera.x / renderer.tileWidth);
-			var startY = Math.floor(camera.y / renderer.tileHeight);
-			var offsetX = -camera.x + startX * renderer.tileWidth;
-			var offsetY = -camera.y + startY * renderer.tileHeight;
+			let startX = Math.floor(camera.x / renderer.tileWidth);
+			let startY = Math.floor(camera.y / renderer.tileHeight);
+			let offsetX = -camera.x + startX * renderer.tileWidth;
+			let offsetY = -camera.y + startY * renderer.tileHeight;
 
-			var xPos = Math.floor((this.catX - startX) * TILE_WIDTH + offsetX);
-			var yPos = Math.floor((this.catY - startY) * TILE_HEIGHT + offsetY);
+			let xPos = Math.floor((this.catX - startX) * TILE_WIDTH + offsetX);
+			let yPos = Math.floor((this.catY - startY) * TILE_HEIGHT + offsetY);
 
 			ctx.drawImage(this.image, xPos, yPos, TILE_WIDTH, TILE_WIDTH);
 		}
@@ -120,9 +120,9 @@ class Enemy {
 	 * @returns 
 	 */
 	calculateNextMove(renderer) {
-		var mouseX = renderer.player.x;
-		var mouseY = renderer.player.y;
-		var dirs = [
+		let mouseX = renderer.player.x;
+		let mouseY = renderer.player.y;
+		let dirs = [
 			new Direction(-1, 0),
 			new Direction(0, -1),
 			new Direction(0, +1),
@@ -135,15 +135,15 @@ class Enemy {
 
 		this.nextPositionFound = false;
 		if(!this.stunned ) {
-			var catX = this.catX;
-			var catY = this.catY;
+			let catX = this.catX;
+			let catY = this.catY;
 		
-			var queue = new Queue();
+			let queue = new Queue();
 
 			// prepare discovered places
-			var discovered = this.discovered;
-			for (var y = 0; y < renderer.mapHeight; y++) {
-				for (var x = 0; x < renderer.mapWidth; x++) {
+			let discovered = this.discovered;
+			for (let y = 0; y < renderer.mapHeight; y++) {
+				for (let x = 0; x < renderer.mapWidth; x++) {
 					discovered[y][x] = false;
 				}
 			}
@@ -152,13 +152,13 @@ class Enemy {
 
 			queue.enqueue(new Node(catX, catY, null));
 			while (!queue.isEmpty) {
-				var node = queue.dequeue();
+				let node = queue.dequeue();
 
-				for (var d = 0; d < dirs.length; d++) {
-					var dir = dirs[d];
-					var newX = node.x + dir.dx;
-					var newY = node.y + dir.dy;
-					var newDir = node.initialDir == null ? dir : node.initialDir;
+				for (let d = 0; d < dirs.length; d++) {
+					let dir = dirs[d];
+					let newX = node.x + dir.dx;
+					let newY = node.y + dir.dy;
+					let newDir = node.initialDir == null ? dir : node.initialDir;
 
 					// found mouse
 					if (newX == mouseX && newY == mouseY) {
@@ -183,7 +183,7 @@ class Enemy {
 			}
 		}
 		else { // stunned
-			var currentTimeStamp = Date.now();
+			let currentTimeStamp = Date.now();
 			if( (currentTimeStamp - this.stunnedTime) > 4000 ) {
 				this.stunned = false;
 			}
@@ -191,7 +191,7 @@ class Enemy {
 		}
 
 		if( !this.nextPositionFound ) {
-			var enemyWalked = false;
+			let enemyWalked = false;
 			// just walk along a direction until cat reaches a border, then change to the 
 			// next possible direction and walk along that
 			if( this.currentWalkingDir != null ) {
@@ -202,8 +202,8 @@ class Enemy {
 				}
 			}
 			if( !enemyWalked ) {
-				for( var d = 0; d < dirs.length; d++) {
-					var dir = dirs[d];
+				for( let d = 0; d < dirs.length; d++) {
+					let dir = dirs[d];
 					if( renderer.isWalkable(this.catX + dir.dx, this.catY + dir.dy)) {
 						this.currentWalkingDir = dir;
 						this.catX += this.currentWalkingDir.dx;
@@ -249,8 +249,8 @@ class Camera {
 	}
 
 	isInView(x, y) {
-		var posX = x * TILE_WIDTH;
-		var posY = y * TILE_HEIGHT;
+		let posX = x * TILE_WIDTH;
+		let posY = y * TILE_HEIGHT;
 		if (posX < this.x || posX > this.x + this.width || posY < this.y || posY > this.y + this.height) {
 			return false;
 		}
@@ -258,8 +258,8 @@ class Camera {
 	}
 
 	centerAround(x, y) {
-		var w = this.width / TILE_WIDTH;
-		var h = this.height / TILE_HEIGHT;
+		let w = this.width / TILE_WIDTH;
+		let h = this.height / TILE_HEIGHT;
 
 		this.x = (x - w / 2) * TILE_WIDTH;
 		this.y = (y - h / 2) * TILE_HEIGHT;
@@ -282,10 +282,10 @@ class PlacedBomb {
 	}
 
 	explode(ctx, x, y) {
-		var startX = Math.floor(this.camera.x / 32);
-		var startY = Math.floor(this.camera.y / 32);
-		var offsetX = -this.camera.x + startX * 32;
-		var offsetY = -this.camera.y + startY * 32;
+		let startX = Math.floor(this.camera.x / 32);
+		let startY = Math.floor(this.camera.y / 32);
+		let offsetX = -this.camera.x + startX * 32;
+		let offsetY = -this.camera.y + startY * 32;
 
 		ctx.drawImage(
 			this.image,
@@ -303,10 +303,10 @@ class PlacedBomb {
 
 	draw(ctx) {
 		if( !this.exploded ) {
-			var startX = Math.floor(this.camera.x / 32);
-			var startY = Math.floor(this.camera.y / 32);
-			var offsetX = -this.camera.x + startX * 32;
-			var offsetY = -this.camera.y + startY * 32;
+			let startX = Math.floor(this.camera.x / 32);
+			let startY = Math.floor(this.camera.y / 32);
+			let offsetX = -this.camera.x + startX * 32;
+			let offsetY = -this.camera.y + startY * 32;
 
 			if( this.currentFrame < animatedBomb.tiles[1].animation.length ) {
 				// draw main part

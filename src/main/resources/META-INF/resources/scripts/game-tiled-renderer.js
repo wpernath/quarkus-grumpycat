@@ -54,7 +54,7 @@ class TiledMapRenderer {
 	 * @returns
 	 */
 	getLayer(name) {
-		for (var i = 0; i < this.layers.length; i++) {
+		for (let i = 0; i < this.layers.length; i++) {
 			if (this.layers[i].name == name) {
 				return this.layers[i];
 			}
@@ -72,12 +72,12 @@ class TiledMapRenderer {
 		this.tileset = this.mapData.tilesets[0].source;
 
 		// get all enemies and initialize player;
-		var personLayer = this.getLayer("Persons");
+		let personLayer = this.getLayer("Persons");
 
-		for (var i = 0; i < personLayer.data.length; i++) {
-			var tile = personLayer.data[i];
-			var x = i % this.mapWidth;
-			var y = ~~(i / this.mapWidth);
+		for (let i = 0; i < personLayer.data.length; i++) {
+			let tile = personLayer.data[i];
+			let x = i % this.mapWidth;
+			let y = ~~(i / this.mapWidth);
 
 			if (tile == PLAYER_TILE) {
 				// player
@@ -96,22 +96,22 @@ class TiledMapRenderer {
 	}
 
     countMaxScore() {
-        var layer = this.getLayer("Bonus");
-        var maxScore = 0;
-        for( var t = 0; t < layer.data.length; t++ ) {
-            var tile = layer.data[t];
+        let layer = this.getLayer("Bonus");
+        let maxScore = 0;
+        for( let t = 0; t < layer.data.length; t++ ) {
+            let tile = layer.data[t];
             if(tile != 0) maxScore+=10;
         }
         return maxScore;
     }
 
     placeBomb(bomb) {
-        var layer = this.getLayer("Persons");
+        let layer = this.getLayer("Persons");
         this.placedBombs.push(bomb);
     }
 
     placeBarrier(x, y) {
-        var layer = this.getLayer("Frame");
+        let layer = this.getLayer("Frame");
         if( this.isWalkable(x,y)) {
             this.setTileAt(layer, x, y, Math.floor(Math.random() * STONES.length));
             return true;
@@ -120,36 +120,36 @@ class TiledMapRenderer {
     }
 
 	draw(ctx) {
-		var startX = Math.floor(this.camera.x / this.tileWidth);
-		var endX = startX + this.camera.width / this.tileWidth;
-		var startY = Math.floor(this.camera.y / this.tileHeight);
-		var endY = startY + this.camera.height / this.tileHeight;
-		var offsetX = -this.camera.x + startX * this.tileWidth;
-		var offsetY = -this.camera.y + startY * this.tileHeight;
+		let startX = Math.floor(this.camera.x / this.tileWidth);
+		let endX = startX + this.camera.width / this.tileWidth;
+		let startY = Math.floor(this.camera.y / this.tileHeight);
+		let endY = startY + this.camera.height / this.tileHeight;
+		let offsetX = -this.camera.x + startX * this.tileWidth;
+		let offsetY = -this.camera.y + startY * this.tileHeight;
 
-		for (var l = 0; l < this.layers.length; l++) {
-			var layer = this.layers[l];
+		for (let l = 0; l < this.layers.length; l++) {
+			let layer = this.layers[l];
 			if (layer.name != "Persons") {
-				for (var y = startY; y < endY; y++) {
-					for (var x = startX; x < endX; x++) {
-						var xPos = Math.floor((x - startX) * this.tileWidth ) + offsetX;
-						var yPos = Math.floor((y - startY) * this.tileHeight) + offsetY;
+				for (let y = startY; y < endY; y++) {
+					for (let x = startX; x < endX; x++) {
+						let xPos = Math.floor((x - startX) * this.tileWidth ) + offsetX;
+						let yPos = Math.floor((y - startY) * this.tileHeight) + offsetY;
 
-						var t = this.tileAt(layer, x, y);
-						var tile = t & ~(FLIPPED_DIAGONALLY_FLAG | FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | ROTATED_HEXAGONAL_120_FLAG);
-                        var flippedHorizontally = (t & FLIPPED_HORIZONTALLY_FLAG) != 0 ? true : false;
-                        var flippedVertically   = (t & FLIPPED_VERTICALLY_FLAG) != 0 ? true : false;
+						let t = this.tileAt(layer, x, y);
+						let tile = t & ~(FLIPPED_DIAGONALLY_FLAG | FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | ROTATED_HEXAGONAL_120_FLAG);
+                        let flippedHorizontally = (t & FLIPPED_HORIZONTALLY_FLAG) != 0 ? true : false;
+                        let flippedVertically   = (t & FLIPPED_VERTICALLY_FLAG) != 0 ? true : false;
         
 						if (tile != 0) {
                             tile -= 1;
 
                             // calculate position on tileset
-                            var tileX= Math.floor(tile % this.tilesetColumns);
-                            var tileY= Math.floor(tile / this.tilesetColumns);
-                            var srcX = Math.floor((tileX * this.tileWidth) + (this.tilesetSpacing * (tileX)));
-                            var srcY = Math.floor((tileY * this.tileHeight) + (this.tilesetMargin * (tileY)));
-                            var w = this.tileWidth;
-                            var h = this.tileHeight;
+                            let tileX= Math.floor(tile % this.tilesetColumns);
+                            let tileY= Math.floor(tile / this.tilesetColumns);
+                            let srcX = Math.floor((tileX * this.tileWidth) + (this.tilesetSpacing * (tileX)));
+                            let srcY = Math.floor((tileY * this.tileHeight) + (this.tilesetMargin * (tileY)));
+                            let w = this.tileWidth;
+                            let h = this.tileHeight;
                             ctx.save();
 
                             if( flippedHorizontally || flippedVertically) {
@@ -175,24 +175,24 @@ class TiledMapRenderer {
 			}
             else {
                 // draw enemies and player
-                for(var e = 0; e < this.enemies.length; e++ ) {
-                    var enemy = this.enemies[e];
+                for(let e = 0; e < this.enemies.length; e++ ) {
+                    let enemy = this.enemies[e];
                     enemy.draw(ctx, this, this.camera);
                 }
 
                 // draw mouse
                 this.player.draw(ctx, this, this.camera);
-                
+
                 // draw bombs
-                var explodedBombs = [];
-                for( var b = 0; b < this.placedBombs.length; b++) {
-                    var bomb = this.placedBombs[b];
+                let explodedBombs = [];
+                for( let b = 0; b < this.placedBombs.length; b++) {
+                    let bomb = this.placedBombs[b];
                     bomb.draw(ctx);     
                     if( bomb.exploded) {
                         explodedBombs.push(b);
 
                         // destroy borders in a 3x3 tile section around bomb
-                        var frame = this.getLayer("Frame");
+                        let frame = this.getLayer("Frame");
                         this.setTileAt(frame, bomb.x + 0, bomb.y, 0);
                         this.setTileAt(frame, bomb.x - 1, bomb.y, 0);
                         this.setTileAt(frame, bomb.x + 1, bomb.y, 0);
@@ -206,8 +206,8 @@ class TiledMapRenderer {
 						this.setTileAt(frame, bomb.x + 1, bomb.y - 1, 0);
 
                         // was an enemy in radius?
-                        for( var e=0; e < this.enemies.length; e++) {
-                            var enemy = this.enemies[e];
+                        for( let e=0; e < this.enemies.length; e++) {
+                            let enemy = this.enemies[e];
                             if( bomb.x - 2 < enemy.catX && bomb.x + 2 > enemy.catX && bomb.y - 2 < enemy.catY && bomb.y + 2 > enemy.catY) {
                                 if( !enemy.stunned ) {
                                     enemy.stunned = true;
@@ -219,7 +219,7 @@ class TiledMapRenderer {
                 }
 
                 // remove exploded bombs from array
-                for( var b = 0; b < explodedBombs.length; b++) {
+                for( let b = 0; b < explodedBombs.length; b++) {
                     this.placedBombs.splice(explodedBombs[b], 1);
                 }
 		    }
@@ -227,8 +227,8 @@ class TiledMapRenderer {
 	}
 
 	checkForBonus(x, y) {
-		var layer = this.getLayer("Bonus");
-		var tile = this.tileAt(layer, x, y);
+		let layer = this.getLayer("Bonus");
+		let tile = this.tileAt(layer, x, y);
 		if (tile == 0) return 0;
 		else {
 			this.setTileAt(layer, x, y, 0);
@@ -238,20 +238,20 @@ class TiledMapRenderer {
 
 	setTileAt(layer, x, y, newSet) {
         if (x >= 0 && y >= 0 && x < this.mapWidth && y < this.mapHeight) {
-    		var pos = y * this.mapWidth + x;
+    		let pos = y * this.mapWidth + x;
 	    	layer.data[pos] = newSet;
         }
 	}
 
 	tileAt(layer, x, y) {
-		var pos = y * this.mapWidth + x;
+		let pos = y * this.mapWidth + x;
 		return layer.data[pos];
 	}
 
 	isWalkable(x, y) {
         if( x < 0 || y < 0 || x > this.mapWidth || y > this.mapHeight) return false;
 
-		var layer = this.getLayer("Frame");
+		let layer = this.getLayer("Frame");
 		return this.tileAt(layer, x, y) == 0;
 	}
 }

@@ -21,7 +21,7 @@ let numBombs = 5;
 let bombsThrown = 0;
 let ctx;
 let canvas;
-var gameWorld;
+let gameWorld;
 let enemies;
 let camera;
 
@@ -97,7 +97,7 @@ function initLevel() {
 
 	// download a new level
 	console.log("initalizing level " + (currentLevel+1) + " / " + numLevels);
-	var name = "Level" + (currentLevel+1);
+	let name = "Level" + (currentLevel+1);
 	$.ajax({
 		url: "/maps/" + name + ".tmj",
 		contentType: "application/json",
@@ -116,7 +116,7 @@ function initLevel() {
 			catSpeed = CAT_SPEED;
 
 			enemies = renderer.enemies;
-			for(var i = 0; i < enemies.length; i++ ) {
+			for(let i = 0; i < enemies.length; i++ ) {
 				enemies[i].image = catLeft;
 				enemies[i].catLeft = catLeft;
 				enemies[i].catRight = catRight;
@@ -142,7 +142,7 @@ function initLevel() {
 
 // main game loop: move player, move enemy, update maze
 function gameLoop(timestamp) {
-	var elapsed = timestamp - lastTimestamp;
+	let elapsed = timestamp - lastTimestamp;
 
 	if (elapsed > 100) {
 		lastTimestamp = timestamp;
@@ -244,7 +244,7 @@ function drawStatus() {
 }
 
 function updatePlayer() {
-	var oldX = renderer.player.x,
+	let oldX = renderer.player.x,
 		oldY = renderer.player.y;
 
 	if( !dropStonePressed ) {
@@ -278,7 +278,7 @@ function updatePlayer() {
 		camera.centerAround(renderer.player.x, renderer.player.y);
 	
 
-		var bonus = renderer.checkForBonus(renderer.player.x, renderer.player.y);
+		let bonus = renderer.checkForBonus(renderer.player.x, renderer.player.y);
 		if (bonus != 0) {
 			score += 10;
 			if( bonus == BONUS_BOMB ) {
@@ -306,7 +306,7 @@ function updatePlayer() {
 		}
 	}
 	else {
-		var dirX = 0, dirY = 0;
+		let dirX = 0, dirY = 0;
 		if( leftPressed ) dirX =-1;
 		if( rightPressed) dirX =+1;
 		if( upPressed)	  dirY =-1;
@@ -315,7 +315,7 @@ function updatePlayer() {
 	}
 
 	// check to see if ANY cat reached mouse
-	for( var e = 0; e < enemies.length; e++) {
+	for( let e = 0; e < enemies.length; e++) {
 		if (renderer.player.x == enemies[e].catX && renderer.player.y == enemies[e].catY) {
 			gameOver = true;
 			break;
@@ -325,8 +325,8 @@ function updatePlayer() {
 
 // calculate the next step, the cat does
 function updateEnemy() {
-	for( var e = 0; e < enemies.length; e++ ) {
-		var enemy = enemies[e];
+	for( let e = 0; e < enemies.length; e++ ) {
+		let enemy = enemies[e];
 		enemy.calculateNextMove(renderer);
 	}
 }
