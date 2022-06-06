@@ -7,8 +7,6 @@ import javax.ws.rs.Path;
 @Path("/enemy")
 public class EnemyResource {
     
-    @Inject
-    MazeResource mazes;
 
     @GET
     public Cat calculateNextMovement(Cat cat, int playerX, int playerY) {

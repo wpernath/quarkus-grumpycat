@@ -84,10 +84,18 @@ function initGame() {
 		document.addEventListener("keydown", keyDownHandler, false);
 		document.addEventListener("keyup", keyUpHandler, false);
 
-		currentLevel = 0;
+		currentLevel = 3;
 		numBombs = 5;
 		maxScore = 0;
-		initLevel();
+
+		fetch("/maps/")
+			.then(function(response) {
+				return response.json();
+			})
+			.then(function(result) {
+				numLevels = result;
+				initLevel();
+			});
 	}
 }
 
@@ -98,7 +106,7 @@ function initLevel() {
 	// download a new level
 	console.log("initalizing level " + (currentLevel+1) + " / " + numLevels);
 	let name = "Level" + (currentLevel+1);
-	fetch("/maps/" + name + ".tmj")
+	fetch("/maps/" + currentLevel)
 		.then(function(response) {
 			if( !response.ok) {
 				throw new Error("Could not load map file /maps/" + name + ".tmj" );
@@ -110,8 +118,6 @@ function initLevel() {
 			renderer = new TiledMapRenderer();
 			renderer.parse(result);
 
-			//renderer.tilesetImage = terrainTiles;
-			//renderer.bombImageSet = bombTiles;
 			renderer.player.image = mouseImg;
 
 			catSpeed = CAT_SPEED;
