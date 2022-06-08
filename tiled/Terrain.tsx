@@ -3,18 +3,34 @@
  <editorsettings>
   <export target="../src/main/resources/META-INF/resources/to_be_removed_maps/Terrain.tsj" format="json"/>
  </editorsettings>
- <image source="images/tilesets/terrain.png" width="1024" height="1024"/>
+ <image source="../src/main/resources/META-INF/resources/images/tilesets/terrain.png" width="1024" height="1024"/>
  <tile id="124">
   <objectgroup draworder="index" id="2">
    <object id="1" x="0" y="0" width="32" height="32"/>
   </objectgroup>
   <animation>
-   <frame tileid="124" duration="1000"/>
    <frame tileid="187" duration="1000"/>
    <frame tileid="188" duration="1000"/>
    <frame tileid="189" duration="1000"/>
    <frame tileid="188" duration="1000"/>
    <frame tileid="187" duration="1000"/>
+  </animation>
+ </tile>
+ <tile id="559">
+  <animation>
+   <frame tileid="559" duration="1000"/>
+   <frame tileid="560" duration="1000"/>
+   <frame tileid="561" duration="1000"/>
+   <frame tileid="560" duration="1000"/>
+   <frame tileid="559" duration="1000"/>
+  </animation>
+ </tile>
+ <tile id="962">
+  <animation>
+   <frame tileid="962" duration="1000"/>
+   <frame tileid="964" duration="1000"/>
+   <frame tileid="963" duration="1000"/>
+   <frame tileid="964" duration="1000"/>
   </animation>
  </tile>
  <wangsets>

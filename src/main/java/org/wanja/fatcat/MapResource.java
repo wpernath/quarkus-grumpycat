@@ -34,15 +34,15 @@ public class MapResource {
         };
 
         try {
-            for(int i = 0; i < levels.length; i++ ) {
+            for(String level : levels ) {
                 Map map = mapper.readValue(
-                        getClass().getResourceAsStream("/maps/" + levels[i] ), 
+                        getClass().getResourceAsStream("/maps/" + level ), 
                         Map.class);
 
                 // Hack to make sure, tileset is properly loaded as
                 // MapEditor.org's export will change image file according to exported directory
                 if( map.tilesets != null && !map.tilesets.isEmpty()) {
-                    map.tilesets.get(0).image = "/images/tilesets/terrain.png";
+                    map.tilesets.forEach( t -> t.image = "/images/tilesets/terrain.png" );                    
                 }
                 maps.add(map);
             }

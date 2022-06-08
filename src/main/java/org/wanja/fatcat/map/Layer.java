@@ -10,5 +10,5 @@ public class Layer {
     public int x;
     public int y;
     public boolean visible;
-    public int[] data;
+    public long[] data;
 }
