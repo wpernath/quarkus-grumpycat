@@ -58,3 +58,5 @@ This function makes sure, the dog moves according to the keys pressed. It also m
 ### `game-logic.js`: updateEnemy() 
 This function calculates the shortest path between each enemy and the dog. It just calculates the next possible move for each cat based on a simple Lee Algorythm. If there is no direct path between the cat and the player, it follows the logic: walk in a random walkable direction until you hit a border, then choose another random walkable direction. 
 
+## About the graphics
+The map graphics are coming from OpenGameArt.org 
