@@ -29,18 +29,13 @@ let camera;
 
 // load images
 let loader = new PxLoader(),
-	floorImg = loader.addImage("images/tiles/water.png"),
-	wallImg = loader.addImage("images/tiles/tile_2.png"),
 	catLeft = loader.addImage("images/cat_left.png"),
 	catRight = loader.addImage("images/cat_right.png"),
-	tenPoints = loader.addImage("images/10-points.png"),
-	fivPoints = loader.addImage("images/5-points.jpg"),
 	pauseImg = loader.addImage("images/pause.png"),
 	gameOverImg = loader.addImage("images/gameOver.png"),
 	mouseImg = loader.addImage("images/sensa_jaa.png"),
 	gameOverDog = loader.addImage("images/sensa_nee.png"),
 	levelWonDog = loader.addImage("images/sensa_jaa.png"),
-	tilesetImage = loader.addImage("/images/tilesets/desert-water.png"),
 	bombTiles = loader.addImage("/images/tilesets/BombExploding.png"),
 	terrainTiles = loader.addImage("/images/tilesets/terrain.png");	
 
@@ -84,7 +79,7 @@ function initGame() {
 		document.addEventListener("keydown", keyDownHandler, false);
 		document.addEventListener("keyup", keyUpHandler, false);
 
-		currentLevel = 3;
+		currentLevel = 0;
 		numBombs = 5;
 		maxScore = 0;
 
@@ -233,10 +228,13 @@ function drawGameOver() {
 	}
 }
 
-// draws the currently loaded maze
+// draws the currently loaded map
 function drawMaze() {
+	let time = new Date().getMilliseconds();
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	renderer.draw(ctx);	
+	let elapsed = new Date().getMilliseconds() - time;
+	//console.log("time to draw: " + elapsed);
 }
 
 function drawStatus() {

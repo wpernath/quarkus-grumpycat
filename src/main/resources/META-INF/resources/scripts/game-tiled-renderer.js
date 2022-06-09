@@ -184,7 +184,7 @@ class TiledMapRenderer {
 		return false;
 	}
 
-	draw(ctx) {
+	draw(ctx) { 
 		let startX = Math.floor(this.camera.x / this.tileWidth);
 		let endX = startX + this.camera.width / this.tileWidth;
 		let startY = Math.floor(this.camera.y / this.tileHeight);
