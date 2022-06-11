@@ -5,6 +5,7 @@ let upPressed = false;
 let downPressed = false;
 let spacePressed = false;
 let dropStonePressed = false;
+let escapePressed = false;
 
 // global game states
 let onTitleScreen = true;
@@ -62,6 +63,7 @@ function keyDownHandler(event) {
 	if (event.code == "ArrowDown" || event.code == "KeyS") downPressed = true;
 	if (event.code == "Space" || event.code == "Enter") spacePressed = true;
 	if( event.code == "ShiftLeft" || event.code == "ShiftRight") dropStonePressed = true;
+	if( event.code == "Escape") escapePressed = true;
 	//console.log(event.code);
 }
 
@@ -73,6 +75,7 @@ function keyUpHandler(event) {
 	if (event.code == "KeyP") gamePaused = !gamePaused;
 	if (event.code == "Space" || event.code == "Enter") spacePressed = false;
 	if (event.code == "ShiftLeft" || event.code == "ShiftRight") dropStonePressed = false;
+	if (event.code == "Escape") escapePressed = false;
 }
 
 // init game
@@ -188,7 +191,7 @@ function initLevel() {
 
 // main game loop: move player, move enemy, update maze
 function gameLoop(timestamp) {
-	let elapsed = timestamp - lastTimestamp;
+	let elapsed = Math.round(timestamp - lastTimestamp);
 
 	if( !automatedPlayMode ) {
 		if (elapsed > 50) {
@@ -200,7 +203,7 @@ function gameLoop(timestamp) {
 					catSpeed = CAT_SPEED;
 				}
 				updatePlayer();
-				drawMaze();
+				updateMap();
 				drawStatus();
 			}
 
@@ -222,75 +225,91 @@ function gameLoop(timestamp) {
 			}
 		}
 	}
+	else { // automated play mode
+		replayAction(timestamp);		
+	}
+	window.requestAnimationFrame(gameLoop);
+}
+
+let lastMovementTime = 0;
+function replayAction(timestamp) {
+	let elapsed = Math.round(timestamp - lastTimestamp);
+	let movementElapsed = Math.round(timestamp - lastMovementTime);
+
+	if (spacePressed || escapePressed) {
+		console.log("closing replay.");
+		onTitleScreen = true;
+		automatedPlayMode = false;
+		currentLevel = 0;
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+	}
 	else {
-		if( spacePressed ) {
+		// replay move
+		if (serverMovementIndex >= serverMovements.length) {
 			console.log("closing replay.");
 			onTitleScreen = true;
 			automatedPlayMode = false;
 			currentLevel = 0;
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 		}
 		else {
-			// replay move
-			if( serverMovementIndex >= serverMovements.length ) {
-				console.log("closing replay.");
-				onTitleScreen = true;
-				automatedPlayMode = false;
-				currentLevel = 0;
-				ctx.clearRect(0, 0, canvas.width, canvas.height);
+			// update movement
+			const movement = serverMovements[serverMovementIndex];
+			let shouldElapsed = Date.parse(movement.time) - ((lastServerMovement != null) ? Date.parse(lastServerMovement.time) : 0);
 
-			}  
-			else {
-				// update movement
-				const movement = serverMovements[serverMovementIndex];
-				let shouldElapsed = Date.parse(movement.time) - ((lastServerMovement != null) ? Date.parse(lastServerMovement.time) : 0);
-				if( lastServerMovement == null || elapsed > shouldElapsed ) {
-					lastTimestamp = timestamp;
-					lastServerMovement = movement;
-					serverMovementIndex++;
+			if (lastServerMovement == null || movementElapsed >= shouldElapsed) {
+				//console.log("Elapsed time: " + elapsed + " / " + shouldElapsed);
+				lastServerMovement = movement;
+				lastMovementTime = timestamp;
+				serverMovementIndex++;
 
-					if( movement.gutterThrown ) {
-						renderer.placeBarrier(
-							renderer.player.x + movement.dx,
-							renderer.player.y + movement.dy
-						);
-					}
-					else if( movement.bombPlaced ) {
-						renderer.placeBomb(
-							new PlacedBomb(
-								renderer.player.x, 
-								renderer.player.y, 
-								bombTiles, 
-								camera
-							)
-						);
-						bombsThrown++;					
-					}
-					else {
-						renderer.player.x += movement.dx;
-						renderer.player.y += movement.dy;
-					}
-					camera.centerAround(renderer.player.x, renderer.player.y);
+				if (movement.gutterThrown) {
+					renderer.placeBarrier(
+						renderer.player.x + movement.dx,
+						renderer.player.y + movement.dy
+					);
+				}
+				else if (movement.bombPlaced) {
+					renderer.placeBomb(
+						new PlacedBomb(
+							renderer.player.x,
+							renderer.player.y,
+							bombTiles,
+							camera
+						)
+					);
+					bombsThrown++;
+				}
+				else {
+					renderer.player.x += movement.dx;
+					renderer.player.y += movement.dy;
+				}
+				camera.centerAround(renderer.player.x, renderer.player.y);
 
-					let bonus = renderer.checkForBonus(renderer.player.x, renderer.player.y);
-					if (bonus != 0) {
-						score += 10;
-						if (bonus == BONUS_BOMB) {
-							numBombs += 5;
-						}
+				let bonus = renderer.checkForBonus(renderer.player.x, renderer.player.y);
+				if (bonus != 0) {
+					score += 10;
+					if (bonus == BONUS_BOMB) {
+						numBombs += 5;
 					}
-
-					if (--catSpeed <= 0) {
-						updateEnemy();
-						catSpeed = CAT_SPEED;
-					}
-					drawMaze();
-					drawStatus();
 				}
 			}
-		}		
+
+			// update enemy the same as in orginal gameplay
+			if (elapsed > 50) {
+				lastTimestamp = timestamp;
+				if (--catSpeed <= 0) {
+					updateEnemy();
+					catSpeed = CAT_SPEED;
+				}
+
+				updateMap();
+				drawStatus();
+
+			}
+		}
 	}
-	window.requestAnimationFrame(gameLoop);
 }
 
 function drawCenteredText(text, y) {
@@ -300,6 +319,8 @@ function drawCenteredText(text, y) {
 	return x;
 }
 
+let titleScreenDrawn =0;
+let currentSelectedMenueEntryColor = "#4695eb";
 function drawTitleScreen() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	let menueEntries = [
@@ -317,7 +338,7 @@ function drawTitleScreen() {
 		},
 	];
 	
-	let y = 200;
+	let y = 220;
 
 	ctx.save();
 	ctx.font = "66px Arial";
@@ -335,9 +356,15 @@ function drawTitleScreen() {
 	ctx.shadowColor = "red";
 	ctx.fillStyle = "white";
 
+	titleScreenDrawn += 1;
+	if (titleScreenDrawn > 8) {
+		currentSelectedMenueEntryColor = currentSelectedMenueEntryColor === "#4695eb" ? "white" : "#4695eb";
+		titleScreenDrawn = 0;
+	}
+
 	for(let i = 0; i < menueEntries.length; i++ ) {
-		if( titleScreenSelectedEntry == i ) {
-			ctx.fillStyle = "#4695eb";
+		if( titleScreenSelectedEntry === i ) {
+			ctx.fillStyle = currentSelectedMenueEntryColor;
 		}
 		else {
 			ctx.fillStyle = "white";
@@ -459,7 +486,7 @@ function drawGameOver() {
 }
 
 // draws the currently loaded map
-function drawMaze() {
+function updateMap() {
 	let time = new Date().getMilliseconds();
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	renderer.draw(ctx);	
@@ -591,10 +618,12 @@ function updatePlayer() {
 		if( rightPressed) dirX =+1;
 		if( upPressed)	  dirY =-1;
 		if( downPressed)  dirY =+1;
-		renderer.placeBarrier(renderer.player.x + dirX, renderer.player.y + dirY);
-		action.gutterThrown = true;
-		action.dx = dirX;
-		action.dy = dirY;
+		if( dirX != 0 || dirY != 0 ) {
+			renderer.placeBarrier(renderer.player.x + dirX, renderer.player.y + dirY);
+			action.gutterThrown = true;
+			action.dx = dirX;
+			action.dy = dirY;
+		}
 	}
 
 	// check to see if ANY cat reached mouse

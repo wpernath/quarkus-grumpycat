@@ -37,7 +37,7 @@ public class PlayerMovementResource {
     @GET
     @Path("/{gameId}/{playerId}")
     public List<PlayerAction> movementsForGame(@PathParam long gameId, @PathParam long playerId) {
-        Log.debug("Loading movements from game " + gameId + " and player " + playerId );
+        Log.info("Loading movements from game " + gameId + " and player " + playerId );
         List<PlayerAction> res = PlayerAction
                 .list("gameId = ?1 and playerId = ?2 order by time", gameId, playerId);                
         // res.sort(new Comparator<PlayerAction>() {                    
