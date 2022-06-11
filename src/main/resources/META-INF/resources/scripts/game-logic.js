@@ -10,6 +10,9 @@ let dropStonePressed = false;
 let onTitleScreen = true;
 let titleScreenSelectedEntry = 0;
 let automatedPlayMode = false;
+let serverMovements = [];
+let serverMovementIndex = 0;
+let lastServerMovement = null;
 
 let gamePaused = true;
 let gameOver = false;
@@ -57,8 +60,9 @@ function keyDownHandler(event) {
 	if (event.code == "ArrowLeft" || event.code == "KeyA") leftPressed = true;
 	if (event.code == "ArrowRight" || event.code == "KeyD") rightPressed = true;
 	if (event.code == "ArrowDown" || event.code == "KeyS") downPressed = true;
-	if (event.code == "Space") spacePressed = true;
+	if (event.code == "Space" || event.code == "Enter") spacePressed = true;
 	if( event.code == "ShiftLeft" || event.code == "ShiftRight") dropStonePressed = true;
+	//console.log(event.code);
 }
 
 function keyUpHandler(event) {
@@ -67,9 +71,8 @@ function keyUpHandler(event) {
 	if (event.code == "ArrowRight" || event.code == "KeyD") rightPressed = false;
 	if (event.code == "ArrowDown" || event.code == "KeyS") downPressed = false;
 	if (event.code == "KeyP") gamePaused = !gamePaused;
-	if (event.code == "Space") spacePressed = false;
+	if (event.code == "Space" || event.code == "Enter") spacePressed = false;
 	if (event.code == "ShiftLeft" || event.code == "ShiftRight") dropStonePressed = false;
-	//console.log("KeyUp with " + event.code);
 }
 
 // init game
@@ -127,7 +130,7 @@ async function createGameOnServer(level) {
 
 // function to load a level from server and
 function loadAndInitializeLevel(currentLevel) {
-	let name = "Level" + (currentLevel + 1);
+	let name = "Level " + (currentLevel + 1);
 	fetch("/maps/" + currentLevel)
 		.then(function (response) {
 			if (!response.ok) {
@@ -136,7 +139,7 @@ function loadAndInitializeLevel(currentLevel) {
 			return response.json();
 		})
 		.then(function (result) {
-			console.log("current level loaded: " + result);
+			console.log("current level loaded: " + name);
 			renderer = new TiledMapRenderer();
 			renderer.parse(result);
 
@@ -188,7 +191,7 @@ function gameLoop(timestamp) {
 	let elapsed = timestamp - lastTimestamp;
 
 	if( !automatedPlayMode ) {
-		if (elapsed > 100) {
+		if (elapsed > 50) {
 			lastTimestamp = timestamp;
 
 			if (!gamePaused && !gameOver && !onTitleScreen) {
@@ -220,7 +223,72 @@ function gameLoop(timestamp) {
 		}
 	}
 	else {
+		if( spacePressed ) {
+			console.log("closing replay.");
+			onTitleScreen = true;
+			automatedPlayMode = false;
+			currentLevel = 0;
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+		}
+		else {
+			// replay move
+			if( serverMovementIndex >= serverMovements.length ) {
+				console.log("closing replay.");
+				onTitleScreen = true;
+				automatedPlayMode = false;
+				currentLevel = 0;
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+			}  
+			else {
+				// update movement
+				const movement = serverMovements[serverMovementIndex];
+				let shouldElapsed = Date.parse(movement.time) - ((lastServerMovement != null) ? Date.parse(lastServerMovement.time) : 0);
+				if( lastServerMovement == null || elapsed > shouldElapsed ) {
+					lastTimestamp = timestamp;
+					lastServerMovement = movement;
+					serverMovementIndex++;
+
+					if( movement.gutterThrown ) {
+						renderer.placeBarrier(
+							renderer.player.x + movement.dx,
+							renderer.player.y + movement.dy
+						);
+					}
+					else if( movement.bombPlaced ) {
+						renderer.placeBomb(
+							new PlacedBomb(
+								renderer.player.x, 
+								renderer.player.y, 
+								bombTiles, 
+								camera
+							)
+						);
+						bombsThrown++;					
+					}
+					else {
+						renderer.player.x += movement.dx;
+						renderer.player.y += movement.dy;
+					}
+					camera.centerAround(renderer.player.x, renderer.player.y);
+
+					let bonus = renderer.checkForBonus(renderer.player.x, renderer.player.y);
+					if (bonus != 0) {
+						score += 10;
+						if (bonus == BONUS_BOMB) {
+							numBombs += 5;
+						}
+					}
+
+					if (--catSpeed <= 0) {
+						updateEnemy();
+						catSpeed = CAT_SPEED;
+					}
+					drawMaze();
+					drawStatus();
+				}
+			}
+		}		
 	}
 	window.requestAnimationFrame(gameLoop);
 }
@@ -240,22 +308,30 @@ function drawTitleScreen() {
 			action: initGame,
 		},
 		{
-			title: "See last game",
+			title: "Replay Last Game",
 			action: playLastRun,
 		},
 		{
 			title: "Highscores",
-			action: showHightscores
+			action: showHighscores
 		},
 	];
 	
-	let y = 140;
+	let y = 200;
 
 	ctx.save();
-	ctx.font = "32px Arial";
+	ctx.font = "66px Arial";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
-	ctx.shadowBlur = 20;
+	ctx.shadowBlur = 15;
+	ctx.shadowColor = "#ffffff";
+	ctx.fillStyle = "#000fff";
+
+
+	drawCenteredText("Quarkus Grumpy Cat", 20);
+
+	ctx.font = "40px Arial";
+	ctx.shadowBlur = 10;
 	ctx.shadowColor = "red";
 	ctx.fillStyle = "white";
 
@@ -267,7 +343,7 @@ function drawTitleScreen() {
 			ctx.fillStyle = "white";
 		}
 		let x = drawCenteredText(menueEntries[i].title, y);
-		y+=80;
+		y+=100;
 	}
 
 	if( upPressed ) {
@@ -276,7 +352,7 @@ function drawTitleScreen() {
 	}
 	if( downPressed) {
 		titleScreenSelectedEntry +=1;
-		if( titleScreenSelectedEntry > menueEntries.length) titleScreenSelectedEntry = 0;
+		if( titleScreenSelectedEntry >= menueEntries.length) titleScreenSelectedEntry = 0;
 	}
 
 	ctx.restore();
@@ -291,14 +367,42 @@ function drawTitleScreen() {
 	}
 }
 
-function showHightscores() {
+function showHighscores() {
 	console.log("Showing highscores");
+}
+
+
+async function loadStoredGame() {
+	let res = await fetch("/game");
+	const games = await res.json();
+	let movements = [];
+	for( let i = 0; i < games.length; i++ ) {
+		console.log("trying to use game to replay " + games[i].name);
+		res = await fetch("/movement/" + games[i].id + "/" + games[i].player.id);
+		movements = await res.json();
+
+		if (movements.length < 200) {
+			console.log("  cant use this game");
+		}
+		else {
+			serverGame = games[i];
+			break;
+		}
+	}
+	return movements;
 }
 
 function playLastRun() {
 	console.log("playing last run");
-	loadAndInitializeLevel();
-	automatedPlayMode = true;
+
+	loadStoredGame().then(function(movements) {
+		serverMovements = movements;
+		console.log("  Loaded " + movements.length + " movements from server");
+		serverMovementIndex = 0;
+		lastServerMovement = null;
+		automatedPlayMode = true;
+		loadAndInitializeLevel(serverGame.level);
+	})
 }
 
 function drawLevelWon() {
@@ -365,14 +469,24 @@ function drawMaze() {
 
 function drawStatus() {
 	ctx.clearRect(0, MAZE_HEIGHT, MAZE_WIDTH, 32);
-
+	ctx.save();
 	ctx.font = "20px Arial";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	ctx.fillStyle = "white";
+	ctx.shadowBlur = 20;
+	ctx.shadowColor = "blue";
 	ctx.fillText("SCORE: " + score + " of " + maxScore , 10, MAZE_HEIGHT + 8);
 	ctx.fillText("LEVEL: " + (currentLevel + 1) + " of " + numLevels, 300, MAZE_HEIGHT + 8);
-	ctx.fillText("BOMBS: " + bombsThrown + " of " + numBombs, 600, MAZE_HEIGHT + 8)
+	ctx.fillText("BOMBS: " + bombsThrown + " of " + numBombs, 600, MAZE_HEIGHT + 8);
+
+	if( automatedPlayMode ) {
+		drawCenteredText("Replay of: " + serverGame.name, 4);
+	}
+	else {
+		drawCenteredText("Player: " + serverGame.name, 4);
+	}
+	ctx.restore();
 }
 
 function updatePlayer() {

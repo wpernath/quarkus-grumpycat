@@ -4,7 +4,7 @@ const MAZE_HEIGHT = 736;
 
 const TILE_WIDTH = 32;
 const TILE_HEIGHT = 32;
-const CAT_SPEED =5;
+const CAT_SPEED =8;
 
 class Direction {
 	constructor(dx, dy) {

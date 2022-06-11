@@ -14,6 +14,8 @@ import org.wanja.fatcat.model.Game;
 import org.wanja.fatcat.model.Player;
 
 import io.quarkus.logging.Log;
+import io.quarkus.panache.common.Sort;
+import io.quarkus.panache.common.Sort.Direction;
 
 @Path("/game")
 @Consumes("application/json")
@@ -36,7 +38,7 @@ public class GameResource {
 
     @GET
     public List<Game> listGames() {
-        return Game.listAll();
+        return Game.listAll(Sort.by("time", Direction.Descending));
     }
 
     @GET

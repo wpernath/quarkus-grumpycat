@@ -31,7 +31,7 @@ public class PlayerMovementResource {
         pa.gameOver = action.gameOver;
         pa.persist();
 
-        Log.debug("new player action created for game id: "+ pa.gameId + " ");
+        //Log.debug("new player action created for game id: "+ pa.gameId + " ");
     }
 
     @GET
