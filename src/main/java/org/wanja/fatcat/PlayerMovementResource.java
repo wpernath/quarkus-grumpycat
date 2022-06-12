@@ -20,16 +20,9 @@ public class PlayerMovementResource {
     @POST
     @Transactional
     public void createMovement(PlayerAction action) {
-        PlayerAction pa = new PlayerAction();
-        pa.dx = action.dx;
-        pa.dy = action.dy;
-        pa.bombPlaced = action.bombPlaced;
-        pa.gameId = action.gameId;
-        pa.playerId = action.playerId;
-        pa.gutterThrown = action.gutterThrown;
-        pa.time = action.time;
-        pa.gameOver = action.gameOver;
-        pa.persist();
+        //PlayerAction pa = new PlayerAction();
+        action.id = null;
+        action.persist();
 
         //Log.debug("new player action created for game id: "+ pa.gameId + " ");
     }

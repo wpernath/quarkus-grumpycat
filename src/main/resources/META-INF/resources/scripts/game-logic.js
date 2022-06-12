@@ -194,7 +194,7 @@ function gameLoop(timestamp) {
 	let elapsed = Math.round(timestamp - lastTimestamp);
 
 	if( !automatedPlayMode ) {
-		if (elapsed > 50) {
+		if (elapsed > 80) {
 			lastTimestamp = timestamp;
 
 			if (!gamePaused && !gameOver && !onTitleScreen) {
@@ -281,10 +281,8 @@ function replayAction(timestamp) {
 					);
 					bombsThrown++;
 				}
-				else {
-					renderer.player.x += movement.dx;
-					renderer.player.y += movement.dy;
-				}
+				renderer.player.x = movement.x;
+				renderer.player.y = movement.y;
 				camera.centerAround(renderer.player.x, renderer.player.y);
 
 				let bonus = renderer.checkForBonus(renderer.player.x, renderer.player.y);
@@ -297,7 +295,7 @@ function replayAction(timestamp) {
 			}
 
 			// update enemy the same as in orginal gameplay
-			if (elapsed > 50) {
+			if (elapsed > 80) {
 				lastTimestamp = timestamp;
 				if (--catSpeed <= 0) {
 					updateEnemy();
@@ -501,13 +499,15 @@ function drawStatus() {
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	ctx.fillStyle = "white";
-	ctx.shadowBlur = 20;
+	ctx.shadowBlur = 15;
 	ctx.shadowColor = "blue";
 	ctx.fillText("SCORE: " + score + " of " + maxScore , 10, MAZE_HEIGHT + 8);
 	ctx.fillText("LEVEL: " + (currentLevel + 1) + " of " + numLevels, 300, MAZE_HEIGHT + 8);
 	ctx.fillText("BOMBS: " + bombsThrown + " of " + numBombs, 600, MAZE_HEIGHT + 8);
 
-	if( automatedPlayMode ) {
+	ctx.font = "32px Arial";
+	ctx.shadowColor = "black";		
+	if( automatedPlayMode ) {		
 		drawCenteredText("Replay of: " + serverGame.name, 4);
 	}
 	else {
@@ -525,6 +525,8 @@ function updatePlayer() {
 		gameId: serverGame.id,
 		dx: 0,
 		dy: 0,
+		x: 0,
+		y: 0,
 		bombPlaced: false,
 		gutterThrown: false,
 		gameOver: false,
@@ -565,7 +567,7 @@ function updatePlayer() {
 			renderer.player.x += 1;
 			action.dx = +1;
 			if (renderer.player.x >= renderer.mapWidth) {
-				renderer.player.x = renderer.player.x;
+				renderer.player.x = renderer.mapWidth;
 				action.dx = 0;
 			}
 		}
@@ -579,6 +581,8 @@ function updatePlayer() {
 			action.dy = 0;
 		}
 
+		action.x = renderer.player.x;
+		action.y = renderer.player.y;
 		camera.centerAround(renderer.player.x, renderer.player.y);
 	
 

@@ -15,6 +15,8 @@ public class PlayerAction extends PanacheEntity {
     public long gameId;
     public int dx;
     public int dy;
+    public int x;
+    public int y;
     public boolean bombPlaced=false;
     public boolean gutterThrown=false;
     public boolean gameOver = false;
