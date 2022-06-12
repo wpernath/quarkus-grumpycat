@@ -26,6 +26,7 @@ public class MapResource {
     @PostConstruct
     void init() {
         
+        // add new levels here! All levels are stored in /java/resources/maps
         String[] levels = new String[] {
             "Level1.tmj",
             "Level2.tmj",

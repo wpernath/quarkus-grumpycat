@@ -90,6 +90,7 @@ function initGame() {
 		document.addEventListener("keydown", keyDownHandler, false);
 		document.addEventListener("keyup", keyUpHandler, false);
 
+		// change here if you want to directly play a new level
 		currentLevel = 0;
 		numBombs = 5;
 		maxScore = 0;
