@@ -30,8 +30,9 @@ public class MapResource {
         String[] levels = new String[] {
             "Level1.tmj",
             "Level2.tmj",
+            "Level5.tmj",
+            "Level4.tmj",
             "Level3.tmj",
-            "Level4.tmj"
         };
 
         try {

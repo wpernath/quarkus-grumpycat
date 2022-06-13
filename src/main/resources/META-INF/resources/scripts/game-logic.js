@@ -40,6 +40,8 @@ let serverGame;
 let loader = new PxLoader(),
 	catLeft = loader.addImage("images/cat_left.png"),
 	catRight = loader.addImage("images/cat_right.png"),
+	catLeftStatue = loader.addImage("images/grumpy_cat_right.png"),
+	catRightStatue = loader.addImage("images/grumpy_cat_left.png");
 	pauseImg = loader.addImage("images/pause.png"),
 	gameOverImg = loader.addImage("images/gameOver.png"),
 	mouseImg = loader.addImage("images/sensa_jaa.png"),
@@ -92,7 +94,7 @@ function initGame() {
 
 		// change here if you want to directly play a new level
 		currentLevel = 0;
-		numBombs = 5;
+		numBombs = 1;
 		maxScore = 0;
 
 		fetch("/maps/")
@@ -193,6 +195,17 @@ function initLevel() {
 // main game loop: move player, move enemy, update maze
 function gameLoop(timestamp) {
 	let elapsed = Math.round(timestamp - lastTimestamp);
+
+	if( escapePressed ) {
+		onTitleScreen = true;
+		score = 0;
+		maxScore = 0;
+		currentLevel =0;
+		bombsThrown = 0;
+		automatedPlayMode = false;
+		levelWon = false;
+		gameOver = false;
+	}
 
 	if( !automatedPlayMode ) {
 		if (elapsed > 80) {
@@ -319,9 +332,8 @@ function drawCenteredText(text, y) {
 }
 
 let titleScreenDrawn =0;
-let currentSelectedMenueEntryColor = "#4695eb";
+let currentSelectedMenueEntryColor = "#1259A5";
 function drawTitleScreen() {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	let menueEntries = [
 		{
 			title: "New Game",
@@ -333,10 +345,25 @@ function drawTitleScreen() {
 		},
 		{
 			title: "Highscores",
-			action: showHighscores
+			action: showHighscores,
 		},
 	];
-	
+
+	if (upPressed) {
+		titleScreenSelectedEntry -= 1;
+		if (titleScreenSelectedEntry < 0) titleScreenSelectedEntry = menueEntries.length - 1;
+		currentSelectedMenueEntryColor = "#1259A5";
+		titleScreenDrawn = 0;
+	}
+	if (downPressed) {
+		titleScreenSelectedEntry += 1;
+		if (titleScreenSelectedEntry >= menueEntries.length) titleScreenSelectedEntry = 0;
+		currentSelectedMenueEntryColor = "#1259A5";
+		titleScreenDrawn = 0;
+	}
+
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 	let y = 220;
 
 	ctx.save();
@@ -344,8 +371,8 @@ function drawTitleScreen() {
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	ctx.shadowBlur = 15;
-	ctx.shadowColor = "#ffffff";
-	ctx.fillStyle = "#000fff";
+	ctx.shadowColor = "#ff0000";
+	ctx.fillStyle = "#aaf000";
 
 
 	drawCenteredText("Quarkus Grumpy Cat", 20);
@@ -357,7 +384,7 @@ function drawTitleScreen() {
 
 	titleScreenDrawn += 1;
 	if (titleScreenDrawn > 8) {
-		currentSelectedMenueEntryColor = currentSelectedMenueEntryColor === "#4695eb" ? "white" : "#4695eb";
+		currentSelectedMenueEntryColor = currentSelectedMenueEntryColor === "#1259A5" ? "white" : "#1259A5";
 		titleScreenDrawn = 0;
 	}
 
@@ -372,16 +399,10 @@ function drawTitleScreen() {
 		y+=100;
 	}
 
-	if( upPressed ) {
-		titleScreenSelectedEntry -= 1;
-		if( titleScreenSelectedEntry <0 ) titleScreenSelectedEntry = menueEntries.length-1;
-	}
-	if( downPressed) {
-		titleScreenSelectedEntry +=1;
-		if( titleScreenSelectedEntry >= menueEntries.length) titleScreenSelectedEntry = 0;
-	}
-
 	ctx.restore();
+
+	ctx.drawImage(catLeftStatue, 12, canvas.height - 280, 160, 250);
+	ctx.drawImage(catRightStatue, canvas.width - 172, canvas.height - 280, 160, 250);
 	if( spacePressed ) {
 		spacePressed = false;
 		gameOver = false;
@@ -432,18 +453,18 @@ function playLastRun() {
 }
 
 function drawLevelWon() {
-	ctx.clearRect(0, 0, MAZE_WIDTH, MAZE_HEIGHT+20);
-	ctx.drawImage(levelWonDog, (MAZE_WIDTH - levelWonDog.width) / 2, (MAZE_HEIGHT - levelWonDog.height) / 2);
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.drawImage(levelWonDog, (canvas.width - levelWonDog.width) / 2, (canvas.height - levelWonDog.height) / 2);
 
 	ctx.font = "22px Arial";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	ctx.fillStyle = "white";
 
-	ctx.fillText("Press <space> to play next level", MAZE_WIDTH - 620, MAZE_HEIGHT);
+	drawCenteredText("Press <space> to play next level", MAZE_HEIGHT);
 
 	if (spacePressed) {
-		ctx.clearRect(0, 0, MAZE_WIDTH, MAZE_HEIGHT+20);
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		spacePressed = false;
 		gameOver = false;
 
@@ -464,15 +485,15 @@ function drawGameOver() {
 	maxScore = 0;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-	ctx.drawImage(gameOverDog, (MAZE_WIDTH - gameOverDog.width) / 2, (MAZE_HEIGHT - gameOverDog.height) / 2);
-	ctx.drawImage(gameOverImg, (MAZE_WIDTH - 620) / 2, 10, 620, 400);
+	ctx.drawImage(gameOverDog, (canvas.width - gameOverDog.width) / 2, (canvas.height - gameOverDog.height) / 2);
+	ctx.drawImage(gameOverImg, (canvas.width - 620) / 2, 10, 620, 400);
 
 	ctx.font = "22px Arial";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	ctx.fillStyle = "white";
 
-	ctx.fillText("Press <space> to start again", MAZE_WIDTH - 620, MAZE_HEIGHT + 8);
+	drawCenteredText("Press <space> to start again", MAZE_HEIGHT + 8);
 
 	if (spacePressed) {
 		spacePressed = false;
