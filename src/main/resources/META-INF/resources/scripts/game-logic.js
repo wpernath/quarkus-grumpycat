@@ -243,70 +243,72 @@ function replayAction(timestamp) {
 		automatedPlayMode = false;
 		currentLevel = 0;
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		return;
+	}
+
+	if (serverMovementIndex >= serverMovements.length) {
+		console.log("closing replay.");
+		onTitleScreen = true;
+		automatedPlayMode = false;
+		currentLevel = 0;
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 	}
 	else {
-		// replay move
-		if (serverMovementIndex >= serverMovements.length) {
-			console.log("closing replay.");
-			onTitleScreen = true;
-			automatedPlayMode = false;
-			currentLevel = 0;
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
+		// update movement
+		const movement = serverMovements[serverMovementIndex];
+		let shouldElapsed = Date.parse(movement.time) - ((lastServerMovement != null) ? Date.parse(lastServerMovement.time) : 0);
 
+		if (lastServerMovement == null || movementElapsed >= shouldElapsed) {
+			//console.log("Elapsed time: " + elapsed + " / " + shouldElapsed);
+			lastServerMovement = movement;
+			lastMovementTime = timestamp;
+			serverMovementIndex++;
+
+			renderer.player.x = movement.x;
+			renderer.player.y = movement.y;
+
+			if (movement.gutterThrown) {
+				console.log("Barrier placed at (" + (movement.x + movement.dx) + "/" + (movement.y + movement.dy));
+				renderer.placeBarrier(
+					renderer.player.x + movement.dx,
+					renderer.player.y + movement.dy
+				);
+			}
+			else if (movement.bombPlaced) {
+				console.log("Bomb placed at (" + renderer.player.x + "/" + renderer.player.y);
+				renderer.placeBomb(
+					new PlacedBomb(
+						renderer.player.x,
+						renderer.player.y,
+						bombTiles,
+						camera
+					)
+				);
+				bombsThrown++;
+			}
+
+			camera.centerAround(renderer.player.x, renderer.player.y);
+
+			let bonus = renderer.checkForBonus(renderer.player.x, renderer.player.y);
+			if (bonus != 0) {
+				score += 10;
+				if (bonus == BONUS_BOMB) {
+					numBombs += 5;
+				}
+			}
 		}
-		else {
-			// update movement
-			const movement = serverMovements[serverMovementIndex];
-			let shouldElapsed = Date.parse(movement.time) - ((lastServerMovement != null) ? Date.parse(lastServerMovement.time) : 0);
 
-			if (lastServerMovement == null || movementElapsed >= shouldElapsed) {
-				//console.log("Elapsed time: " + elapsed + " / " + shouldElapsed);
-				lastServerMovement = movement;
-				lastMovementTime = timestamp;
-				serverMovementIndex++;
-
-				if (movement.gutterThrown) {
-					renderer.placeBarrier(
-						renderer.player.x + movement.dx,
-						renderer.player.y + movement.dy
-					);
-				}
-				else if (movement.bombPlaced) {
-					renderer.placeBomb(
-						new PlacedBomb(
-							renderer.player.x,
-							renderer.player.y,
-							bombTiles,
-							camera
-						)
-					);
-					bombsThrown++;
-				}
-				renderer.player.x = movement.x;
-				renderer.player.y = movement.y;
-				camera.centerAround(renderer.player.x, renderer.player.y);
-
-				let bonus = renderer.checkForBonus(renderer.player.x, renderer.player.y);
-				if (bonus != 0) {
-					score += 10;
-					if (bonus == BONUS_BOMB) {
-						numBombs += 5;
-					}
-				}
+		// update enemy the same as in orginal gameplay
+		if (elapsed > 80) {
+			lastTimestamp = timestamp;
+			if (--catSpeed <= 0) {
+				updateEnemy();
+				catSpeed = CAT_SPEED;
 			}
 
-			// update enemy the same as in orginal gameplay
-			if (elapsed > 80) {
-				lastTimestamp = timestamp;
-				if (--catSpeed <= 0) {
-					updateEnemy();
-					catSpeed = CAT_SPEED;
-				}
-
-				updateMap();
-				drawStatus();
-
-			}
+			updateMap();
+			drawStatus();
 		}
 	}
 }
@@ -628,6 +630,8 @@ function updatePlayer() {
 			action.gutterThrown = true;
 			action.dx = dirX;
 			action.dy = dirY;
+			action.x = renderer.player.x;
+			action.y = renderer.player.y;
 		}
 	}
 
