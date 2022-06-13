@@ -76,7 +76,17 @@ Maps can be of any size. The only important thing you need to keep in mind are t
 
 You might add more layers to your map. Any layer placed on top of **Persons** will be drawn last, which means it might draw over enemies and player sprites.
 
+## Running on Docker / Podman
+There are container images ready to be used on [Quay.io](https://quay.io/wpernath/quarkus-grumpycat). Use this command to pull the image to your local repository:
 
+```shell
+docker pull quay.io/wpernath/quarkus-grumpycat
+```
+
+Note, to run the server part, you need to have a PostgreSQL database running. You can use the `docker-compose.yaml` file in `src/main/docker/` to setup a local docker / podman compose environment.
+
+
+## Running on Kubernetes / OpenShift
 
 
 ## About the graphics

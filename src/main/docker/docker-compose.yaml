@@ -1,0 +1,30 @@
+version: "3"
+#name: "lightcontrol"
+
+services:
+  catsdb:
+    image: docker.io/library/postgres:14.2
+    volumes:
+      - pg_data:/var/lib/postgresql
+    restart: always
+    environment:
+      POSTGRES_USER: cat
+      POSTGRES_PASSWORD: grumpy
+      POSTGRES_DB: catdb
+  
+  grumpy-cat:
+    depends_on: 
+      - catsdb
+    image: quay.io/wpernath/quarkus-grumpycat:v0.2.2
+    ports:
+      - "8001:8080"
+    restart: always
+    environment:
+      DB_user: cat
+      DB_password: grumpy
+      DB_host: catsdb
+      DB_dbname: catdb      
+volumes:
+  pg_data:
+
+  
