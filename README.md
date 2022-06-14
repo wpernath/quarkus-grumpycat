@@ -85,8 +85,34 @@ docker pull quay.io/wpernath/quarkus-grumpycat
 
 Note, to run the server part, you need to have a PostgreSQL database running. You can use the `docker-compose.yaml` file in `src/main/docker/` to setup a local docker / podman compose environment.
 
+```shell
+docker-compose -f src/main/docker/docker-compose.yaml [--detach|-d] up
+```
+
+The app is then available under `http://localhost:8081` in your browser.
+
 
 ## Running on Kubernetes / OpenShift
+### OpenShift S2I
+Installing database
+
+```shell
+oc new-app postgresql-persistent \
+	-p POSTGRESQL_USER=cat \
+	-p POSTGRESQL_PASSWORD=grumpy \
+	-p POSTGRESQL_DATABASE=catdb \
+	-p DATABASE_SERVICE_NAME=catserver
+```
+
+Start building the app
+```shell
+oc new-app java:openjdk-17-ubi8~https://github.com/wpernath/quarkus-grumpycat.git  --name=grumpy-cat --build-env MAVEN_MIRROR_URL=http://nexus.ci:8081/repository/maven-public/
+```
+
+Expose the service
+```shell
+oc expose svc/grumpy-cat
+```
 
 
 ## About the graphics

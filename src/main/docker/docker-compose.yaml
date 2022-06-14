@@ -15,7 +15,7 @@ services:
   grumpy-cat:
     depends_on: 
       - catsdb
-    image: quay.io/wpernath/quarkus-grumpycat:v0.2.2
+    image: quay.io/wpernath/quarkus-grumpycat:v0.2.3
     ports:
       - "8081:8080"
     restart: always
