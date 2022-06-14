@@ -80,6 +80,55 @@ function keyUpHandler(event) {
 	if (event.code == "Escape") escapePressed = false;
 }
 
+const pointerStart = {x: 0, y:0, identifier: 0};
+let displayTouched = false;
+
+function handleTouchStart(event) {
+	event.preventDefault();
+	let evt = event.changedTouches[0];
+	console.log(event.changedTouches.length);
+	pointerStart.x = evt.clientX;
+	pointerStart.y = evt.clientY;
+	pointerStart.identifier = evt.identifier;
+	console.log("Touch start " + evt.identifier + " (" + pointerStart.x + "/" + pointerStart.y + ")");
+	displayTouched = true;
+}
+function handleTouchEnd(event) {
+	event.preventDefault();
+	console.log("Touch end");
+	upPressed = downPressed = leftPressed = rightPressed = false;
+	displayTouched = false;
+}
+function handleTouchMove(event) {
+	event.preventDefault();
+	let evt = event.changedTouches[0];
+	if( evt.clientX < pointerStart.x ) {
+		leftPressed = true;
+		rightPressed = false;
+	}
+	if( evt.clientX > pointerStart.x ) {
+		rightPressed = true;
+		leftPressed = false;
+	}
+
+	if (evt.clientY < pointerStart.y) {
+		upPressed = true;
+		downPressed = false;
+	}
+	if (evt.clientY > pointerStart.y) {
+		downPressed = true;
+		upPressed = false;
+	}
+
+	console.log("Touch move");
+}
+function handleTouchCancel(event) {
+	event.preventDefault();
+	console.log("Touch cancel");
+	upPressed = downPressed = leftPressed = rightPressed = false;
+	displayTouched = false;
+}
+
 // init game
 function initGame() {
 	canvas = document.getElementById("maze");
@@ -91,6 +140,10 @@ function initGame() {
 
 		document.addEventListener("keydown", keyDownHandler, false);
 		document.addEventListener("keyup", keyUpHandler, false);
+		canvas.addEventListener("touchstart", handleTouchStart);
+		canvas.addEventListener("touchend", handleTouchEnd);
+		canvas.addEventListener("touchmove", handleTouchMove);
+		canvas.addEventListener("touchcancel", handleTouchCancel);
 
 		// change here if you want to directly play a new level
 		currentLevel = 0;
@@ -242,7 +295,18 @@ function gameLoop(timestamp) {
 	else { // automated play mode
 		replayAction(timestamp);		
 	}
+	drawTouchControls(timestamp);
 	window.requestAnimationFrame(gameLoop);
+}
+
+function drawTouchControls(timestamp) {
+	if( displayTouched ) {
+		// draw a circle around the touchpoint
+		ctx.beginPath();
+		ctx.arc(pointerStart.x, pointerStart.y, 50, 0, 2*Math.PI, false);
+		ctx.fillStyle = "white";
+		ctx.fill();
+	}
 }
 
 let lastMovementTime = 0;
