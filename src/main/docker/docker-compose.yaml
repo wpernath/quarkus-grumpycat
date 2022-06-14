@@ -17,7 +17,7 @@ services:
       - catsdb
     image: quay.io/wpernath/quarkus-grumpycat:v0.2.2
     ports:
-      - "8001:8080"
+      - "8081:8080"
     restart: always
     environment:
       DB_user: cat
