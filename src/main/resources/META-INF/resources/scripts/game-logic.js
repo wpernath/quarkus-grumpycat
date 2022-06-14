@@ -53,6 +53,7 @@ let loader = new PxLoader(),
 // This is the entry point of the game.   
 function setupGame() {
 	// add a completion listener to the image loader which inits the game
+	console.log("setupGame() called");
 	loader.addCompletionListener(initGame);
 	loader.start();
 }
@@ -87,8 +88,8 @@ function handleTouchStart(event) {
 	event.preventDefault();
 	let evt = event.changedTouches[0];
 	console.log(event.changedTouches.length);
-	pointerStart.x = evt.clientX;
-	pointerStart.y = evt.clientY;
+	pointerStart.x = Math.round(evt.clientX - canvas.offsetLeft);
+	pointerStart.y = Math.round(evt.clientY - canvas.offsetTop);
 	pointerStart.identifier = evt.identifier;
 	console.log("Touch start " + evt.identifier + " (" + pointerStart.x + "/" + pointerStart.y + ")");
 	displayTouched = true;
@@ -102,25 +103,31 @@ function handleTouchEnd(event) {
 function handleTouchMove(event) {
 	event.preventDefault();
 	let evt = event.changedTouches[0];
-	if( evt.clientX < pointerStart.x ) {
-		leftPressed = true;
-		rightPressed = false;
-	}
-	if( evt.clientX > pointerStart.x ) {
-		rightPressed = true;
-		leftPressed = false;
+	let dx = Math.round(pointerStart.x - (evt.clientX - canvas.offsetLeft));
+	let dy = Math.round(pointerStart.y - (evt.clientY - canvas.offsetTop));
+
+	upPressed = downPressed = leftPressed = rightPressed = false;
+
+	if( Math.abs(dx) > 10 ) {
+		console.log("dx: " + dx);
+		if( dx > 0 ) {
+			leftPressed = true;
+		}
+		else if( dx < 0 ) {
+			rightPressed = true;			
+		}
 	}
 
-	if (evt.clientY < pointerStart.y) {
-		upPressed = true;
-		downPressed = false;
+	if( Math.abs(dy) > 10) {
+		console.log("dy: " + dy);
+		if (dy > 0) {
+			upPressed = true;			
+		}
+		else if (dy < 0) {
+			downPressed = true;			
+		}
 	}
-	if (evt.clientY > pointerStart.y) {
-		downPressed = true;
-		upPressed = false;
-	}
-
-	console.log("Touch move");
+	console.log("Touch move: " + leftPressed + "/" + rightPressed + "/" + upPressed + "/" + downPressed);
 }
 function handleTouchCancel(event) {
 	event.preventDefault();
@@ -131,36 +138,55 @@ function handleTouchCancel(event) {
 
 // init game
 function initGame() {
-	canvas = document.getElementById("maze");
-	if (canvas.getContext) {
-		ctx = canvas.getContext("2d");
+	console.log("initGame()");
+	setupCanvas();
 
-		ctx.imageSmoothingEnabled = true;
-		ctx.imageSmoothingQuality = "high";
+	document.addEventListener("keydown", keyDownHandler, false);
+	document.addEventListener("keyup", keyUpHandler, false);
+	canvas.addEventListener("touchstart", handleTouchStart);
+	canvas.addEventListener("touchend", handleTouchEnd);
+	canvas.addEventListener("touchmove", handleTouchMove);
+	canvas.addEventListener("touchcancel", handleTouchCancel);
+	canvas.addEventListener("resize", setupCanvas);
 
-		document.addEventListener("keydown", keyDownHandler, false);
-		document.addEventListener("keyup", keyUpHandler, false);
-		canvas.addEventListener("touchstart", handleTouchStart);
-		canvas.addEventListener("touchend", handleTouchEnd);
-		canvas.addEventListener("touchmove", handleTouchMove);
-		canvas.addEventListener("touchcancel", handleTouchCancel);
+	// change here if you want to directly play a new level
+	currentLevel = 0;
+	numBombs = 1;
+	maxScore = 0;
 
-		// change here if you want to directly play a new level
-		currentLevel = 0;
-		numBombs = 1;
-		maxScore = 0;
-
-		fetch("/maps/")
-			.then(function(response) {
-				return response.json();
-			})
-			.then(function(result) {
-				numLevels = result;
-				initLevel();
-			});
-	}
+	fetch("/maps/")
+		.then(function(response) {
+			return response.json();
+		})
+		.then(function(result) {
+			numLevels = result;
+			initLevel();
+		});
 }
 
+
+function setupCanvas() {
+	console.log("setupCanvas()");
+	if( canvas === undefined ) {
+		let myDiv = document.getElementById("canvas");
+		canvas = document.createElement("canvas");
+		canvas.style.zIndex = 1;  
+		canvas.width = myDiv.clientWidth;
+		canvas.height= myDiv.clientHeight;
+
+		myDiv.appendChild(canvas);
+		ctx = canvas.getContext("2d");
+
+		ctx.imageSmoothingEnabled = false;
+		//ctx.imageSmoothingQuality = "high";
+
+		MAZE_HEIGHT = canvas.height - 32;
+		MAZE_WIDTH = canvas.width;
+		//canvas.width = canvas.clientWidth;
+		//canvas.height = canvas.clientHeight;
+		console.log("setupCanvas(canvas: " + MAZE_WIDTH + "/" + MAZE_HEIGHT + ")");
+	}
+}
 
 async function createGameOnServer(level) {
 	let resp = await fetch("/faker");
