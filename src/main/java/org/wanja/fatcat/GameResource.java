@@ -9,7 +9,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-import org.jboss.resteasy.annotations.jaxrs.PathParam;
 import org.wanja.fatcat.model.Game;
 import org.wanja.fatcat.model.Player;
 
@@ -43,7 +42,7 @@ public class GameResource {
 
     @GET
     @Path("/{id}")
-    public Game game(@PathParam long id) {
+    public Game game(long id) {
         return Game.findById(id);
     }
 }

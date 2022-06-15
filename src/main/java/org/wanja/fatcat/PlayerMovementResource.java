@@ -8,7 +8,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
-import org.jboss.resteasy.annotations.jaxrs.PathParam;
 import org.wanja.fatcat.model.Game;
 import org.wanja.fatcat.model.PlayerAction;
 
@@ -29,7 +28,7 @@ public class PlayerMovementResource {
 
     @GET
     @Path("/{gameId}/{playerId}")
-    public List<PlayerAction> movementsForGame(@PathParam long gameId, @PathParam long playerId) {
+    public List<PlayerAction> movementsForGame(long gameId, long playerId) {
         Log.info("Loading movements from game " + gameId + " and player " + playerId );
         List<PlayerAction> res = PlayerAction
                 .list("gameId = ?1 and playerId = ?2 order by time", gameId, playerId);                

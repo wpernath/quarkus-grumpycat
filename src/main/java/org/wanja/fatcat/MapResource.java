@@ -11,7 +11,6 @@ import javax.ws.rs.Path;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.jboss.resteasy.annotations.jaxrs.PathParam;
 import org.wanja.fatcat.map.Map;
 
 @Path("/maps")
@@ -55,7 +54,7 @@ public class MapResource {
 
     @GET
     @Path("/{level}")
-    public Map mapByLevel(@PathParam int level) {
+    public Map mapByLevel(int level) {
         return maps.get(level);
     }
 

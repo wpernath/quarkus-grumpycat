@@ -87,8 +87,9 @@ function handleTouchStart(event) {
 	event.preventDefault();
 	let evt = event.changedTouches[0];
 	console.log(event.changedTouches.length);
-	pointerStart.x = evt.clientX;
-	pointerStart.y = evt.clientY;
+	pointerStart.x = evt.pageX ;
+	pointerStart.y = evt.pageY ;
+
 	pointerStart.identifier = evt.identifier;
 	console.log("Touch start " + evt.identifier + " (" + pointerStart.x + "/" + pointerStart.y + ")");
 	displayTouched = true;
@@ -102,20 +103,20 @@ function handleTouchEnd(event) {
 function handleTouchMove(event) {
 	event.preventDefault();
 	let evt = event.changedTouches[0];
-	if( evt.clientX < pointerStart.x ) {
+	if( evt.pageX < pointerStart.x ) {
 		leftPressed = true;
 		rightPressed = false;
 	}
-	if( evt.clientX > pointerStart.x ) {
+	if( evt.pageX > pointerStart.x ) {
 		rightPressed = true;
 		leftPressed = false;
 	}
 
-	if (evt.clientY < pointerStart.y) {
+	if (evt.pageY < pointerStart.y) {
 		upPressed = true;
 		downPressed = false;
 	}
-	if (evt.clientY > pointerStart.y) {
+	if (evt.pageY > pointerStart.y) {
 		downPressed = true;
 		upPressed = false;
 	}
