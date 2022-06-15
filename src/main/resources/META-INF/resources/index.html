@@ -3,15 +3,16 @@
     <head>
         <meta charset="UTF-8">
         <title>Quarkus Grumpy Cat - 0.2.3</title>
+
+        <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
         <style>
             body {
                 margin: 0;
                 font-family: Roboto, "Helvetica Neue", Arial, sans-serif; color:white;
-            }
-            code {
-                font-family: "Courier New", monospace;
-                color: #e83e8c;
-                word-break: break-word;
             }
             h1, h2, h3, h4, h5, h6 {
                 margin-bottom: 0.5rem;
@@ -40,11 +41,12 @@
                 clear: both;
             }
             .header-wrapper {
-                padding: 0 13rem;
+                padding: 0 4rem;
                 background: black;
             }
             .content-wrapper {
                 padding: 0 4rem;
+                width: 1024px; height: 768px;
                 background: black;
             }
             .header {
@@ -57,123 +59,63 @@
                 height: 30px;
                 padding-top: 1rem;
             }
-            .banner {
-                grid-column: span 12;
-                padding: 2rem 0;
-            }
-            .callout {
-                color: white;
-                font-size: 3.5rem;
-                margin: 0;
-                padding-top: 5rem;
-                grid-column: span 8;
-            }
-            .app-details {
-                margin: 1rem 0;
-                border: 1px solid lightgrey;
-                padding: 1rem;
-                background: white;
-                font-size: .75rem;
-                font-weight: 300;
-                grid-column: span 4;
-            }
-            .app-details code { font-size: 87.5%; }
-            .app-details ul {
-                list-style-type: none;
-                padding: 0;
-                margin: 0;
-            }
-            .app-details ul li { margin-bottom: 0.2rem; }
-            .app-details h5 {
-                margin: 0;
-                padding: 0;
-            }
-            .left-column {
-                grid-column: span 8;
-                padding-right: 3rem;
-            }
-            .left-column p {
-                padding: .15rem 0;
-                margin: 0;
-                font-weight: 300;
-            }
-            .left-column ul {
-                margin: 0;
-                padding: 10px 0 0 25px;
-                list-style-type: "\1F680";
-                font-weight: 300;
-            }
-            .left-column li { padding-left: 10px; }
-            .left-column .cta-button {
-                margin: 20px 0;
-                display: inline-block;
-                padding: 1rem 2rem;
-                background-color: #4695EB;
-                font-weight: 600;
-                color: white;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-            .right-column {
-                grid-column: span 4;
-                margin-top: 1rem;
-                font-weight: 200;
-            }
-            .right-column h5 {
-                padding: 1rem 0 .25rem 0;
-                margin: 0;
-                font-weight: 300;
-            }
-            .right-column h3 { font-weight: 400;}
-            .right-column ul {
-                margin: 0;
-                list-style-type: circle;
-            }
-            .right-column li {
-                padding: .5rem 0 0 0;
-            }
-            .provided-code {
-                line-height: 20px;
-            }
-            .provided-code b {
-                font-weight: 400;
-            }
-            @media screen and (max-width: 1023px) {
+
+            .maze { border: 1px solid grey; width: 1024px; height: 768px;}
+
+            @media screen and (max-width: 1025px) {
+                .header {
+                    background-position: 0 0rem;
+                    min-height: 30px;
+                    grid-column: span 12;
+                }
+                #quarkus-logo-svg {
+                    width: 200px;
+                    height: 24px;
+                    padding-top: 1rem;
+                }
+
                 .header-wrapper {
-                    padding: 0 1rem;
+                    padding: 0 0rem;
                     background: black;
                 }
-                .banner-wrapper { padding: 0 1rem; }
+                .banner-wrapper { padding: 0 0rem; }
                 .content-wrapper {
-                    padding: 0 1rem;
+                    padding: 0 0rem;
+                    width: 864px; height: 608px;
                     background: black;
                 }
-                .left-column {
-                    grid-column: span 12;
-                }
-                .right-column {
-                    grid-column: span 12;
-                    margin: 3rem 0;
-                }
-                .callout {
-                    color: white;
-                    font-size: 3.5rem;
-                    margin: 0;
-                    padding: 1rem 0;
-                    grid-column: span 12;
-                }
-                .app-details {
-                    margin: 1rem 0;
-                    border: 1px solid lightgrey;
-                    padding: 1rem;
-                    background: white;
-                    font-size: 1rem;
-                    font-weight: 300;
-                    grid-column: span 12;
-                }
+
+                h1 { font-size: 0rem; }
+                .maze { border: 1px solid grey; width: 864px; height: 608px;}
             }
 
-            canvas { border: 1px solid grey; }
+            @media screen and (max-width: 855px) {
+                .header {
+                    background-position: 0 0rem;
+                    min-height: 30px;
+                    grid-column: span 12;
+                }
+                #quarkus-logo-svg {
+                    width: 200px;
+                    height: 24px;
+                    padding-top: 1rem;
+                }
+
+                .header-wrapper {
+                    padding: 0 0rem;
+                    background: black;
+                }
+                .banner-wrapper { padding: 0 0rem; }
+                .content-wrapper {
+                    padding: 0 0rem;
+                    background: black;
+
+                    width: 864px; height: 384px;
+                }
+
+                .maze { border: 1px solid grey; width: 864px; height: 384px;}
+            }
+
         </style>
 
         <script type="text/javascript" src="/scripts/pxloader-all.js" ></script>
@@ -232,26 +174,13 @@
                 </div>                
             </div>
         </div>
-        <div class="content-wrapper" >            
+        <div id="canvas2" class="content-wrapper" >                        
+            <!--h1>Quarkus Grumpy Cat</h1-->
+            <div class="maze" id="canvas"></div>
 
-            <div class="grid">
-                <!--div>
-                    <img src="/images/grumpy_cat_right.png" height="250" />
-                </div -->
-                <div >
-                    <h1>Quarkus Grumpy Cat</h1>
-                    <canvas id="maze" width="1024" height="768">
-                        <p>Game is loading.. Cat is crawling.. Mouse is yawning..</p>
-                    </canvas>
-
-                    <p class="small">Coded by Wanja Pernath, Game Art by <a href="https://opengameart.org/content/tiled-terrains">LPC
-                            Terrain</a>, Maps designed with <a href="https://mapeditor.org">Tiled Map Editor</a></p>
-                </div>
-                <!--div >
-                    <img src="/images/grumpy_cat_left.png" height="250" />                     
-                </div -->
-            </div>
-
+            <p class="small">Coded by Wanja Pernath, Game Art by <a href="https://opengameart.org/content/tiled-terrains">LPC
+                    Terrain</a>, Maps designed with <a href="https://mapeditor.org">Tiled Map Editor</a></p>
+        
         </div>
     </body>
 

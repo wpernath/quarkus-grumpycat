@@ -1,6 +1,6 @@
 // global letiables
-const MAZE_WIDTH = 1024;
-const MAZE_HEIGHT = 736;
+let MAZE_WIDTH = 1024;
+let MAZE_HEIGHT = 736;
 
 const TILE_WIDTH = 32;
 const TILE_HEIGHT = 32;
@@ -107,10 +107,10 @@ class Enemy {
 			let offsetX = -camera.x + startX * renderer.tileWidth;
 			let offsetY = -camera.y + startY * renderer.tileHeight;
 
-			let xPos = Math.floor((this.catX - startX) * TILE_WIDTH + offsetX);
-			let yPos = Math.floor((this.catY - startY) * TILE_HEIGHT + offsetY);
+			let xPos = Math.floor((this.catX - startX) * renderer.tileWidth + offsetX);
+			let yPos = Math.floor((this.catY - startY) * renderer.tileHeight + offsetY);
 
-			ctx.drawImage(this.image, xPos, yPos, TILE_WIDTH, TILE_WIDTH);
+			ctx.drawImage(this.image, xPos, yPos, renderer.tileWidth, renderer.tileHeight);
 		}
 	}
 

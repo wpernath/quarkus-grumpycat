@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cat-dev
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: cat-dev
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: config/overlays/dev
+    repoURL: https://github.com/wpernath/grumpycat-config.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+    syncOptions:
+    - PruneLast=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cat-stage
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: cat-stage
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: config/overlays/stage
+    repoURL: https://github.com/wpernath/grumpycat-config.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+    syncOptions:
+    - PruneLast=true
