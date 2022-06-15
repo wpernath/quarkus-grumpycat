@@ -66,6 +66,7 @@ spec:
           value:
             - package
             - '-DskipTests'
+            - '-Dquarkus.container-image.build=false'
         - name: CONTEXT_DIR
           value: the-source/$(params.git-context)
       runAfter:

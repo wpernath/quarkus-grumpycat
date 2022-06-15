@@ -35,8 +35,18 @@ spec:
         which we want to execute maven goals.
       default: "."
   steps:
+    - name: mvn-setup
+      image: docker.io/maven:3.8.5-eclipse-temurin-17-alpine
+      workingDir: $(workspaces.source.path)/$(params.CONTEXT_DIR)
+      script: |
+        echo "Maven version:"
+        /usr/bin/mvn -version
+        
+        echo "Java version:"
+        java -version
+
     - name: mvn-goals
-      image: gcr.io/cloud-builders/mvn@sha256:57523fc43394d6d9d2414ee8d1c85ed7a13460cbb268c3cd16d28cfb3859e641
+      image: docker.io/maven:3.8.5-eclipse-temurin-17-alpine
       workingDir: $(workspaces.source.path)/$(params.CONTEXT_DIR)
       command: ["/usr/bin/mvn"]
       args:

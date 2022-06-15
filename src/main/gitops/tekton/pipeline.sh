@@ -193,7 +193,7 @@ EOF
     oc apply -k "$SCRIPT_DIR" -n $TARGET_NAMESPACE
 
     while :; do
-      oc get ns/book-ci > /dev/null && break
+      oc get ns/cat-ci > /dev/null && break
       sleep 2
     done
   fi
