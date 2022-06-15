@@ -48,6 +48,11 @@ let loader = new PxLoader(),
 	gameOverDog = loader.addImage("images/sensa_nee.png"),
 	levelWonDog = loader.addImage("images/sensa_jaa.png"),
 	bombTiles = loader.addImage("/images/tilesets/BombExploding.png"),
+
+	compassRoseImg = loader.addImage("/images/compass_rose.png"),
+	touchImg = loader.addImage("/images/touch.png"),
+	touchSegmentImg = loader.addImage("/images/touch_segment.png"),
+
 	terrainTiles = loader.addImage("/images/tilesets/terrain.png");	
 
 // This is the entry point of the game.   
@@ -108,7 +113,7 @@ function handleTouchMove(event) {
 
 	upPressed = downPressed = leftPressed = rightPressed = false;
 
-	if( Math.abs(dx) > 10 ) {
+	if( Math.abs(dx) > 15 ) {
 		console.log("dx: " + dx);
 		if( dx > 0 ) {
 			leftPressed = true;
@@ -118,7 +123,7 @@ function handleTouchMove(event) {
 		}
 	}
 
-	if( Math.abs(dy) > 10) {
+	if( Math.abs(dy) > 15) {
 		console.log("dy: " + dy);
 		if (dy > 0) {
 			upPressed = true;			
@@ -127,7 +132,7 @@ function handleTouchMove(event) {
 			downPressed = true;			
 		}
 	}
-	console.log("Touch move: " + leftPressed + "/" + rightPressed + "/" + upPressed + "/" + downPressed);
+	//console.log("Touch move: " + leftPressed + "/" + rightPressed + "/" + upPressed + "/" + downPressed);
 }
 function handleTouchCancel(event) {
 	event.preventDefault();
@@ -326,12 +331,14 @@ function gameLoop(timestamp) {
 }
 
 function drawTouchControls(timestamp) {
+
 	if( displayTouched ) {
-		// draw a circle around the touchpoint
-		ctx.beginPath();
-		ctx.arc(pointerStart.x, pointerStart.y, 50, 0, 2*Math.PI, false);
-		ctx.fillStyle = "white";
-		ctx.fill();
+		// draw the compass_rose
+		ctx.drawImage(compassRoseImg, pointerStart.x - (compassRoseImg.width / 2), pointerStart.y - ((compassRoseImg.height/2)));
+
+		if( leftPressed || rightPressed || upPressed || downPressed ) {
+			if( leftPressed && !(up))
+		}
 	}
 }
 
