@@ -9,6 +9,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.wanja.fatcat.model.Game;
 import org.wanja.fatcat.model.Player;
 
@@ -20,6 +21,9 @@ import io.quarkus.panache.common.Sort.Direction;
 @Consumes("application/json")
 @Produces("application/json")
 public class GameResource {
+
+    @ConfigProperty( name = "application.version")
+    String versionString;
 
     @POST
     @Transactional
@@ -44,5 +48,12 @@ public class GameResource {
     @Path("/{id}")
     public Game game(long id) {
         return Game.findById(id);
+    }
+
+    @GET
+    @Path("/version")
+    @Produces("text/plain")
+    public String version() {
+        return versionString;
     }
 }
