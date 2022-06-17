@@ -86,59 +86,93 @@ function keyUpHandler(event) {
 	if (event.code == "Escape") escapePressed = false;
 }
 
-const pointerStart = {x: 0, y:0, identifier: 0};
+const pointerStart = {x: 0, y:0, identifier: 0, touched: false};
+const virtGamePad  = {x: 0, y:0, identifier: 0, touched: false};
+const virtButtons  = {x: 0, y:0, identifier: 0, touched: false};
 let displayTouched = false;
 
 function handleTouchStart(event) {
 	event.preventDefault();
-	let evt = event.changedTouches[0];
-	console.log(event.changedTouches.length);
-	pointerStart.x = Math.round(evt.clientX - canvas.offsetLeft);
-	pointerStart.y = Math.round(evt.clientY - canvas.offsetTop);
-	pointerStart.identifier = evt.identifier;
-	console.log("Touch start " + evt.identifier + " (" + pointerStart.x + "/" + pointerStart.y + ")");
+	for( let i = 0; i < event.changedTouches.length; i++ ) {
+		let evt = event.changedTouches[i];
+		pointerStart.x = Math.round(evt.clientX - canvas.offsetLeft);
+		pointerStart.y = Math.round(evt.clientY - canvas.offsetTop);
+		pointerStart.identifier = evt.identifier;	
+
+		if( pointerStart.x < (canvas.width / 2)) { // virtGamePad clicked
+			virtGamePad.x = pointerStart.x;
+			virtGamePad.y = pointerStart.y;
+			virtGamePad.identifier = evt.identifier;
+			virtGamePad.touched = true;
+		}
+		else if( pointerStart.x > (canvas.width / 2) ) {
+			virtButtons.x = pointerStart.x;
+			virtButtons.y = pointerStart.y;
+			virtButtons.identifier = pointerStart.identifier;
+			virtButtons.touched = true;
+		}
+	}
 	displayTouched = true;
 }
 function handleTouchEnd(event) {
-	event.preventDefault();
-	console.log("Touch end");
-	upPressed = downPressed = leftPressed = rightPressed = false;
-	displayTouched = false;
+	event.preventDefault();	
+
+	for (let i = 0; i < event.changedTouches.length; i++) {
+		let evt = event.changedTouches[i];
+		pointerStart.x = Math.round(evt.clientX - canvas.offsetLeft);
+		pointerStart.y = Math.round(evt.clientY - canvas.offsetTop);
+		pointerStart.identifier = evt.identifier;
+		
+		if (evt.identifier == virtGamePad.identifier) {
+			// virtGamePad clicked
+			virtGamePad.x = pointerStart.x;
+			virtGamePad.y = pointerStart.y;			
+			virtGamePad.touched = false;
+			upPressed = downPressed = leftPressed = rightPressed = false;
+		} 
+		else if (evt.identifier == virtButtons.identifier) {
+			virtButtons.x = pointerStart.x;
+			virtButtons.y = pointerStart.y;			
+			virtButtons.touched = false;
+		}
+	}
+
+	if( !virtGamePad.touched && !virtButtons.touched ) {
+		displayTouched = false;
+	}
 }
 function handleTouchMove(event) {
 	event.preventDefault();
-	let evt = event.changedTouches[0];
-	let dx = Math.round(pointerStart.x - (evt.clientX - canvas.offsetLeft));
-	let dy = Math.round(pointerStart.y - (evt.clientY - canvas.offsetTop));
 
-	upPressed = downPressed = leftPressed = rightPressed = false;
+	for (let i = 0; i < event.changedTouches.length; i++) {
+		let evt = event.changedTouches[i];
 
-	if( Math.abs(dx) > 15 ) {
-		console.log("dx: " + dx);
-		if( dx > 0 ) {
-			leftPressed = true;
-		}
-		else if( dx < 0 ) {
-			rightPressed = true;			
+		if( evt.identifier == virtGamePad.identifier && virtGamePad.touched ) {
+			let dx = Math.round(pointerStart.x - (evt.clientX - canvas.offsetLeft));
+			let dy = Math.round(pointerStart.y - (evt.clientY - canvas.offsetTop));
+
+			upPressed = downPressed = leftPressed = rightPressed = false;
+
+			if( Math.abs(dx) > 20 ) {		
+				if( dx > 0 ) {
+					leftPressed = true;
+				}
+				else if( dx < 0 ) {
+					rightPressed = true;			
+				}
+			}
+
+			if( Math.abs(dy) > 20) {		
+				if (dy > 0) {
+					upPressed = true;			
+				}
+				else if (dy < 0) {
+					downPressed = true;			
+				}
+			}
+			break;
 		}
 	}
-
-	if( Math.abs(dy) > 15) {
-		console.log("dy: " + dy);
-		if (dy > 0) {
-			upPressed = true;			
-		}
-		else if (dy < 0) {
-			downPressed = true;			
-		}
-	}
-	//console.log("Touch move: " + leftPressed + "/" + rightPressed + "/" + upPressed + "/" + downPressed);
-}
-function handleTouchCancel(event) {
-	event.preventDefault();
-	console.log("Touch cancel");
-	upPressed = downPressed = leftPressed = rightPressed = false;
-	displayTouched = false;
 }
 
 // init game
@@ -151,7 +185,7 @@ function initGame() {
 	canvas.addEventListener("touchstart", handleTouchStart);
 	canvas.addEventListener("touchend", handleTouchEnd);
 	canvas.addEventListener("touchmove", handleTouchMove);
-	canvas.addEventListener("touchcancel", handleTouchCancel);
+	canvas.addEventListener("touchcancel", handleTouchEnd);
 	canvas.addEventListener("resize", setupCanvas);
 
 	// change here if you want to directly play a new level
@@ -321,25 +355,42 @@ function gameLoop(timestamp) {
 			if( onTitleScreen ) {
 				drawTitleScreen();
 			}
+			drawTouchControls(timestamp);
 		}
 	}
 	else { // automated play mode
 		replayAction(timestamp);		
 	}
-	drawTouchControls(timestamp);
+	
 	window.requestAnimationFrame(gameLoop);
 }
 
 function drawTouchControls(timestamp) {
 
 	if( displayTouched ) {
-		// draw the compass_rose
+		// draw the compass_rose		
 		ctx.drawImage(compassRoseImg, pointerStart.x - (compassRoseImg.width / 2), pointerStart.y - ((compassRoseImg.height/2)));
+		let img = touchImg;
+		let x = pointerStart.x - (img.width / 2);
+		let y = pointerStart.y - (img.height / 2);
 
-		if( leftPressed || rightPressed || upPressed || downPressed ) {
-			if( leftPressed && !(up))
+		if( leftPressed)  x -= img.width / 2;
+		if( rightPressed) x += img.width / 2;
+		if( upPressed )   y -= img.height /2;
+		if( downPressed)  y += img.height / 2;
+
+		ctx.drawImage(img, x, y);
+
+		// right side
+		ctx.drawImage(touchImg, canvas.width - touchImg.width - 130, canvas.height - touchImg.height - 40);
+
+		if( !automatedPlayMode && !gameOver && !levelWon && !gamePaused ) {
+			ctx.drawImage(touchImg, canvas.width - touchImg.width - 30, canvas.height - touchImg.height - 100);
+			//ctx.drawImage(bombTiles, )
 		}
+
 	}
+
 }
 
 let lastMovementTime = 0;
