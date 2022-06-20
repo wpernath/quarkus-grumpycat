@@ -34,7 +34,7 @@ let camera;
 
 let serverGame;
 let serverVersion;
-
+let gameEngine;
 
 // load images
 let loader = new PxLoader(),
@@ -221,7 +221,8 @@ function setupCanvas() {
 	canvas.width = Math.floor(myDiv.clientWidth / 32)*32;
 	canvas.height= Math.floor(myDiv.clientHeight / 32) * 32;
 
-	
+	gameEngine = new GameEngine(canvas);
+
 	ctx = canvas.getContext("2d");
 
 	ctx.imageSmoothingEnabled = false;
@@ -491,10 +492,7 @@ function replayAction(timestamp) {
 }
 
 function drawCenteredText(text, y) {
-	let width = ctx.measureText(text).width;
-	let x = (canvas.width-width)/2;
-	ctx.fillText(text, x, y);
-	return x;
+	gameEngine.drawCenteredText(text, y);
 }
 
 let titleScreenDrawn =0;
@@ -528,12 +526,12 @@ function drawTitleScreen() {
 		titleScreenDrawn = 0;
 	}
 
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	gameEngine.clearScreen();
 
 	let y = 220;
 
 	ctx.save();
-	ctx.font = "66px Arial";
+	ctx.font = gameEngine.getHeadlineFont().size + "px Arial";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	ctx.shadowBlur = 15;
@@ -542,11 +540,11 @@ function drawTitleScreen() {
 
 
 	drawCenteredText("Quarkus Grumpy Cat", 20);
-	ctx.font = "16px Arial";
+	ctx.font = gameEngine.getSmallFont().size + "px Arial";
 	ctx.shadowBlur = 0;
 	drawCenteredText("Server version: " + serverVersion, 92);
 
-	ctx.font = "40px Arial";
+	ctx.font = gameEngine.getMenuFont().size + "px Arial";
 	ctx.shadowBlur = 10;
 	ctx.shadowColor = "red";
 	ctx.fillStyle = "white";
