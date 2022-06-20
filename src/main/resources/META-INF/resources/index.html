@@ -89,23 +89,26 @@
                 .maze { border: 1px solid grey; width: 864px; height: 608px;}
             }
 
-            @media screen and (max-width: 855px) {
+            @media screen and (max-width: 844px) {
                 .header {
                     background-position: 0 0rem;
-                    min-height: 30px;
-                    grid-column: span 12;
+                    min-height: 0px;
+                    grid-column: span 12;                    
+                    visibility: hidden;
                 }
                 #quarkus-logo-svg {
-                    width: 200px;
-                    height: 24px;
-                    padding-top: 1rem;
+                    width: 0px;
+                    height: 0px;
+                    padding-top: 0rem;
+                    visibility: hidden;
                 }
 
                 .header-wrapper {
                     padding: 0 0rem;
                     background: black;
+                    visibility: hidden;
                 }
-                .banner-wrapper { padding: 0 0rem; }
+                .banner-wrapper { padding: 0 0rem; visibility: hidden;}
                 .content-wrapper {
                     padding: 0 0rem;
                     background: black;

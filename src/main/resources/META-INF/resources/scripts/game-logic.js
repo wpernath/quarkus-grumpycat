@@ -18,6 +18,9 @@ let lastServerMovement = null;
 let gamePaused = true;
 let gameOver = false;
 let levelWon = false;
+
+let deviceHasTouchScreen = false;
+
 let catSpeed = CAT_SPEED;
 let lastTimestamp = 0;
 let numPoints = 0;
@@ -59,8 +62,33 @@ let loader = new PxLoader(),
 function setupGame() {
 	// add a completion listener to the image loader which inits the game
 	console.log("setupGame() called");
+	console.log("  Device has Touch Screen: " + checkForTouchScreen());
+
 	loader.addCompletionListener(initGame);
 	loader.start();
+}
+
+function checkForTouchScreen() {
+	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent
+	hasTouchScreen = false;
+	if ("maxTouchPoints" in navigator) {
+		hasTouchScreen = navigator.maxTouchPoints > 0;
+	} else if ("msMaxTouchPoints" in navigator) {
+		hasTouchScreen = navigator.msMaxTouchPoints > 0;
+	} else {
+		var mQ = window.matchMedia && matchMedia("(pointer:coarse)");
+		if (mQ && mQ.media === "(pointer:coarse)") {
+			hasTouchScreen = !!mQ.matches;
+		} else if ("orientation" in window) {
+			hasTouchScreen = true; // deprecated, but good fallback
+		} else {
+			// Only as a last resort, fall back to user agent sniffing
+			var UA = navigator.userAgent;
+			hasTouchScreen = /\b(BlackBerry|webOS|iPhone|IEMobile)\b/i.test(UA) || /\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA);
+		}
+	}
+	deviceHasTouchScreen = hasTouchScreen;
+	return hasTouchScreen;
 }
 
 // we need to get key downs / ups
@@ -185,7 +213,7 @@ function initGame() {
 	canvas.addEventListener("touchend", handleTouchEnd);
 	canvas.addEventListener("touchmove", handleTouchMove);
 	canvas.addEventListener("touchcancel", handleTouchEnd);
-	canvas.addEventListener("resize", setupCanvas);
+	window.addEventListener("resize", setupCanvas);
 
 	// change here if you want to directly play a new level
 	currentLevel = 2;
@@ -529,6 +557,11 @@ function drawTitleScreen() {
 	gameEngine.clearScreen();
 
 	let y = 220;
+	let h = 100;
+	if( gameEngine.getDeviceType() === DEVICE_TYPE.SMALL ) {
+		y = 120;
+		h = 50;
+	}
 
 	ctx.save();
 	ctx.font = gameEngine.getHeadlineFont().size + "px Arial";
@@ -542,7 +575,9 @@ function drawTitleScreen() {
 	drawCenteredText("Quarkus Grumpy Cat", 20);
 	ctx.font = gameEngine.getSmallFont().size + "px Arial";
 	ctx.shadowBlur = 0;
-	drawCenteredText("Server version: " + serverVersion, 92);
+	ctx.fillStyle = "white";
+	drawCenteredText("Server version: " + serverVersion, 24 + gameEngine.getHeadlineFont().size );
+
 
 	ctx.font = gameEngine.getMenuFont().size + "px Arial";
 	ctx.shadowBlur = 10;
@@ -563,19 +598,19 @@ function drawTitleScreen() {
 			ctx.fillStyle = "white";
 		}
 		let x = drawCenteredText(menueEntries[i].title, y);
-		y+=100;
+		y+=h;
 	}
 
 	ctx.restore();
 
 	ctx.drawImage(catLeftStatue, 12, canvas.height - 280, 160, 250);
-	ctx.drawImage(catRightStatue, canvas.width - 172, canvas.height - 280, 160, 250);
+	ctx.drawImage(catRightStatue, canvas.width - 180, canvas.height - 280, 160, 250);
 	if( spacePressed ) {
 		spacePressed = false;
 		gameOver = false;
 		onTitleScreen = false;
 		currentLevel = 0;
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		gameEngine.clearScreen();
 
 		menueEntries[titleScreenSelectedEntry].action();
 	}
