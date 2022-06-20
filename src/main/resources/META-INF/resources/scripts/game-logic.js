@@ -33,7 +33,7 @@ let enemies;
 let camera;
 
 let serverGame;
-
+let serverVersion;
 
 
 // load images
@@ -104,15 +104,16 @@ function handleTouchStart(event) {
 			virtGamePad.y = pointerStart.y;
 			virtGamePad.identifier = evt.identifier;
 			virtGamePad.touched = true;
+			displayTouched = true;
 		}
 		else if( pointerStart.x > (canvas.width / 2) ) {
 			virtButtons.x = pointerStart.x;
 			virtButtons.y = pointerStart.y;
 			virtButtons.identifier = pointerStart.identifier;
 			virtButtons.touched = true;
+			displayTouched = true;
 		}
 	}
-	displayTouched = true;
 }
 function handleTouchEnd(event) {
 	event.preventDefault();	
@@ -137,9 +138,7 @@ function handleTouchEnd(event) {
 		}
 	}
 
-	if( !virtGamePad.touched && !virtButtons.touched ) {
-		displayTouched = false;
-	}
+	displayTouched = false;
 }
 function handleTouchMove(event) {
 	event.preventDefault();
@@ -148,8 +147,8 @@ function handleTouchMove(event) {
 		let evt = event.changedTouches[i];
 
 		if( evt.identifier == virtGamePad.identifier && virtGamePad.touched ) {
-			let dx = Math.round(pointerStart.x - (evt.clientX - canvas.offsetLeft));
-			let dy = Math.round(pointerStart.y - (evt.clientY - canvas.offsetTop));
+			let dx = Math.round(virtGamePad.x - (evt.clientX - canvas.offsetLeft));
+			let dy = Math.round(virtGamePad.y - (evt.clientY - canvas.offsetTop));
 
 			upPressed = downPressed = leftPressed = rightPressed = false;
 
@@ -189,7 +188,7 @@ function initGame() {
 	canvas.addEventListener("resize", setupCanvas);
 
 	// change here if you want to directly play a new level
-	currentLevel = 0;
+	currentLevel = 2;
 	numBombs = 1;
 	maxScore = 0;
 
@@ -199,6 +198,13 @@ function initGame() {
 		})
 		.then(function(result) {
 			numLevels = result;
+			return fetch("/game/version");			
+		})
+		.then(function(res) {
+			return res.text();
+		})
+		.then(function(ver) {
+			serverVersion = ver;
 			initLevel();
 		});
 }
@@ -206,25 +212,26 @@ function initGame() {
 
 function setupCanvas() {
 	console.log("setupCanvas()");
+	let myDiv = document.getElementById("canvas");
 	if( canvas === undefined ) {
-		let myDiv = document.getElementById("canvas");
 		canvas = document.createElement("canvas");
 		canvas.style.zIndex = 1;  
-		canvas.width = myDiv.clientWidth;
-		canvas.height= myDiv.clientHeight;
-
 		myDiv.appendChild(canvas);
-		ctx = canvas.getContext("2d");
-
-		ctx.imageSmoothingEnabled = false;
-		//ctx.imageSmoothingQuality = "high";
-
-		MAZE_HEIGHT = canvas.height - 32;
-		MAZE_WIDTH = canvas.width;
-		//canvas.width = canvas.clientWidth;
-		//canvas.height = canvas.clientHeight;
-		console.log("setupCanvas(canvas: " + MAZE_WIDTH + "/" + MAZE_HEIGHT + ")");
 	}
+	canvas.width = Math.floor(myDiv.clientWidth / 32)*32;
+	canvas.height= Math.floor(myDiv.clientHeight / 32) * 32;
+
+	
+	ctx = canvas.getContext("2d");
+
+	ctx.imageSmoothingEnabled = false;
+	//ctx.imageSmoothingQuality = "high";
+
+	MAZE_HEIGHT = canvas.height - 32;
+	MAZE_WIDTH = canvas.width;
+	//canvas.width = canvas.clientWidth;
+	//canvas.height = canvas.clientHeight;
+	console.log("setupCanvas(canvas: " + MAZE_WIDTH + "/" + MAZE_HEIGHT + ")");
 }
 
 async function createGameOnServer(level) {
@@ -368,25 +375,34 @@ function gameLoop(timestamp) {
 function drawTouchControls(timestamp) {
 
 	if( displayTouched ) {
-		// draw the compass_rose		
-		ctx.drawImage(compassRoseImg, pointerStart.x - (compassRoseImg.width / 2), pointerStart.y - ((compassRoseImg.height/2)));
-		let img = touchImg;
-		let x = pointerStart.x - (img.width / 2);
-		let y = pointerStart.y - (img.height / 2);
+		// draw the compass_rose if left side was touched
+		if( virtGamePad.touched ) {		
+			ctx.drawImage(compassRoseImg, virtGamePad.x - (compassRoseImg.width / 2), virtGamePad.y - ((compassRoseImg.height/2)));
+			let img = touchImg;
+			let x = virtGamePad.x - (img.width / 2);
+			let y = virtGamePad.y - (img.height / 2);
 
-		if( leftPressed)  x -= img.width / 2;
-		if( rightPressed) x += img.width / 2;
-		if( upPressed )   y -= img.height /2;
-		if( downPressed)  y += img.height / 2;
+			if( leftPressed)  x -= img.width / 2;
+			if( rightPressed) x += img.width / 2;
+			if( upPressed )   y -= img.height /2;
+			if( downPressed)  y += img.height / 2;
 
-		ctx.drawImage(img, x, y);
+			ctx.drawImage(img, x, y);
+		}
 
 		// right side
 		ctx.drawImage(touchImg, canvas.width - touchImg.width - 130, canvas.height - touchImg.height - 40);
 
 		if( !automatedPlayMode && !gameOver && !levelWon && !gamePaused ) {
 			ctx.drawImage(touchImg, canvas.width - touchImg.width - 30, canvas.height - touchImg.height - 100);
-			//ctx.drawImage(bombTiles, )
+			ctx.drawImage(
+				bombTiles, 
+				0,
+				32,
+				32,
+				32,
+				canvas.width - touchImg.width - 120, canvas.height - touchImg.height - 30, 64, 64
+			);
 		}
 
 	}
@@ -526,6 +542,9 @@ function drawTitleScreen() {
 
 
 	drawCenteredText("Quarkus Grumpy Cat", 20);
+	ctx.font = "16px Arial";
+	ctx.shadowBlur = 0;
+	drawCenteredText("Server version: " + serverVersion, 92);
 
 	ctx.font = "40px Arial";
 	ctx.shadowBlur = 10;
