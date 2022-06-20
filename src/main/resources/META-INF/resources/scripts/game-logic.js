@@ -261,6 +261,11 @@ function setupCanvas() {
 	//canvas.width = canvas.clientWidth;
 	//canvas.height = canvas.clientHeight;
 	console.log("setupCanvas(canvas: " + MAZE_WIDTH + "/" + MAZE_HEIGHT + ")");
+	alert(
+		"Dimensions\n"+
+		"  window: " + window.innerWidth + "x" + window.innerHeight + "\n"+
+		"  canvas: " + canvas.width + "x" + canvas.height + "\n"
+	);
 }
 
 async function createGameOnServer(level) {
