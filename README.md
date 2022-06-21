@@ -114,6 +114,62 @@ Expose the service
 oc expose svc/grumpy-cat
 ```
 
+### OpenShift / Kubernetes image deployment in a GitOps way
+There are precompiled images available on `quay.io/wpernath/quarkus-grumpycat`. You can either use `latest` tag or use one of the `vx.y.z` tags.
+
+NOTE, for this approach, you need to have the `Crunchy Data Postgres Operator` installed in your Kubernetes environment. 
+
+Just clone the [config repository](https://github.com/wpernath/grumpycat-config.git). Then apply the `config/overlays/dev` configuration as usual:
+
+```shell
+oc new-project cat-dev
+oc apply -k config/overlays/dev
+```
+
+This will automatically install a database and the latest DEV version of the App.
+
+
+### Using full featured GitOps
+To make use of all GitOps features, have a look at the `src/main/gitops` folder of this project. 
+
+Your OpenShift / Kubernetes cluster needs to have the following Operators installed:
+
+- OpenShift Pipeline (or Tekton Pipeline)
+- OpenShift GitOps (or an ArgoCD instance)
+- Crunchy Data Postgres Operator
+
+To install the `cat-ci` project, call:
+
+```shell
+./src/main/gitops/tekton/pipeline.sh init \
+	--force \
+	--git-user <your git user> \
+	--git-password <your git password> \
+	--registry-user <your quay.io user> \
+	--registry-password <your quay.io password>
+```
+
+To install the `cat-dev` and `cat-stage` projects, call
+
+```shell
+oc apply -k ./src/main/gitops/argocd
+```
+
+To start a pipeline build, call
+
+```shell
+./src/main/gitops/tekton/pipeline.sh build \
+	-u <your quay.io user>
+	-p <your quay.io password>
+```
+
+To stage your version of quarkus-grumpycat, call something like
+
+```shell
+./src/main/gitops/tekton/pipeline.sh stage -r v0.2.4
+```
+
+This creates a new branch in github.com and tags the current image on quay.io.
 
 ## About the graphics
 The map graphics are coming from [LPC Terrain](https://opengameart.org/content/tiled-terrains) and all its authors. Special thanks to all of them!
