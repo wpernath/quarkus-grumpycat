@@ -62,7 +62,8 @@ let loader = new PxLoader(),
 function setupGame() {
 	// add a completion listener to the image loader which inits the game
 	console.log("setupGame() called");
-	console.log("  Device has Touch Screen: " + checkForTouchScreen());
+	deviceHasTouchScreen = checkForTouchScreen();
+	console.log("  Device has Touch Screen: " + deviceHasTouchScreen);
 
 	loader.addCompletionListener(initGame);
 	loader.start();
@@ -408,10 +409,10 @@ function gameLoop(timestamp) {
 
 function drawTouchControls(timestamp) {
 
-	if( displayTouched ) {
+	if( deviceHasTouchScreen ) {
+		ctx.drawImage(compassRoseImg, virtGamePad.x - compassRoseImg.width / 2, virtGamePad.y - compassRoseImg.height / 2);
 		// draw the compass_rose if left side was touched
-		if( virtGamePad.touched ) {		
-			ctx.drawImage(compassRoseImg, virtGamePad.x - (compassRoseImg.width / 2), virtGamePad.y - ((compassRoseImg.height/2)));
+		if( virtGamePad.touched ) {					
 			let img = touchImg;
 			let x = virtGamePad.x - (img.width / 2);
 			let y = virtGamePad.y - (img.height / 2);
