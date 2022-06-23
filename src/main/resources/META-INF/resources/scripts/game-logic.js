@@ -1,6 +1,3 @@
-import { GameEngine } from "./engine/game.js";
-import { TiledMapRenderer } from "./engine/game-tiled-renderer.js";
-//import { }
 // global key states
 const CAT_SPEED = 8;
 
@@ -63,7 +60,7 @@ let loader = new PxLoader(),
 	terrainTiles = loader.addImage("/images/tilesets/terrain.png");
 
 // This is the entry point of the game.
-export function setupGame() {
+function setupGame() {
 	// add a completion listener to the image loader which inits the game
 	console.log("setupGame() called");
 	deviceHasTouchScreen = checkForTouchScreen();

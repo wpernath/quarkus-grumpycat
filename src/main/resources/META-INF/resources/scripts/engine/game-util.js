@@ -1,5 +1,5 @@
 // we need to get key downs / ups
-export function keyDownHandler(event) {
+function keyDownHandler(event) {
 	if (event.code == "ArrowUp" || event.code == "KeyW") upPressed = true;
 	if (event.code == "ArrowLeft" || event.code == "KeyA") leftPressed = true;
 	if (event.code == "ArrowRight" || event.code == "KeyD") rightPressed = true;
@@ -10,7 +10,7 @@ export function keyDownHandler(event) {
 	//console.log(event.code);
 }
 
-export function keyUpHandler(event) {
+function keyUpHandler(event) {
 	if (event.code == "ArrowUp" || event.code == "KeyW") upPressed = false;
 	if (event.code == "ArrowLeft" || event.code == "KeyA") leftPressed = false;
 	if (event.code == "ArrowRight" || event.code == "KeyD") rightPressed = false;
@@ -22,9 +22,9 @@ export function keyUpHandler(event) {
 }
 
 const pointerStart = { x: 0, y: 0, identifier: 0, touched: false };
-export const virtGamePad = { x: 0, y: 0, identifier: 0, touched: false };
-export const virtButtons = { x: 0, y: 0, identifier: 0, touched: false };
-export let displayTouched = false;
+const virtGamePad = { x: 0, y: 0, identifier: 0, touched: false };
+const virtButtons = { x: 0, y: 0, identifier: 0, touched: false };
+let displayTouched = false;
 
 function handleTouchStart(event) {
 	event.preventDefault();
@@ -107,7 +107,7 @@ function handleTouchMove(event) {
 	}
 }
 
-export function drawLevelWon() {
+function drawLevelWon() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.drawImage(levelWonDog, (canvas.width - levelWonDog.width) / 2, (canvas.height - levelWonDog.height) / 2);
 
@@ -134,7 +134,7 @@ export function drawLevelWon() {
 	}
 }
 
-export function drawGameOver() {
+function drawGameOver() {
 	score = 0;
 	maxScore = 0;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -159,13 +159,13 @@ export function drawGameOver() {
 	}
 }
 
-export function drawCenteredText(text, y) {
+function drawCenteredText(text, y) {
 	gameEngine.drawCenteredText(text, y);
 }
 
 let titleScreenDrawn = 0;
 let currentSelectedMenueEntryColor = "#1259A5";
-export function drawTitleScreen() {
+function drawTitleScreen() {
 	let menueEntries = [
 		{
 			title: "New Game",
@@ -253,6 +253,6 @@ export function drawTitleScreen() {
 	}
 }
 
-export function showHighscores() {
+function showHighscores() {
 	console.log("Showing highscores");
 }

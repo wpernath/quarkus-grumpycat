@@ -1,18 +1,15 @@
 // Bits on the far end of the 32-bit global tile ID are used for tile flags
-export const FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
-export const FLIPPED_VERTICALLY_FLAG = 0x40000000;
-export const FLIPPED_DIAGONALLY_FLAG = 0x20000000;
-export const ROTATED_HEXAGONAL_120_FLAG = 0x10000000;
+const FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
+const FLIPPED_VERTICALLY_FLAG = 0x40000000;
+const FLIPPED_DIAGONALLY_FLAG = 0x20000000;
+const ROTATED_HEXAGONAL_120_FLAG = 0x10000000;
+const BONUS_10PT = 963;
+const BONUS_BOMB = 961;
+const PLAYER_TILE = 993;
+const ENEMY_TILE = 994;
+const STONES = [182, 183, 184];
 
-export const BONUS_10PT = 963;
-export const BONUS_BOMB = 961;
-
-export const PLAYER_TILE = 993;
-export const ENEMY_TILE = 994;
-
-export const STONES = [182, 183, 184];
-
-export class TiledAnimFrame {
+class TiledAnimFrame {
     id;
     duration;
 
@@ -22,7 +19,7 @@ export class TiledAnimFrame {
     }
 }
 
-export class TiledAnimation {
+class TiledAnimation {
 	id;
 	frames = [];
 	currentFrameId = 0;
@@ -56,7 +53,7 @@ export class TiledAnimation {
 	}
 }
 
-export class TiledMapRenderer {
+class TiledMapRenderer {
 	camera;
 	enemies = [];
 	player;

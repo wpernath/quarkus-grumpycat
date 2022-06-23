@@ -2,14 +2,14 @@
 let MAZE_WIDTH = 1024;
 let MAZE_HEIGHT = 736;
 
-export  class Direction {
+class Direction {
 	constructor(dx, dy) {
 		this.dx = dx;
 		this.dy = dy;
 	}
 }
  
-export  class Node {
+class Node {
 	constructor(x, y, dir) {
 		this.x = x;
 		this.y = y;
@@ -17,7 +17,7 @@ export  class Node {
 	}
 }
 
-export  class Queue {
+class Queue {
 	constructor() {
 		this.elements = {};
 		this.head = 0;
@@ -45,7 +45,7 @@ export  class Queue {
 }
 
 
-export class Player extends Renderable {
+class Player extends Renderable {
 	constructor(x, y, speed) {
 		super(x, y);
 		this.speed = speed;
@@ -69,7 +69,7 @@ export class Player extends Renderable {
  * Enemy Object: Every enemy is represented by this class
  * It contains methods for calculating the next movement
  */
-export class Enemy extends Renderable {
+class Enemy extends Renderable {
 	constructor(x, y, speed) {
 		super(x, y);
 		this.catX = x;
@@ -214,7 +214,7 @@ export class Enemy extends Renderable {
  * Camera Object: This is used to display the current part of the map
  * The player is always in the center of the cam (if possible)
  */
-export class Camera {
+class Camera {
 	constructor(mapWidth, mapHeight, canvasWidth, canvasHeight) {
 		this.x = 0;
 		this.y = 0;

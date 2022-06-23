@@ -1,4 +1,4 @@
-export class Renderable {
+class Renderable {
     constructor(x, y) {
         this.x = x;
         this.y = y;
@@ -21,7 +21,7 @@ export class Renderable {
 }
 
 
-export class Tile extends Renderable {
+class Tile extends Renderable {
     constructor(pos) {
 
     }
