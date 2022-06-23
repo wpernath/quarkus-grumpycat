@@ -12,13 +12,13 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
-import org.wanja.fatcat.map.TileSet;
+import org.wanja.fatcat.map.RealTileSet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Path("/tileset")
 public class TileSetResource {
-    Map<String,TileSet> tileSets = new HashMap<>();
+    Map<String,RealTileSet> tileSets = new HashMap<>();
 
     @Inject
     ObjectMapper mapper;
@@ -34,9 +34,9 @@ public class TileSetResource {
 
         try {
             for (String tileset : tilesets) {
-                TileSet map = mapper.readValue(
+                RealTileSet map = mapper.readValue(
                     getClass().getResourceAsStream("/maps/" + tileset + ".tsj"),
-                    TileSet.class
+                    RealTileSet.class
                 );
 
                 // Hack to make sure, tileset is properly loaded as
@@ -58,7 +58,7 @@ public class TileSetResource {
 
     @GET
     @Path("/{name}")
-    public TileSet getTileSet(String name) {
+    public RealTileSet getTileSet(String name) {
         return tileSets.get(name);
     }
 }

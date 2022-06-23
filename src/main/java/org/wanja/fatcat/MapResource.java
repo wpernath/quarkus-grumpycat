@@ -12,6 +12,9 @@ import javax.ws.rs.Path;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.wanja.fatcat.map.Map;
+import org.wanja.fatcat.map.MapTileSet;
+import org.wanja.fatcat.map.RealTileSet;
+import org.wanja.fatcat.map.TileSet;
 
 @Path("/maps")
 public class MapResource {
@@ -21,6 +24,8 @@ public class MapResource {
     @Inject
     ObjectMapper mapper;
 
+    @Inject
+    TileSetResource tileSetResource;
 
     @PostConstruct
     void init() {
@@ -39,8 +44,17 @@ public class MapResource {
                 Map map = mapper.readValue(
                         getClass().getResourceAsStream("/maps/" + level ), 
                         Map.class);
-                maps.add(map);
-                map.tilesets.forEach(t -> t.source = t.source.substring(t.source.lastIndexOf('/')+1, t.source.lastIndexOf('.') ));
+                maps.add(map);   
+                List<MapTileSet> sets = map.tilesets;
+                map.tilesets = new ArrayList<MapTileSet>();
+                sets.forEach(t -> {
+                    MapTileSet mts = (MapTileSet )t;
+                    mts.source = mts.source.substring(mts.source.lastIndexOf('/')+1, mts.source.lastIndexOf('.') );
+                    
+                    RealTileSet rts = tileSetResource.getTileSet(mts.source);
+                    rts.firstGid = mts.firstGid;
+                    map.tilesets.add(rts);
+                });
             }
         } catch (IOException e) {
             e.printStackTrace();
