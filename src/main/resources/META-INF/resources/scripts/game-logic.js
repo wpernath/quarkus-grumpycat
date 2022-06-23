@@ -194,7 +194,7 @@ function loadAndInitializeLevel(currentLevel) {
 		})
 		.then(function (result) {
 			console.log("current level loaded: " + name);
-			renderer = new TiledMapRenderer();
+			renderer = new TiledMapRenderer(canvas);
 			renderer.parse(result);
 
 			renderer.player.image = mouseImg;

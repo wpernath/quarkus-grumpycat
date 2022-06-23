@@ -77,7 +77,10 @@ class TiledMapRenderer {
 	// for animation
 	tileAnimations = [];
 
-	constructor() {}
+	constructor(canvas) {
+		this.canvas = canvas;
+		this.context= canvas.getContext('2d');
+	}
 
 	/**
 	 *
@@ -122,7 +125,7 @@ class TiledMapRenderer {
 			if (tile == PLAYER_TILE) {
 				// player
 				this.player = new Player(x, y, 1);
-				this.camera = new Camera(this.mapWidth, this.mapHeight, MAZE_WIDTH, MAZE_HEIGHT);
+				this.camera = new Camera(this.mapWidth, this.mapHeight, this.canvas.width, this.canvas.height, this.tileWidth, this.tileHeight);
 				this.camera.centerAround(x, y);
 				console.log("  player at(" + x + ", " + y + ")");
 			} else if (tile == ENEMY_TILE) {

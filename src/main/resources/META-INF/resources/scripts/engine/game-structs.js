@@ -215,16 +215,18 @@ class Enemy extends Renderable {
  * The player is always in the center of the cam (if possible)
  */
 class Camera {
-	constructor(mapWidth, mapHeight, canvasWidth, canvasHeight) {
+	constructor(mapWidth, mapHeight, canvasWidth, canvasHeight, tileWidth, tileHeight) {
 		this.x = 0;
 		this.y = 0;
 		this.mapWidth = mapWidth;
 		this.mapHeight = mapHeight;
 		this.width = canvasWidth;
 		this.height = canvasHeight;
-		this.maxX = mapWidth * TILE_WIDTH - canvasWidth;
-		this.maxY = mapHeight * TILE_HEIGHT - canvasHeight;
-		this.SPEED = TILE_WIDTH/4;
+		this.tileWidth = tileWidth;
+		this.tileHeight = tileHeight
+		this.maxX = mapWidth * tileWidth - canvasWidth;
+		this.maxY = mapHeight * tileHeight - canvasHeight;
+		this.SPEED = this.tileWidth/4;
 		this.centerAround(0,0);
 	}
 
@@ -238,8 +240,8 @@ class Camera {
 	}
 
 	isInView(x, y) {
-		let posX = x * TILE_WIDTH;
-		let posY = y * TILE_HEIGHT;
+		let posX = x * this.tileWidth;
+		let posY = y * this.tileHeight;
 		if (posX < this.x || posX > this.x + this.width || posY < this.y || posY > this.y + this.height) {
 			return false;
 		}
@@ -247,11 +249,11 @@ class Camera {
 	}
 
 	centerAround(x, y) {
-		let w = this.width / TILE_WIDTH;
-		let h = this.height / TILE_HEIGHT;
+		let w = this.width / this.tileWidth;
+		let h = this.height / this.tileHeight;
 
-		this.x = (x - w / 2) * TILE_WIDTH;
-		this.y = (y - h / 2) * TILE_HEIGHT;
+		this.x = (x - w / 2) * this.tileWidth;
+		this.y = (y - h / 2) * this.tileHeight;
 
 		// clip values
 		this.x = Math.max(0, Math.min(this.x, this.maxX));
@@ -282,10 +284,10 @@ class PlacedBomb {
 			32,
 			32,
 			32,
-			Math.floor((x * TILE_WIDTH) + offsetX),
-			Math.floor((y * TILE_HEIGHT) + offsetY),
-			TILE_WIDTH,
-			TILE_HEIGHT
+			Math.floor((x * this.camera.tileWidth) + offsetX),
+			Math.floor((y * this.camera.tileHeight) + offsetY),
+			this.camera.tileWidth,
+			this.camera.tileHeight
 		);
 
 	}
@@ -301,26 +303,26 @@ class PlacedBomb {
 				// draw main part
 				ctx.drawImage(
 					this.image,
-					this.currentFrame * 32 ,
-					32,
-					32,
-					32,
-					Math.floor((this.x - startX) * TILE_WIDTH + offsetX),
-					Math.floor((this.y - startY) * TILE_HEIGHT + offsetY),
-					TILE_WIDTH,
-					TILE_HEIGHT
+					this.currentFrame * this.camera.tileWidth,
+					this.camera.tileHeight,
+					this.camera.tileWidth,
+					this.camera.tileHeight,
+					Math.floor((this.x - startX) * this.camera.tileWidth + offsetX),
+					Math.floor((this.y - startY) * this.camera.tileHeight + offsetY),
+					this.camera.tileWidth,
+					this.camera.tileHeight
 				);
 
 				ctx.drawImage(
 					this.image,
-					this.currentFrame * 32,
+					this.currentFrame * this.camera.tileWidth,
 					0,
-					32,
-					32,
-					Math.floor((this.x - startX) * TILE_WIDTH + offsetX),
-					Math.floor((this.y-1 - startY) * TILE_HEIGHT + offsetY),
-					TILE_WIDTH,
-					TILE_HEIGHT
+					this.camera.tileWidth,
+					this.camera.tileHeight,
+					Math.floor((this.x - startX) * this.camera.tileWidth + offsetX),
+					Math.floor((this.y - 1 - startY) * this.camera.tileHeight + offsetY),
+					this.camera.tileWidth,
+					this.camera.tileHeight
 				);
 
 				if( this.currentFrame > 6 ) {
