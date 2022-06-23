@@ -1,12 +1,12 @@
 { "columns":13,
- "image":"images/tilesets/BombExploding.png",
+ "image":"..\/..\/..\/..\/tiled\/images\/tilesets\/BombExploding.png",
  "imageheight":64,
  "imagewidth":416,
  "margin":0,
  "name":"bomb",
  "spacing":0,
  "tilecount":26,
- "tiledversion":"1.8.5",
+ "tiledversion":"1.8.6",
  "tileheight":32,
  "tiles":[
         {

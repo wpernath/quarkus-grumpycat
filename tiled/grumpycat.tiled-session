@@ -1,0 +1,156 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "Level5.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "/Users/wpernath/Desktop/test.tmx": {
+            "scale": 0.89,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 480.3370786516854,
+                "y": 284.26966292134836
+            }
+        },
+        "/Users/wpernath/Downloads/opengameart/LPC_Terrain/Terrain.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "Animated Water.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1.9537
+        },
+        "Level1.tmx": {
+            "scale": 0.74,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 531.081081081081,
+                "y": 624.3243243243244
+            }
+        },
+        "Level1.tmx#Terrain": {
+            "scaleInDock": 1
+        },
+        "Level2.tmx": {
+            "scale": 0.7906,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 542.6258537819377,
+                "y": 641.2850999241083
+            }
+        },
+        "Level2.tmx#Terrain": {
+            "scaleInDock": 1
+        },
+        "Level3.tmx": {
+            "scale": 0.478,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 912.1338912133891,
+                "y": 1100.418410041841
+            }
+        },
+        "Level4.tmx": {
+            "scale": 0.4034991197183098,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 1110.287428415599,
+                "y": 798.0190891737114
+            }
+        },
+        "Level4.tmx#Terrain": {
+            "scaleInDock": 1
+        },
+        "Level5.tmx": {
+            "scale": 0.55,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 670.909090909091,
+                "y": 690.9090909090909
+            }
+        },
+        "Terrain.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 0.5776,
+            "scaleInEditor": 1.01
+        },
+        "Utumno.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1.3212
+        },
+        "bomb.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "desert-grass.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "desert-with-water.tsx": {
+            "scaleInDock": 1.0891,
+            "scaleInEditor": 1
+        },
+        "desert.tmx": {
+            "scale": 0.18,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 963.8888888888889,
+                "y": 480.55555555555543
+            }
+        },
+        "first-wave.tmx": {
+            "scale": 0.8937,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 523.1061877587556,
+                "y": 224.90768714333666
+            }
+        },
+        "spiders.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "frame.defaultDuration": 350,
+    "last.exportedFilePath": "/Users/wpernath/Devel/quarkus-grumpycat/src/main/resources/maps",
+    "last.imagePath": "/Users/wpernath/Devel/quarkus-grumpycat/tiled/images/tilesets",
+    "lastUsedTilesetExportFilter": "JSON-Kachelsatz-Dateien (*.tsj *.json)",
+    "map.height": 36,
+    "map.lastUsedExportFilter": "JSON-Kartendateien (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.width": 32,
+    "openFiles": [
+        "Level1.tmx",
+        "Level2.tmx",
+        "Level3.tmx",
+        "Level4.tmx",
+        "Level5.tmx",
+        "Terrain.tsx"
+    ],
+    "project": "grumpycat.tiled-project",
+    "recentFiles": [
+        "Terrain.tsx",
+        "Level2.tmx",
+        "Level3.tmx",
+        "Level4.tmx",
+        "Level5.tmx",
+        "Utumno.tsx",
+        "spiders.tsx",
+        "Animated Water.tsx",
+        "bomb.tsx",
+        "Level1.tmx",
+        "first-wave.tmx",
+        "desert-with-water.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx"
+}

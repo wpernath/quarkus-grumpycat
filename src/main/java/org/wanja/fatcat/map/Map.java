@@ -17,6 +17,6 @@ public class Map {
     public int tileWidth;
     public boolean infinite;
     public List<Layer> layers;
-    public List<TileSet> tilesets;
+    public List<MapTileSet> tilesets;
 
 }

@@ -1,31 +1,18 @@
 // Bits on the far end of the 32-bit global tile ID are used for tile flags
-const FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
-const FLIPPED_VERTICALLY_FLAG = 0x40000000;
-const FLIPPED_DIAGONALLY_FLAG = 0x20000000;
-const ROTATED_HEXAGONAL_120_FLAG = 0x10000000;
+export const FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
+export const FLIPPED_VERTICALLY_FLAG = 0x40000000;
+export const FLIPPED_DIAGONALLY_FLAG = 0x20000000;
+export const ROTATED_HEXAGONAL_120_FLAG = 0x10000000;
 
-const BONUS_10PT = 963;
-const BONUS_BOMB = 961;
+export const BONUS_10PT = 963;
+export const BONUS_BOMB = 961;
 
-const PLAYER_TILE = 993;
-const ENEMY_TILE = 994;
+export const PLAYER_TILE = 993;
+export const ENEMY_TILE = 994;
 
-const STONES = [
-    510,
-    511,
-    575,
-    576,
-    607,
-    608,
-    183,
-    184,
-    4,
-    7,
-    479,
-    640
-];
+export const STONES = [182, 183, 184];
 
-class TiledAnimFrame {
+export class TiledAnimFrame {
     id;
     duration;
 
@@ -35,42 +22,41 @@ class TiledAnimFrame {
     }
 }
 
-class TiledAnimation {
-    id;
-    frames = [];
-    currentFrameId = 0;
-    lastRequest = 0;
+export class TiledAnimation {
+	id;
+	frames = [];
+	currentFrameId = 0;
+	lastRequest = 0;
 
-    constructor(id) {
-        this.id = id;
-    }
+	constructor(id) {
+		this.id = id;
+	}
 
-    addFrames(animFrames) {
-        for( var a = 0; a < animFrames.length; a++ ) {
-            this.frames.push(new TiledAnimFrame(animFrames[a].tileid, animFrames[a].duration));
-        }
-        this.currentFrameId = 0;
-    }
+	addFrames(animFrames) {
+		for (var a = 0; a < animFrames.length; a++) {
+			this.frames.push(new TiledAnimFrame(animFrames[a].tileid, animFrames[a].duration));
+		}
+		this.currentFrameId = 0;
+	}
 
-    getNextTile(currentTime) {
-        let elapsed = currentTime - this.lastRequest;
-        let currentFrame = this.frames[this.currentFrameId];
-        if( elapsed > currentFrame.duration ) {
-            this.lastRequest = currentTime;
-            if( this.currentFrameId < this.frames.length - 1) {
-                this.currentFrameId += 1;
-                return this.frames[this.currentFrameId];
-            }
-            else {
-                this.currentFrameId = 0;
-                return this.frames[this.currentFrameId];
-            }
-        }
-        return currentFrame;
-    }
+	getNextTile(currentTime) {
+		let elapsed = currentTime - this.lastRequest;
+		let currentFrame = this.frames[this.currentFrameId];
+		if (elapsed > currentFrame.duration) {
+			this.lastRequest = currentTime;
+			if (this.currentFrameId < this.frames.length - 1) {
+				this.currentFrameId += 1;
+				return this.frames[this.currentFrameId];
+			} else {
+				this.currentFrameId = 0;
+				return this.frames[this.currentFrameId];
+			}
+		}
+		return currentFrame;
+	}
 }
 
-class TiledMapRenderer {
+export class TiledMapRenderer {
 	camera;
 	enemies = [];
 	player;
@@ -178,20 +164,25 @@ class TiledMapRenderer {
 	placeBarrier(x, y) {
 		let layer = this.getLayer("Frame");
 		if (this.isWalkable(x, y)) {
-			this.setTileAt(layer, x, y, Math.floor(Math.random() * STONES.length));
+			let stone = 182;
+			let tile = this.tileAt(this.getLayer("Ground"), x, y);
+
+			// check to see if ground is something light to get the dark stone etc.
+			if (tile == 161) stone = 184;
+			this.setTileAt(layer, x, y, stone);
 			return true;
 		}
 		return false;
 	}
 
-	draw(ctx) { 
+	draw(ctx) {
 		let startX = Math.floor(this.camera.x / this.tileWidth);
 		let endX = startX + this.camera.width / this.tileWidth;
 		let startY = Math.floor(this.camera.y / this.tileHeight);
 		let endY = startY + this.camera.height / this.tileHeight;
 		let offsetX = -this.camera.x + startX * this.tileWidth;
 		let offsetY = -this.camera.y + startY * this.tileHeight;
-        let currentTime = Date.now();
+		let currentTime = Date.now();
 
 		for (let l = 0; l < this.layers.length; l++) {
 			let layer = this.layers[l];
@@ -209,13 +200,13 @@ class TiledMapRenderer {
 						if (tile != 0) {
 							tile -= 1;
 
-                            // check to see if this is an animated tile
+							// check to see if this is an animated tile
 							for (var a = 0; a < this.tileAnimations.length; a++) {
-                                let animatedTile = this.tileAnimations[a];
+								let animatedTile = this.tileAnimations[a];
 								if (animatedTile.id == tile) {
-                                    let frame = animatedTile.getNextTile(currentTime);
-									tile = frame.id;	
-                                    break;
+									let frame = animatedTile.getNextTile(currentTime);
+									tile = frame.id;
+									break;
 								}
 							}
 
@@ -234,9 +225,8 @@ class TiledMapRenderer {
 								if (flippedVertically) xPos = (xPos + w) * -1;
 							}
 
-							
 							ctx.drawImage(this.tilesetImage, srcX, srcY, w, h, xPos, yPos, w, h);
-							
+
 							ctx.restore();
 						}
 					}

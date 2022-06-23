@@ -1,4 +1,9 @@
+import { GameEngine } from "./engine/game.js";
+import { TiledMapRenderer } from "./engine/game-tiled-renderer.js";
+//import { }
 // global key states
+const CAT_SPEED = 8;
+
 let rightPressed = false;
 let leftPressed = false;
 let upPressed = false;
@@ -45,22 +50,20 @@ let loader = new PxLoader(),
 	catLeft = loader.addImage("images/cat_left.png"),
 	catRight = loader.addImage("images/cat_right.png"),
 	catLeftStatue = loader.addImage("images/grumpy_cat_right.png"),
-	catRightStatue = loader.addImage("images/grumpy_cat_left.png");
+	catRightStatue = loader.addImage("images/grumpy_cat_left.png"),
 	pauseImg = loader.addImage("images/pause.png"),
 	gameOverImg = loader.addImage("images/gameOver.png"),
 	mouseImg = loader.addImage("images/sensa_jaa.png"),
 	gameOverDog = loader.addImage("images/sensa_nee.png"),
 	levelWonDog = loader.addImage("images/sensa_jaa.png"),
 	bombTiles = loader.addImage("/images/tilesets/BombExploding.png"),
-
 	compassRoseImg = loader.addImage("/images/compass_rose.png"),
 	touchImg = loader.addImage("/images/touch.png"),
 	touchSegmentImg = loader.addImage("/images/touch_segment.png"),
+	terrainTiles = loader.addImage("/images/tilesets/terrain.png");
 
-	terrainTiles = loader.addImage("/images/tilesets/terrain.png");	
-
-// This is the entry point of the game.   
-function setupGame() {
+// This is the entry point of the game.
+export function setupGame() {
 	// add a completion listener to the image loader which inits the game
 	console.log("setupGame() called");
 	deviceHasTouchScreen = checkForTouchScreen();
@@ -93,7 +96,6 @@ function checkForTouchScreen() {
 	return hasTouchScreen;
 }
 
-
 // init game
 function initGame() {
 	console.log("initGame()");
@@ -113,33 +115,32 @@ function initGame() {
 	maxScore = 0;
 
 	fetch("/maps/")
-		.then(function(response) {
+		.then(function (response) {
 			return response.json();
 		})
-		.then(function(result) {
+		.then(function (result) {
 			numLevels = result;
-			return fetch("/game/version");			
+			return fetch("/game/version");
 		})
-		.then(function(res) {
+		.then(function (res) {
 			return res.text();
 		})
-		.then(function(ver) {
+		.then(function (ver) {
 			serverVersion = ver;
 			initLevel();
 		});
 }
 
-
 function setupCanvas() {
 	console.log("setupCanvas()");
 	let myDiv = document.getElementById("canvas");
-	if( canvas === undefined ) {
+	if (canvas === undefined) {
 		canvas = document.createElement("canvas");
-		canvas.style.zIndex = 1;  
+		canvas.style.zIndex = 1;
 		myDiv.appendChild(canvas);
 	}
-	canvas.width = Math.floor(myDiv.clientWidth / 32)*32;
-	canvas.height= Math.floor(myDiv.clientHeight / 32) * 32;
+	canvas.width = Math.floor(myDiv.clientWidth / 32) * 32;
+	canvas.height = Math.floor(myDiv.clientHeight / 32) * 32;
 
 	gameEngine = new GameEngine(canvas);
 
@@ -168,22 +169,21 @@ async function createGameOnServer(level) {
 		name: name,
 		level: level,
 		player: {
-			name: name
-		}
+			name: name,
+		},
 	};
 
 	resp = await fetch("/game", {
-		method: 'POST',
+		method: "POST",
 		headers: {
-			'Content-type': 'application/json;charset=utf-8'
+			"Content-type": "application/json;charset=utf-8",
 		},
-		body: JSON.stringify(req)
+		body: JSON.stringify(req),
 	});
 
 	serverGame = await resp.json();
 	console.log("  New game '" + serverGame.name + "' for player '" + serverGame.player.id + "' initialized. ID =  " + serverGame.id);
-
-} 
+}
 
 // function to load a level from server and
 function loadAndInitializeLevel(currentLevel) {
@@ -223,7 +223,6 @@ function loadAndInitializeLevel(currentLevel) {
 		.catch(function (error) {
 			console.log("Error loading game map: " + error);
 		});
-	
 }
 
 // initialize it to use it locally
@@ -239,7 +238,7 @@ function initLevel() {
 
 	// call server to generate a Game and a Player
 	createGameOnServer(currentLevel).then(function () {
-		loadAndInitializeLevel(currentLevel);		
+		loadAndInitializeLevel(currentLevel);
 	});
 }
 
@@ -247,19 +246,19 @@ function initLevel() {
 function gameLoop(timestamp) {
 	let elapsed = Math.round(timestamp - lastTimestamp);
 
-	fps = Math.round(1/(elapsed/1000));
-	if( escapePressed ) {
+	fps = Math.round(1 / (elapsed / 1000));
+	if (escapePressed) {
 		onTitleScreen = true;
 		score = 0;
 		maxScore = 0;
-		currentLevel =0;
+		currentLevel = 0;
 		bombsThrown = 0;
 		automatedPlayMode = false;
 		levelWon = false;
 		gameOver = false;
 	}
 
-	if( !automatedPlayMode ) {
+	if (!automatedPlayMode) {
 		if (elapsed > 80) {
 			lastTimestamp = timestamp;
 
@@ -274,7 +273,7 @@ function gameLoop(timestamp) {
 			}
 
 			if (gamePaused && !gameOver) {
-				ctx.clearRect(0, 0, MAZE_WIDTH, MAZE_HEIGHT );
+				ctx.clearRect(0, 0, MAZE_WIDTH, MAZE_HEIGHT);
 				ctx.drawImage(pauseImg, (MAZE_WIDTH - pauseImg.width) / 2, (MAZE_HEIGHT - pauseImg.height) / 2);
 			}
 
@@ -286,33 +285,32 @@ function gameLoop(timestamp) {
 				drawLevelWon();
 			}
 
-			if( onTitleScreen ) {
+			if (onTitleScreen) {
 				drawTitleScreen();
 			}
 			drawTouchControls(timestamp);
 		}
+	} else {
+		// automated play mode
+		replayAction(timestamp);
 	}
-	else { // automated play mode
-		replayAction(timestamp);		
-	}
-	
+
 	window.requestAnimationFrame(gameLoop);
 }
 
 function drawTouchControls(timestamp) {
-
-	if( deviceHasTouchScreen ) {
+	if (deviceHasTouchScreen) {
 		ctx.drawImage(compassRoseImg, virtGamePad.x - compassRoseImg.width / 2, virtGamePad.y - compassRoseImg.height / 2);
 		// draw the compass_rose if left side was touched
-		if( virtGamePad.touched ) {					
+		if (virtGamePad.touched) {
 			let img = touchImg;
-			let x = virtGamePad.x - (img.width / 2);
-			let y = virtGamePad.y - (img.height / 2);
+			let x = virtGamePad.x - img.width / 2;
+			let y = virtGamePad.y - img.height / 2;
 
-			if( leftPressed)  x -= img.width / 2;
-			if( rightPressed) x += img.width / 2;
-			if( upPressed )   y -= img.height /2;
-			if( downPressed)  y += img.height / 2;
+			if (leftPressed) x -= img.width / 2;
+			if (rightPressed) x += img.width / 2;
+			if (upPressed) y -= img.height / 2;
+			if (downPressed) y += img.height / 2;
 
 			ctx.drawImage(img, x, y);
 		}
@@ -320,20 +318,11 @@ function drawTouchControls(timestamp) {
 		// right side
 		ctx.drawImage(touchImg, canvas.width - touchImg.width - 130, canvas.height - touchImg.height - 40);
 
-		if( !automatedPlayMode && !gameOver && !levelWon && !gamePaused ) {
+		if (!automatedPlayMode && !gameOver && !levelWon && !gamePaused) {
 			ctx.drawImage(touchImg, canvas.width - touchImg.width - 30, canvas.height - touchImg.height - 100);
-			ctx.drawImage(
-				bombTiles, 
-				0,
-				32,
-				32,
-				32,
-				canvas.width - touchImg.width - 120, canvas.height - touchImg.height - 30, 64, 64
-			);
+			ctx.drawImage(bombTiles, 0, 32, 32, 32, canvas.width - touchImg.width - 120, canvas.height - touchImg.height - 30, 64, 64);
 		}
-
 	}
-
 }
 
 let lastMovementTime = 0;
@@ -356,12 +345,10 @@ function replayAction(timestamp) {
 		automatedPlayMode = false;
 		currentLevel = 0;
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-	}
-	else {
+	} else {
 		// update movement
 		const movement = serverMovements[serverMovementIndex];
-		let shouldElapsed = Date.parse(movement.time) - ((lastServerMovement != null) ? Date.parse(lastServerMovement.time) : 0);
+		let shouldElapsed = Date.parse(movement.time) - (lastServerMovement != null ? Date.parse(lastServerMovement.time) : 0);
 
 		if (lastServerMovement == null || movementElapsed >= shouldElapsed) {
 			//console.log("Elapsed time: " + elapsed + " / " + shouldElapsed);
@@ -374,21 +361,10 @@ function replayAction(timestamp) {
 
 			if (movement.gutterThrown) {
 				console.log("Barrier placed at (" + (movement.x + movement.dx) + "/" + (movement.y + movement.dy));
-				renderer.placeBarrier(
-					renderer.player.x + movement.dx,
-					renderer.player.y + movement.dy
-				);
-			}
-			else if (movement.bombPlaced) {
+				renderer.placeBarrier(renderer.player.x + movement.dx, renderer.player.y + movement.dy);
+			} else if (movement.bombPlaced) {
 				console.log("Bomb placed at (" + renderer.player.x + "/" + renderer.player.y);
-				renderer.placeBomb(
-					new PlacedBomb(
-						renderer.player.x,
-						renderer.player.y,
-						bombTiles,
-						camera
-					)
-				);
+				renderer.placeBomb(new PlacedBomb(renderer.player.x, renderer.player.y, bombTiles, camera));
 				bombsThrown++;
 			}
 
@@ -421,15 +397,14 @@ async function loadStoredGame() {
 	let res = await fetch("/game");
 	const games = await res.json();
 	let movements = [];
-	for( let i = 0; i < games.length; i++ ) {
+	for (let i = 0; i < games.length; i++) {
 		console.log("trying to use game to replay " + games[i].name);
 		res = await fetch("/movement/" + games[i].id + "/" + games[i].player.id);
 		movements = await res.json();
 
 		if (movements.length < 200) {
 			console.log("  cant use this game");
-		}
-		else {
+		} else {
 			serverGame = games[i];
 			break;
 		}
@@ -440,21 +415,21 @@ async function loadStoredGame() {
 function playLastRun() {
 	console.log("playing last run");
 
-	loadStoredGame().then(function(movements) {
+	loadStoredGame().then(function (movements) {
 		serverMovements = movements;
 		console.log("  Loaded " + movements.length + " movements from server");
 		serverMovementIndex = 0;
 		lastServerMovement = null;
 		automatedPlayMode = true;
 		loadAndInitializeLevel(serverGame.level);
-	})
+	});
 }
 
 // draws the currently loaded map
 function updateMap() {
 	let time = new Date().getMilliseconds();
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	renderer.draw(ctx);	
+	renderer.draw(ctx);
 	let elapsed = new Date().getMilliseconds() - time;
 	//console.log("time to draw: " + elapsed);
 }
@@ -468,16 +443,15 @@ function drawStatus() {
 	ctx.fillStyle = "white";
 	ctx.shadowBlur = 0;
 	ctx.shadowColor = "blue";
-	ctx.fillText("SCORE: " + score + " of " + maxScore , 10, MAZE_HEIGHT + 8);
+	ctx.fillText("SCORE: " + score + " of " + maxScore, 10, MAZE_HEIGHT + 8);
 	ctx.fillText("LEVEL: " + (currentLevel + 1) + " of " + numLevels, 300, MAZE_HEIGHT + 8);
 	ctx.fillText("BOMBS: " + bombsThrown + " of " + numBombs, 600, MAZE_HEIGHT + 8);
 
 	ctx.font = "32px Arial";
-	ctx.shadowColor = "black";		
-	if( automatedPlayMode ) {		
+	ctx.shadowColor = "black";
+	if (automatedPlayMode) {
 		drawCenteredText("Replay of: " + serverGame.name, 4);
-	}
-	else {
+	} else {
 		drawCenteredText("Player: " + serverGame.name, 4);
 	}
 	ctx.fillText("FPS: " + fps, 2, 4);
@@ -500,14 +474,14 @@ function updatePlayer() {
 		gameOver: false,
 		gameWon: false,
 		score: score,
-		time: Date.now()
+		time: Date.now(),
 	};
 
-	if( !dropStonePressed ) {
+	if (!dropStonePressed) {
 		if (upPressed) {
 			renderer.player.y -= 1;
 			action.dy = -1;
-			if( renderer.player.y < 0) {
+			if (renderer.player.y < 0) {
 				renderer.player.y = 0;
 				action.dy = 0;
 			}
@@ -541,7 +515,7 @@ function updatePlayer() {
 		}
 
 		// get tile and check if it's walkable
-		if( !renderer.isWalkable(renderer.player.x, renderer.player.y) ){
+		if (!renderer.isWalkable(renderer.player.x, renderer.player.y)) {
 			// wall
 			renderer.player.x = oldX;
 			renderer.player.y = oldY;
@@ -552,16 +526,15 @@ function updatePlayer() {
 		action.x = renderer.player.x;
 		action.y = renderer.player.y;
 		camera.centerAround(renderer.player.x, renderer.player.y);
-	
 
 		let bonus = renderer.checkForBonus(renderer.player.x, renderer.player.y);
 		if (bonus != 0) {
 			score += 10;
-			if( bonus == BONUS_BOMB ) {
+			if (bonus == BONUS_BOMB) {
 				numBombs += 5;
 			}
-			
-			if( score >= maxScore ) {
+
+			if (score >= maxScore) {
 				levelWon = true;
 				action.gameWon = true;
 			}
@@ -569,28 +542,21 @@ function updatePlayer() {
 		}
 
 		// check to see if player wants to place a bomb
-		if( spacePressed ) {
-			if( bombsThrown < numBombs ) {
-				renderer.placeBomb(
-					new PlacedBomb(
-						renderer.player.x, 
-						renderer.player.y,
-						bombTiles,
-						camera
-					)
-				);
+		if (spacePressed) {
+			if (bombsThrown < numBombs) {
+				renderer.placeBomb(new PlacedBomb(renderer.player.x, renderer.player.y, bombTiles, camera));
 				bombsThrown++;
 				action.bombPlaced = true;
 			}
 		}
-	}
-	else {
-		let dirX = 0, dirY = 0;
-		if( leftPressed ) dirX =-1;
-		if( rightPressed) dirX =+1;
-		if( upPressed)	  dirY =-1;
-		if( downPressed)  dirY =+1;
-		if( dirX != 0 || dirY != 0 ) {
+	} else {
+		let dirX = 0,
+			dirY = 0;
+		if (leftPressed) dirX = -1;
+		if (rightPressed) dirX = +1;
+		if (upPressed) dirY = -1;
+		if (downPressed) dirY = +1;
+		if (dirX != 0 || dirY != 0) {
 			renderer.placeBarrier(renderer.player.x + dirX, renderer.player.y + dirY);
 			action.gutterThrown = true;
 			action.dx = dirX;
@@ -601,7 +567,7 @@ function updatePlayer() {
 	}
 
 	// check to see if ANY cat reached mouse
-	for( let e = 0; e < enemies.length; e++) {
+	for (let e = 0; e < enemies.length; e++) {
 		if (renderer.player.x == enemies[e].catX && renderer.player.y == enemies[e].catY) {
 			gameOver = true;
 			action.gameOver = true;
@@ -610,26 +576,26 @@ function updatePlayer() {
 	}
 
 	// only update server if anything has changed!
-	if( action.dx != 0 || action.dy != 0 || action.gutterThrown || action.bombPlaced || action.gameOver || action.gameWon) {
+	if (action.dx != 0 || action.dy != 0 || action.gutterThrown || action.bombPlaced || action.gameOver || action.gameWon) {
 		updateGameServer(action);
 	}
 }
 
 async function updateGameServer(action) {
-	let resp = await fetch("/movement", {			
-		method: 'POST',
+	let resp = await fetch("/movement", {
+		method: "POST",
 		headers: {
-			'Content-type': 'application/json;charset=utf-8'
+			"Content-type": "application/json;charset=utf-8",
 		},
-		body: JSON.stringify(action)
+		body: JSON.stringify(action),
 	});
 
-	if( !resp.ok) console.log("  could not update player action on server!");
+	if (!resp.ok) console.log("  could not update player action on server!");
 }
 
 // calculate the next step, the cat does
 function updateEnemy() {
-	for( let e = 0; e < enemies.length; e++ ) {
+	for (let e = 0; e < enemies.length; e++) {
 		let enemy = enemies[e];
 		enemy.calculateNextMove(renderer);
 	}

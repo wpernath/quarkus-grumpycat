@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.8" tiledversion="1.8.5" name="Terrain" tilewidth="32" tileheight="32" tilecount="1024" columns="32">
+<tileset version="1.8" tiledversion="1.8.6" name="Terrain" tilewidth="32" tileheight="32" tilecount="1024" columns="32">
  <editorsettings>
   <export target="../src/main/resources/META-INF/resources/to_be_removed_maps/Terrain.tsj" format="json"/>
  </editorsettings>
@@ -25,6 +25,16 @@
    <frame tileid="176" duration="350"/>
   </animation>
  </tile>
+ <tile id="370">
+  <animation>
+   <frame tileid="370" duration="350"/>
+   <frame tileid="371" duration="350"/>
+   <frame tileid="372" duration="350"/>
+   <frame tileid="371" duration="350"/>
+   <frame tileid="372" duration="350"/>
+   <frame tileid="307" duration="350"/>
+  </animation>
+ </tile>
  <tile id="559">
   <animation>
    <frame tileid="559" duration="1000"/>
@@ -32,6 +42,16 @@
    <frame tileid="561" duration="1000"/>
    <frame tileid="560" duration="1000"/>
    <frame tileid="559" duration="1000"/>
+  </animation>
+ </tile>
+ <tile id="562">
+  <animation>
+   <frame tileid="562" duration="350"/>
+   <frame tileid="563" duration="350"/>
+   <frame tileid="564" duration="350"/>
+   <frame tileid="563" duration="350"/>
+   <frame tileid="564" duration="350"/>
+   <frame tileid="502" duration="350"/>
   </animation>
  </tile>
  <tile id="962">

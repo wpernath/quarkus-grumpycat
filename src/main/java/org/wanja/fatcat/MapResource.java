@@ -39,13 +39,8 @@ public class MapResource {
                 Map map = mapper.readValue(
                         getClass().getResourceAsStream("/maps/" + level ), 
                         Map.class);
-
-                // Hack to make sure, tileset is properly loaded as
-                // MapEditor.org's export will change image file according to exported directory
-                if( map.tilesets != null && !map.tilesets.isEmpty()) {
-                    map.tilesets.forEach( t -> t.image = "/images/tilesets/terrain.png" );                    
-                }
                 maps.add(map);
+                map.tilesets.forEach(t -> t.source = t.source.substring(t.source.lastIndexOf('/')+1, t.source.lastIndexOf('.') ));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -55,7 +50,10 @@ public class MapResource {
     @GET
     @Path("/{level}")
     public Map mapByLevel(int level) {
-        return maps.get(level);
+        if( level >= 0 && level < maps.size()) {
+            return maps.get(level);
+        }
+        return null;
     }
 
     @GET

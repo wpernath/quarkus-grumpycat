@@ -2,18 +2,14 @@
 let MAZE_WIDTH = 1024;
 let MAZE_HEIGHT = 736;
 
-const TILE_WIDTH = 32;
-const TILE_HEIGHT = 32;
-const CAT_SPEED =8;
-
-class Direction {
+export  class Direction {
 	constructor(dx, dy) {
 		this.dx = dx;
 		this.dy = dy;
 	}
 }
  
-class Node {
+export  class Node {
 	constructor(x, y, dir) {
 		this.x = x;
 		this.y = y;
@@ -21,7 +17,7 @@ class Node {
 	}
 }
 
-class Queue {
+export  class Queue {
 	constructor() {
 		this.elements = {};
 		this.head = 0;
@@ -49,27 +45,23 @@ class Queue {
 }
 
 
-class Player {
+export class Player extends Renderable {
 	constructor(x, y, speed) {
-		this.x = x;
-		this.y = y;
+		super(x, y);
 		this.speed = speed;
 		this.image = new Image();
 	}
 
 	draw(ctx, renderer, camera) {
-		let startX = Math.floor(camera.x / renderer.tileWidth);
-		let startY = Math.floor(camera.y / renderer.tileHeight);
-		let offsetX = -camera.x + startX * renderer.tileWidth;
-		let offsetY = -camera.y + startY * renderer.tileHeight;
-
-		ctx.drawImage(
-			this.image,
-			Math.floor((this.x - startX) * renderer.tileWidth + offsetX),
-			Math.floor((this.y - startY) * renderer.tileHeight + offsetY),
-			renderer.tileWidth,
-			renderer.tileHeight
-		);
+		if( super.draw(ctx, renderer, camera)) {
+			ctx.drawImage(
+				this.image,
+				Math.floor((this.x - this.startX) * renderer.tileWidth + this.offsetX),
+				Math.floor((this.y - this.startY) * renderer.tileHeight + this.offsetY),
+				renderer.tileWidth,
+				renderer.tileHeight
+			);
+		}
 	}
 }
 
@@ -77,8 +69,9 @@ class Player {
  * Enemy Object: Every enemy is represented by this class
  * It contains methods for calculating the next movement
  */
-class Enemy {
+export class Enemy extends Renderable {
 	constructor(x, y, speed) {
+		super(x, y);
 		this.catX = x;
 		this.catY = y;
 		this.speed = speed;
@@ -101,15 +94,11 @@ class Enemy {
 	}
 
 	draw(ctx, renderer, camera) {
-		if (camera.isInView(this.catX, this.catY)) {
-			let startX = Math.floor(camera.x / renderer.tileWidth);
-			let startY = Math.floor(camera.y / renderer.tileHeight);
-			let offsetX = -camera.x + startX * renderer.tileWidth;
-			let offsetY = -camera.y + startY * renderer.tileHeight;
-
-			let xPos = Math.floor((this.catX - startX) * renderer.tileWidth + offsetX);
-			let yPos = Math.floor((this.catY - startY) * renderer.tileHeight + offsetY);
-
+		this.x = this.catX;
+		this.y = this.catY;
+		if( super.draw(ctx, renderer, camera) ) {
+			let xPos = Math.floor((this.catX - this.startX) * renderer.tileWidth + this.offsetX);
+			let yPos = Math.floor((this.catY - this.startY) * renderer.tileHeight + this.offsetY);
 			ctx.drawImage(this.image, xPos, yPos, renderer.tileWidth, renderer.tileHeight);
 		}
 	}
@@ -225,7 +214,7 @@ class Enemy {
  * Camera Object: This is used to display the current part of the map
  * The player is always in the center of the cam (if possible)
  */
-class Camera {
+export class Camera {
 	constructor(mapWidth, mapHeight, canvasWidth, canvasHeight) {
 		this.x = 0;
 		this.y = 0;

@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class TileSet {
     public String name;
     public String image;
+    
+    @JsonProperty("tiledversion")
+    public String tiledVersion;
 
     @JsonProperty("imagewidth")
     public int imageWidth;

@@ -1,5 +1,5 @@
 // we need to get key downs / ups
-function keyDownHandler(event) {
+export function keyDownHandler(event) {
 	if (event.code == "ArrowUp" || event.code == "KeyW") upPressed = true;
 	if (event.code == "ArrowLeft" || event.code == "KeyA") leftPressed = true;
 	if (event.code == "ArrowRight" || event.code == "KeyD") rightPressed = true;
@@ -10,7 +10,7 @@ function keyDownHandler(event) {
 	//console.log(event.code);
 }
 
-function keyUpHandler(event) {
+export function keyUpHandler(event) {
 	if (event.code == "ArrowUp" || event.code == "KeyW") upPressed = false;
 	if (event.code == "ArrowLeft" || event.code == "KeyA") leftPressed = false;
 	if (event.code == "ArrowRight" || event.code == "KeyD") rightPressed = false;
@@ -22,9 +22,9 @@ function keyUpHandler(event) {
 }
 
 const pointerStart = { x: 0, y: 0, identifier: 0, touched: false };
-const virtGamePad = { x: 0, y: 0, identifier: 0, touched: false };
-const virtButtons = { x: 0, y: 0, identifier: 0, touched: false };
-let displayTouched = false;
+export const virtGamePad = { x: 0, y: 0, identifier: 0, touched: false };
+export const virtButtons = { x: 0, y: 0, identifier: 0, touched: false };
+export let displayTouched = false;
 
 function handleTouchStart(event) {
 	event.preventDefault();
@@ -74,6 +74,7 @@ function handleTouchEnd(event) {
 
 	displayTouched = false;
 }
+
 function handleTouchMove(event) {
 	event.preventDefault();
 
@@ -106,11 +107,11 @@ function handleTouchMove(event) {
 	}
 }
 
-function drawLevelWon() {
+export function drawLevelWon() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.drawImage(levelWonDog, (canvas.width - levelWonDog.width) / 2, (canvas.height - levelWonDog.height) / 2);
 
-	ctx.font = "22px Arial";
+	ctx.font = gameEngine.getSmallFont().size + "px Arial";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	ctx.fillStyle = "white";
@@ -133,7 +134,7 @@ function drawLevelWon() {
 	}
 }
 
-function drawGameOver() {
+export function drawGameOver() {
 	score = 0;
 	maxScore = 0;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -141,7 +142,7 @@ function drawGameOver() {
 	ctx.drawImage(gameOverDog, (canvas.width - gameOverDog.width) / 2, (canvas.height - gameOverDog.height) / 2);
 	ctx.drawImage(gameOverImg, (canvas.width - 620) / 2, 10, 620, 400);
 
-	ctx.font = "22px Arial";
+	ctx.font = gameEngine.getSmallFont().size + "px Arial";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	ctx.fillStyle = "white";
@@ -158,13 +159,13 @@ function drawGameOver() {
 	}
 }
 
-function drawCenteredText(text, y) {
+export function drawCenteredText(text, y) {
 	gameEngine.drawCenteredText(text, y);
 }
 
 let titleScreenDrawn = 0;
 let currentSelectedMenueEntryColor = "#1259A5";
-function drawTitleScreen() {
+export function drawTitleScreen() {
 	let menueEntries = [
 		{
 			title: "New Game",
@@ -252,6 +253,6 @@ function drawTitleScreen() {
 	}
 }
 
-function showHighscores() {
+export function showHighscores() {
 	console.log("Showing highscores");
 }

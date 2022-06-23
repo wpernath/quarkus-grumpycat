@@ -1,10 +1,13 @@
-const DEVICE_TYPE = {
+import {TiledMapRenderer} from './game-tiled-renderer.js';
+
+
+export const DEVICE_TYPE = {
     SMALL: 'small',
     MEDIUM: 'medium',
     LARGE: 'large'
 };
 
-class Font {
+export class Font {
 
     constructor(name, size) {
         this.name = name;
@@ -13,9 +16,15 @@ class Font {
 }
 
 
-class GameEngine {
+export class GameEngine {
     fonts;
     deviceType;
+    canvas; 
+    context;
+    width;
+    height;
+    renderer;
+    fonts = [];
 
     constructor(canvas) {
         this.canvas  = canvas;
@@ -45,6 +54,9 @@ class GameEngine {
         }
     }
 
+    initMap() {
+        
+    }
     getFont(name) {
         for( let i = 0; i < this.fonts.length; i++ ) {
             if( this.fonts[i].name == name) {
