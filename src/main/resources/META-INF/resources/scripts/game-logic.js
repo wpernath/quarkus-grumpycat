@@ -195,11 +195,6 @@ function loadAndInitializeLevel(currentLevel) {
 		.then(function (result) {
 			console.log("current level loaded: " + name);
 
-			// make sure we're loading all tilesets and replace the array with the 
-			// enlarged real tileset coming from server
-			let tilesetRes = [];
-			
-
 			renderer = new TiledMapRenderer(canvas);
 			renderer.parse(result);
 

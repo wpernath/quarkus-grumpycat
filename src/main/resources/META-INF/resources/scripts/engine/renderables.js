@@ -12,8 +12,8 @@ class Renderable {
         if (camera.isInView(this.x, this.y)) {
             this.startX = Math.floor(camera.x / renderer.tileWidth);
             this.startY = Math.floor(camera.y / renderer.tileHeight);
-            this.offsetX = -camera.x + startX * renderer.tileWidth;
-            this.offsetY = -camera.y + startY * renderer.tileHeight;
+            this.offsetX = -camera.x + this.startX * renderer.tileWidth;
+            this.offsetY = -camera.y + this.startY * renderer.tileHeight;
             return true;
         }
         return false;
