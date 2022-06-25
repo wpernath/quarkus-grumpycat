@@ -107,10 +107,10 @@ function initGame() {
 	window.addEventListener("resize", setupCanvas);
 
 	// change here if you want to directly play a new level
-	currentLevel = 2;
+	currentLevel = 0;
 	numBombs = 1;
 	maxScore = 0;
-
+	//onTitleScreen = true;
 	fetch("/maps/")
 		.then(function (response) {
 			return response.json();
@@ -124,6 +124,8 @@ function initGame() {
 		})
 		.then(function (ver) {
 			serverVersion = ver;
+
+			// and start game loop
 			initLevel();
 		});
 }
