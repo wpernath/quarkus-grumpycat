@@ -1,8 +1,3 @@
-// Bits on the far end of the 32-bit global tile ID are used for tile flags
-const FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
-const FLIPPED_VERTICALLY_FLAG = 0x40000000;
-const FLIPPED_DIAGONALLY_FLAG = 0x20000000;
-const ROTATED_HEXAGONAL_120_FLAG = 0x10000000;
 const BONUS_10PT = 963;
 const BONUS_BOMB = 961;
 const PLAYER_TILE = 993;
@@ -73,7 +68,7 @@ class TiledMapRenderer {
 
 	tilesetImage = new Image();
 	placedBombs = [];
-
+	
 	// for animation
 	tileAnimations = [];
 
@@ -182,7 +177,7 @@ class TiledMapRenderer {
 		let endY = startY + this.camera.height / this.tileHeight;
 		let offsetX = -this.camera.x + startX * this.tileWidth;
 		let offsetY = -this.camera.y + startY * this.tileHeight;
-		let currentTime = Date.now();
+		let currentTime = performance.now();
 
 		for (let l = 0; l < this.layers.length; l++) {
 			let layer = this.layers[l];
@@ -193,9 +188,9 @@ class TiledMapRenderer {
 						let yPos = Math.floor((y - startY) * this.tileHeight) + offsetY;
 
 						let t = this.tileAt(layer, x, y);
-						let tile = t & ~(FLIPPED_DIAGONALLY_FLAG | FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | ROTATED_HEXAGONAL_120_FLAG);
-						let flippedHorizontally = (t & FLIPPED_HORIZONTALLY_FLAG) != 0 ? true : false;
-						let flippedVertically = (t & FLIPPED_VERTICALLY_FLAG) != 0 ? true : false;
+						let tile = t & ~(Tile.FLIPPED_DIAGONALLY_FLAG | Tile.FLIPPED_HORIZONTALLY_FLAG | Tile.FLIPPED_VERTICALLY_FLAG | Tile.ROTATED_HEXAGONAL_120_FLAG);
+						let flippedHorizontally = (t & Tile.FLIPPED_HORIZONTALLY_FLAG) != 0 ? true : false;
+						let flippedVertically = (t & Tile.FLIPPED_VERTICALLY_FLAG) != 0 ? true : false;
 
 						if (tile != 0) {
 							tile -= 1;
@@ -269,7 +264,7 @@ class TiledMapRenderer {
 							if (bomb.x - 2 < enemy.catX && bomb.x + 2 > enemy.catX && bomb.y - 2 < enemy.catY && bomb.y + 2 > enemy.catY) {
 								if (!enemy.stunned) {
 									enemy.stunned = true;
-									enemy.stunnedTime = Date.now();
+									enemy.stunnedTime = performance.now();
 								}
 							}
 						}

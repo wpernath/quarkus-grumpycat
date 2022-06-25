@@ -107,7 +107,7 @@ function initGame() {
 	window.addEventListener("resize", setupCanvas);
 
 	// change here if you want to directly play a new level
-	currentLevel = 0;
+	currentLevel = 2;
 	numBombs = 1;
 	maxScore = 0;
 

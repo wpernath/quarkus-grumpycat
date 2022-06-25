@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.wanja.fatcat.map.Map;
 import org.wanja.fatcat.map.MapTileSet;
 import org.wanja.fatcat.map.RealTileSet;
-import org.wanja.fatcat.map.TileSet;
+
 
 @Path("/maps")
 public class MapResource {
@@ -47,6 +47,8 @@ public class MapResource {
                 maps.add(map);   
                 List<MapTileSet> sets = map.tilesets;
                 map.tilesets = new ArrayList<MapTileSet>();
+
+                // resolve all tilesets of the map
                 sets.forEach(t -> {
                     MapTileSet mts = (MapTileSet )t;
                     mts.source = mts.source.substring(mts.source.lastIndexOf('/')+1, mts.source.lastIndexOf('.') );
