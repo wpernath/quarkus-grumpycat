@@ -29,9 +29,15 @@ You can run your application in dev mode that enables live coding using:
 ```
 
 ## Game Server
-The server part consists of a HTML server serving index.html and the various scripts in JavaScript. It also contains `MapResource.java` which will be called to download a level in the format of [Tiled MapEditor](https://mapeditor.org). All levels are stored in JSON format in `java/resources/map`. The all sources for the levels in the original XML based format of the MapEditor are stored in `/tiled`. 
+The server part consists of a HTML server serving index.html and the various scripts in JavaScript. It also contains serveral REST API endpoints, namely:
 
-The Game Server needs a PostgreSQL database server to store new games (`GameResource.java`) and to store the player's actions in (`PlayerMovementResource.java`). 
+- `MapResource.java`, (`/maps`) will be called to download a level in the format of [Tiled MapEditor](https://mapeditor.org). All levels are stored in JSON format in `java/resources/map`. All sources of the levels in the original XML based format of the MapEditor are stored in `/tiled`. 
+
+- `GameResource.java`, (`/game/`) will be called to create a new game on the server, which will be used to store all movements of the player in the client.
+
+- `TileSetResource.java`, (`/tileset`), will be used to download a given tileset for the map. Tilesets are also stored in `java/resources/map` and are JSON representations of the original XML based tilesets, stored in `/tiled`. 
+
+- `PlayerMovementResource.java`, (`/movement`) will be called by the client to store player actions and movements. This is being used to replay random games after they've been played. This resource is simply taking the JSON parameters and is storing it in a PostgreSQL database server.
 
 
 
@@ -62,7 +68,7 @@ This function calculates the shortest path between each enemy and the dog. It ju
 
 
 ## Creating new Levels
-To create a new level, download the [Tiled MapEditor](https://mapeditor.org). A `Level-Template.tmx` can be found in `/tiled` folder. The only supported tileset currently is `/tiled/Terrain.tsx`. Please make sure to save the new Level with embedded tileset. If you're done creating the level and would like to use it in the game, export it in JSON format and store it in `/java/resources/maps`. Then you need to update `MapResource.java` to include this new level. 
+To create a new level, download the [Tiled MapEditor](https://mapeditor.org). A `Level-Template.tmx` can be found in `/tiled` folder. The only supported tileset currently is `/tiled/Terrain.tsx`. Please make sure to **NOT** save the new Level with embedded tileset. If you're done creating the level and would like to use it in the game, export it in JSON format and store it in `/java/resources/maps`. Then you need to update `MapResource.java` to include this new level. 
 
 If you directly want to play your new level, you could open `game-logic.js` and go to the function `initGame()` where you can change the global variable `currentLevel` to point to the index of the array in `MapResource.java`. 
 
@@ -71,10 +77,10 @@ Maps can be of any size. The only important thing you need to keep in mind are t
 - **Ground:** This is the base ground of the level. You can put any tile here.  
 - **Frame:** This layer is the border of the map. Anything placed here will be used as barrier for player and enemies. Anything placed here can be destroyed with a bomb. 
 - **Dekor:** Use this layer to place decorative tiles on. For example flowers on water or stones on sand. 
-- **Bonus:** Use this layer to place your bonus items on. Any tile placed here can be a bonus which adds a score of 10 points. Once the player walks over it, the bonus items gets removed. Special bonus tile is the bomb, which provides 5 more bombs to the player to be used to destroy frames.
+- **Bonus:** Use this layer to place your bonus items on. Any tile placed here can be a bonus which adds a score of 10 points. Once the player walks over it, the bonus item gets removed. Special bonus tile is the bomb, which provides 5 more bombs to the player to be used to destroy frames.
 - **Persons:** This layer will be used to place the player and enemies on. Use the two sign tiles as player and enemies. Note, you MUST not place more than one player, but you CAN place more than one enemy.
 
-You might add more layers to your map. Any layer placed on top of **Persons** will be drawn last, which means it might draw over enemies and player sprites.
+You might add more layers to your map. Any layer placed on top of **Persons** will be drawn last, which means it will draw over enemies and player sprites.
 
 ## Running on Docker / Podman
 There are container images ready to be used on [Quay.io](https://quay.io/wpernath/quarkus-grumpycat). Use this command to pull the image to your local repository:
@@ -170,6 +176,14 @@ To stage your version of quarkus-grumpycat, call something like
 ```
 
 This creates a new branch in github.com and tags the current image on quay.io.
+
+## Roadmap
+
+- In the near future there will also be an EnemyMovementResource to store - well - the enemy's movements, as my plan to calculate new positions of the enemies based on current PlayerMovement doesn't work properly (timing issue).
+
+- Refactoring of the JavaScript stuff. I mainly have used this project to learn some JavaScript. Now it's time to refactor everything and to use some more fancy methods to do the same.
+
+- Do not directly use the Player- / EnemyMovement to store the data in the database, but use Apache Kafka or Streams to take the data and then use a Consumer to store the data asynchronously in the database. 
 
 ## About the graphics
 The map graphics are coming from [LPC Terrain](https://opengameart.org/content/tiled-terrains) and all its authors. Special thanks to all of them!
