@@ -63,35 +63,13 @@ let loader = new PxLoader(),
 function setupGame() {
 	// add a completion listener to the image loader which inits the game
 	console.log("setupGame() called");
-	deviceHasTouchScreen = checkForTouchScreen();
+	deviceHasTouchScreen = Video.checkForTouchScreen();
 	console.log("  Device has Touch Screen: " + deviceHasTouchScreen);
 
 	loader.addCompletionListener(initGame);
 	loader.start();
 }
 
-function checkForTouchScreen() {
-	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent
-	hasTouchScreen = false;
-	if ("maxTouchPoints" in navigator) {
-		hasTouchScreen = navigator.maxTouchPoints > 0;
-	} else if ("msMaxTouchPoints" in navigator) {
-		hasTouchScreen = navigator.msMaxTouchPoints > 0;
-	} else {
-		var mQ = window.matchMedia && matchMedia("(pointer:coarse)");
-		if (mQ && mQ.media === "(pointer:coarse)") {
-			hasTouchScreen = !!mQ.matches;
-		} else if ("orientation" in window) {
-			hasTouchScreen = true; // deprecated, but good fallback
-		} else {
-			// Only as a last resort, fall back to user agent sniffing
-			var UA = navigator.userAgent;
-			hasTouchScreen = /\b(BlackBerry|webOS|iPhone|IEMobile)\b/i.test(UA) || /\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA);
-		}
-	}
-	deviceHasTouchScreen = hasTouchScreen;
-	return hasTouchScreen;
-}
 
 // init game
 function initGame() {
@@ -197,9 +175,9 @@ function loadAndInitializeLevel(currentLevel) {
 		.then(function (result) {
 			console.log("current level loaded: " + name);
 
-			renderer = new TiledMapRenderer(canvas);
-			renderer.parse(result);
-
+			gameEngine.initMap(result);
+			renderer = gameEngine.renderer;
+			
 			renderer.player.image = mouseImg;
 
 			catSpeed = CAT_SPEED;
