@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Map {
     public String name;
     public String type;
+    public String orientation;
     public int width;
     public int height;
 

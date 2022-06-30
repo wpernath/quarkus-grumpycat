@@ -7,10 +7,12 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.wanja.fatcat.map.Layer;
 import org.wanja.fatcat.map.Map;
 import org.wanja.fatcat.map.MapTileSet;
 import org.wanja.fatcat.map.RealTileSet;
@@ -45,6 +47,16 @@ public class MapResource {
                         getClass().getResourceAsStream("/maps/" + level ), 
                         Map.class);
                 maps.add(map);   
+
+                // make sure person layer is not visible
+                List<Layer> layers = map.layers;
+                layers.forEach(l -> {
+                    if( l.name.equalsIgnoreCase("Persons")) {
+                        l.visible = false;
+                    }
+                });
+                
+                // resolve all tilesets of the map
                 List<MapTileSet> sets = map.tilesets;
                 map.tilesets = new ArrayList<MapTileSet>();
 
@@ -65,6 +77,12 @@ public class MapResource {
 
     @GET
     @Path("/{level}")
+    public Map mapByLevelId(int level) {
+        return mapByLevel(level);
+    }
+
+    @GET
+    @Path("/{level}.json")    
     public Map mapByLevel(int level) {
         if( level >= 0 && level < maps.size()) {
             return maps.get(level);

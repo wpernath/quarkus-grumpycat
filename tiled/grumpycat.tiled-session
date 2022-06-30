@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Level5.tmx",
+    "activeFile": "explosion.tsx",
     "expandedProjectPaths": [
         "."
     ],
@@ -33,38 +33,38 @@
             "scale": 0.74,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 531.081081081081,
-                "y": 624.3243243243244
+                "x": 512.1621621621622,
+                "y": 504.7297297297297
             }
         },
         "Level1.tmx#Terrain": {
             "scaleInDock": 1
         },
         "Level2.tmx": {
-            "scale": 0.7906,
+            "scale": 0.79,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 542.6258537819377,
-                "y": 641.2850999241083
+                "x": 543.0379746835441,
+                "y": 642.4050632911391
             }
         },
         "Level2.tmx#Terrain": {
             "scaleInDock": 1
         },
         "Level3.tmx": {
-            "scale": 0.478,
+            "scale": 0.47,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 912.1338912133891,
-                "y": 1100.418410041841
+                "x": 912.7659574468084,
+                "y": 1101.0638297872342
             }
         },
         "Level4.tmx": {
-            "scale": 0.4034991197183098,
+            "scale": 0.4,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 1110.287428415599,
-                "y": 798.0190891737114
+                "x": 1112.5,
+                "y": 798.75
             }
         },
         "Level4.tmx#Terrain": {
@@ -75,7 +75,7 @@
             "selectedLayer": 3,
             "viewCenter": {
                 "x": 670.909090909091,
-                "y": 690.9090909090909
+                "y": 691.8181818181818
             }
         },
         "Terrain.tsx": {
@@ -108,6 +108,10 @@
                 "y": 480.55555555555543
             }
         },
+        "explosion.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "first-wave.tmx": {
             "scale": 0.8937,
             "selectedLayer": 1,
@@ -123,23 +127,20 @@
     },
     "frame.defaultDuration": 350,
     "last.exportedFilePath": "/Users/wpernath/Devel/quarkus-grumpycat/src/main/resources/maps",
-    "last.imagePath": "/Users/wpernath/Devel/quarkus-grumpycat/tiled/images/tilesets",
+    "last.imagePath": "/Users/wanja/Devel/grumpycat/quarkus-grumpycat/tiled/images/tilesets",
     "lastUsedTilesetExportFilter": "JSON-Kachelsatz-Dateien (*.tsj *.json)",
     "map.height": 36,
     "map.lastUsedExportFilter": "JSON-Kartendateien (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
     "map.width": 32,
     "openFiles": [
-        "Level1.tmx",
-        "Level2.tmx",
-        "Level3.tmx",
-        "Level4.tmx",
-        "Level5.tmx",
-        "Terrain.tsx"
+        "explosion.tsx"
     ],
     "project": "grumpycat.tiled-project",
     "recentFiles": [
+        "explosion.tsx",
         "Terrain.tsx",
+        "Level1.tmx",
         "Level2.tmx",
         "Level3.tmx",
         "Level4.tmx",
@@ -148,9 +149,11 @@
         "spiders.tsx",
         "Animated Water.tsx",
         "bomb.tsx",
-        "Level1.tmx",
-        "first-wave.tmx",
-        "desert-with-water.tsx"
+        "first-wave.tmx"
     ],
-    "tileset.lastUsedFormat": "tsx"
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 256,
+        "width": 256
+    }
 }
