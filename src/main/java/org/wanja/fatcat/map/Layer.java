@@ -1,5 +1,7 @@
 package org.wanja.fatcat.map;
 
+import java.util.List;
+
 public class Layer {
     public int id;
     public int height;
@@ -11,4 +13,5 @@ public class Layer {
     public int y;
     public boolean visible;
     public long[] data;
+    public List<LayerProperty> properties;
 }

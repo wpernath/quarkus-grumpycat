@@ -33,8 +33,8 @@
             "scale": 0.74,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 512.1621621621622,
-                "y": 504.7297297297297
+                "x": 512.8378378378377,
+                "y": 505.4054054054053
             }
         },
         "Level1.tmx#Terrain": {
@@ -42,10 +42,10 @@
         },
         "Level2.tmx": {
             "scale": 0.79,
-            "selectedLayer": 4,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 543.0379746835441,
-                "y": 642.4050632911391
+                "x": 543.6708860759494,
+                "y": 643.0379746835441
             }
         },
         "Level2.tmx#Terrain": {
@@ -126,7 +126,7 @@
         }
     },
     "frame.defaultDuration": 350,
-    "last.exportedFilePath": "/Users/wpernath/Devel/quarkus-grumpycat/src/main/resources/maps",
+    "last.exportedFilePath": "/Users/wpernath/Devel/grumpycat/quarkus-grumpycat/src/main/resources/maps",
     "last.imagePath": "/Users/wanja/Devel/grumpycat/quarkus-grumpycat/tiled/images/tilesets",
     "lastUsedTilesetExportFilter": "JSON-Kachelsatz-Dateien (*.tsj *.json)",
     "map.height": 36,
@@ -137,9 +137,10 @@
         "explosion.tsx"
     ],
     "project": "grumpycat.tiled-project",
+    "property.type": "int",
     "recentFiles": [
-        "explosion.tsx",
         "Terrain.tsx",
+        "explosion.tsx",
         "Level1.tmx",
         "Level2.tmx",
         "Level3.tmx",
