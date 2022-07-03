@@ -29,12 +29,20 @@
             "scaleInDock": 1,
             "scaleInEditor": 1.9537
         },
+        "Level-Template.tmx": {
+            "scale": 0.390118838028169,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 1106.0732216393073,
+                "y": 802.3196254301348
+            }
+        },
         "Level1.tmx": {
             "scale": 0.74,
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 512.8378378378377,
-                "y": 505.4054054054053
+                "y": 504.05405405405406
             }
         },
         "Level1.tmx#Terrain": {
@@ -42,9 +50,9 @@
         },
         "Level2.tmx": {
             "scale": 0.79,
-            "selectedLayer": 3,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 543.6708860759494,
+                "x": 544.9367088607595,
                 "y": 643.0379746835441
             }
         },
@@ -55,16 +63,16 @@
             "scale": 0.47,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 912.7659574468084,
-                "y": 1101.0638297872342
+                "x": 1102.127659574468,
+                "y": 800
             }
         },
         "Level4.tmx": {
             "scale": 0.4,
-            "selectedLayer": 1,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 1112.5,
-                "y": 798.75
+                "x": 1113.75,
+                "y": 800
             }
         },
         "Level4.tmx#Terrain": {
@@ -137,20 +145,20 @@
         "explosion.tsx"
     ],
     "project": "grumpycat.tiled-project",
-    "property.type": "int",
+    "property.type": "bool",
     "recentFiles": [
-        "Terrain.tsx",
-        "explosion.tsx",
+        "Level4.tmx",
+        "Level3.tmx",
+        "Level-Template.tmx",
         "Level1.tmx",
         "Level2.tmx",
-        "Level3.tmx",
-        "Level4.tmx",
+        "Terrain.tsx",
+        "explosion.tsx",
         "Level5.tmx",
         "Utumno.tsx",
         "spiders.tsx",
         "Animated Water.tsx",
-        "bomb.tsx",
-        "first-wave.tmx"
+        "bomb.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

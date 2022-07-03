@@ -217,6 +217,12 @@
 </data>
  </layer>
  <layer id="5" name="Persons" width="70" height="50">
+  <properties>
+    <property name="enemyEmitterActive" type="bool" value="false" />
+    <property name="enemyNumEmitting" type="int" value="5" />
+    <property name="enemyTimeEmitting" type="int" value="6000" />
+  </properties>
+
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
