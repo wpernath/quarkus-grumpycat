@@ -29,7 +29,12 @@ public class GameResource {
     @Transactional
     public Game createNewGame(Game game) {
         Game g = new Game();
-        g.player = new Player(game.name);
+        if( game.player == null ) {
+            g.player = new Player(game.name);
+        }
+        else {
+            g.player = game.player;
+        }
         g.level  = game.level;
         g.name   = game.name;
         g.player.persist();
