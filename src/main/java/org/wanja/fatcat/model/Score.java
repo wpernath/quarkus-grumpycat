@@ -11,5 +11,6 @@ public class Score extends PanacheEntity {
     public Long playerId;
     public Long gameId;
     public long score;
+    public String name;
     public Date time = new Date();
 }

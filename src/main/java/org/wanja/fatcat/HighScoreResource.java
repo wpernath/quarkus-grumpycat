@@ -28,7 +28,7 @@ public class HighScoreResource {
     @Transactional
     public List<Score> addScore(Score score) {
         score.id = null;
-        if( score.time == null ) score.time = new Date();
+        if( score.time == null ) score.time = new Date();        
         score.persist();
         return readHighscore(10);
     }
