@@ -25,6 +25,9 @@ public class GameResource {
     @ConfigProperty( name = "application.version")
     String versionString;
 
+    @ConfigProperty( name = "quarkus.application.name")
+    String appName;
+
     @POST
     @Transactional
     public Game createNewGame(Game game) {
@@ -57,8 +60,23 @@ public class GameResource {
 
     @GET
     @Path("/version")
-    @Produces("text/plain")
-    public String version() {
-        return versionString;
+    //@Produces("text/plain")
+    public AppVersion version() {
+        return new AppVersion("grumpycat-server", this.appName, this.versionString);
     }
+
+    final class AppVersion {
+        public String appName;
+        public String internalName;
+        public String appVersion;
+
+        public AppVersion() {
+        }
+        public AppVersion(String n, String i, String v) {
+            this.appName = n;
+            this.appVersion = v;
+            this.internalName = i;
+        }
+    }
+
 }
