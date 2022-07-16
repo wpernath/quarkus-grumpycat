@@ -12,23 +12,23 @@
         {
          "animation":[
                 {
-                 "duration":1000,
+                 "duration":250,
                  "tileid":187
                 }, 
                 {
-                 "duration":1000,
+                 "duration":250,
                  "tileid":188
                 }, 
                 {
-                 "duration":1000,
+                 "duration":250,
                  "tileid":189
                 }, 
                 {
-                 "duration":1000,
+                 "duration":250,
                  "tileid":188
                 }, 
                 {
-                 "duration":1000,
+                 "duration":250,
                  "tileid":187
                 }],
          "id":124,

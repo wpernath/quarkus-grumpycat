@@ -211,6 +211,22 @@
          "id":5,
          "name":"Persons",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"enemyEmitterActive",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"enemyNumEmitting",
+                 "type":"int",
+                 "value":5
+                }, 
+                {
+                 "name":"enemyTimeEmitting",
+                 "type":"int",
+                 "value":6000
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":32,
@@ -220,6 +236,12 @@
  "nextlayerid":6,
  "nextobjectid":1,
  "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"Name",
+         "type":"string",
+         "value":"It's just a cat. But she's a grumpy one!"
+        }],
  "renderorder":"right-down",
  "tiledversion":"1.8.6",
  "tileheight":32,
