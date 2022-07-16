@@ -11,6 +11,7 @@ public class Map {
     public int width;
     public int height;
 
+    public List<LayerProperty> properties;
     @JsonProperty("tileheight")
     public int tileHeight;
 
