@@ -12,6 +12,7 @@ import javax.ws.rs.Path;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.wanja.fatcat.map.Layer;
+import org.wanja.fatcat.map.LayerProperty;
 import org.wanja.fatcat.map.Map;
 import org.wanja.fatcat.map.MapTileSet;
 import org.wanja.fatcat.map.RealTileSet;
@@ -55,6 +56,16 @@ public class MapResource {
                     }
                 });
                 
+                // look for a map property named 'name' and make it 'longName'
+                if( map.properties != null && map.properties.size() > 0 ) {
+                    for( LayerProperty p : map.properties ) {
+                        if( p.name.equalsIgnoreCase("Name")) {
+                            map.longName = p.value;
+                            break;
+                        }
+                    }
+                }
+
                 // resolve all tilesets of the map
                 List<MapTileSet> sets = map.tilesets;
                 map.tilesets = new ArrayList<MapTileSet>();

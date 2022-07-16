@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Map {
+    public String longName;
     public String name;
     public String type;
     public String orientation;
