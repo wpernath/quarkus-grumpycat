@@ -328,6 +328,11 @@
  "orientation":"orthogonal",
  "properties":[
         {
+         "name":"Description",
+         "type":"string",
+         "value":"A fire world. Not yet finished. But have a look and tell me what you think! We need more enemy types. Let's wait and see what's happening."
+        }, 
+        {
          "name":"Name",
          "type":"string",
          "value":"Fire and Dragon... At least Fire. And some cats. And some Spiders!"

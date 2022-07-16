@@ -61,7 +61,9 @@ public class MapResource {
                     for( LayerProperty p : map.properties ) {
                         if( p.name.equalsIgnoreCase("Name")) {
                             map.longName = p.value;
-                            break;
+                        }
+                        else if( p.name.equalsIgnoreCase("Description")) {
+                            map.description = p.value;
                         }
                     }
                 }

@@ -278,6 +278,11 @@
  "orientation":"orthogonal",
  "properties":[
         {
+         "name":"Description",
+         "type":"string",
+         "value":"Oh no!! No spiders, please! But spiders don't like thunders and lightning. Perhaps there is something you can do?"
+        }, 
+        {
          "name":"Name",
          "type":"string",
          "value":"Spiders!!!! I mean SPIDERS!!! Flee! Flee! (Or use the boom effect)."

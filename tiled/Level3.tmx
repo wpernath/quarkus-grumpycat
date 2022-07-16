@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.8" tiledversion="1.8.6" orientation="orthogonal" renderorder="right-down" width="70" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="1">
  <editorsettings>
-  <export target="../src/main/resources/META-INF/resources/maps/Level3.tmj" format="json"/>
+  <export target="../src/main/resources/maps/Level3.tmj" format="json"/>
  </editorsettings>
  <properties>
+  <property name="Description" value="A fire world. Not yet finished. But have a look and tell me what you think! We need more enemy types. Let's wait and see what's happening."/>
   <property name="Name" value="Fire and Dragon... At least Fire. And some cats. And some Spiders!"/>
  </properties>
  <tileset firstgid="1" source="Terrain.tsx"/>

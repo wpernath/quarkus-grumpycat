@@ -389,6 +389,11 @@
  "orientation":"orthogonal",
  "properties":[
         {
+         "name":"Description",
+         "type":"string",
+         "value":"Did you know that the grumpy cat and spiders would work together?"
+        }, 
+        {
          "name":"Name",
          "type":"string",
          "value":"You get both: Cats and Spiders!"

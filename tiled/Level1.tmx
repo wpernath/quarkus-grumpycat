@@ -4,6 +4,9 @@
   <export target="../src/main/resources/maps/Level1.tmj" format="json"/>
  </editorsettings>
  <properties>
+  <property name="Description">Welcome to the grumpy cat land. A land full of joy but also full of grumpy cats. Collect all pills to leave that part of the world. 
+
+Cats don't like noise. Perhaps you can find something to stunn the cat?</property>
   <property name="Name" value="It's just a cat. But she's a grumpy one!"/>
  </properties>
  <tileset firstgid="1" source="Terrain.tsx"/>

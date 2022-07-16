@@ -4,6 +4,7 @@
   <export target="../src/main/resources/maps/Level2.tmj" format="json"/>
  </editorsettings>
  <properties>
+  <property name="Description" value="Oh no!! No spiders, please! But spiders don't like thunders and lightning. Perhaps there is something you can do?"/>
   <property name="Name" value="Spiders!!!! I mean SPIDERS!!! Flee! Flee! (Or use the boom effect)."/>
  </properties>
  <tileset firstgid="1" source="Terrain.tsx"/>

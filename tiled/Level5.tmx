@@ -4,6 +4,7 @@
   <export target="../src/main/resources/maps/Level5.tmj" format="json"/>
  </editorsettings>
  <properties>
+  <property name="Description" value="Did you know that the grumpy cat and spiders would work together?"/>
   <property name="Name" value="You get both: Cats and Spiders!"/>
  </properties>
  <tileset firstgid="1" source="Terrain.tsx"/>

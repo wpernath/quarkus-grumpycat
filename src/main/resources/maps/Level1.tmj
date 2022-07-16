@@ -238,6 +238,11 @@
  "orientation":"orthogonal",
  "properties":[
         {
+         "name":"Description",
+         "type":"string",
+         "value":"Welcome to the grumpy cat land. A land full of joy but also full of grumpy cats. Collect all pills to leave that part of the world. \n\nCats don't like noise. Perhaps you can find something to stunn the cat?"
+        }, 
+        {
          "name":"Name",
          "type":"string",
          "value":"It's just a cat. But she's a grumpy one!"
