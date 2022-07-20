@@ -19,7 +19,7 @@ If the cat gets into an exploding bomb, it stops for 3sec. A bomb can destroy ba
 
 All client game logic is currently coded with JavaScript and [MelonJS](https://github.com/melonjs/melonjs).
 
-![the game](docs/the-game.png)
+![the game](docs/game-title.png)
 
 ## Running the applications in dev mode
 
