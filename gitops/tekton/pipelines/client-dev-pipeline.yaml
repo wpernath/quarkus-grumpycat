@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: dev-pipeline
+  name: client-dev-pipeline
 spec:
   params:
     - default: 'https://github.com/wpernath/quarkus-grumpycat.git'
@@ -12,7 +12,7 @@ spec:
       description: revision to be used
       name: git-revision
       type: string
-    - default: .
+    - default: melonjs-client
       description: context dir within git repo where the source code is
       name: git-context
       type: string
@@ -28,7 +28,7 @@ spec:
       description: real config within config git to use
       name: kustomize-dir
       type: string
-    - default: 'quay.io/wpernath/quarkus-grumpycat:latest'
+    - default: 'quay.io/wpernath/grumpycat-melonjs:latest'
       description: Image to produce
       name: image-name
       type: string
@@ -60,27 +60,6 @@ spec:
       workspaces:
         - name: output
           workspace: source
-    - name: package
-      params:
-        - name: GOALS
-          value:
-            - package
-            - '-DskipTests'
-            - '-Dquarkus.container-image.build=false'
-            - '-Dquarkus.container-image.push=false'
-        - name: CONTEXT_DIR
-          value: the-source/$(params.git-context)
-      runAfter:
-        - clone-source
-        - clone-config
-      taskRef:
-        kind: Task
-        name: maven-caching
-      workspaces:
-        - name: source
-          workspace: source
-        - name: maven-settings
-          workspace: maven-settings
     - name: build-image
       params:
         - name: GOALS
@@ -95,7 +74,8 @@ spec:
         - name: CONTEXT_DIR
           value: the-source/$(params.git-context)
       runAfter:
-        - package
+        - clone-source
+        - clone-config
       taskRef:
         kind: Task
         name: maven-caching
