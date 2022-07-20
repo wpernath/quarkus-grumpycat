@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Level5.tmx",
+    "activeFile": "Level3.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -88,7 +88,7 @@
         },
         "Terrain.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 0.6709,
+            "scaleInDock": 0.4964,
             "scaleInEditor": 1.01
         },
         "Utumno.tsx": {
@@ -142,26 +142,26 @@
     "map.lastUsedFormat": "tmx",
     "map.width": 32,
     "openFiles": [
-        "Terrain.tsx",
         "Level3.tmx",
         "Level4.tmx",
         "Level2.tmx",
-        "Level5.tmx"
+        "Level5.tmx",
+        "Level1.tmx"
     ],
     "project": "grumpycat.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "Level1.tmx",
+        "Level5.tmx",
+        "Level2.tmx",
+        "Level4.tmx",
+        "Level3.tmx",
         "Terrain.tsx",
         "Level-Template.tmx",
         "spiders.tsx",
         "explosion.tsx",
         "bomb.tsx",
         "Animated Water.tsx",
-        "Level3.tmx",
-        "Level4.tmx",
-        "Level2.tmx",
-        "Level5.tmx",
-        "Level1.tmx",
         "Utumno.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
