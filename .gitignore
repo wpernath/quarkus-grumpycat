@@ -37,3 +37,13 @@ nb-configuration.xml
 
 # Local environment
 .env
+
+
+node/
+node_modules/
+public/
+dist/
+src/main/resources/META-INF/resources/generated/
+.DS_Store
+package-lock.json
+target/

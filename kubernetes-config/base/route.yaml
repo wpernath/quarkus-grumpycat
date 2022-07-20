@@ -1,0 +1,20 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"catserver"}]'
+  labels:
+    app: grumpycat
+    app.kubernetes.io/component: grumpycat
+    app.kubernetes.io/instance: grumpycat
+    app.kubernetes.io/name: grumpycat
+    app.kubernetes.io/part-of: grumpycat-app
+  name: grumpycat
+spec:
+  port:
+    targetPort: 8080-tcp
+  to:
+    kind: Service
+    name: grumpycat
+    weight: 100
+  wildcardPolicy: None
