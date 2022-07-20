@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../base
+
+
+images:
+- digest: sha256:57493d22a83ea73b7cf4542b1fd2955a9034040b42d7ef9efda67bcf23a6af4f
+  name: quay.io/wpernath/grumpycat-melonjs:latest
+  newName: quay.io/wpernath/grumpycat-melonjs:latest
+- digest: sha256:d9ba1000450965112de981fe211e5d10ee598b8b2484df1af03a18db133c89aa
+  name: quay.io/wpernath/quarkus-grumpycat:latest
+  newName: quay.io/wpernath/quarkus-grumpycat:latest
