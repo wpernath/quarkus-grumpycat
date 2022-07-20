@@ -391,15 +391,15 @@
         {
          "name":"Description",
          "type":"string",
-         "value":"Did you know that the grumpy cat and spiders would work together?"
+         "value":"Did you know that the grumpy cat and spiders could work together?"
         }, 
         {
          "name":"Name",
          "type":"string",
-         "value":"You get both: Cats and Spiders!"
+         "value":"Cats and Spiders!"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.8.6",
+ "tiledversion":"1.9.0",
  "tileheight":32,
  "tilesets":[
         {
@@ -408,6 +408,6 @@
         }],
  "tilewidth":32,
  "type":"map",
- "version":"1.8",
+ "version":"1.9",
  "width":37
 }

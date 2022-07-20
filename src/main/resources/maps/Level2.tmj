@@ -280,15 +280,15 @@
         {
          "name":"Description",
          "type":"string",
-         "value":"Oh no!! No spiders, please! But spiders don't like thunders and lightning. Perhaps there is something you can do?"
+         "value":"Oh no!! No spiders, please! Spiders are scuttling all over and they are\nbiting you into your nose. But spiders don't like thunder and lightning.\nPerhaps there is something you can do?\n"
         }, 
         {
          "name":"Name",
          "type":"string",
-         "value":"Spiders!!!! I mean SPIDERS!!! Flee! Flee! (Or use the boom effect)."
+         "value":"Spiders!"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.8.6",
+ "tiledversion":"1.9.0",
  "tileheight":32,
  "tilesets":[
         {
@@ -297,6 +297,6 @@
         }],
  "tilewidth":32,
  "type":"map",
- "version":"1.8",
+ "version":"1.9",
  "width":33
 }

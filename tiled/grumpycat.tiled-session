@@ -7,7 +7,7 @@
     "expandedProjectPaths": [
         "."
     ],
-    "file.lastUsedOpenFilter": "All Files (*)",
+    "file.lastUsedOpenFilter": "Alle Dateien (*)",
     "fileStates": {
         "": {
             "scaleInDock": 1,
@@ -41,8 +41,8 @@
             "scale": 0.74,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 512.8378378378378,
-                "y": 335.1351351351351
+                "x": 292.5675675675675,
+                "y": 333.78378378378375
             }
         },
         "Level1.tmx#Terrain": {
@@ -52,8 +52,8 @@
             "scale": 0.79,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 663.9240506329114,
-                "y": 483.5443037974684
+                "x": 322.15189873417717,
+                "y": 639.2405063291139
             }
         },
         "Level2.tmx#Terrain": {
@@ -63,27 +63,27 @@
             "scale": 0.47,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1294.6808510638298,
-                "y": 529.7872340425531
+                "x": 758.5106382978723,
+                "y": 797.8723404255319
             }
         },
         "Level4.tmx": {
             "scale": 0.3951,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 1102.2525942799289,
-                "y": 1435.0797266514808
+                "x": 709.946848899013,
+                "y": 799.7975196152871
             }
         },
         "Level4.tmx#Terrain": {
             "scaleInDock": 1
         },
         "Level5.tmx": {
-            "scale": 1.2207,
+            "scale": 1.43,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 339.55926927172936,
-                "y": 382.56737937249125
+                "x": 463.98601398601403,
+                "y": 437.7622377622379
             }
         },
         "Terrain.tsx": {
@@ -134,7 +134,7 @@
         }
     },
     "frame.defaultDuration": 250,
-    "last.exportedFilePath": "/Users/wpernath/Devel/grumpycat/quarkus-grumpycat/src/main/resources/maps",
+    "last.exportedFilePath": "/Users/wanja/Devel/grumpycat/quarkus-grumpycat/src/main/resources/maps",
     "last.imagePath": "/Users/wanja/Devel/grumpycat/quarkus-grumpycat/tiled/images/tilesets",
     "lastUsedTilesetExportFilter": "JSON-Kachelsatz-Dateien (*.tsj *.json)",
     "map.height": 36,
@@ -142,26 +142,26 @@
     "map.lastUsedFormat": "tmx",
     "map.width": 32,
     "openFiles": [
-        "Terrain.tsx",
+        "Level1.tmx",
+        "Level2.tmx",
         "Level3.tmx",
         "Level4.tmx",
-        "Level2.tmx",
         "Level5.tmx"
     ],
     "project": "grumpycat.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "Level1.tmx",
+        "Level2.tmx",
+        "Level3.tmx",
+        "Level4.tmx",
+        "Level5.tmx",
         "Terrain.tsx",
         "Level-Template.tmx",
         "spiders.tsx",
         "explosion.tsx",
         "bomb.tsx",
         "Animated Water.tsx",
-        "Level3.tmx",
-        "Level4.tmx",
-        "Level2.tmx",
-        "Level5.tmx",
-        "Level1.tmx",
         "Utumno.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",

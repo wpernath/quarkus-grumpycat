@@ -330,15 +330,15 @@
         {
          "name":"Description",
          "type":"string",
-         "value":"A fire world. Not yet finished. But have a look and tell me what you think! We need more enemy types. Let's wait and see what's happening."
+         "value":"...  Well, at least fire.  And some cats. And some Spiders! A fire world. \n\nNot yet finished. But have a look and tell me what you think! We need more\nenemy types. Let's wait and see what's happening."
         }, 
         {
          "name":"Name",
          "type":"string",
-         "value":"Fire and Dragon... At least Fire. And some cats. And some Spiders!"
+         "value":"Fire and Dragon..."
         }],
  "renderorder":"right-down",
- "tiledversion":"1.8.6",
+ "tiledversion":"1.9.0",
  "tileheight":32,
  "tilesets":[
         {
@@ -347,6 +347,6 @@
         }],
  "tilewidth":32,
  "type":"map",
- "version":"1.8",
+ "version":"1.9",
  "width":70
 }

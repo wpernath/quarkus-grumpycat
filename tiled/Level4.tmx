@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.6" orientation="orthogonal" renderorder="right-down" width="70" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="1">
+<map version="1.9" tiledversion="1.9.0" orientation="orthogonal" renderorder="right-down" width="70" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="1">
  <editorsettings>
   <export target="../src/main/resources/maps/Level4.tmj" format="json"/>
  </editorsettings>
  <properties>
-  <property name="Description">The dog can't swim. At least not in salty water. Be aware of the spiders. And be aware of the cats. 
+  <property name="Description">Oh no! The ocean and CATS! And Spiders!
 
-There are MANY grumpy cats in this level!</property>
-  <property name="Name" value="Oh no! The ocean and CATS! And Spiders!"/>
+The dog can't swim. At least not in salty water, because it simply tastes
+ terrible. - Be aware of the spiders. And be aware of the cats. 
+
+There are MANY grumpy cats in this level! And MANY spiders!</property>
+  <property name="Name" value="The ocean world"/>
  </properties>
  <tileset firstgid="1" source="Terrain.tsx"/>
  <layer id="1" name="Ground" width="70" height="50">

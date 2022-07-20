@@ -240,15 +240,15 @@
         {
          "name":"Description",
          "type":"string",
-         "value":"Welcome to the grumpy cat land. A land full of joy but also full of grumpy cats. Collect all pills to leave that part of the world. \n\nCats don't like noise. Perhaps you can find something to stunn the cat?"
+         "value":"Welcome to the promised grumpy cat land. A land full of joy and meat and\ncheese but also full of grumpy cats. \nCollect all pills to leave that part of the world. Cats don't like noise.\nPerhaps you can find something to stunn the cat?"
         }, 
         {
          "name":"Name",
          "type":"string",
-         "value":"It's just a cat. But she's a grumpy one!"
+         "value":"It's just a cat."
         }],
  "renderorder":"right-down",
- "tiledversion":"1.8.6",
+ "tiledversion":"1.9.0",
  "tileheight":32,
  "tilesets":[
         {
@@ -257,6 +257,6 @@
         }],
  "tilewidth":32,
  "type":"map",
- "version":"1.8",
+ "version":"1.9",
  "width":32
 }

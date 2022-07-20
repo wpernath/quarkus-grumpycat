@@ -391,15 +391,15 @@
         {
          "name":"Description",
          "type":"string",
-         "value":"The dog can't swim. At least not in salty water. Be aware of the spiders. And be aware of the cats. \n\nThere are MANY grumpy cats in this level!"
+         "value":"Oh no! The ocean and CATS! And Spiders!\n\nThe dog can't swim. At least not in salty water, because it simply tastes\n terrible. - Be aware of the spiders. And be aware of the cats. \n\nThere are MANY grumpy cats in this level! And MANY spiders!"
         }, 
         {
          "name":"Name",
          "type":"string",
-         "value":"Oh no! The ocean and CATS! And Spiders!"
+         "value":"The ocean world"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.8.6",
+ "tiledversion":"1.9.0",
  "tileheight":32,
  "tilesets":[
         {
@@ -408,6 +408,6 @@
         }],
  "tilewidth":32,
  "type":"map",
- "version":"1.8",
+ "version":"1.9",
  "width":70
 }
