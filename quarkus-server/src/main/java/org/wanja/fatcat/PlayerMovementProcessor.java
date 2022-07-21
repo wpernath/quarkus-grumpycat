@@ -11,8 +11,8 @@ import io.smallrye.reactive.messaging.annotations.Blocking;
 @ApplicationScoped
 public class PlayerMovementProcessor {
     
-    @Incoming("player-actions")
-    @Blocking
+   // @Incoming("player-actions")
+   // @Blocking
     @Transactional
     public void processPlayerAction(PlayerAction action) {
         action.id = null;
