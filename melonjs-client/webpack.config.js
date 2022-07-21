@@ -6,7 +6,7 @@ const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 require("@babel/register");
 
 module.exports = {
-  entry: ['@babel/polyfill','./src/index.js'],
+  entry: ['@babel/polyfill','./src/main/client/index.js'],
   target: 'web',
   output: {
     path: __dirname + '/src/main/resources/META-INF/resources/generated/',
@@ -34,13 +34,13 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-        template: './src/index.html',
+        template: './src/main/client/index.html',
         hash: true
     }),
     new CopyWebpackPlugin({
         patterns: [
             {
-                from: './src/data',
+                from: './src/main/client/data',
                 to: './data',
                 filter: async (resourcePath) => {
                    const data = await fs.promises.readFile(resourcePath);
@@ -68,7 +68,7 @@ module.exports = {
         ]
     }),
     new FaviconsWebpackPlugin({
-        logo: './src/favicon/logo.png', // svg works too!
+        logo: './src/main/client/favicon/logo.png', // svg works too!
         mode: 'webapp', // optional can be 'webapp', 'light' or 'auto' - 'auto' by default
         devMode: 'webapp', // optional can be 'webapp' or 'light' - 'light' by default
         favicons: {
@@ -85,7 +85,7 @@ module.exports = {
   ],
   resolve: {
     modules: [
-      path.resolve('./src'),
+      path.resolve('./src/main/client'),
       path.resolve('./node_modules')
     ]
   },

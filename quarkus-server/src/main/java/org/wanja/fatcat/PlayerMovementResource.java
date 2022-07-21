@@ -16,7 +16,7 @@ import io.smallrye.mutiny.Uni;
 public class PlayerMovementResource {
     
     @POST
-    @Outgoing("player-actions")
+    //@Outgoing("player-actions")
     public Uni<PlayerAction> createMovement(Uni<PlayerAction> action) {
         action.onItem().transform(r -> r.id = null)
         .subscribe().with(

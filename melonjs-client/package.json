@@ -1,7 +1,7 @@
 {
   "name": "grumpycat-melonjs",
   "version": "0.4.7",
-  "main": "index.js",
+  "main": "src/main/client/index.js",
   "author": "Wanja Pernath",
   "license": "GPL",
   "devDependencies": {
