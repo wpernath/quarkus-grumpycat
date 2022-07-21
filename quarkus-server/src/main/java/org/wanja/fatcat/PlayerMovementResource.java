@@ -10,21 +10,13 @@ import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.wanja.fatcat.model.PlayerAction;
 
 import io.quarkus.logging.Log;
-import io.smallrye.mutiny.Uni;
 
 @Path("/movement")
 public class PlayerMovementResource {
     
     @POST
-    //@Outgoing("player-actions")
-    public Uni<PlayerAction> createMovement(Uni<PlayerAction> action) {
-        action.onItem().transform(r -> r.id = null)
-        .subscribe().with(
-            result -> {
-                Log.info("Processed " + result);
-            },
-            failure -> Log.error("Failed " +  failure)
-        );
+    public PlayerAction createMovement(PlayerAction action) {
+        action.id = null; 
         return action;
     }
 
