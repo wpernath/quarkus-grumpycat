@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Quarkus Grumpy Cat</title>
+
+        <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+        <style>
+            body {
+                margin: 0;
+                font-family: Roboto, "Helvetica Neue", Arial, sans-serif; color:white;
+            }
+            h1, h2, h3, h4, h5, h6 {
+                margin-bottom: 0.5rem;
+                font-weight: 400;
+                line-height: 1.5;
+            }
+            h1 { font-size: 2.25rem; }
+            h2 { font-size: 1.6rem }
+            h3 { font-size: 1.5rem }
+            h4 { font-size: 1.4rem }
+            h5 { font-size: 1.25rem }
+            h6 { font-size: 1rem }
+            p {
+                padding: .15rem 0;
+                margin: 0;
+                line-height: 1.3rem;
+            }
+            a {
+                text-decoration: underline;
+                color: #1259A5;
+            }
+            a:hover, a:active { color: #c00; }
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(12, 1fr);
+                clear: both;
+            }
+            .header-wrapper {
+                padding: 0 4rem;
+                background: black;
+            }
+            .content-wrapper {
+                padding: 0 4rem;
+                width: 1024px; height: 768px;
+                background: black;
+            }
+            .header {
+                background-position: 0 1rem;
+                min-height: 60px;
+                grid-column: span 12;
+            }
+            #quarkus-logo-svg {
+                width: 200px;
+                height: 30px;
+                padding-top: 1rem;
+            }
+
+            .maze { border: 1px solid grey; width: 1024px; height: 768px;}
+
+            @media screen and (max-width: 1025px) {
+                .header {
+                    background-position: 0 0rem;
+                    min-height: 30px;
+                    grid-column: span 12;
+                }
+                #quarkus-logo-svg {
+                    width: 200px;
+                    height: 24px;
+                    padding-top: 1rem;
+                }
+
+                .header-wrapper {
+                    padding: 0 0rem;
+                    background: black;
+                }
+                .banner-wrapper { padding: 0 0rem; }
+                .content-wrapper {
+                    padding: 0 0rem;
+                    width: 864px; height: 608px;
+                    background: black;
+                }
+
+                h1 { font-size: 0rem; }
+                .maze { border: 1px solid grey; width: 864px; height: 608px;}
+            }
+
+            @media screen and (max-width: 844px) {
+                .header {
+                    background-position: 0 0rem;
+                    min-height: 0px;
+                    grid-column: span 12;                    
+                    visibility: hidden;
+                    display: none;
+                }
+                #quarkus-logo-svg {
+                    width: 0px;
+                    height: 0px;
+                    padding-top: 0rem;
+;
+                    display: none;
+                }
+
+                .header-wrapper {
+                    padding: 0 0rem;
+                    background: black;
+                    visibility: hidden;
+                    display: none;
+                }
+                .banner-wrapper { padding: 0 0rem; visibility: hidden;display: none;}
+                .content-wrapper {
+                    padding: 0 0rem;
+                    background: black;
+
+                    width: 864px; height: 384px;
+                }
+
+                .maze { border: 1px solid grey; width: 864px; height: 384px;}
+            }
+
+        </style>
+
+        <script type="text/javascript" src="/scripts/pxloader-all.js"></script>
+    </head>
+    <body background="#000000" bgcolor="#000000" onload="setupGame()">
+        <div id="canvas2" class="content-wrapper" >                        
+            <p>This is replaced by the refactored grumpycat-melonjs client, which you can find in the melonjs-client folder.</p>
+            <p class="small">Coded by Wanja Pernath, Game Art by <a href="https://opengameart.org/content/tiled-terrains">LPC
+                    Terrain</a>, Maps designed with <a href="https://mapeditor.org">Tiled Map Editor</a></p>
+        
+        </div>
+    </body>
+
+</html>

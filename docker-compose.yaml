@@ -1,0 +1,41 @@
+version: "3"
+name: "grumpycat"
+
+services:
+  catsdb:
+    image: docker.io/library/postgres:14.2
+    volumes:
+      - pg_data:/var/lib/postgresql
+    restart: always
+    environment:
+      POSTGRES_USER: cat
+      POSTGRES_PASSWORD: grumpy
+      POSTGRES_DB: catdb
+  
+  cat-server:
+    depends_on: 
+      - catsdb
+    image: quay.io/wpernath/quarkus-grumpycat:latest
+    ports:
+      - "9001:8080"
+    restart: always
+    environment:
+      DB_user: cat
+      DB_password: grumpy
+      DB_host: catsdb
+      DB_dbname: catdb      
+
+  cat-client: 
+    depends_on:
+      - cat-server
+    image: quay.io/wpernath/grumpycat-melonjs:latest
+    ports:
+      - "8085:8088"
+    restart: always
+    environment:
+      APPLICATION_BASESERVERURL: "http://0.0.0.0:9001/"
+
+volumes:
+  pg_data:
+
+  

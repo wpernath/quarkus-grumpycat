@@ -37,3 +37,13 @@ nb-configuration.xml
 
 # Local environment
 .env
+
+
+melonjs-client/node/
+melonjs-client/node_modules/
+melonjs-client/public/
+melonjs-client/dist/
+melonjs-client/src/main/resources/META-INF/resources/generated/
+.DS_Store
+melonjs-client/package-lock.json
+melonjs-client/target/
