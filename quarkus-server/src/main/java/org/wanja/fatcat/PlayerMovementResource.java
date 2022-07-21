@@ -2,27 +2,30 @@ package org.wanja.fatcat;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
-
+import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.wanja.fatcat.model.PlayerAction;
 
 import io.quarkus.logging.Log;
+import io.smallrye.mutiny.Uni;
 
 @Path("/movement")
 public class PlayerMovementResource {
     
     @POST
-    @Transactional
-    public void createMovement(PlayerAction action) {
-        //PlayerAction pa = new PlayerAction();
-        action.id = null;
-        action.persist();
-
-        //Log.debug("new player action created for game id: "+ pa.gameId + " ");
+    @Outgoing("player-actions")
+    public Uni<PlayerAction> createMovement(Uni<PlayerAction> action) {
+        action.onItem().transform(r -> r.id = null)
+        .subscribe().with(
+            result -> {
+                Log.info("Processed " + result);
+            },
+            failure -> Log.error("Failed " +  failure)
+        );
+        return action;
     }
 
     @GET

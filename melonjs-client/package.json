@@ -28,12 +28,11 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-node-resolve": "^13.3.0",
     "css-loader": "^6.7.1",
     "melonjs": "^13.0.0",
     "rollup": "^2.75.7",
-    "@rollup/plugin-node-resolve": "^13.3.0",
-    "@rollup/plugin-babel": "^5.3.1",
-    
     "style-loader": "^3.3.1"
   }
 }

@@ -39,11 +39,11 @@ nb-configuration.xml
 .env
 
 
-node/
-node_modules/
-public/
-dist/
-src/main/resources/META-INF/resources/generated/
+melonjs-client/node/
+melonjs-client/node_modules/
+melonjs-client/public/
+melonjs-client/dist/
+melonjs-client/src/main/resources/META-INF/resources/generated/
 .DS_Store
-package-lock.json
-target/
+melonjs-client/package-lock.json
+melonjs-client/target/

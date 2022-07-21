@@ -10,8 +10,8 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 @Entity
 public class PlayerAction extends PanacheEntity {
 
-    public long playerId;
-    public long gameId;
+    public Long playerId;
+    public Long gameId;
     public int dx;
     public int dy;
     public int x;
