@@ -93,17 +93,13 @@ class PlayScreen extends Stage {
         return dirty;
     }
 
-    setupLevel() {
-        //level.load(GlobalGameState.levels[GlobalGameState.currentLevel]);
+    setupLevel() {    
         LevelManager.getInstance().prepareCurrentLevel();
-        
-        console.log("PLAYING: " + level.getCurrentLevelId());
 
         let layers = level.getCurrentLevel().getLayers();
         layers.forEach((l) => {
             console.log(l.name);
-            if (l.name === "Persons") {
-                console.log("  should be not visible");
+            if (l.name === "Persons") {                
                 let enemynum = 0;
                 for (let y = 0; y < l.height; y++) {
                     for (let x = 0; x < l.width; x++) {

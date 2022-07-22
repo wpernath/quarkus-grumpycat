@@ -9,16 +9,21 @@ export class Level {
         this.longName = longName;
         this.data = data; 
         this.description = data.description;
+        this.loadedIntoMelon = false;
     }
 
     loadIntoMelon() {
-        loader.load(
-            {name: this.id, src: this.info.path, type: 'tmx', format: 'json', data: this.data},
-            this.paul
-        );
+        if( !this.loadedIntoMelon ) {
+            loader.load(
+                {name: this.id, src: this.info.path, type: 'tmx', format: 'json', data: this.data},
+                this.paul
+            );
+
+            this.loadedIntoMelon = true;      
+        }
     }
 
-    paul() {        
+    paul() {  
     }
 }
 
@@ -62,7 +67,6 @@ export class LevelManager {
         let level = new Level(info, data.name, data.longName, data);
         console.log("  Loaded: " + info.id);
         myThis.allLevels.push(level);
-        level.loadIntoMelon();
         return data;
     }
 
@@ -143,6 +147,9 @@ export class LevelManager {
     }
 
     prepareCurrentLevel() {
-        level.load(this.getCurrentLevel().id);
+        let l = this.getCurrentLevel();
+        console.log("  LevelManager.prepareCurrentLevel('" + this.getCurrentLevelId() + "')");        
+        l.loadIntoMelon();
+        level.load(l.id);
     }
 }

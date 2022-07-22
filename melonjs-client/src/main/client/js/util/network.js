@@ -19,6 +19,10 @@ export default class NetworkManager {
 	readPlayerMovementsURL = null;
 	fakeNameURL = null;
 
+	// buffer of player actions 
+	BUFFER_SIZE = 50;
+	playerActions = [];
+
 	constructor() {
 		let baseURL = CONFIG.baseURL;
 		this.readHighscoreURL = baseURL + "highscore/10";
@@ -27,6 +31,8 @@ export default class NetworkManager {
 		this.fakeNameURL = baseURL + "faker";
 		this.writePlayerMovementURL = baseURL + "movement";
 		this.readPlayerMovementsURL = baseURL + "movement/";
+
+		this.playerActions = [];
 	}
 
 	async readTop10Highscores() {
@@ -76,16 +82,28 @@ export default class NetworkManager {
 	 * - LevelWon
 	 *
 	 * @param {*} action the action to write
+	 * @param {boolean} flush flush the cache
 	 */
-	async writePlayerAction(action) {
-		fetch(this.writePlayerMovementURL, {
-			method: "POST",
-			mode: "cors",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(action),
-		});
+	async writePlayerAction(action, flush = false) {
+		if( action !== null ) this.playerActions.push(action);
+		if( flush || this.playerActions.length > this.BUFFER_SIZE ) {
+			console.log("need to flush buffer");
+			if( this.playerActions.length == 0 ) {
+				console.log("  nothing to flush");
+				return;
+			}
+			let body = JSON.stringify(this.playerActions);
+			this.playerActions = [];
+
+			fetch(this.writePlayerMovementURL + "/" + GlobalGameState.globalServerGame.id + "/" + GlobalGameState.globalServerGame.player.id, {
+				method: "POST",
+				mode: "cors",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: body,
+			});
+		}
 	}
 
 	/**

@@ -31,11 +31,15 @@ class PlayerEntity extends Sprite {
     groundLayer;
     xInMap;
     yInMap;
+
     mapWidth;
     mapHeight;
     collectedBonusTiles = 0;
     numberOfBonusTiles = 0;
     oldDx =0; oldDy=0;
+
+    lastMapX = 0; lastMapY = 0;
+
     /**
      * constructor
      */
@@ -51,6 +55,8 @@ class PlayerEntity extends Sprite {
         super(x*32+16, y*32+16 , settings);
         this.xInMap = x;
         this.yInMap = y;
+        this.lastMapX = x;
+        this.lastMapY = y;
 
         this.body = new Body(this);
         this.body.ignoreGravity = true;
@@ -138,7 +144,7 @@ class PlayerEntity extends Sprite {
             gameOver: false,
             gameWon: false,
             score: GlobalGameState.score,
-            time: performance.now(),
+            time: Date.now(),
         };
 
         if( input.isKeyPressed("barrier")) {
@@ -188,15 +194,14 @@ class PlayerEntity extends Sprite {
                     action.dx = dx;
                     action.dy = dy;
                     action.gutterThrown = true;
-/*
-                    this.writePlayerAction(action)
+
+                    NetworkManager.getInstance().writePlayerAction(action)
                         .then(function (res) {
                             console.log("update send to server");
                         })
                         .catch(function (err) {
                             console.error(err);
                         });                    
-                        */
                 }
             }
         }
@@ -207,6 +212,15 @@ class PlayerEntity extends Sprite {
                     GlobalGameState.usedBombs++;         
                     GlobalGameState.bombs--;
                     action.bombPlaced = true;
+                    NetworkManager.getInstance()
+                        .writePlayerAction(action)
+                        .then(function (res) {
+                            console.log("update send to server " );
+                        })
+                        .catch(function (err) {
+                            //console.error(err);
+                        });                    
+
                 }
             }
             if( input.isKeyPressed("explode")) {
@@ -272,6 +286,7 @@ class PlayerEntity extends Sprite {
 
                 action.dx = dx;
                 action.dy = dy;
+                
 
                 let bonus = this.collectBonusTile(this.pos.x, this.pos.y);
                 if( bonus !== 0 ) {
@@ -295,6 +310,7 @@ class PlayerEntity extends Sprite {
 
                     if( this.collectedBonusTiles >= this.numberOfBonusTiles ) {
                         // level done, check to see if there are more levels
+                        action.gameWon = true;
                         if( LevelManager.getInstance().hasNext() ) {
                             LevelManager.getInstance().next();
                             state.change(state.READY);
@@ -305,22 +321,48 @@ class PlayerEntity extends Sprite {
                     }
                 }
 
-                if (this.pos.x < 0) this.pos.x -= dx;
+                if (this.pos.x < 0) this.pos.x = 0;
                 if (this.pos.x > this.mapWidth * 32) this.pos.x = this.mapWidth * 32;
-                if (this.pos.y < 0) this.pos.y -= dy;
+                if (this.pos.y < 0) this.pos.y = 0;
                 if (this.pos.y > this.mapHeight * 32) this.pos.y = this.mapHeight * 32;
 
-                /*
-                this.writePlayerAction(action)
-                    .then(function (res) {
-                        console.log("update send to server");
-                    })
-                    .catch(function (err) {
-                        console.error(err);
-                    });                    
-                    */
+                mapX = Math.floor(this.pos.x / 32);
+                mapY = Math.floor(this.pos.y / 32);
+
+                if( mapX != this.lastMapX || mapY != this.lastMapY || action.gameWon || action.gameOver) {
+                    action.x = mapX;
+                    action.y = mapY;
+                    this.lastMapX = mapX;
+                    this.lastMapY = mapY;
+
+                    NetworkManager.getInstance()
+                        .writePlayerAction(action, action.gameWon)
+                        .then(function (res) {
+                            console.log("update send to server: " + action.gameWon);
+                        })
+                        .catch(function (err) {
+                            //console.error(err);
+                        });                    
+                }
             }
         }
+
+        if (GlobalGameState.energy <= 0) {
+            console.log("GAME OVER!");
+            GlobalGameState.isGameOver = true;
+            state.change(state.GAMEOVER);
+            action.gameOver = true;
+            NetworkManager.getInstance()
+                .writePlayerAction(action, true)
+                .then(function (res) {
+                    console.log("update send to server, flushing!");
+                })
+                .catch(function (err) {
+                    //console.error(err);
+                });                    
+
+        }
+
         // call the parent method
         return super.update(dt);
     }
@@ -345,17 +387,10 @@ class PlayerEntity extends Sprite {
                 GlobalGameState.energy -= GlobalGameState.energyLostByGolem;
             }
             
-            if( GlobalGameState.energy <= 0 ) {
-                console.log("GAME OVER!");
-                GlobalGameState.isGameOver = true;
-                state.change(state.GAMEOVER);
-            }
-            else {
-                GlobalGameState.invincible = true;
-                this.flicker(GlobalGameState.playerInvincibleTime, () => {
-                    GlobalGameState.invincible = false;
-                });
-            }
+            GlobalGameState.invincible = true;
+            this.flicker(GlobalGameState.playerInvincibleTime, () => {
+                GlobalGameState.invincible = false;
+            });
         }
         return false;
     }
