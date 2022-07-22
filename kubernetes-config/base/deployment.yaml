@@ -33,6 +33,9 @@ spec:
       - image: quay.io/wpernath/quarkus-grumpycat:latest
         imagePullPolicy: Always
         name: grumpycat
+        env:
+          - name: KAFKA_BOOTSTRAP_SERVERS
+            value: grumpy-kafka-kafka-bootstrap.grumpy-test.svc.cluster.local:9092
         envFrom:
           - secretRef:
               name: cat-pguser-cat

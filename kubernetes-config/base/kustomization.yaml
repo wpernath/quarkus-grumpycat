@@ -9,3 +9,5 @@ resources:
 - client-depl.yaml
 - client-route.yaml
 - client-service.yaml
+- kafka-broker.yaml
+- kafka-topic.yaml
