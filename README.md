@@ -52,7 +52,7 @@ docker pull quay.io/wpernath/grumpycat-melonjs
 To run the server, the required database and the client, you need to have Docker / Podman configured and running. You can use the `docker-compose.yaml` to start the latest version of the game:
 
 ```shell
-docker-compose src/main/docker/docker-compose.yaml [--detach|-d] up
+docker-compose [--detach|-d] up
 ```
 
 The app is then available under `http://localhost:8085` in your browser.
@@ -63,27 +63,35 @@ The app is then available under `http://localhost:8085` in your browser.
 ### OpenShift / Kubernetes image deployment in a GitOps way
 There are precompiled images available on `quay.io/wpernath/quarkus-grumpycat`. You can either use `latest` tag or use one of the `vx.y.z` tags.
 
-NOTE, for this approach, you need to have the `Crunchy Data Postgres Operator` installed in your Kubernetes environment. 
+NOTE, for this approach, you need to have the following Operators installed in your OpenShift / Kubernetes cluster:
 
-Just have a look into the [kubernetes-config directory](kubernetes-config). Then apply the `overlays/dev` configuration as usual:
+- [Crunchy Data Postgres Operator](https://operatorhub.io/operator/postgresql)
+- [Strimzi Kafka Operator](https://operatorhub.io/operator/strimzi-kafka-operator)  
+
+Just have a look into the [kubernetes-config directory](kubernetes-config). Then apply the `overlays/dev` configuration as usual, after making sure the config maps are set according to your target namespace
 
 ```shell
 oc login <log into your openshift cluster>
-oc new-project cat-dev
+oc new-project grumpy-test
 oc apply -k kubernetes-config/overlays/dev
 ```
 
-This will automatically install a database and the latest DEV versions of the App.
+This will automatically install a database, the Kafka service and the latest DEV versions of the App.
+
+To delete the app, use:
+
+```shell 
+oc delete -k kubernetes-config/overlays/dev
+```
 
 
 ### Using full featured GitOps
 To make use of all GitOps features, have a look at the `gitops` folder of this project. 
 
-Your OpenShift / Kubernetes cluster needs to have the following Operators installed:
+Your OpenShift / Kubernetes cluster needs to have the following Operators installed (in addition to Strimzi and Crunchy PGO):
 
-- OpenShift Pipeline (or Tekton Pipeline)
-- OpenShift GitOps (or an ArgoCD instance)
-- Crunchy Data Postgres Operator
+- [OpenShift Pipeline (or Tekton Pipeline)](https://operatorhub.io/operator/tektoncd-operator)
+- [OpenShift GitOps (or an ArgoCD instance)](https://operatorhub.io/operator/argocd-operator)
 
 To install the `cat-ci` project, call:
 
