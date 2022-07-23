@@ -41,14 +41,18 @@ command.help() {
   
   Examples:
       pipeline.sh init [--force] --git-user <user> --git-password <pwd> --registry-user <user> --registry-password
-      pipeline.sh build -u wpernath -p <nope> [-t <target-namespace>]
-      pipeline.sh stage -r v1.2.5 [-g <config-git-rep>] [-i <target-image>] [-t <target-namespace>]
+      pipeline.sh build-client -u wpernath -p <nope> 
+      pipeline.sh build-server -u wpernath -p <nope> 
+      pipeline.sh stage-client -r v1.2.5 [-g <config-git-rep>] 
+      pipeline.sh stage-server -r v1.2.5 [-g <config-git-rep>] 
       pipeline.sh logs [-t <target-namespace]
   
   COMMANDS:
       init                           creates ConfigMap, Secrets, Tasks and Pipelines into $TARGET_NAMESPACE
-      build                          starts the dev-pipeline in $TARGET_NAMESPACE
-      stage                          starts the stage-pipeline in $TARGET_NAMESPACE
+      build-client                   starts the client-dev-pipeline in $TARGET_NAMESPACE
+      stage-client                   starts the client-stage-pipeline in $TARGET_NAMESPACE
+      build-server                   starts the dev-pipeline in $TARGET_NAMESPACE
+      stage-server                   starts the stage-pipeline in $TARGET_NAMESPACE
       logs                           shows logs of the last pipeline run in $TARGET_NAMESPACE
       help                           Help about this command
 
@@ -69,7 +73,7 @@ EOF
 
 while (( "$#" )); do
   case "$1" in
-    build|stage|logs|init)
+    build-client|stage-client|logs|init|build-server|stage-server)
       COMMAND=$1
       shift
       ;;
@@ -206,7 +210,7 @@ command.logs() {
     tkn pr logs -f -L -n $TARGET_NAMESPACE
 }
 
-command.stage() {
+command.stage-server() {
   cat > /tmp/stage-pr.yaml <<-EOF
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
@@ -228,7 +232,7 @@ EOF
     oc apply -f /tmp/stage-pr.yaml -n $TARGET_NAMESPACE
 }
 
-command.build() {
+command.build-server() {
   cat > /tmp/pipelinerun.yaml <<-EOF
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
@@ -247,6 +251,53 @@ spec:
       name: maven-settings
   pipelineRef:
     name: dev-pipeline
+  serviceAccountName: pipeline-bot
+EOF
+
+    oc apply -f /tmp/pipelinerun.yaml -n $TARGET_NAMESPACE
+}
+
+command.stage-client() {
+  cat > /tmp/stage-pr.yaml <<-EOF
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: stage-pipeline-run-$(date "+%Y%m%d-%H%M%S")
+spec:
+  params:
+    - name: release-name
+      value: $GIT_REVISION
+  workspaces:
+    - name: shared-workspace
+      persistentVolumeClaim:
+        claimName: client-builder-pvc
+  pipelineRef:
+    name: client-stage-pipeline
+  serviceAccountName: pipeline-bot
+EOF
+
+    oc apply -f /tmp/stage-pr.yaml -n $TARGET_NAMESPACE
+}
+
+command.build-client() {
+  cat > /tmp/pipelinerun.yaml <<-EOF
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: $PIPELINE-run-$(date "+%Y%m%d-%H%M%S")
+spec:
+  params:
+    - name: repo-password
+      value: $IMAGE_PASSWORD
+  workspaces:
+    - name: source
+      persistentVolumeClaim:
+        claimName: client-builder-pvc
+    - configMap:
+        name: maven-settings
+      name: maven-settings
+  pipelineRef:
+    name: client-dev-pipeline
   serviceAccountName: pipeline-bot
 EOF
 
