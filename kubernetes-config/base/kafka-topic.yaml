@@ -5,5 +5,8 @@ metadata:
   labels:
     strimzi.io/cluster: "grumpy-kafka"
 spec:
-  partitions: 3
+  partitions: 1
   replicas: 1
+  config:
+    retention.ms: 7200000
+    segment.bytes: 1073741824

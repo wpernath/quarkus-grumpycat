@@ -17,12 +17,13 @@ spec:
         tls: true
         authentication:
           type: tls
-      - name: external
-        port: 9094
-        type: nodeport
-        tls: false
     storage:
-      type: ephemeral
+      type: jbod
+      volumes:
+        - type: persistent-claim
+          id: 0
+          size: 5Gi
+          deleteClaim: true
     config:
       offsets.topic.replication.factor: 1
       transaction.state.log.replication.factor: 1
@@ -34,8 +35,8 @@ spec:
     replicas: 1
     storage:
       type: persistent-claim
-      size: 10Gi
-      deleteClaim: false
+      size: 1Gi
+      deleteClaim: true
   entityOperator:
     topicOperator: {}
     userOperator: {}

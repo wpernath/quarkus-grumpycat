@@ -35,7 +35,7 @@ spec:
         name: cat
         env:
           - name: APPLICATION_BASESERVERURL
-            value: http://grumpycat-cat-dev.apps.work.ocp.lan/
+            value: http://grumpycat-grumpy-test.apps.work.ocp.lan/
         ports:
         - containerPort: 8080
           protocol: TCP
