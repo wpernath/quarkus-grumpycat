@@ -2,22 +2,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    app.openshift.io/connects-to: '[{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"catserver"}]'
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"cat-server"}]'
     app.openshift.io/route-disabled: "false"
   labels:
-    app: cat
-    app.kubernetes.io/component: cat
-    app.kubernetes.io/instance: cat
-    app.kubernetes.io/name: cat
+    app: cat-client
+    app.kubernetes.io/component: cat-client
+    app.kubernetes.io/instance: cat-client
+    app.kubernetes.io/name: cat-client
     app.kubernetes.io/part-of: grumpycat-app
-  name: cat
+  name: cat-client
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: cat
+      app: cat-client
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -26,13 +26,12 @@ spec:
   template:
     metadata:
       labels:
-        app: cat
-        deploymentconfig: cat
+        app: cat-client        
     spec:
       containers:
       - image: quay.io/wpernath/grumpycat-melonjs:latest
         imagePullPolicy: Always
-        name: cat
+        name: cat-client
         envFrom:
           - configMapRef:
               name: client-config

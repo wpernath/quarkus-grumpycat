@@ -2,14 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    app.openshift.io/connects-to: '[{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"catserver"}]'    
+    app.openshift.io/connects-to: >-
+      [{"apiVersion":"apps/v1","kind":"Deployment","name":"grumpy-kafka-entity-operator"},{"apiVersion":"apps/v1","kind":"StatefulSet","name":"cat-repo-host"}]
   labels:
-    app: grumpycat
-    app.kubernetes.io/component: grumpycat
-    app.kubernetes.io/instance: grumpycat
-    app.kubernetes.io/name: grumpycat
+    app: cat-server
+    app.kubernetes.io/component: cat-server
+    app.kubernetes.io/instance: cat-server
+    app.kubernetes.io/name: cat-server
     app.kubernetes.io/part-of: grumpycat-app
-  name: grumpycat
+  name: cat-server
 spec:
   internalTrafficPolicy: Cluster
   ipFamilies:
@@ -25,7 +26,6 @@ spec:
     protocol: TCP
     targetPort: 8443
   selector:
-    app: grumpycat
-    deploymentconfig: grumpycat
+    app: cat-server    
   sessionAffinity: None
   type: ClusterIP
