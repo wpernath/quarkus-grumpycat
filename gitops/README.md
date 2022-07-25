@@ -31,20 +31,35 @@ This will create two namespaces with all roles properly setup so that Argo CD ca
 
 ## Calling the pipelines
 
-In order to call the build pipeline in `cat-ci`, call 
+In order to call one of the build pipelines in `cat-ci`, either call 
 
 ```bash
-$ ./pipeline.sh build -u <reg-user> \
+./pipeline.sh build-client -u <reg-user> \
 	-p <reg-password>
 ```
 
-This starts the development pipeline as discussed in chapter 5. Whenever the pipeline is successfully executed, you should see an updated message on the `grumpycat-config` Git repository. And you should see that ArgoCD has initiated a synchronization process, which ends with a redeployment of the Quarkus application.
-
-To start the staging pipeline, call
+or 
 ```bash
-$ ./pipeline.sh stage -r v1.0.1-testing
+./pipeline.sh build-server -u <reg-user> \
+	-p <reg-password>
+```
+
+
+This starts the development pipelines as discussed in chapter 5. Whenever the pipeline is successfully executed, you should see an updated message on the `grumpycat-config` Git repository. And you should see that ArgoCD has initiated a synchronization process, which ends with a redeployment of the Quarkus application.
+
+To start one of the staging pipelines, either call
+```bash
+$ ./pipeline.sh stage-client -r v1.0.1-testing
+```
+
+or
+
+To start one of the staging pipelines, either call
+```bash
+$ ./pipeline.sh stage-server -r v1.0.1-testing
 ```
 
 This creates a new branch in Git called `release-v1.0.1-testing`, uses the current DEV image, tags it on quay.io and updates the `stage` config in git. 
 
 In order to apply the changes, you need to either merge the branch directly or create a pull request and merge the changes then. 
+
