@@ -3,15 +3,17 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wanja.grumpycat</groupId>
     <artifactId>umbrella</artifactId>
-    <version>0.5.1</version>
+    <version>${grumpycat.umbrella.version}</version>
     <packaging>pom</packaging>
 
     <modules>
+        <!--module>cat-model</module -->
         <module>quarkus-server</module>
         <module>melonjs-client</module>
     </modules>
 
     <properties>
+        <grumpycat.umbrella.version>0.5.1</grumpycat.umbrella.version>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
         <failsafe.useModulePath>false</failsafe.useModulePath>
         <maven.compiler.release>11</maven.compiler.release>
