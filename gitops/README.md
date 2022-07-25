@@ -3,9 +3,41 @@
 
 This is the sample discussed in chapter 5. It's about using Tekton and ArgoCD. 
 
-You have to do the following two steps in order to setup the environment. 
+You have to do the following three steps in order to setup the environment. 
 
-## 1. Setup Tekton Pipelines (the CI part)
+## 1. Prepare your environment
+
+### a. forking git repositories
+Please make sure that you're forking the following two repositories on GitHub.com
+- (Source Code)[https://github.com/wpernath/quarkus-grumpycat]
+- (Configuration)[https://github.com/wpernath/grumpycat-config]
+
+### b. prepare pipelines
+Then you have to make sure that all the defaults are pointing to YOUR repositories:
+```
+FOR EACH pipeline in ${gitops/tekton/pipelines} DO
+  spec.params.git-url -> your forked git url
+  spec.params.config-git-url -> your forked git url
+  spec.params.image-name -> your quay.io or dockerhub.io repository name
+  spec.params.repo-username -> your user name on quay.io or dockerhub.io or whereever
+END
+```
+
+OR 
+
+You can enhance `gitops/tekton/pipeline.sh` to let you specify those parameters accordingly.
+
+### c. prepare argo cd applications
+Finally, you have to open `gitops/argocd/cat-apps.yaml` and
+
+```
+FOR EACH $(argocd application in cat-apps.yaml) DO
+  spec.source.repoURL -> your grumpycat config repository
+END
+```
+
+
+## 2. Setup Tekton Pipelines (the CI part)
 In order to initialize the Tekton pipelines, call
 
 ```bash
@@ -15,10 +47,15 @@ $ ./pipeline.sh init --force --git-user <user> \
 	--registry-password <pwd> 
 ```
 
-This call (if given the `--force` flag) will create the following namespaces and ArgoCD applications for you:
-- `cat-ci`: Pipelines, Tasks and a Nexus instance 
+This call (if given the `--force` flag) will initialize the `cat-ci` namespace for you. This includes
+- all 4 tekton pipelines
+- all custom tasks
+- preparation of the Tekton service account for running the pipelines
+- preparation of the Tekton secret to access GitHub.com and Quay.io
 
-## 2. Setup ArgoCD Applications (the CD part)
+
+
+## 3. Setup ArgoCD Applications (the CD part)
 
 To initialize the ArgoCD part, call the following
 
@@ -26,8 +63,7 @@ To initialize the ArgoCD part, call the following
 $ oc apply -k gitops/argocd
 ```
 
-This will create two namespaces with all roles properly setup so that Argo CD can then start initializing the environment. It will take a while until you're able to see the `cat-dev` and `cat-stage` with a PostgreSQL database instance up and running in those two namespaces.
-
+This will create two namespaces with all roles properly setup so that Argo CD can then start initializing the environment. It will take a while until you're able to see the `cat-dev` and `cat-stage` namespaces with the two versions of the app deployed in. 
 
 ## Calling the pipelines
 
