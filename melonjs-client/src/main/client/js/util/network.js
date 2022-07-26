@@ -107,16 +107,13 @@ export default class NetworkManager {
 	}
 
 	/**
-	 * Create a new game on the server
+	 * Create a new game on the server. Initially, it also creates 
+	 * a new player with a random fake name.
 	 */
 	async createGameOnServer() {
-		let resp = await fetch(this.fakeNameURL);
-		let name = await resp.text();
-		console.log("name: " + name);
-
-		resp = await fetch(this.createGameURL + "/version");
-		GlobalGameState.globalServerVersion = await resp.json();
-
+		// if this is the first call, initialize server version etc.
+		let name;
+		let resp;
 		let req = {
 			name: name,
 			level: "0",
@@ -125,8 +122,26 @@ export default class NetworkManager {
 			},
 		};
 
-		req = JSON.stringify(req);
-		console.log(req);
+		if( GlobalGameState.globalServerVersion === null ) {
+			resp = await fetch(this.fakeNameURL);
+			name = await resp.text();
+			console.log("name: " + name);
+
+			resp = await fetch(this.createGameURL + "/version");
+			GlobalGameState.globalServerVersion = await resp.json();
+		}
+
+		if( GlobalGameState.globalServerGame !== null ) {
+			req.level = LevelManager.getInstance().getCurrentLevelIndex() + 1;
+			req.name  = LevelManager.getInstance().getCurrentLevel().longName;
+			req.player= GlobalGameState.globalServerGame.player;
+		}
+		else {
+			req.name = name;
+			req.player.name = name;
+		}
+		
+		req = JSON.stringify(req);		
 		resp = await fetch(this.createGameURL, {
 			method: "POST",
 			mode: "cors",
