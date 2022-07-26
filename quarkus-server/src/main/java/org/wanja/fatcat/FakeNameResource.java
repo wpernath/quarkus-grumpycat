@@ -11,6 +11,6 @@ public class FakeNameResource {
     @GET
     public String fakeName() {
         Faker f = Faker.instance();
-        return f.ancient().hero() + " " + f.book().author();
+        return f.ancient().hero() + " " + f.cat().name();
     }
 }

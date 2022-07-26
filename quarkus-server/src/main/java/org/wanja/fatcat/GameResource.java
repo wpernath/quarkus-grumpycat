@@ -40,7 +40,9 @@ public class GameResource {
         }
         g.level  = game.level;
         g.name   = game.name;
-        g.player.persist();
+        if( g.player.id == null ) {
+            g.player.persist();
+        }
         g.persist();
 
         Log.info("New game created with ID " + g.id + " for player " + g.player.name + " (id=" + g.player.id + ")");
