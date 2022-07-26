@@ -106,6 +106,18 @@ export default class NetworkManager {
 		}
 	}
 
+	async readPlayerActionsFromServer(game) {
+		let res = await fetch(this.writePlayerMovementURL + "/" + game.id + "/" + game.player.id, {
+			method: "GET",
+			mode: "cors",
+			headers: {
+				"Content-Type": "application/json",
+			},			
+		});
+
+		return res.json();
+	}
+
 	/**
 	 * Create a new game on the server. Initially, it also creates 
 	 * a new player with a random fake name.

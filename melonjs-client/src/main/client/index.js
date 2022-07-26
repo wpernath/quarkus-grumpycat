@@ -19,7 +19,7 @@ import PlayScreen from 'js/stage/play.js';
 import GetReadyScreen from './js/stage/get-ready';
 import GameOverScreen from './js/stage/game-over';
 import HighscoreScreen from './js/stage/highscores';
-
+import ReplayGameScreen from './js/stage/replay';
 import DataManifest from 'manifest.js';
 
 import CONFIG from 'config.js';
@@ -87,7 +87,7 @@ device.onReady(() => {
             state.set(state.MENU, new TitleScreen());
             state.set(state.PLAY, new PlayScreen());
             state.set(my_state.REPLAY_GAME_CHOOSER, new ReplayChooserScreen());
-            //state.set(my_state.REPLAY_GAME, new ReplayGame());
+            state.set(my_state.REPLAY_GAME, new ReplayGameScreen());
             state.set(state.READY, new GetReadyScreen());
             state.set(state.GAMEOVER, new GameOverScreen(true));
             state.set(state.GAME_END, new GameOverScreen(false));

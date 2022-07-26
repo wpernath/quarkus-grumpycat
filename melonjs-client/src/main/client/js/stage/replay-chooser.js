@@ -3,6 +3,7 @@ import BaseClickableComponent from "../util/base-clickable-component";
 import GlobalGameState from "../util/global-game-state";
 
 import NetworkManager from "../util/network";
+import { my_state } from "../util/constants";
 
 class ListEntry extends BaseClickableComponent {
 	font;
@@ -157,6 +158,17 @@ class ReplayComponent extends Container {
 
 	useSelectedGame(game) {
 		console.log("  selected game = " + JSON.stringify(game));
+
+		NetworkManager.getInstance()
+			.readPlayerActionsFromServer(game)
+			.then(function(res) {
+				console.log("Successfully read player actions from server: " + JSON.stringify(res));
+				state.change(my_state.REPLAY_GAME);				
+			})
+			.catch(function(err) {
+				console.error("Could not read player actions: " + err);
+				state.change(state.MENU);
+			})
 	}
 }
 
