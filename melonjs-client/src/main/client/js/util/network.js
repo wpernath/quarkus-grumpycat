@@ -155,4 +155,16 @@ export default class NetworkManager {
 		console.log("   Server API: " + JSON.stringify(GlobalGameState.globalServerVersion));
 		console.log("   New game  : " + JSON.stringify(GlobalGameState.globalServerGame));
 	}
+
+	async readLastGamesFromServer() {
+		let resp = await fetch(this.createGameURL, {
+			method: "GET",
+			mode: "cors",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+
+		return resp.json();
+	}
 }

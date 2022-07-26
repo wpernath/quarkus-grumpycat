@@ -145,7 +145,7 @@ export default class GetReadyScreen extends Stage {
 		this.spiders = [];
 
 		console.log("GetReady.OnEnter()");
-
+ 
 		this.back = new GetReadyBack();
 		game.world.addChild(this.back);
 

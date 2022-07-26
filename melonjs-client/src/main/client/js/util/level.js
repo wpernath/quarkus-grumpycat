@@ -66,8 +66,8 @@ export class LevelManager {
         let data = await res.json();
         let level = new Level(info, data.name, data.longName, data);
         console.log("  Loaded: " + info.id);
-        myThis.allLevels.push(level);
-        return data;
+        this.allLevels[level.id] = level;
+        return level;
     }
 
     /**
@@ -96,11 +96,13 @@ export class LevelManager {
      * @returns the current level information
      */
     getCurrentLevel() {
-        return this.allLevels[this.currentLevel];
+        let levelId = levels[this.currentLevel].id;
+        return this.allLevels[levelId];
     }
 
     getCurrentLevelId() {
-        return this.allLevels[this.currentLevel].id;
+        let levelId = levels[this.currentLevel].id;
+        return levelId;
     }
 
     getCurrentLevelIndex() {
@@ -122,7 +124,7 @@ export class LevelManager {
     next() {
         console.log("  LevelManager.next() ");
         this.currentLevel++;
-        if( this.currentLevel > this.allLevels.length) {
+        if( this.currentLevel > levels.length) {
             this.reset();
         }
         return this.getCurrentLevel();
@@ -142,7 +144,7 @@ export class LevelManager {
     }
 
     hasNext() {        
-        if( this.currentLevel < this.allLevels.length) return true;
+        if( this.currentLevel < levels.length) return true;
         return false;
     }
 

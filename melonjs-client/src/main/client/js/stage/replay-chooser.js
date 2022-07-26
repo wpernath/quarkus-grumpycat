@@ -1,76 +1,68 @@
 import { Stage, event, loader, game, state, Vector2d, Container, BitmapText, Rect, Sprite, input, ImageLayer } from "melonjs/dist/melonjs.module.js";
+import BaseClickableComponent from "../util/base-clickable-component";
 import GlobalGameState from "../util/global-game-state";
-import CONFIG from "../../config";
+
 import NetworkManager from "../util/network";
 
-class ListEntry extends Container {
+class ListEntry extends BaseClickableComponent {
 	font;
-	scoreEntry;
 	nameText;
 	dateText;
 	scoreText;
+	borderColor;
+	callbackOnClick;
 
-	constructor(score, pos, x, y, w) {
+	constructor(g, x, y, w) {
 		super(x, y, w, 32);
-		this.scoreEntry = score;
-		this.position = pos;
 
-		this.posFont = new BitmapText(x, y, {
-			font: "24Outline",
-			size: 1,
-			text: pos.toString().padStart(2, "0") + ".",
-			anchorPoint: new Vector2d(0, 0),
-		});
+		this.gameEntry = g;		
 
-		this.nameFont = new BitmapText(x, y, {
+		this.playerFont = new BitmapText(x, y, {
 			font: "24Outline",
 			size: 1,
 			text: "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
 			anchorPoint: new Vector2d(0, 0),
 		});
 
-		this.dateFont = new BitmapText(x + 200, y, {
+		this.dateFont = new BitmapText(x + 300, y, {
 			font: "24Outline",
 			size: 1,
-			text: this.scoreEntry.time,
 			anchorPoint: new Vector2d(0, 0),
 		});
 
-		this.scoreFont = new BitmapText(x + 350, y, {
+		this.gameFont = new BitmapText(x + 500, y, {
 			font: "24Outline",
 			size: 1,
 			fillStyle: "#ffffff",
-			text: this.scoreEntry.score,
+			text: this.gameEntry.name,
 			textAlign: "left",
 			anchorPoint: new Vector2d(0, 0),
 		});
 
-		this.fontSize = this.nameFont.measureText();
+		this.fontSize = this.playerFont.measureText();
 		super.setShape(x, y, w, this.fontSize.height + 16);
 		this.border = new Rect(x, y, w, this.fontSize.height + 16);
 
-		this.posFont.pos.x += 8;
-		this.posFont.pos.y += 8;
+		this.gameFont.pos.x += 8;
+		this.gameFont.pos.y += 8;
 
-		this.nameFont.pos.x += 48;
-		this.nameFont.pos.y += 8;
-
-		this.dateFont.pos.x += 200;
+		this.dateFont.pos.x += 8;
 		this.dateFont.pos.y += 8;
 
-		this.scoreFont.pos.x += 320;
-		this.scoreFont.pos.y += 8;
+		this.playerFont.pos.x += 8;
+		this.playerFont.pos.y += 8;
 
-		this.setName("Wanja Pernath");
-		this.setTime(this.scoreEntry.time);
-		this.setScore(this.scoreEntry.score);
-		this.posText = pos.toString().padStart(2, "0") + ".";
-		console.log("(" + x + ", " + y + ", " + w + ", " + (this.fontSize.height + 16) + ")");
+		this.playerName = this.gameEntry.player.name;
+		this.gameName = this.gameEntry.name;
+		this.dateTime = new Date(this.gameEntry.time).toLocaleDateString();
+
+		this.borderColor = "#008800";
+		this.callbackOnClick = this.onClick;
 	}
 
 	draw(renderer) {
 		renderer.setGlobalAlpha(0.5);
-		renderer.setColor("#008800");
+		renderer.setColor(this.borderColor);
 		renderer.fill(this.border);
 
 		renderer.setGlobalAlpha(1);
@@ -78,49 +70,32 @@ class ListEntry extends Container {
 		renderer.stroke(this.border);
 
 		renderer.setColor("#ffffff");
-		this.posFont.draw(renderer, this.posText, this.posFont.pos.x, this.posFont.pos.y);
-		this.nameFont.draw(renderer, this.nameText, this.nameFont.pos.x, this.nameFont.pos.y);
-		this.dateFont.draw(renderer, this.dateText, this.dateFont.pos.x, this.dateFont.pos.y);
-		this.scoreFont.draw(renderer, this.scoreText, this.scoreFont.pos.x, this.scoreFont.pos.y);
+		this.gameFont.draw(renderer, this.gameName, this.gameFont.pos.x, this.gameFont.pos.y);
+		this.dateFont.draw(renderer, this.dateTime, this.dateFont.pos.x, this.dateFont.pos.y);
+		this.playerFont.draw(renderer, this.playerName, this.playerFont.pos.x, this.playerFont.pos.y);
 	}
 
-	setName(text) {
-		this.nameText = text;
+	setCallbackOnClick(callback) {
+		this.callbackOnClick = callback;
+	}
+
+	onClick(event) {
+		console.log("onClick");
+		this.callbackOnClick(this.gameEntry);
+	}
+	onOver(event) {
+		this.borderColor = "#00aa00";
 		this.isDirty = true;
 	}
 
-	setTime(time) {
-		this.dateText = new Date(time).toLocaleDateString();
+	onOut(event) {
+		this.borderColor = "#008800";
 		this.isDirty = true;
-	}
-
-	setScore(score) {
-		this.scoreText = score.toString().padStart(7, "0");
-		this.isDirty = true;
-	}
-
-	updateScoreEntry(score) {
-		this.scoreEntry = score;
-		this.setName(score.name);
-		this.setTime(score.time);
-		this.setScore(score.score);
 	}
 }
 
 class ReplayComponent extends Container {
-	highscoreComponent = [];
-	highscores = [
-		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 100000, time: new Date(Date.now()) },
-		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 90000, time: new Date(Date.now()) },
-		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 80000, time: new Date(Date.now()) },
-		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 70000, time: new Date(Date.now()) },
-		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 60000, time: new Date(Date.now()) },
-		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 50000, time: new Date(Date.now()) },
-		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 40000, time: new Date(Date.now()) },
-		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 30000, time: new Date(Date.now()) },
-		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 20000, time: new Date(Date.now()) },
-		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 10000, time: new Date(Date.now()) },
-	];
+	listComponents = [];
 
 	constructor() {
 		super();
@@ -164,27 +139,24 @@ class ReplayComponent extends Container {
 
 		this.addChild(this.titleText);
 		this.addChild(this.subTitleText);
+	}
 
-		// write the highest 10 scores
-		for (let i = 0; i < this.highscores.length; i++) {
-			let se = this.highscores[i];
-			let comp = new ListEntry(se, i + 1, 50, 250 + 42 * i, game.viewport.width - 100, 36);
-			this.highscoreComponent.push(comp);
-			this.addChild(comp);
+	updateList(games) {
+		if (games !== null && games.length > 0) {
+			// create a ListEntry for each game found in list
+			for (let i = 0; i < games.length; i++) {
+				let comp = new ListEntry(games[i], 50, 250 + 42 * i, game.viewport.width - 100, 36);
+				this.listComponents.push(comp);
+				this.addChild(comp);
+				comp.setCallbackOnClick(this.useSelectedGame);
+				if( i >= 10 ) break;
+			}
+			this.isDirty = true;
 		}
 	}
 
-	updateHighscores(scores) {
-		if (scores == null || scores.length == 0) {
-			scores = this.highscores;
-		}
-
-		for (let i = 0; i < scores.length; i++) {
-			let score = scores[i];
-			this.highscoreComponent[i].updateScoreEntry(score);
-		}
-
-		console.log(scores);
+	useSelectedGame(game) {
+		console.log("  selected game = " + JSON.stringify(game));
 	}
 }
 
@@ -193,7 +165,7 @@ export default class ReplayChooserScreen extends Stage {
 		this.replay = new ReplayComponent();
 		game.world.addChild(this.replay);
 
-		input.bindPointer(input.pointer.LEFT, input.KEY.ESC);
+		//input.bindPointer(input.pointer.LEFT, input.KEY.ESC);
 
 		this.handler = event.on(event.KEYDOWN, function (action, keyCode, edge) {
 			if (action === "exit") {
@@ -201,17 +173,15 @@ export default class ReplayChooserScreen extends Stage {
 			}
 		});
 
-        /*
 		NetworkManager.getInstance()
-			.readTop10Highscores()
+			.readLastGamesFromServer()
 			.then((out) => this.replay.updateList(out))
 			.catch((err) => console.log(err));
-        */
 	}
 
 	onDestroyEvent() {
 		event.off(event.KEYDOWN, this.handler);
-		input.unbindPointer(input.pointer.LEFT);
+		//input.unbindPointer(input.pointer.LEFT);
 		game.world.removeChild(this.replay);
 	}
 }
