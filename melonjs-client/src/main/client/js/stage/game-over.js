@@ -71,9 +71,6 @@ class GameOverBack extends Container {
 	constructor(isGameOver=true) {
 		super();
 
-		// persistent across level change
-		this.isPersistent = true;
-
 		// make sure we use screen coordinates
 		this.floating = true;
 

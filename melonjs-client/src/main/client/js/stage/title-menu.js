@@ -1,4 +1,5 @@
 import { BitmapText, input, timer, game, Container, Vector2d, Text, RoundRect, state, Rect } from "melonjs/dist/melonjs.module.js";
+import { my_state } from "../util/constants";
 import GlobalGameState from "../util/global-game-state";
 
 class BaseTextButton extends Container {
@@ -278,7 +279,7 @@ class ReplayButton extends BaseTextButton {
 	}
 
 	onClick(event) {
-		state.change(state.READY);
+		state.change(my_state.REPLAY_GAME_CHOOSER);
 	}
 }
 
@@ -298,9 +299,6 @@ class HighscoreButton extends BaseTextButton {
 export default class TitleMenu extends Container {
 	constructor() {
 		super(0, 0);
-
-		// persistent across level change
-		this.isPersistent = true;
 
 		// make sure we use screen coordinates
 		this.floating = true;

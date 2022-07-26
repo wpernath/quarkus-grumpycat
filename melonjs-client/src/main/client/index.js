@@ -20,16 +20,14 @@ import GetReadyScreen from './js/stage/get-ready';
 import GameOverScreen from './js/stage/game-over';
 import HighscoreScreen from './js/stage/highscores';
 
-import PlayerEntity from 'js/renderables/player.js';
-import CatEnemy from "js/renderables/cat-enemy.js";
-import { SpiderEnemy } from './js/renderables/spider-enemy';
-import BombEntity from './js/renderables/bomb';
 import DataManifest from 'manifest.js';
 
 import CONFIG from 'config.js';
 import GlobalGameState from './js/util/global-game-state';
 import { LevelManager } from './js/util/level';
 import NetworkManager from './js/util/network';
+import { my_state } from './js/util/constants';
+import ReplayChooserScreen from './js/stage/replay-chooser';
 
 
 
@@ -88,6 +86,8 @@ device.onReady(() => {
             // set the user defined game stages
             state.set(state.MENU, new TitleScreen());
             state.set(state.PLAY, new PlayScreen());
+            state.set(my_state.REPLAY_GAME_CHOOSER, new ReplayChooserScreen());
+            //state.set(my_state.REPLAY_GAME, new ReplayGame());
             state.set(state.READY, new GetReadyScreen());
             state.set(state.GAMEOVER, new GameOverScreen(true));
             state.set(state.GAME_END, new GameOverScreen(false));
@@ -95,12 +95,6 @@ device.onReady(() => {
 
             // set the fade transition effect
             state.transition("fade", "#000000", 500);
-
-            // add our player entity in the entity pool
-            pool.register("player", PlayerEntity, true);
-            pool.register("enemy", CatEnemy, false);
-            pool.register("bomb", BombEntity, true);
-            pool.register("spider", SpiderEnemy, true);
 
             // bind keys
             input.bindKey(input.KEY.SHIFT, "barrier");

@@ -1,5 +1,5 @@
 const CONFIG = {
-	environment: "prod", // change this TO PROD on deployment
+	environment: "dev", // change this TO PROD on deployment
 
 	appName: "{{applicationName}}",
 	appVersion: "{{applicationVersion}}",
@@ -11,10 +11,10 @@ const CONFIG = {
 	},
 
 	dev: {
-		baseURL: "http://grumpycat-cat-dev.apps.work.ocp.lan/",
+		baseURL: "http://cat-server-cat-dev.apps.work.ocp.lan/",
 	},
 	test: {
-		baseURL: "http://grumpycat-cat-stage.apps.work.ocp.lan/",
+		baseURL: "http://cat-server-cat-stage.apps.work.ocp.lan/",
 	},
 
 	// use this one for the quarkus engine on production systems
