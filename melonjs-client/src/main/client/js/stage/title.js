@@ -13,13 +13,13 @@ export default class TitleScreen extends Stage {
 		console.log("Title.OnEnter()");
 		
 		// Reset GlobalGameState
-		GlobalGameState.reset();
-		LevelManager.getInstance().reset();
+		GlobalGameState.reset();		
 		
 		this.background = new TitleBackground();
 		this.menu = new TitleMenu();
 		game.world.addChild(this.background);
 		game.world.addChild(this.menu);
+
 
         this.handler = event.on(event.KEYDOWN, function (action, keyCode, edge) {
 			if (!state.isCurrent(state.MENU)) return;
