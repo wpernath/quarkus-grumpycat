@@ -68,6 +68,8 @@ spec:
       params:
         - name: kustomize-dir
           value: the-config/$(params.kustomize-dev)
+        - name: image-name
+          value: $(params.target-image)
       runAfter:
         - git-branch
       taskRef:
