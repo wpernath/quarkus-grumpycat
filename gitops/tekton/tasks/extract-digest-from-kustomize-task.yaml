@@ -12,7 +12,9 @@ spec:
   params:
     - name: kustomize-dir
       description: Where to extract the DIGEST from.       
-
+    - name: image-name
+      description: in case there are multiple images in the array, which one should be used
+      
   results:
     - name: DIGEST
       description: The image digest of the last quarkus maven build with JIB image creation
@@ -28,9 +30,9 @@ spec:
     - name: extract-digest
       image: quay.io/wpernath/kustomize-ubi:latest
       script: |
-        # yq eval '.images[0].digest' $(workspaces.source.path)/$(params.kustomize-dir)/kustomization.yaml
-        
-        DIGEST=$(yq eval '.images[0].digest' $(workspaces.source.path)/$(params.kustomize-dir)/kustomization.yaml)
+        yq eval '.images[] | select(.name == "$(params.image-name)*").digest' $(workspaces.source.path)/$(params.kustomize-dir)/kustomization.yaml       
+
+        DIGEST=$(yq eval '.images[] | select(.name == "$(params.image-name)*").digest' $(workspaces.source.path)/$(params.kustomize-dir)/kustomization.yaml)
         echo " DIGEST: $DIGEST"
         echo
         echo -n $DIGEST > $(results.DIGEST.path)
