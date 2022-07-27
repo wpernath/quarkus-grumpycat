@@ -21,7 +21,7 @@ export class BasePlayerSprite extends Sprite {
 	currentSpeed = this.SPEED;
 	lastSpeedAdded = 0;
 
-	SPEED = 4;
+	SPEED = 8;
 	borderLayer;
 	bonusLayer;
 	groundLayer;

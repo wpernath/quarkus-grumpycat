@@ -16,20 +16,20 @@ export class Level {
         if( !this.loadedIntoMelon ) {
             loader.load(
                 {name: this.id, src: this.info.path, type: 'tmx', format: 'json', data: this.data},
-                this.paul
+                this.onLoaded
             );
 
             this.loadedIntoMelon = true;      
         }
     }
 
-    paul() {  
+    onLoaded() {  
     }
 }
 
 var levelManager = null; 
 
-const levels = [
+const LEVEL_NAMES = [
 	// GUIDs from manifest.js
 	{ id: "level1", path: "maps/0.json", loaded: false, error: false },
 	{ id: "level2", path: "maps/1.json", loaded: false, error: false },
@@ -41,8 +41,9 @@ const levels = [
 export class LevelManager {
     allLevels = [];
     currentLevel = 0;
+    levelChangeListeners = [];
 
-    _constructor() {        
+    constructor() {        
     }
 
     /**
@@ -66,7 +67,7 @@ export class LevelManager {
         let data = await res.json();
         let level = new Level(info, data.name, data.longName, data);
         console.log("  Loaded: " + info.id);
-        this.allLevels[level.id] = level;
+        this.allLevels[info.id] = level;
         return level;
     }
 
@@ -77,9 +78,9 @@ export class LevelManager {
      */
     initialize(callback) {
         const promises = [];
-        for (let i = 0; i < levels.length; i++) {
-            let info = levels[i];
-            promises.push(this._loadLevelData(levels[i]));
+        for (let i = 0; i < LEVEL_NAMES.length; i++) {
+            let info = LEVEL_NAMES[i];
+            promises.push(this._loadLevelData(LEVEL_NAMES[i]));
         }
 
         Promise.all(promises).then((res) => {
@@ -91,17 +92,27 @@ export class LevelManager {
         });
     }
 
+    addLevelChangeListener(callback) {
+        this.levelChangeListeners.push(callback);
+    }
+
+    async _fireLevelChanged(oldLevel, newLevel) {
+        this.levelChangeListeners.forEach((l) => {
+            l(oldLevel, newLevel);
+        });
+    }
+
     /**
      * 
      * @returns the current level information
      */
     getCurrentLevel() {
-        let levelId = levels[this.currentLevel].id;
+        let levelId = LEVEL_NAMES[this.currentLevel].id;
         return this.allLevels[levelId];
     }
 
     getCurrentLevelId() {
-        let levelId = levels[this.currentLevel].id;
+        let levelId = LEVEL_NAMES[this.currentLevel].id;
         return levelId;
     }
 
@@ -132,12 +143,13 @@ export class LevelManager {
      * @returns the next level or the 0th one.
      */
     next() {
-        console.log("  LevelManager.next() ");
+        console.log("  LevelManager.next() ");        
+        let oldLevel = this.currentLevel;
         this.currentLevel++;
-        if( this.currentLevel > levels.length) {
+        if( this.currentLevel > LEVEL_NAMES.length) {
             this.reset();
         }
-        return this.getCurrentLevel();
+        this._fireLevelChanged(oldLevel, this.currentLevel);        
     }
 
     /**
@@ -146,15 +158,16 @@ export class LevelManager {
      */
     prev() {
         console.log("  LevelManager.prev() ");
+        let oldLevel = this.currentLevel;
         this.currentLevel--;
         if( this.currentLevel < 0 ) {
             this.reset();
         }
-        return this.getCurrentLevel();
+        this._fireLevelChanged(oldLevel, this.currentLevel);        
     }
 
     hasNext() {        
-        if( this.currentLevel < levels.length) return true;
+        if (this.currentLevel < LEVEL_NAMES.length) return true;
         return false;
     }
 

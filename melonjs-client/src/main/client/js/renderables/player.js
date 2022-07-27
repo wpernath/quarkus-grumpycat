@@ -11,6 +11,8 @@ import { BONUS_TILE, BasePlayerSprite, BARRIER_TILE } from './base-player';
 
 class PlayerEntity extends BasePlayerSprite {
 
+    levelOver = false;
+
     /**
      * constructor
      */
@@ -45,6 +47,8 @@ class PlayerEntity extends BasePlayerSprite {
             score: GlobalGameState.score,
             time: new Date(performance.now()),
         };
+
+        if( this.levelOver ) return super.update(dt);
 
         if( input.isKeyPressed("barrier")) {
             /*
@@ -116,7 +120,7 @@ class PlayerEntity extends BasePlayerSprite {
             }
 
             if( input.isKeyPressed("accel")) {
-                this.currentSpeed = 2*this.SPEED;
+                this.currentSpeed = this.SPEED / 2;
             }
             else {
                 this.currentSpeed = this.SPEED;
@@ -165,11 +169,12 @@ class PlayerEntity extends BasePlayerSprite {
                 if( this.collectedBonusTiles >= this.numberOfBonusTiles ) {
                     // level done, check to see if there are more levels
                     action.gameWon = true;
+                    this.levelOver = true;
                     if( LevelManager.getInstance().hasNext() ) {
                         LevelManager.getInstance().next();
                         state.change(state.READY);
                     }
-                    else {
+                    else {                        
                         state.change(state.GAME_END);
                     }
                 }
@@ -203,6 +208,7 @@ class PlayerEntity extends BasePlayerSprite {
         if (GlobalGameState.energy <= 0) {
             console.log("GAME OVER!");
             GlobalGameState.isGameOver = true;
+            this.levelOver = true;
             state.change(state.GAMEOVER);
             action.gameOver = true;
             NetworkManager.getInstance()
