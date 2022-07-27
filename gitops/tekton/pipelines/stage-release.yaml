@@ -93,7 +93,7 @@ spec:
         - extract-digest
       taskRef:
         kind: ClusterTask
-        name: skopeo-copy
+        name: skopeo-copy-1-6-0
       workspaces:
         - name: images-url
           workspace: shared-workspace
