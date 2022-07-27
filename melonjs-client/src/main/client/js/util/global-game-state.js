@@ -6,6 +6,10 @@ const GlobalGameState = {
 	globalServerGame: null,
 	globalServerVersion: null,
 
+	// For replaying an allready played game
+	gameToReplay: null,
+	replayActions : null,
+
 	// engine state
 	screenControlsTexture: null,
 	

@@ -1,7 +1,9 @@
 package org.wanja.fatcat;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -12,6 +14,7 @@ import javax.ws.rs.Produces;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.wanja.fatcat.model.Game;
 import org.wanja.fatcat.model.Player;
+import org.wanja.fatcat.model.PlayerAction;
 
 import io.quarkus.logging.Log;
 import io.quarkus.panache.common.Sort;
@@ -28,6 +31,9 @@ public class GameResource {
     @ConfigProperty( name = "quarkus.application.name")
     String appName;
 
+    @Inject
+    PlayerMovementResource playerMovements;
+
     @POST
     @Transactional
     public Game createNewGame(Game game) {
@@ -40,7 +46,9 @@ public class GameResource {
         }
         g.level  = game.level;
         g.name   = game.name;
-        g.player.persist();
+        if( g.player.id == null ) {
+            g.player.persist();
+        }
         g.persist();
 
         Log.info("New game created with ID " + g.id + " for player " + g.player.name + " (id=" + g.player.id + ")");
@@ -49,7 +57,16 @@ public class GameResource {
 
     @GET
     public List<Game> listGames() {
-        return Game.listAll(Sort.by("time", Direction.Descending));
+        List<Game> games = Game.listAll(Sort.by("time", Direction.Descending));
+        List<Game> gamesWithMovements = new ArrayList<Game>();
+        for( Game g : games ) {
+            List<PlayerAction> actions = playerMovements.movementsForGame(g.id, g.player.id);
+
+            if( actions != null && actions.size() > 50 ) {
+                gamesWithMovements.add(g);
+            }
+        }
+        return gamesWithMovements;
     }
 
     @GET

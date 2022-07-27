@@ -56,6 +56,9 @@ public class MapResource {
                     }
                 });
                 
+                // Make filename the name of the level without extension
+                map.name = level.substring(0, level.lastIndexOf('.')).toLowerCase();
+
                 // look for a map property named 'name' and make it 'longName'
                 if( map.properties != null && map.properties.size() > 0 ) {
                     for( LayerProperty p : map.properties ) {

@@ -40,7 +40,7 @@ class PlayScreen extends Stage {
         this.hudContainer = new HUDContainer(0,0);
         this.virtualJoypad = new VirtualJoypad();
         game.world.addChild(this.hudContainer);
-        game.world.addChild(this.virtualJoypad);
+        game.world.addChild(this.virtualJoypad, Infinity);
 
         this.handler = event.on(event.KEYDOWN, function (action, keyCode, edge) {
             if (!state.isCurrent(state.PLAY)) return;            

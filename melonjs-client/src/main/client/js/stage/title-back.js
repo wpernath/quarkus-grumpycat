@@ -43,9 +43,6 @@ export default class TitleBackground extends Container {
     constructor() {
 		super();
 
-		// persistent across level change
-		this.isPersistent = true;
-
 		// make sure we use screen coordinates
 		this.floating = true;
 

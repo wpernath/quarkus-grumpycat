@@ -4,6 +4,8 @@ import CONFIG from "../../config";
 import GlobalGameState from "../util/global-game-state";
 import SpiderEnemy from "../renderables/spider-enemy";
 import { LevelManager } from "../util/level";
+import NetworkManager from "../util/network";
+
 class MySpider extends SpiderEnemy {
 	walkRight = true;
 
@@ -77,9 +79,6 @@ class GetReadyBack extends Container {
 	constructor() {
 		super();
 
-		// persistent across level change
-		this.isPersistent = true;
-
 		// make sure we use screen coordinates
 		this.floating = true;
 
@@ -146,7 +145,7 @@ export default class GetReadyScreen extends Stage {
 		this.spiders = [];
 
 		console.log("GetReady.OnEnter()");
-
+ 
 		this.back = new GetReadyBack();
 		game.world.addChild(this.back);
 
@@ -186,7 +185,17 @@ export default class GetReadyScreen extends Stage {
 			if (!state.isCurrent(state.READY)) return;
 			console.log("GetReady.EventHandler()");
 			if (action === "enter" || action === "bomb") {
-				state.change(state.PLAY);
+
+				NetworkManager.getInstance().createGameOnServer()
+				.then(function() {
+					state.change(state.PLAY);
+					input.unbindKey(input.KEY.ENTER);
+					input.unbindPointer(input.pointer.LEFT);
+				})
+				.catch(function(err) {
+					console.error("Error creating new game on server: " + err);
+					state.change(state.MENU);
+				});				
 			}
 			if (action === "exit") {
 				state.change(state.MENU);

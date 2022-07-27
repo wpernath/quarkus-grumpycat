@@ -1,4 +1,4 @@
-import { Entity, game, input, Sprite, Body, collision, level, Tile, Rect, state } from 'melonjs/dist/melonjs.module.js';
+import { game, input, Sprite, Body, collision, level, Tile, Rect, state } from 'melonjs/dist/melonjs.module.js';
 import BombEntity from './bomb';
 import ExplosionEntity from './explosion';
 import GlobalGameState from '../util/global-game-state';
@@ -7,119 +7,18 @@ import CONFIG from '../../config';
 import { LevelManager } from '../util/level';
 import NetworkManager from '../util/network';
 
-const BARRIER_TILE = {
-    light : 182,
-    mid : 183,
-    dark: 184
-};
+import { BONUS_TILE, BasePlayerSprite, BARRIER_TILE } from './base-player';
 
-const BONUS_TILE = {
-    bomb : 961,
-    cactus : 963,
-    meat : 966,
-    cheese : 967
-};
-class PlayerEntity extends Sprite {
-    initialSpeed = 4;
-    maximalSpeed = 8;
-    currentSpeed = this.initialSpeed;
-    lastSpeedAdded = 0;
-
-    SPEED=4;
-    borderLayer;
-    bonusLayer;
-    groundLayer;
-    xInMap;
-    yInMap;
-
-    mapWidth;
-    mapHeight;
-    collectedBonusTiles = 0;
-    numberOfBonusTiles = 0;
-    oldDx =0; oldDy=0;
-
-    lastMapX = 0; lastMapY = 0;
+class PlayerEntity extends BasePlayerSprite {
 
     /**
      * constructor
      */
     constructor(x, y) {
         // call the parent constructor
-        let settings = {
-            width: 32,
-            height: 32,
-            framewidth: 32,
-            frameheight: 32,
-            image: "player", //image: "animals-walk"
-        };
-        super(x*32+16, y*32+16 , settings);
-        this.xInMap = x;
-        this.yInMap = y;
-        this.lastMapX = x;
-        this.lastMapY = y;
-
-        this.body = new Body(this);
-        this.body.ignoreGravity = true;
-        this.body.addShape(new Rect(0, 0, this.width, this.height));
-		this.body.collisionType = collision.types.PLAYER_OBJECT;
-		this.body.setCollisionMask(collision.types.ENEMY_OBJECT);
-
-        // set the display to follow our position on both axis
-        game.viewport.follow(this.pos, game.viewport.AXIS.BOTH, 0.1);
-
-        // ensure the player is updated even when outside of the viewport
-        this.alwaysUpdate = true;
-        this.mapHeight = level.getCurrentLevel().rows;
-        this.mapWidth  = level.getCurrentLevel().cols;
-
-        let layers = level.getCurrentLevel().getLayers();
-        layers.forEach(l => {
-            if(l.name === "Bonus") this.bonusLayer = l;
-            else if( l.name === "Frame") this.borderLayer = l;    
-            else if( l.name === "Ground") this.groundLayer = l;    
-        });
-
-        for( let x=0; x < this.mapWidth; x++) {
-            for( let y=0; y < this.mapHeight; y++) {
-                let tile = this.bonusLayer.cellAt(x,y);
-                if( tile !== null ) this.numberOfBonusTiles++;
-            }
-        }
-
-/*
-		this.addAnimation("stand-up", [84]);
-		this.addAnimation("walk-up", [84, 85, 86], 48);
-
-		this.addAnimation("stand-left", [60]);
-		this.addAnimation("walk-left", [60, 61, 62], 48);
-
-		this.addAnimation("stand-down", [48]);
-		this.addAnimation("walk-down", [48, 49, 50,], 48);
-
-		this.addAnimation("stand-right", [72]);
-		this.addAnimation("walk-right", [72, 73, 74], 48);
-		this.setCurrentAnimation("stand-left");
-*/
+        super(x,y);
     }
 
-    isWalkable(x, y) {
-        let realX = Math.floor(x/32);
-        let realY = Math.floor(y/32);
-        let tile  = this.borderLayer.cellAt(realX, realY);
-        if( tile !== null && tile != undefined ) return false;
-        else return true;
-    }
-
-    collectBonusTile(x,y) {
-        let realX = Math.floor(x / 32);
-		let realY = Math.floor(y / 32);
-		let tile = this.bonusLayer.cellAt(realX, realY);
-		if (tile !== null && tile != undefined) {
-            this.bonusLayer.clearTile(realX, realY);
-            return tile.tileId;
-        }
-        return 0;
-    }
 
 
     /**
@@ -144,7 +43,7 @@ class PlayerEntity extends Sprite {
             gameOver: false,
             gameWon: false,
             score: GlobalGameState.score,
-            time: Date.now(),
+            time: new Date(performance.now()),
         };
 
         if( input.isKeyPressed("barrier")) {
@@ -178,18 +77,7 @@ class PlayerEntity extends Sprite {
                 // only if there is no border tile at that pos
                 let bX = mapX + dx;
                 let bY = mapY + dy;
-                if( this.borderLayer.cellAt(bX, bY) == null ) {
-                    let newBorderId = 184;
-                    let ground = this.groundLayer.cellAt(bX,bY);
-                    if( ground !== null ) {
-                        let gId = ground.tileId;
-//                        switch(gId) {
-//                            case: 
-//                        }
-                    }
-                    let tile = this.borderLayer.getTileById(newBorderId, bX, bY);
-                    this.borderLayer.setTile(tile, bX, bY);
-                    GlobalGameState.placedBarriers++;
+                if( this.placeBorderTile(bX, bY)) {
 
                     action.dx = dx;
                     action.dy = dy;
@@ -227,6 +115,13 @@ class PlayerEntity extends Sprite {
                 game.world.addChild(new ExplosionEntity(this.pos.x, this.pos.y));            
             }
 
+            if( input.isKeyPressed("accel")) {
+                this.currentSpeed = 2*this.SPEED;
+            }
+            else {
+                this.currentSpeed = this.SPEED;
+            }
+
             if (input.isKeyPressed("left")) {            
                 this.flipX(true);
                 dx = -this.currentSpeed;
@@ -258,27 +153,6 @@ class PlayerEntity extends Sprite {
                 }
             }
 
-            // check speed of dog
-            if( dx == 0 && dy == 0) { // reset speed
-                /*
-                if (this.oldDx < 0) this.setCurrentAnimation("stand-left");
-                else if (this.oldDx > 0) this.setCurrentAnimation("stand-right");
-                else if (this.oldDy < 0) this.setCurrentAnimation("stand-up");
-                else if (this.oldDy > 0) this.setCurrentAnimation("stand-down");
-                */
-                this.currentSpeed = this.initialSpeed;
-
-            }
-            else {
-                if( this.lastSpeedAdded > 60 ) {
-                    this.currentSpeed += 2;
-                    if( this.currentSpeed > this.maximalSpeed ) this.currentSpeed = this.maximalSpeed;
-                    this.lastSpeedAdded = 0;
-                }
-                else {
-                    this.lastSpeedAdded += dt;
-                }
-            }
 
             if ((dx != 0 || dy != 0) && this.isWalkable(this.pos.x + dx, this.pos.y + dy)) {
                 this.pos.x += dx;
@@ -287,37 +161,16 @@ class PlayerEntity extends Sprite {
                 action.dx = dx;
                 action.dy = dy;
                 
-
-                let bonus = this.collectBonusTile(this.pos.x, this.pos.y);
-                if( bonus !== 0 ) {
-                    this.collectedBonusTiles++;
-                    GlobalGameState.bonusCollected++;
-                    if( bonus === BONUS_TILE.bomb ) { // bomb                        
-                        GlobalGameState.bombs += GlobalGameState.bombsForBombBonus;
-                        GlobalGameState.score += GlobalGameState.scoreForBombs;
+                this.checkBonusTile(this.pos.x, this.pos.y);
+                if( this.collectedBonusTiles >= this.numberOfBonusTiles ) {
+                    // level done, check to see if there are more levels
+                    action.gameWon = true;
+                    if( LevelManager.getInstance().hasNext() ) {
+                        LevelManager.getInstance().next();
+                        state.change(state.READY);
                     }
-                    else if( bonus === BONUS_TILE.cactus) { // cactus
-                        GlobalGameState.score += GlobalGameState.scoreForPills;
-                    }
-                    else if( bonus === BONUS_TILE.meat) { // meat
-                        GlobalGameState.energy+= GlobalGameState.energyForMeat;
-                        GlobalGameState.score += GlobalGameState.scoreForMeat;
-                    }
-                    else if( bonus === BONUS_TILE.cheese) { // cheese
-                        GlobalGameState.energy+= GlobalGameState.energyForCheese;
-                        GlobalGameState.score += GlobalGameState.scoreForCheese;
-                    }
-
-                    if( this.collectedBonusTiles >= this.numberOfBonusTiles ) {
-                        // level done, check to see if there are more levels
-                        action.gameWon = true;
-                        if( LevelManager.getInstance().hasNext() ) {
-                            LevelManager.getInstance().next();
-                            state.change(state.READY);
-                        }
-                        else {
-                            state.change(state.GAME_END);
-                        }
+                    else {
+                        state.change(state.GAME_END);
                     }
                 }
 
@@ -367,33 +220,6 @@ class PlayerEntity extends Sprite {
         return super.update(dt);
     }
 
-   /**
-     * colision handler
-     * (called when colliding with other objects)
-     */
-    onCollision(response, other) {
-        if( GlobalGameState.invincible ) return false;
-        if( other.body.collisionType === collision.types.ENEMY_OBJECT && !other.isStunned && !other.isDead && !GlobalGameState.isGameOver) {
-            if( other.enemyType === ENEMY_TYPES.cat ) {
-                GlobalGameState.catchedByCats++;
-                GlobalGameState.energy -= GlobalGameState.energyLostByCat;
-            }
-            else if( other.enemyType === ENEMY_TYPES.spider) {
-                GlobalGameState.bittenBySpiders++;
-                GlobalGameState.energy -= GlobalGameState.energyLostBySpider;
-            }
-            else if( other.enemyType === ENEMY_TYPES.golem) {
-                GlobalGameState.catchedByGolems++;
-                GlobalGameState.energy -= GlobalGameState.energyLostByGolem;
-            }
-            
-            GlobalGameState.invincible = true;
-            this.flicker(GlobalGameState.playerInvincibleTime, () => {
-                GlobalGameState.invincible = false;
-            });
-        }
-        return false;
-    }
 };
 
 export default PlayerEntity;

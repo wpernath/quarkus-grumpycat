@@ -112,22 +112,20 @@ class HighscoreEntry extends Container {
 class HighscoreComponent extends Container {
 	highscoreComponent = [];
 	highscores = [
-		{ pos: 0, name: "Wanja", playerId: 1, gameId: 2, score: 100000, time: new Date(Date.now()) },
-		{ pos: 0, name: "Wanja", playerId: 1, gameId: 2, score: 90000, time: new Date(Date.now()) },
-		{ pos: 0, name: "Wanja", playerId: 1, gameId: 2, score: 80000, time: new Date(Date.now()) },
-		{ pos: 0, name: "Wanja", playerId: 1, gameId: 2, score: 70000, time: new Date(Date.now()) },
-		{ pos: 0, name: "Wanja", playerId: 1, gameId: 2, score: 60000, time: new Date(Date.now()) },
-		{ pos: 0, name: "Wanja", playerId: 1, gameId: 2, score: 50000, time: new Date(Date.now()) },
-		{ pos: 0, name: "Wanja", playerId: 1, gameId: 2, score: 40000, time: new Date(Date.now()) },
-		{ pos: 0, name: "Wanja", playerId: 1, gameId: 2, score: 30000, time: new Date(Date.now()) },
-		{ pos: 0, name: "Wanja", playerId: 1, gameId: 2, score: 20000, time: new Date(Date.now()) },
-		{ pos: 0, name: "Wanja", playerId: 1, gameId: 2, score: 10000, time: new Date(Date.now()) },
+		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 100000, time: new Date(Date.now()) },
+		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 90000, time: new Date(Date.now()) },
+		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 80000, time: new Date(Date.now()) },
+		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 70000, time: new Date(Date.now()) },
+		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 60000, time: new Date(Date.now()) },
+		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 50000, time: new Date(Date.now()) },
+		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 40000, time: new Date(Date.now()) },
+		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 30000, time: new Date(Date.now()) },
+		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 20000, time: new Date(Date.now()) },
+		{ pos: 0, name: "Wanja Pernath", playerId: 1, gameId: 2, score: 10000, time: new Date(Date.now()) },
 	];
 
 	constructor() {
 		super();
-		// persistent across level change
-		this.isPersistent = true;
 
 		// make sure we use screen coordinates
 		this.floating = true;
@@ -171,7 +169,7 @@ class HighscoreComponent extends Container {
 		// write the highest 10 scores
 		for (let i = 0; i < this.highscores.length; i++) {
 			let se = this.highscores[i];
-			let comp = new HighscoreEntry(se, i+1, 50, 250 + 42 * i, game.viewport.width - 100, 36);
+			let comp = new HighscoreEntry(se, i + 1, 50, 250 + 42 * i, game.viewport.width - 100, 36);
 			this.highscoreComponent.push(comp);
 			this.addChild(comp);
 		}

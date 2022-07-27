@@ -168,41 +168,6 @@ const DataManifest = [
 		src: "./data/map/Terrain.json",
 	},
 
-	/*
-	{
-		name: "level1",
-		type: "tmx",
-		//src: "./data/map/Level1.json",
-		src: "maps/0.json",
-	},
-
-	{
-		name: "level2",
-		type: "tmx",
-		//src: "./data/map/Level2.json",
-		src: "maps/1.json",
-	},
-
-	{
-		name: "level3",
-		type: "tmx",
-		//src: "./data/map/Level3.json",
-		src: "maps/2.json",
-	},
-	{
-		name: "level4",
-		type: "tmx",
-		//src: "./data/map/Level4.json",
-		src: "maps/3.json",
-	},
-
-	{
-		name: "level5",
-		type: "tmx",
-		//src: "./data/map/Level5.json",
-		src: "maps/4.json",
-	},
-	*/
 ];
 
 export default DataManifest;

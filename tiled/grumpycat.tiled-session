@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Level3.tmx",
+    "activeFile": "Level1.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -12,6 +12,17 @@
         "": {
             "scaleInDock": 1,
             "scaleInEditor": 1
+        },
+        "/Users/wanja/Devel/melonjs/examples/platformer/data/map/map1.tmx": {
+            "scale": 0.7092328042328042,
+            "selectedLayer": 9,
+            "viewCenter": {
+                "x": 455.4216867469879,
+                "y": 943.9777686597783
+            }
+        },
+        "/Users/wanja/Devel/melonjs/examples/platformer/data/map/tileset.tsx": {
+            "scaleInDock": 0.2397
         },
         "/Users/wpernath/Desktop/test.tmx": {
             "scale": 0.89,
@@ -41,8 +52,8 @@
             "scale": 0.74,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 512.8378378378378,
-                "y": 512.1621621621622
+                "x": 513.5135135135135,
+                "y": 512.8378378378378
             }
         },
         "Level1.tmx#Terrain": {
@@ -60,11 +71,11 @@
             "scaleInDock": 1
         },
         "Level3.tmx": {
-            "scale": 0.47,
+            "scale": 0.8782,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 742.5531914893617,
-                "y": 781.9148936170212
+                "x": 486.221817353678,
+                "y": 1381.8036893646095
             }
         },
         "Level4.tmx": {
@@ -151,18 +162,18 @@
     "project": "grumpycat.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "Level1.tmx",
-        "Level5.tmx",
-        "Level2.tmx",
-        "Level4.tmx",
         "Level3.tmx",
+        "Level4.tmx",
+        "Level2.tmx",
+        "Level5.tmx",
+        "Level1.tmx",
+        "/Users/wanja/Devel/melonjs/examples/platformer/data/map/map1.tmx",
         "Terrain.tsx",
         "Level-Template.tmx",
         "spiders.tsx",
         "explosion.tsx",
         "bomb.tsx",
-        "Animated Water.tsx",
-        "Utumno.tsx"
+        "Animated Water.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
