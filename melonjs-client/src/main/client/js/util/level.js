@@ -118,6 +118,16 @@ export class LevelManager {
     }
 
     /**
+     * Set the current level index. This is mainly being used
+     * by the replay feature.
+     * 
+     * @param {int} lvl current level index
+     */
+    setCurrentLevel(lvl) {
+        this.currentLevel = lvl;
+    }
+
+    /**
      * 
      * @returns the next level or the 0th one.
      */

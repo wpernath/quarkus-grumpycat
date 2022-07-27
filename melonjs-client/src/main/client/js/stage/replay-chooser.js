@@ -162,7 +162,9 @@ class ReplayComponent extends Container {
 		NetworkManager.getInstance()
 			.readPlayerActionsFromServer(game)
 			.then(function(res) {
-				console.log("Successfully read player actions from server: " + JSON.stringify(res));
+				//console.log("Successfully read player actions from server: " + JSON.stringify(res));
+				GlobalGameState.gameToReplay = game;
+				GlobalGameState.replayActions = res;
 				state.change(my_state.REPLAY_GAME);				
 			})
 			.catch(function(err) {
