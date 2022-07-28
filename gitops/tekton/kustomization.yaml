@@ -10,7 +10,7 @@ resources:
 - infra/maven-artifact-cache-pvc.yaml
 - infra/maven-settings-cm.yaml
 
-# This is an old nexus server which will be installed in book-ci to cache artifacts
+# This is an old nexus server which will be installed in cat-ci to cache artifacts
 # NOTE, you need to change tekton/infra/maven-settings-cm.yaml if you don't want to use
 #       THIS nexus instance!
 - infra/nexus.yaml
@@ -22,6 +22,7 @@ resources:
 - tasks/extract-digest-task.yaml
 - tasks/git-update-deployment.yaml
 - tasks/maven-task.yaml
+- tasks/argocd-sync-task.yaml
 
 # pipelines
 - pipelines/dev-pipeline.yaml

@@ -1,0 +1,61 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: build-all
+spec:
+  params:
+    - description: password of the target image repository
+      name: repository-password
+      type: string
+  tasks:
+    - name: start-server-build
+      params:
+        - name: TKN_IMAGE
+          value: >-
+            registry.redhat.io/openshift-pipelines/pipelines-cli-tkn-rhel8@sha256:e1fa47811f156e48a61741aabe73ef85078960567822a4b23c174c0d9b4d0ee6
+        - name: SCRIPT
+          value: tkn $@
+        - name: ARGS
+          value:
+            - dev-pipeline
+            - '-s pipeline-bot'
+            - '-p repo-password=$(params.repository-password)'
+            - '-w name=source,claimName=builder-pvc'
+            - '-w name=maven-settings,config=maven-settings'
+            - '--use-param-defaults'
+      taskRef:
+        kind: ClusterTask
+        name: tkn
+    - name: start-client-build
+      params:
+        - name: TKN_IMAGE
+          value: >-
+            registry.redhat.io/openshift-pipelines/pipelines-cli-tkn-rhel8@sha256:e1fa47811f156e48a61741aabe73ef85078960567822a4b23c174c0d9b4d0ee6
+        - name: SCRIPT
+          value: tkn $@
+        - name: ARGS
+          value:
+            - client-dev-pipeline
+            - '-s pipeline-bot'
+            - '-p repo-password=$(params.repository-password)'
+            - '-w name=source,claimName=client-builder-pvc'
+            - '-w name=maven-settings,config=maven-settings'
+            - '--use-param-defaults'
+      taskRef:
+        kind: ClusterTask
+        name: tkn
+    - name: start-argocd-sync
+      params:
+        - name: application-name
+          value: cat-dev
+        - name: revision
+          value: HEAD
+        - name: flags
+          value: '--insecure'
+        - name: argocd-version
+          value: v2.2.2
+      taskRef:
+        kind: Task
+        name: argocd-task-sync-and-wait
+
+
