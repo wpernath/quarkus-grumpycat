@@ -43,7 +43,12 @@ spec:
         fi
 
         OUTPUT=$(tkn pipeline start $@)
-        PIPELINE_RUN_ID=$(echo $OUTPUT | head -n 1 | cut -f2 -d:)
+        x=$(echo $OUTPUT | head -n 1 | cut -f2 -d:)
+
+        # remove leading whitespaces
+        x=${x#"${x%%[! ]*}"}
+        PIPELINE_RUN_ID=x
+
         echo "PipelineRun started with ID=$PIPELINE_RUN_ID"
         echo -n $PIPELINE_RUN_ID > $(results.PIPELINE_RUN_ID.path)
 
