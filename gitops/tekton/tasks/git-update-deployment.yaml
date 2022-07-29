@@ -29,6 +29,13 @@ spec:
       description: The commit SHA
 
   steps:
+    - name: git-pull
+      image: docker.io/alpine/git:v2.26.2
+      workingDir: $(workspaces.workspace.path)/the-config
+      script: |
+        git status
+        git pull origin main
+
     - name: update-digest
       image: quay.io/wpernath/kustomize-ubi:latest
       workingDir: $(workspaces.workspace.path)/the-config
@@ -37,13 +44,6 @@ spec:
         kustomize edit set image $(params.CURRENT_IMAGE)=$(params.NEW_IMAGE)@$(params.NEW_DIGEST)
 
         cat kustomization.yaml
-
-    - name: git-pull
-      image: docker.io/alpine/git:v2.26.2
-      workingDir: $(workspaces.workspace.path)/the-config
-      script: |
-        git status
-        git pull origin main
 
     - name: git-commit
       image: docker.io/alpine/git:v2.26.2

@@ -1,0 +1,50 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: start-pipeline
+  labels:
+    app.kubernetes.io/version: "0.3"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.17.0"
+    tekton.dev/categories: CLI
+    tekton.dev/tags: cli
+    tekton.dev/displayName: "Tekton CLI"
+    tekton.dev/platforms: "linux/amd64,linux/s390x,linux/ppc64le"
+spec:
+  workspaces:
+    - name: kubeconfig
+      description: >-
+        An optional workspace that allows you to provide a .kube/config
+        file for tkn to access the cluster. The file should be placed at
+        the root of the Workspace with name kubeconfig.
+      optional: true
+  description: >-
+    This task performs operations on Tekton resources using tkn
+
+  results:
+    - name: PIPELINE_RUN_ID
+      description: The ID of the PipelineRun object which has been created 
+
+  params:
+    - name: TKN_IMAGE
+      description: tkn CLI container image to run this task
+      default: registry.redhat.io/openshift-pipelines/pipelines-cli-tkn-rhel8:v1.7.2-3
+    - name: ARGS
+      type: array
+      description: tkn CLI arguments to start a pipeline. See "tkn pipeline start --help"
+      default: ["--help"]
+
+  steps:
+    - name: tkn
+      image: "$(params.TKN_IMAGE)"
+      script: |
+        if [ "$(workspaces.kubeconfig.bound)" == "true" ] && [[ -e $(workspaces.kubeconfig.path)/kubeconfig ]]; then
+          export KUBECONFIG=$(workspaces.kubeconfig.path)/kubeconfig
+        fi
+
+        OUTPUT=$(tkn pipeline start $@)
+        PIPELINE_RUN_ID=$(echo $OUTPUT | head -n 1 | cut -f2 -d:)
+        echo "PipelineRun started with ID=$PIPELINE_RUN_ID"
+        echo -n $PIPELINE_RUN_ID > $(results.PIPELINE_RUN_ID.path)
+
+      args: ["$(params.ARGS)"]
