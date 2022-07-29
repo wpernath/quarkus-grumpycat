@@ -95,7 +95,7 @@ spec:
         - extract-digest
       taskRef:
         kind: ClusterTask
-        name: skopeo-copy-1-6-0
+        name: skopeo-copy
       workspaces:
         - name: images-url
           workspace: shared-workspace
@@ -117,6 +117,32 @@ spec:
       taskRef:
         kind: Task
         name: create-release
+
+    - name: github-open-pr
+      params:
+        - name: GITHUB_HOST_URL
+          value: api.github.com
+        - name: REPO_FULL_NAME
+          value: wpernath/grumpycat-config
+        - name: GITHUB_TOKEN_SECRET_NAME
+          value: git-user-pass
+        - name: GITHUB_TOKEN_SECRET_KEY
+          value: password
+        - name: AUTH_TYPE
+          value: Bearer
+        - name: HEAD
+          value: 'release-$(params.release-name)'
+        - name: BASE
+          value: main
+        - name: BODY
+          value: 'Digest updates for images '
+        - name: TITLE
+          value: '[ci] PR for release $(params.release-name)'
+      runAfter:
+        - update-release
+      taskRef:
+        kind: Task
+        name: github-open-pr        
       workspaces:
         - name: workspace
           workspace: shared-workspace

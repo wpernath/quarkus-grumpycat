@@ -45,10 +45,13 @@ $ ./pipeline.sh init --force --git-user <user> \
 	--git-password <pwd> \
 	--registry-user <user> \
 	--registry-password <pwd> 
+  --argo-host <for example openshift-gitops-server-openshift-gitops.apps.work.ocp.lan>
+  --argo-user admin
+  --argo-password <your argocd pass>
 ```
 
 This call (if given the `--force` flag) will initialize the `cat-ci` namespace for you. This includes
-- all 4 tekton pipelines
+- all 5 tekton pipelines
 - all custom tasks
 - preparation of the Tekton service account for running the pipelines
 - preparation of the Tekton secret to access GitHub.com and Quay.io
@@ -99,3 +102,11 @@ This creates a new branch in Git called `release-v1.0.1-testing`, uses the curre
 
 In order to apply the changes, you need to either merge the branch directly or create a pull request and merge the changes then. 
 
+## Starting client-dev and server-dev pipelines as a pipeline
+If you want to start the `build-all` pipeline, you just have to call `tkn` with the following arguments
+
+```shell
+tkn p start build-all -s pipeline-bot -p repository-password=<your quay password>
+```
+
+This starts the dev-pipeline and the client-dev-pipeline and waits for both until they are done. It's then telling ArgoCD to do a redeployment of the `cat-dev` app.

@@ -1,0 +1,89 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: build-all
+spec:
+  params:
+    - description: password of the target image repository
+      name: repository-password
+      type: string
+  tasks:
+    - name: start-server-build
+      params:
+        - name: ARGS
+          value:
+            - dev-pipeline
+            - '-s pipeline-bot'
+            - '-p repo-password=$(params.repository-password)'
+            - '-w name=source,claimName=builder-pvc'
+            - '-w name=maven-settings,config=maven-settings'
+            - '--use-param-defaults'
+      taskRef:
+        kind: Task
+        name: start-pipeline
+
+      
+    - name: start-client-build
+      params:
+        - name: ARGS
+          value:
+            - client-dev-pipeline
+            - '-s pipeline-bot'
+            - '-p repo-password=$(params.repository-password)'
+            - '-w name=source,claimName=client-builder-pvc'
+            - '-w name=maven-settings,config=maven-settings'
+            - '--use-param-defaults'
+      taskRef:
+        kind: Task
+        name: start-pipeline
+
+    - name: wait-for-client
+      runAfter:
+        - start-client-build
+      taskRef:
+        kind: Task
+        name: kubernetes-actions
+      params:
+        - name: script
+          value: kubectl $@
+        - name: args
+          value:
+            - wait
+            - '--for=condition=Succeeded'
+            - '--timeout=300s'
+            - 'PipelineRun/$(tasks.start-client-build.results.PIPELINE_RUN_ID)'
+
+    - name: wait-for-server
+      runAfter:
+        - start-server-build
+      taskRef:
+        kind: Task
+        name: kubernetes-actions
+      params:
+        - name: script
+          value: kubectl $@
+        - name: args
+          value:
+            - wait
+            - '--for=condition=Succeeded'
+            - '--timeout=300s'
+            - 'PipelineRun/$(tasks.start-server-build.results.PIPELINE_RUN_ID)'
+
+    - name: start-argocd-sync
+      params:
+        - name: application-name
+          value: cat-dev
+        - name: revision
+          value: HEAD
+        - name: flags
+          value: '--insecure'
+        - name: argocd-version
+          value: v2.2.2
+      taskRef:
+        kind: Task
+        name: argocd-task-sync-and-wait
+      runAfter:
+        - wait-for-client
+        - wait-for-server
+
+

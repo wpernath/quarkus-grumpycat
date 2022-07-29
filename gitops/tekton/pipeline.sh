@@ -9,6 +9,9 @@ GIT_URL=https://github.com/wpernath/grumpycat-config.git
 GIT_REVISION=main
 GIT_USER=""
 GIT_PASSWORD=""
+ARGO_SERVER=""
+ARGO_USER=""
+ARGO_PASSWORD=""
 
 PIPELINE=dev-pipeline
 CONTEXT_DIR=.
@@ -40,7 +43,7 @@ command.help() {
       pipeline.sh [command] [options]
   
   Examples:
-      pipeline.sh init [--force] --git-user <user> --git-password <pwd> --registry-user <user> --registry-password
+      pipeline.sh init [--force] --git-user <user> --git-password <pwd> --registry-user <user> --registry-password <password> --argo-host <argo host> --argo-user <user name> --argo-password <password>
       pipeline.sh build-client -u wpernath -p <nope> 
       pipeline.sh build-server -u wpernath -p <nope> 
       pipeline.sh stage-client -r v1.2.5 [-g <config-git-rep>] 
@@ -61,6 +64,9 @@ command.help() {
       -p, --registry-password       Password to store the image into quay.io ($IMAGE_PASSWORD)
       --git-user                    User to read/write into github
       --git-password                Password to read/write into github
+      --argo-host                   The ArgoCD server to use
+      --argo-user                   The username of the ArgoCD server to use
+      --argo-password               The password of the ArgoCD server to use
       -i, --target-image            Target image name to push to ($IMAGE_NAME)
       -c, --context-dir             Which context-dir to user ($CONTEXT_DIR)
       -t, --target-namespace        Which target namespace to start the app ($TARGET_NAMESPACE)
@@ -85,6 +91,19 @@ while (( "$#" )); do
       CONTEXT_DIR=$2
       shift 2
       ;;
+    --argo-host)
+      ARGO_SERVER=$2
+      shift 2
+      ;;
+    --argo-user)
+      ARGO_USER=$2
+      shift 2
+      ;;
+    --argo-password)
+      ARGO_PASSWORD=$2
+      shift 2
+      ;;
+
     -i|--target-image)
       IMAGE_NAME=$2
       shift 2
@@ -140,11 +159,16 @@ command.init() {
   pwd
 
 echo "Using parameters:"
-echo "   GIT_USER    : $GIT_USER"
-echo "   GIT_PASSWORD: $GIT_PASSWORD"
-echo "   REG_USER    : $IMAGE_USER"
-echo "   REG_PASSWORD: $IMAGE_PASSWORD"
-echo "   FORCE_SETUP : $FORCE_SETUP "
+echo "   GIT_USER     : $GIT_USER"
+echo "   GIT_PASSWORD : $GIT_PASSWORD"
+echo "   REG_USER     : $IMAGE_USER"
+echo "   REG_PASSWORD : $IMAGE_PASSWORD"
+echo "   ARGO_SERVER  : $ARGO_SERVER"
+echo "   ARGO_USER    : $ARGO_USER"
+echo "   ARGO_PASSWORD: $ARGO_PASSWORD"
+echo "   REG_USER     : $IMAGE_USER"
+
+echo "   FORCE_SETUP  : $FORCE_SETUP "
 
   # prepare secrets for SA
   if [ -z $GIT_USER ]; then 
@@ -167,6 +191,34 @@ echo "   FORCE_SETUP : $FORCE_SETUP "
     err "You have to provide credentials via --registry-password"
   fi
 
+  if [ -z $ARGO_USER ]; then
+    info "No ArgoCD users etc provided. You can't start build-all pipeline "
+  fi 
+
+  # install secret and configmap for accessing ARgoCD
+  if [ -n $ARGO_USER ]; then
+    info "Installing ArgoCD Secret and ConfigMap..."
+    cat > /tmp/secret.yaml <<-EOF
+apiVersion: v1
+kind: Secret
+metadata:
+  name: argocd-env-secret 
+stringData:
+  ARGOCD_USERNAME: $ARGO_USER
+  ARGOCD_PASSWORD: $ARGO_PASSWORD
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-env-configmap
+data:
+  ARGOCD_SERVER: $ARGO_SERVER
+EOF
+    oc apply -f /tmp/secret.yaml -n $TARGET_NAMESPACE
+  fi
+
+  # installing secrets to access github and quay.io
+  info "Installing Secrets to access GitHub and Quay.io"
   cat > /tmp/secret.yaml <<-EOF
 apiVersion: v1
 kind: Secret

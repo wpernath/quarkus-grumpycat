@@ -10,7 +10,7 @@ resources:
 - infra/maven-artifact-cache-pvc.yaml
 - infra/maven-settings-cm.yaml
 
-# This is an old nexus server which will be installed in book-ci to cache artifacts
+# This is an old nexus server which will be installed in cat-ci to cache artifacts
 # NOTE, you need to change tekton/infra/maven-settings-cm.yaml if you don't want to use
 #       THIS nexus instance!
 - infra/nexus.yaml
@@ -22,12 +22,16 @@ resources:
 - tasks/extract-digest-task.yaml
 - tasks/git-update-deployment.yaml
 - tasks/maven-task.yaml
+- tasks/argocd-sync-task.yaml
+- tasks/start-pipeline-task.yaml
+- tasks/kubernetes-actions-task.yaml
 
 # pipelines
 - pipelines/dev-pipeline.yaml
 - pipelines/stage-release.yaml
 - pipelines/client-dev-pipeline.yaml
 - pipelines/client-stage-release.yaml
+- pipelines/build-all-pipeline.yaml
 
 # please note, you still have to call pipeline.sh init to generate the secrets!
 
