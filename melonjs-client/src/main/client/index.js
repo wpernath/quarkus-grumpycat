@@ -7,7 +7,7 @@ import {
     utils,
     game,
     plugin,
-    pool,
+    Vector2d,
     input,
     TextureAtlas
 } from 'melonjs/dist/melonjs.module.js';
@@ -117,6 +117,11 @@ device.onReady(() => {
                 
             NetworkManager.getInstance().createGameOnServer()
                 .then(function() {
+                    // we don't use gravity here
+                    game.world.gravity = new Vector2d(0, 0);
+
+                    // we want to use an offscreen canvas first (double buffering)
+                    game.world.preRender = true;                    
                     state.change(state.MENU);
                 })
                 .catch(function(err) {

@@ -27,6 +27,7 @@ class PlayerEntity extends BasePlayerSprite {
      * update the entity
      */
     update(dt) {
+        console.log("player.update()")
         let mapX = Math.floor(this.pos.x / 32);
         let mapY = Math.floor(this.pos.y / 32);
         let dx = 0,
@@ -45,7 +46,7 @@ class PlayerEntity extends BasePlayerSprite {
             gameOver: false,
             gameWon: false,
             score: GlobalGameState.score,
-            time: new Date(performance.now()),
+            time: performance.now(),
         };
 
         if( this.levelOver ) return super.update(dt);

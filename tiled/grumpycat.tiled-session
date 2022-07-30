@@ -49,11 +49,11 @@
             }
         },
         "Level1.tmx": {
-            "scale": 0.74,
-            "selectedLayer": 0,
+            "scale": 0.9133,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 513.5135135135135,
-                "y": 512.8378378378378
+                "x": 556.224679732837,
+                "y": 505.31041278878786
             }
         },
         "Level1.tmx#Terrain": {
@@ -74,8 +74,8 @@
             "scale": 0.8782,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 486.221817353678,
-                "y": 1381.8036893646095
+                "x": 1119.9043498064223,
+                "y": 792.5301753586883
             }
         },
         "Level4.tmx": {
@@ -162,11 +162,11 @@
     "project": "grumpycat.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "Level1.tmx",
         "Level3.tmx",
         "Level4.tmx",
         "Level2.tmx",
         "Level5.tmx",
-        "Level1.tmx",
         "/Users/wanja/Devel/melonjs/examples/platformer/data/map/map1.tmx",
         "Terrain.tsx",
         "Level-Template.tmx",

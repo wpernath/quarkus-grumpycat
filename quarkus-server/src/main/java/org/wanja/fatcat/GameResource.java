@@ -39,16 +39,20 @@ public class GameResource {
     public Game createNewGame(Game game) {
         Game g = new Game();
         if( game.player == null ) {
-            g.player = new Player(game.name);
+            g.player = new Player(game.name);            
         }
         else {
             g.player = game.player;
         }
-        g.level  = game.level;
-        g.name   = game.name;
+
         if( g.player.id == null ) {
             g.player.persist();
+            g.playerId = g.player.id;
         }
+
+        g.level  = game.level;
+        g.name   = game.name;
+        System.out.println("game.playerId = " + g.playerId);
         g.persist();
 
         Log.info("New game created with ID " + g.id + " for player " + g.player.name + " (id=" + g.player.id + ")");
@@ -56,11 +60,12 @@ public class GameResource {
     }
 
     @GET
-    public List<Game> listGames() {
+    public List<Game> listGames() {            
         List<Game> games = Game.listAll(Sort.by("time", Direction.Descending));
         List<Game> gamesWithMovements = new ArrayList<Game>();
+
         for( Game g : games ) {
-            List<PlayerAction> actions = playerMovements.movementsForGame(g.id, g.player.id);
+            List<PlayerAction> actions = playerMovements.movementsForGame(g.id, g.playerId);
 
             if( actions != null && actions.size() > 50 ) {
                 gamesWithMovements.add(g);

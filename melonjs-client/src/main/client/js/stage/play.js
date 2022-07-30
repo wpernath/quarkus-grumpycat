@@ -15,6 +15,7 @@ class PlayScreen extends Stage {
     enemies= [];
     hudContainer = null;
     virtualJoypad = null;
+    isActive = false;
 
     enemyEmitter = {
         isActive: false,
@@ -29,8 +30,8 @@ class PlayScreen extends Stage {
     /**
      *  action to perform on state change
      */
-    onResetEvent() {
-        console.log("Play.OnEnter()");
+    onResetEvent() {    
+        this.isActive = false;    
         this.player = null;
         this.enemies = [];
         this.enemyEmitter.isActive = false;
@@ -64,7 +65,7 @@ class PlayScreen extends Stage {
 				}
 			}
         });
-
+        this.isActive = true;
     }
 
     onDestroyEvent() {
@@ -72,10 +73,11 @@ class PlayScreen extends Stage {
       game.world.removeChild(this.hudContainer);
       game.world.removeChild(this.virtualJoypad);
       event.off(event.KEYDOWN, this.handler);
+      this.isActive = false;
     }
 
     update(dt) {
-        
+        if( !this.isActive ) return super.update(dt);
         if( this.enemyEmitter.isActive && this.enemyEmitter.emitEvery <=0 && this.enemyEmitter.emitCount >0) {
             // emit a new spider
             this.enemyEmitter.emitCount--;

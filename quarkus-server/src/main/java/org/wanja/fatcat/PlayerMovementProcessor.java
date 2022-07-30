@@ -4,6 +4,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
+import org.wanja.fatcat.model.EnemyAction;
 import org.wanja.fatcat.model.PlayerAction;
 
 import io.quarkus.logging.Log;
@@ -25,6 +26,10 @@ public class PlayerMovementProcessor {
 
             Log.info("Logging player action for " + action.gameId);
         action.persist();
+        for( EnemyAction ea : action.enemies) {
+            ea.playerActionId = action.id;
+            ea.persist();
+        }
     }
 
 }
