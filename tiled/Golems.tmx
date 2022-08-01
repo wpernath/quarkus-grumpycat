@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.6" orientation="orthogonal" renderorder="right-down" width="33" height="42" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="1">
+<map version="1.8" tiledversion="1.8.6" orientation="orthogonal" renderorder="right-down" width="33" height="42" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="4">
  <editorsettings>
   <export target="../quarkus-server/src/main/resources/maps/Golems.tmj" format="json"/>
  </editorsettings>
@@ -290,4 +290,12 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="7" name="Golems">
+  <object id="1" name="golem1" x="722.647" y="752.302">
+   <polygon points="0,0 284.064,1.56079 284.064,99.8907 -1.56079,92.0868 0,127.985 284.064,124.863 287.186,-3.12159"/>
+  </object>
+  <object id="3" name="golem2" x="243.484" y="143.593">
+   <polygon points="0,0 -6.24317,106.134 -106.134,99.8907 -99.8907,-93.6476 285.625,-96.7692 287.186,93.6476 187.295,96.7692 185.734,-3.12159 191.978,99.8907 285.625,95.2084 288.747,-93.6476 -96.7692,-93.6476 -107.695,95.2084 4.68238,88.9652"/>
+  </object>
+ </objectgroup>
 </map>
