@@ -91,7 +91,7 @@ class PlayScreen extends Stage {
 
 		this.enemyEmitter.emitEvery -= dt;
 
-		this.collectAndSendActions();
+		//this.collectAndSendActions();
 		let dirty = super.update(dt);
 		return dirty;
 	}
@@ -99,15 +99,30 @@ class PlayScreen extends Stage {
 	collectAndSendActions() {
 		if (this.player !== null) {
 			let pa = this.player.currentAction;
-			if (pa !== null && pa.hasChanged) {
-				pa.hasChanged = false;
+			if (pa !== null ) {
+				//pa.hasChanged = false;
 
 				// now collect all enemy's movements
-				this.enemies.forEach((enemy) => {
-					pa.addEnemyMovement(enemy.name, enemy.type);
+                let enemyChanged = false;
+				this.enemies.forEach((enemy) => {                    
+					pa.addEnemyMovement(enemy.getEnemyAction());
+                    if( enemy.getEnemyAction().hasChanged ) {
+                        enemyChanged = true;
+                        enemy.getEnemyAction().hasChanged = false;
+                    }
 				});
 
-				NetworkManager.getInstance().writePlayerAction(pa);
+                if( pa.hasChanged || enemyChanged ) {
+				    NetworkManager.getInstance()
+                        .writePlayerAction(pa)
+                        .then( () => {
+                            console.log("successfully wrote game updates");
+                        })
+                        .catch( (err) => {
+                            console.log("Could not write game updates: " + err);
+                        });
+                    pa.hasChanged = false;
+                }
 			}
 		}
 	}

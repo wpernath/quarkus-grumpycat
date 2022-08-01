@@ -4,11 +4,19 @@ export class EnemyAction {
 	name;
 	type;
 	hasChanged = false;
-
+	isStunned = false;
+	isDead = false;
+	hasChanged = false;
+	
 	x = 0;
 	y = 0;
 	dx = 0;
 	dy = 0;
+
+	last = {
+		dx: 0,
+		dy: 0
+	};
 
 	constructor(name, type, x, y, dx, dy) {
 		this.name = name;
@@ -52,7 +60,7 @@ export class GameStateAction {
 		this.time = performance.now();
 	}
 
-	addEnemyMovement(name, type, x, y, dx, dy) {
-		this.enemies.push(new EnemyAction(name, type, x, y, dx, dy));
+	addEnemyMovement(action) {
+		this.enemies.push(action);
 	}
 }

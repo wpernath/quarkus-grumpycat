@@ -4,7 +4,7 @@ import { ENEMY_TYPES } from "./base-enemy";
 import GlobalGameState from "../util/global-game-state";
 
 export default class GolemEnemySprite extends BaseEnemySprite {
-	SPEED = 1;
+	VELOCITY = 0.1;
 	constructor(x, y) {
 		super(x, y, 64, 64, "golem-walk");
 		this.enemyType = ENEMY_TYPES.golem;

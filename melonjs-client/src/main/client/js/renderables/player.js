@@ -69,15 +69,6 @@ class PlayerEntity extends BasePlayerSprite {
                     action.gutterThrown = true;
                     action.hasChanged = true;
 
-                    /*
-                    NetworkManager.getInstance().writePlayerAction(action)
-                        .then(function (res) {
-                            console.log("update send to server");
-                        })
-                        .catch(function (err) {
-                            console.error(err);
-                        });                    
-                    */
                    this.currentAction = action;
                 }
             }
@@ -89,31 +80,15 @@ class PlayerEntity extends BasePlayerSprite {
                     GlobalGameState.usedBombs++;         
                     GlobalGameState.bombs--;
                     action.bombPlaced = true;
-                    NetworkManager.getInstance()
-                        .writePlayerAction(action)
-                        .then(function (res) {
-                            console.log("update send to server " );
-                        })
-                        .catch(function (err) {
-                            //console.error(err);
-                        });                    
-
                 }
             }
             if( input.isKeyPressed("explode")) {
                 game.world.addChild(new ExplosionEntity(this.pos.x, this.pos.y));            
             }
 
-            if( input.isKeyPressed("accel")) {
-                this.currentSpeed = this.SPEED / 2;
-            }
-            else {
-                this.currentSpeed = this.SPEED;
-            }
-
             if (input.isKeyPressed("left")) {            
                 this.flipX(true);
-                dx = -this.currentSpeed;
+                dx = -(dt * this.VELOCITY);
                 if(this.oldDx >= 0) {
                     //this.setCurrentAnimation("walk-left");
                     this.oldDx = dx;
@@ -121,21 +96,21 @@ class PlayerEntity extends BasePlayerSprite {
             } 
             else if (input.isKeyPressed("right")) {
                 this.flipX(false);
-                dx = +this.currentSpeed;
+                dx = dt*this.VELOCITY
                 if(this.oldDx <=0 ) {
                     this.oldDx = dx;
                 //    this.setCurrentAnimation("walk-right");
                 }
             } 
             if (input.isKeyPressed("up")) {
-                dy = -this.currentSpeed;
+                dy = -(dt*this.VELOCITY);
                 if( this.oldDy >=0) {
                 //    this.setCurrentAnimation("walk-up");
                     this.oldDy = dy;
                 }
             } 
             else if (input.isKeyPressed("down")) {
-                dy = +this.currentSpeed;
+                dy = dt*this.VELOCITY;
                 if( this.oldDy <= 0 ) {
                 //    this.setCurrentAnimation("walk-down");
                     this.oldDy = dy;
@@ -179,17 +154,6 @@ class PlayerEntity extends BasePlayerSprite {
                     this.lastMapY = mapY;
                     action.hasChanged = true;
                     this.currentAction = action;
-
-                    /*
-                    NetworkManager.getInstance()
-                        .writePlayerAction(action, action.gameWon)
-                        .then(function (res) {
-                            console.log("update send to server: " + action.gameWon);
-                        })
-                        .catch(function (err) {
-                            //console.error(err);
-                        });                    
-                    */
                 }
             }
         }
@@ -202,17 +166,6 @@ class PlayerEntity extends BasePlayerSprite {
             action.gameOver = true;
             action.hasChanged = true;
             this.currentAction = action;
-
-            /*
-            NetworkManager.getInstance()
-                .writePlayerAction(action, true)
-                .then(function (res) {
-                    console.log("update send to server, flushing!");
-                })
-                .catch(function (err) {
-                    //console.error(err);
-                });                    
-            */
         }
 
         // call the parent method

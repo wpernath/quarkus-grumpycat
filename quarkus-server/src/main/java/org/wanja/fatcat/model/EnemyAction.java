@@ -4,7 +4,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.action.internal.EntityAction;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
@@ -25,6 +28,9 @@ public class EnemyAction extends PanacheEntity{
     public int y;
     public int dx;
     public int dy;
+    public boolean isStunned = false;
+    public boolean isDead = false;
 
+    public EnemyAction() {}
 
 }
