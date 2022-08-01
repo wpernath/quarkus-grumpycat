@@ -13,7 +13,7 @@
     </modules>
 
     <properties>
-        <grumpycat.umbrella.version>0.5.2</grumpycat.umbrella.version>
+        <grumpycat.umbrella.version>0.5.3</grumpycat.umbrella.version>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
         <failsafe.useModulePath>false</failsafe.useModulePath>
         <maven.compiler.release>11</maven.compiler.release>
