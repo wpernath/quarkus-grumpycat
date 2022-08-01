@@ -41,20 +41,21 @@ public class GameResource {
         if( game.player == null ) {
             g.player = new Player(game.name);            
         }
-        else {
+        else {            
             g.player = game.player;
+            g.playerId = game.player.id;
         }
 
         if( g.player.id == null ) {
             g.player.persist();
-            g.playerId = g.player.id;
         }
 
+        g.playerId = g.player.id;
         g.level  = game.level;
         g.name   = game.name;
-        System.out.println("game.playerId = " + g.playerId);
         g.persist();
 
+        Log.info(g.toString());
         Log.info("New game created with ID " + g.id + " for player " + g.player.name + " (id=" + g.player.id + ")");
         return g;
     }
@@ -63,9 +64,10 @@ public class GameResource {
     public List<Game> listGames() {            
         List<Game> games = Game.listAll(Sort.by("time", Direction.Descending));
         List<Game> gamesWithMovements = new ArrayList<Game>();
-
-        for( Game g : games ) {
-            List<PlayerAction> actions = playerMovements.movementsForGame(g.id, g.playerId);
+        
+        for( Game g : games ) {            
+            Log.info("Trying to read movements from Game " + g.id );
+            List<PlayerAction> actions = playerMovements.movementsForGame(g.id, g.player.id);
 
             if( actions != null && actions.size() > 50 ) {
                 gamesWithMovements.add(g);

@@ -5,8 +5,8 @@ import GlobalGameState from '../util/global-game-state';
 import { ENEMY_TYPES } from './base-enemy';
 import CONFIG from '../../config';
 import { LevelManager } from '../util/level';
-import NetworkManager from '../util/network';
 
+import { GameStateAction } from "../util/game-updates";
 import { BONUS_TILE, BasePlayerSprite, BARRIER_TILE } from './base-player';
 
 class PlayerEntity extends BasePlayerSprite {
@@ -19,6 +19,7 @@ class PlayerEntity extends BasePlayerSprite {
     constructor(x, y) {
         // call the parent constructor
         super(x,y);
+        this.currentAction = new GameStateAction();
     }
 
 
@@ -26,52 +27,31 @@ class PlayerEntity extends BasePlayerSprite {
     /**
      * update the entity
      */
-    update(dt) {
-        console.log("player.update()")
+    update(dt) {        
         let mapX = Math.floor(this.pos.x / 32);
         let mapY = Math.floor(this.pos.y / 32);
         let dx = 0,
             dy = 0;
 
         // this is the data to be stored on the server
-        const action = {
-            playerId: GlobalGameState.globalServerGame.player.id,
-            gameId: GlobalGameState.globalServerGame.id,
-            dx: 0,
-            dy: 0,
-            x: mapX,
-            y: mapY,
-            bombPlaced: false,
-            gutterThrown: false,
-            gameOver: false,
-            gameWon: false,
-            score: GlobalGameState.score,
-            time: performance.now(),
-        };
+        let action = new GameStateAction();
+        
 
         if( this.levelOver ) return super.update(dt);
+        action.x = mapX;
+        action.y = mapY;
 
         if( input.isKeyPressed("barrier")) {
-            /*
-            if (this.oldDx < 0) this.setCurrentAnimation("stand-left");
-            else if (this.oldDx > 0) this.setCurrentAnimation("stand-right");
-            else if (this.oldDy < 0) this.setCurrentAnimation("stand-up");
-            else if (this.oldDy > 0) this.setCurrentAnimation("stand-down");
-            */
             if( input.isKeyPressed("left")) {
                 dx =-1;
-            //    this.setCurrentAnimation("stand-left");
             }
             else if( input.isKeyPressed("right")) {
                 dx =+1;
-            //    this.setCurrentAnimation("stand-right");
             }
             if( input.isKeyPressed("up")) {
-            //    this.setCurrentAnimation("stand-up");
                 dy =-1;
             }
             else if( input.isKeyPressed("down")){
-            //    this.setCurrentAnimation("stand-down");
                 dy =+1;
             }
 
@@ -87,7 +67,9 @@ class PlayerEntity extends BasePlayerSprite {
                     action.dx = dx;
                     action.dy = dy;
                     action.gutterThrown = true;
+                    action.hasChanged = true;
 
+                    /*
                     NetworkManager.getInstance().writePlayerAction(action)
                         .then(function (res) {
                             console.log("update send to server");
@@ -95,6 +77,8 @@ class PlayerEntity extends BasePlayerSprite {
                         .catch(function (err) {
                             console.error(err);
                         });                    
+                    */
+                   this.currentAction = action;
                 }
             }
         }
@@ -193,7 +177,10 @@ class PlayerEntity extends BasePlayerSprite {
                     action.y = mapY;
                     this.lastMapX = mapX;
                     this.lastMapY = mapY;
+                    action.hasChanged = true;
+                    this.currentAction = action;
 
+                    /*
                     NetworkManager.getInstance()
                         .writePlayerAction(action, action.gameWon)
                         .then(function (res) {
@@ -202,6 +189,7 @@ class PlayerEntity extends BasePlayerSprite {
                         .catch(function (err) {
                             //console.error(err);
                         });                    
+                    */
                 }
             }
         }
@@ -212,6 +200,10 @@ class PlayerEntity extends BasePlayerSprite {
             this.levelOver = true;
             state.change(state.GAMEOVER);
             action.gameOver = true;
+            action.hasChanged = true;
+            this.currentAction = action;
+
+            /*
             NetworkManager.getInstance()
                 .writePlayerAction(action, true)
                 .then(function (res) {
@@ -220,7 +212,7 @@ class PlayerEntity extends BasePlayerSprite {
                 .catch(function (err) {
                     //console.error(err);
                 });                    
-
+            */
         }
 
         // call the parent method

@@ -1,61 +1,8 @@
 import CONFIG from "../../config";
 import GlobalGameState from "./global-game-state";
 import { LevelManager } from "./level";
+//import { GameStateAction,EnemyAction } from "./game-updates";
 
-export class EnemyAction {
-	name;
-	type;
-	
-	x  = 0;
-	y  = 0;
-	dx = 0;
-	dy = 0;	
-
-	constructor(name, type, x,y,dx,dy) {
-		this.name = name;
-		this.type = type;
-		this.x = x;
-		this.y = y;
-		this.dx = dx;
-		this.dy = dy;
-	}
-}
-
-export class GameStateAction {
-    playerId;
-    gameId;
-
-	x = 0;
-	y = 0;
-	dx = 0;
-	dy = 0;
-
-	bombPlaced = false;
-	gutterThrown = false;
-	gameOver = false;
-	gameWon = false;
-	score;
-	time;
-
-	enemies = [];
-
-	constructor(x,y,dx,dy) {
-		this.x = x;
-		this.y = y;
-		this.dx = dx;
-		this.dy = dy;
-
-    	this.playerId = GlobalGameState.globalServerGame.player.id;
-		this.gameId = GlobalGameState.globalServerGame.id;
-		this.score  = GlobalGameState.score;
-		this.time   = performance.now();
-	}
-
-	addEnemyMovement(name, type, x,y,dx,dy) {
-		this.enemies.push(new EnemyAction(name, type, x,y,dx,dy));
-	}
-	
-}
 
 var networkManager = null;
 export default class NetworkManager {
@@ -182,9 +129,12 @@ export default class NetworkManager {
 		let name;
 		let resp;
 		let req = {
+			id: null,
 			name: name,
 			level: "0",
+			playerId: null,
 			player: {
+				id: null,
 				name: name,
 			},
 		};
@@ -199,6 +149,8 @@ export default class NetworkManager {
 		}
 
 		if( GlobalGameState.globalServerGame !== null ) {
+			console.log("  Initializing a new Game");
+			req.playerId = GlobalGameState.globalServerGame.playerId;
 			req.level = LevelManager.getInstance().getCurrentLevelIndex() + 1;
 			req.name  = LevelManager.getInstance().getCurrentLevel().longName;
 			req.player= GlobalGameState.globalServerGame.player;
@@ -209,6 +161,7 @@ export default class NetworkManager {
 		}
 		
 		req = JSON.stringify(req);		
+		console.log("  Sending: " + req);
 		resp = await fetch(this.createGameURL, {
 			method: "POST",
 			mode: "cors",
@@ -219,6 +172,7 @@ export default class NetworkManager {
 		});
 
 		GlobalGameState.globalServerGame = await resp.json();
+		
 		console.log("   Server API: " + JSON.stringify(GlobalGameState.globalServerVersion));
 		console.log("   New game  : " + JSON.stringify(GlobalGameState.globalServerGame));
 	}

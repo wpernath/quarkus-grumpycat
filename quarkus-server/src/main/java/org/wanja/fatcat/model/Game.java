@@ -12,8 +12,8 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
 @Entity
 public class Game extends PanacheEntity {
-    @ManyToOne
-    @JoinColumn(name="player_id", insertable=false, updatable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="player_id", insertable=false, updatable = false )
     public Player player;
 
     @Column(name = "player_id")
@@ -22,4 +22,16 @@ public class Game extends PanacheEntity {
     public Date time = new Date();
     public String name;
     public int level;
+
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Game [id=").append(id)
+                .append(", level=").append(level).append(", name=").append(name).append(", player=").append(player)
+                .append(", playerId=").append(playerId).append(", time=").append(time).append("]");
+        return builder.toString();
+    }
+
+    
 }

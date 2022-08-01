@@ -1,11 +1,6 @@
 package org.wanja.fatcat.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
@@ -20,4 +15,14 @@ public class Player extends PanacheEntity {
     public Player(String name) {
         this.name = name;
     }
+
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Player [id=").append(id).append(", name=").append(name).append("]");
+        return builder.toString();
+    }
+
+    
 }
