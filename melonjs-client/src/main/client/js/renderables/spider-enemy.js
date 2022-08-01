@@ -88,7 +88,8 @@ export class SpiderEnemy extends BaseEnemySprite {
 					this.setCurrentAnimation("dead");
 				});
 			}
-		} else if (other.body.collisionType === collision.types.PLAYER_OBJECT && !this.isDead && !this.isStunned && !GlobalGameState.invincible) {
+		} 
+		else if (other.body.collisionType === collision.types.PLAYER_OBJECT && !this.isDead && !this.isStunned && !GlobalGameState.invincible) {
 			if (this.nextPosition.dx < 0) this.setCurrentAnimation("attack-left");
 			else if (this.nextPosition.dx > 0) this.setCurrentAnimation("attack-right");
 

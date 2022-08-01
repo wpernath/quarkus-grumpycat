@@ -36,6 +36,7 @@ const LEVEL_NAMES = [
 	{ id: "level3", path: "maps/2.json", loaded: false, error: false },
 	{ id: "level4", path: "maps/3.json", loaded: false, error: false },
 	{ id: "level5", path: "maps/4.json", loaded: false, error: false },
+	{ id: "level6", path: "maps/5.json", loaded: false, error: false },
 ];
 
 export class LevelManager {

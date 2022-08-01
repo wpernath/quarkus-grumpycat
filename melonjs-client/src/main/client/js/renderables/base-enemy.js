@@ -1,4 +1,4 @@
-import { collision, Entity, level, Rect, Sprite, Body } from "melonjs/dist/melonjs.module.js";
+import { collision, Entity, level, Rect, Sprite, Body, Vector2d } from "melonjs/dist/melonjs.module.js";
 import { EnemyAction } from "../util/game-updates";
 import GlobalGameState from "../util/global-game-state";
 
@@ -93,7 +93,8 @@ export class BaseEnemySprite extends Sprite {
 			height: h,
 			image: img,
 			framewidth: w,
-			frameheight: h
+			frameheight: h,
+			anchorPoint: new Vector2d(0,0),
 		});
 
 		let layers = level.getCurrentLevel().getLayers();

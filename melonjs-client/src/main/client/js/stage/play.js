@@ -1,6 +1,7 @@
 import { Stage, game, level, event, state,device } from 'melonjs/dist/melonjs.module.js';
 import CatEnemy from '../renderables/cat-enemy.js';
 import { SpiderEnemy } from '../renderables/spider-enemy.js';
+import GolemEnemySprite from '../renderables/golem-enemy';
 
 import PlayerEntity from "../renderables/player.js";
 import GlobalGameState from '../util/global-game-state';
@@ -145,13 +146,15 @@ class PlayScreen extends Stage {
 								this.player.name = "Player";
 								console.log("  player at (" + x + "/" + y + "): " + this.player);
 								game.world.addChild(this.player);
-							} else if (tile.tileId === 994) {
+							} 
+                            else if (tile.tileId === 994) {
 								let enemy = new CatEnemy(x, y);
 								enemy.name = "CatEnemy" + enemynum++;
 								game.world.addChild(enemy);
 								this.enemies.push(enemy);
 								console.log("  enemy at (" + x + "/" + y + "): " + enemy);
-							} else if (tile.tileId === 995) {
+							} 
+                            else if (tile.tileId === 995) {
 								// create a spider emitter, which emits up to X spiders every
 								// 10 seconds
 								this.enemyEmitter.isActive = true;
@@ -161,6 +164,14 @@ class PlayScreen extends Stage {
 								this.enemyEmitter.emitEvery = l.enemyTimeEmitting;
 								console.log("  enemyEmitter at (" + x + "/" + y + "): ");
 							}
+                            else if( tile.tileId === 996) {
+								let enemy = new GolemEnemySprite(x, y);
+								enemy.name = "GolemEnemy" + enemynum++;
+								game.world.addChild(enemy);
+								this.enemies.push(enemy);
+								console.log("  enemy at (" + x + "/" + y + "): " + enemy);
+
+                            }
 						}
 					}
 				}
