@@ -43,7 +43,7 @@ spec:
         fi
 
         OUTPUT=$(tkn pipeline start $@)
-        x=$(echo $OUTPUT | head -n 1 | cut -f2 -d:)
+        x=$(echo $OUTPUT | head -n1 | cut -f2 -d:)
 
         # remove leading whitespaces
         x=${x#"${x%%[! ]*}"}
