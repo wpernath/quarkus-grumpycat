@@ -7,6 +7,10 @@ spec:
     - description: password of the target image repository
       name: repository-password
       type: string
+    - description: source branch/tag to use to compile the stuff
+      name: git-revision
+      type: string
+      default: main
   tasks:
     - name: start-server-build
       params:
@@ -15,6 +19,7 @@ spec:
             - dev-pipeline
             - '-s pipeline-bot'
             - '-p repo-password=$(params.repository-password)'
+            - '-p git-revision=$(params.git-revision)'
             - '-w name=source,claimName=builder-pvc'
             - '-w name=maven-settings,config=maven-settings'
             - '--use-param-defaults'
@@ -30,6 +35,7 @@ spec:
             - client-dev-pipeline
             - '-s pipeline-bot'
             - '-p repo-password=$(params.repository-password)'
+            - '-p git-revision=$(params.git-revision)'
             - '-w name=source,claimName=client-builder-pvc'
             - '-w name=maven-settings,config=maven-settings'
             - '--use-param-defaults'
@@ -50,8 +56,8 @@ spec:
           value:
             - wait
             - '--for=condition=Succeeded'
-            - '--timeout=300s'
-            - 'PipelineRun/$(tasks.start-client-build.results.PIPELINE_RUN_ID)'
+            - '--timeout=400s'
+            - 'PipelineRun $(tasks.start-client-build.results.PIPELINE_RUN_ID)'
 
     - name: wait-for-server
       runAfter:
@@ -66,8 +72,8 @@ spec:
           value:
             - wait
             - '--for=condition=Succeeded'
-            - '--timeout=300s'
-            - 'PipelineRun/$(tasks.start-server-build.results.PIPELINE_RUN_ID)'
+            - '--timeout=400s'
+            - 'PipelineRun $(tasks.start-server-build.results.PIPELINE_RUN_ID)'
 
     - name: start-argocd-sync
       params:
