@@ -32,13 +32,14 @@ spec:
       params:
         - name: ARGS
           value:
-            - client-dev-pipeline
-            - '-s pipeline-bot'
-            - '-p repo-password=$(params.repository-password)'
-            - '-p git-revision=$(params.git-revision)'
-            - '-w name=source,claimName=client-builder-pvc'
-            - '-w name=maven-settings,config=maven-settings'
-            - '--use-param-defaults'
+             - --help
+ #           - client-dev-pipeline
+ #           - '-s pipeline-bot'
+ #           - '-p repo-password=$(params.repository-password)'
+ #           - '-p git-revision=$(params.git-revision)'
+ #           - '-w name=source,claimName=client-builder-pvc'
+ #           - '-w name=maven-settings,config=maven-settings'
+ #           - '--use-param-defaults'
       taskRef:
         kind: Task
         name: start-pipeline
