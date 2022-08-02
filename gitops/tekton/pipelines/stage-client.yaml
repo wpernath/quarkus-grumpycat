@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: stage-pipeline
+  name: stage-client
 spec:
   params:
     - name: git-url
@@ -15,7 +15,7 @@ spec:
     - name: target-image
       type: string
       description: The target image name of the config (without tag/digest)
-      default: quay.io/wpernath/quarkus-grumpycat
+      default: quay.io/wpernath/grumpycat-melonjs
 
     - name: kustomize-dev
       type: string
@@ -117,9 +117,6 @@ spec:
       taskRef:
         kind: Task
         name: create-release
-      workspaces:
-        - name: workspace
-          workspace: shared-workspace
 
     - name: github-open-pr
       params:

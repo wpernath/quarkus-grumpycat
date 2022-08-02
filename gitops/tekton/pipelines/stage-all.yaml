@@ -1,0 +1,89 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: stage-all
+spec:
+  params:
+    - description: "The name of the release (tag/branch) to use (for example v0.1.4)"
+      name: release-name
+      type: string      
+
+  tasks:
+    - name: start-server-staging
+      params:
+        - name: ARGS
+          value:
+            - stage-server
+            - '-s pipeline-bot'
+            - '-p release-name=$(params.release-name)'
+            - '-w name=shared-workspace,claimName=builder-pvc'
+            - '--use-param-defaults'
+      taskRef:
+        kind: Task
+        name: start-pipeline
+      
+    - name: start-client-staging
+      params:
+        - name: ARGS
+          value:
+            - stage-client
+            - '-s pipeline-bot'
+            - '-p release-name=$(params.release-name)'
+            - '-w name=shared-workspace,claimName=client-builder-pvc'
+            - '--use-param-defaults'
+      taskRef:
+        kind: Task
+        name: start-pipeline
+
+
+    - name: wait-for-client
+      runAfter:
+        - start-client-staging
+      taskRef:
+        kind: Task
+        name: kubernetes-actions
+      params:
+        - name: script
+          value: kubectl $@
+        - name: args
+          value:
+            - wait
+            - '--for=condition=Succeeded'
+            - '--timeout=400s'
+            - 'PipelineRun $(tasks.start-client-build.results.PIPELINE_RUN_ID)'
+
+
+    - name: wait-for-server
+      runAfter:
+        - start-server-staging
+      taskRef:
+        kind: Task
+        name: kubernetes-actions
+      params:
+        - name: script
+          value: kubectl $@
+        - name: args
+          value:
+            - wait
+            - '--for=condition=Succeeded'
+            - '--timeout=400s'
+            - 'PipelineRun $(tasks.start-server-build.results.PIPELINE_RUN_ID)'
+
+    - name: start-argocd-sync
+      params:
+        - name: application-name
+          value: cat-stage
+        - name: revision
+          value: HEAD
+        - name: flags
+          value: '--insecure'
+        - name: argocd-version
+          value: v2.2.2
+      taskRef:
+        kind: Task
+        name: argocd-task-sync-and-wait
+      runAfter:
+        - wait-for-client
+        - wait-for-server
+
+

@@ -27,11 +27,12 @@ resources:
 - tasks/kubernetes-actions-task.yaml
 
 # pipelines
-- pipelines/dev-pipeline.yaml
-- pipelines/stage-release.yaml
-- pipelines/client-dev-pipeline.yaml
-- pipelines/client-stage-release.yaml
-- pipelines/build-all-pipeline.yaml
+- pipelines/build-server.yaml
+- pipelines/stage-server.yaml
+- pipelines/build-client.yaml
+- pipelines/stage-client.yaml
+- pipelines/build-all.yaml
+- pipelines/stage-all.yaml
 
 # please note, you still have to call pipeline.sh init to generate the secrets!
 

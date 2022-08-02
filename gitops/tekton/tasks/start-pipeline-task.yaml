@@ -43,12 +43,8 @@ spec:
         fi
 
         tkn pipeline start $@ > /tmp/pr.log
-        export x="$(echo -n $OUTPUT | head -n1)"
-        export x="$(echo -n $x | cut -f2 -d ':' | cut -f1 -d ' ')"
 
-        echo -------------------------------------
-        echo $x
-        echo -------------------------------------
+        export x="$(cat /tmp/pr.log | head -n1 | cut -f2 -d':')"        
 
         # remove leading whitespaces
         export x=${x#"${x%%[! ]*}"}
