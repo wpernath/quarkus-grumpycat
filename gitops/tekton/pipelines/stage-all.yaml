@@ -36,7 +36,7 @@ spec:
         name: start-pipeline
 
 
-    - name: wait-for-client
+    - name: wait-for-client-staging
       runAfter:
         - start-client-staging
       taskRef:
@@ -50,10 +50,10 @@ spec:
             - wait
             - '--for=condition=Succeeded'
             - '--timeout=400s'
-            - 'PipelineRun $(tasks.start-client-build.results.PIPELINE_RUN_ID)'
+            - 'PipelineRun/$(tasks.start-client-staging.results.PIPELINE_RUN_ID)'
 
 
-    - name: wait-for-server
+    - name: wait-for-server-staging
       runAfter:
         - start-server-staging
       taskRef:
@@ -67,9 +67,9 @@ spec:
             - wait
             - '--for=condition=Succeeded'
             - '--timeout=400s'
-            - 'PipelineRun $(tasks.start-server-build.results.PIPELINE_RUN_ID)'
+            - 'PipelineRun/$(tasks.start-server-staging.results.PIPELINE_RUN_ID)'
 
-    - name: start-argocd-sync
+    - name: start-argocd-sync-stage
       params:
         - name: application-name
           value: cat-stage
@@ -83,7 +83,7 @@ spec:
         kind: Task
         name: argocd-task-sync-and-wait
       runAfter:
-        - wait-for-client
-        - wait-for-server
+        - wait-for-client-staging
+        - wait-for-server-staging
 
 

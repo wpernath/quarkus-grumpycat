@@ -57,7 +57,7 @@ spec:
             - wait
             - '--for=condition=Succeeded'
             - '--timeout=400s'
-            - 'PipelineRun $(tasks.start-client-build.results.PIPELINE_RUN_ID)'
+            - 'PipelineRun/$(tasks.start-client-build.results.PIPELINE_RUN_ID)'
 
     - name: wait-for-server
       runAfter:
@@ -73,7 +73,7 @@ spec:
             - wait
             - '--for=condition=Succeeded'
             - '--timeout=400s'
-            - 'PipelineRun $(tasks.start-server-build.results.PIPELINE_RUN_ID)'
+            - 'PipelineRun/$(tasks.start-server-build.results.PIPELINE_RUN_ID)'
 
     - name: start-argocd-sync
       params:
