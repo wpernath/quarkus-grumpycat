@@ -25,6 +25,7 @@ resources:
 - tasks/argocd-sync-task.yaml
 - tasks/start-pipeline-task.yaml
 - tasks/kubernetes-actions-task.yaml
+- tasks/gh_open_pr.yaml
 
 # pipelines
 - pipelines/build-server.yaml

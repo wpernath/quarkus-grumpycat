@@ -32,7 +32,8 @@ spec:
       workingDir: $(workspaces.workspace.path)/the-config
       script: |
         git status
-        git pull origin release-$(params.release-name)
+        # pull possible existing origin branch, but continue if not found
+        git pull origin release-$(params.release-name) || true
 
     - name: update-digest
       image: quay.io/wpernath/kustomize-ubi:latest
