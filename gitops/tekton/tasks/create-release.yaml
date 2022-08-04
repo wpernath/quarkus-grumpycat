@@ -29,6 +29,7 @@ spec:
   steps:
     - name: git-pull
       image: docker.io/alpine/git:v2.26.2
+      onError: continue
       workingDir: $(workspaces.workspace.path)/the-config
       script: |
         git status
