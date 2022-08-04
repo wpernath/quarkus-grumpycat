@@ -55,7 +55,7 @@ class PlayScreen extends Stage {
 				}
 			}
 			if (action === "exit") {
-				state.change(state.MENU);
+				state.change(state.GAMEOVER);
 			}
 			if (action === "fullscreen") {
 				console.log("requesting full screen");
