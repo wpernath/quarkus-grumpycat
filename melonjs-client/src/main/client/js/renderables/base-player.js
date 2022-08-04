@@ -18,10 +18,9 @@ export const BONUS_TILE = {
 };
 
 export class BasePlayerSprite extends Sprite {
-	currentSpeed = this.SPEED;
-	lastSpeedAdded = 0;
 
-	SPEED = 8;
+	VELOCITY = 0.4;
+	
 	borderLayer;
 	bonusLayer;
 	groundLayer;

@@ -1,0 +1,115 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: stage-all
+spec:
+  params:
+    - description: "The name of the release (tag/branch) to use (for example v0.1.4)"
+      name: release-name
+      type: string      
+
+  tasks:
+    - name: start-server-staging
+      params:
+        - name: ARGS
+          value:
+            - stage-server
+            - '-s pipeline-bot'
+            - '-p release-name=$(params.release-name)'
+            - '-w name=shared-workspace,claimName=builder-pvc'
+            - '--use-param-defaults'
+      taskRef:
+        kind: Task
+        name: start-pipeline
+      
+    - name: start-client-staging
+      params:
+        - name: ARGS
+          value:
+            - stage-client
+            - '-s pipeline-bot'
+            - '-p release-name=$(params.release-name)'
+            - '-w name=shared-workspace,claimName=client-builder-pvc'
+            - '--use-param-defaults'
+      taskRef:
+        kind: Task
+        name: start-pipeline
+
+
+    - name: wait-for-client-staging
+      runAfter:
+        - start-client-staging
+      taskRef:
+        kind: Task
+        name: kubernetes-actions
+      params:
+        - name: script
+          value: kubectl $@
+        - name: args
+          value:
+            - wait
+            - '--for=condition=Succeeded'
+            - '--timeout=400s'
+            - 'PipelineRun/$(tasks.start-client-staging.results.PIPELINE_RUN_ID)'
+
+
+    - name: wait-for-server-staging
+      runAfter:
+        - start-server-staging
+      taskRef:
+        kind: Task
+        name: kubernetes-actions
+      params:
+        - name: script
+          value: kubectl $@
+        - name: args
+          value:
+            - wait
+            - '--for=condition=Succeeded'
+            - '--timeout=400s'
+            - 'PipelineRun/$(tasks.start-server-staging.results.PIPELINE_RUN_ID)'
+
+    - name: github-open-pr
+      params:
+        - name: GITHUB_HOST_URL
+          value: api.github.com
+        - name: REPO_FULL_NAME
+          value: wpernath/grumpycat-config
+        - name: GITHUB_TOKEN_SECRET_NAME
+          value: git-user-pass
+        - name: GITHUB_TOKEN_SECRET_KEY
+          value: password
+        - name: AUTH_TYPE
+          value: Bearer
+        - name: HEAD
+          value: 'release-$(params.release-name)'
+        - name: BASE
+          value: main
+        - name: BODY
+          value: 'Digest updates for images '
+        - name: TITLE
+          value: '[ci] PR for release $(params.release-name)'
+      runAfter:
+        - wait-for-client-staging
+        - wait-for-server-staging
+
+      taskRef:
+        kind: Task
+        name: github-open-pr        
+
+    - name: start-argocd-sync-stage
+      params:
+        - name: application-name
+          value: cat-stage
+        - name: revision
+          value: HEAD
+        - name: flags
+          value: '--insecure'
+        - name: argocd-version
+          value: v2.2.2
+      taskRef:
+        kind: Task
+        name: argocd-task-sync-and-wait
+      runAfter:
+        - github-open-pr
+

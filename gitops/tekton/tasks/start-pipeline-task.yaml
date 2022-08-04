@@ -42,11 +42,12 @@ spec:
           export KUBECONFIG=$(workspaces.kubeconfig.path)/kubeconfig
         fi
 
-        OUTPUT=$(tkn pipeline start $@)
-        x=$(echo $OUTPUT | head -n 1 | cut -f2 -d:)
+        tkn pipeline start $@ > /tmp/pr.log
+
+        export x="$(cat /tmp/pr.log | head -n1 | cut -f2 -d':')"        
 
         # remove leading whitespaces
-        x=${x#"${x%%[! ]*}"}
+        export x=${x#"${x%%[! ]*}"}
         PIPELINE_RUN_ID=$x
 
         echo "PipelineRun started with ID=$PIPELINE_RUN_ID"

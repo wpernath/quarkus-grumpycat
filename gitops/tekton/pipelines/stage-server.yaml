@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: client-stage-pipeline
+  name: stage-server
 spec:
   params:
     - name: git-url
@@ -15,7 +15,7 @@ spec:
     - name: target-image
       type: string
       description: The target image name of the config (without tag/digest)
-      default: quay.io/wpernath/grumpycat-melonjs
+      default: quay.io/wpernath/quarkus-grumpycat
 
     - name: kustomize-dev
       type: string
@@ -117,32 +117,6 @@ spec:
       taskRef:
         kind: Task
         name: create-release
-
-    - name: github-open-pr
-      params:
-        - name: GITHUB_HOST_URL
-          value: api.github.com
-        - name: REPO_FULL_NAME
-          value: wpernath/grumpycat-config
-        - name: GITHUB_TOKEN_SECRET_NAME
-          value: git-user-pass
-        - name: GITHUB_TOKEN_SECRET_KEY
-          value: password
-        - name: AUTH_TYPE
-          value: Bearer
-        - name: HEAD
-          value: 'release-$(params.release-name)'
-        - name: BASE
-          value: main
-        - name: BODY
-          value: 'Digest updates for images '
-        - name: TITLE
-          value: '[ci] PR for release $(params.release-name)'
-      runAfter:
-        - update-release
-      taskRef:
-        kind: Task
-        name: github-open-pr        
       workspaces:
         - name: workspace
           workspace: shared-workspace

@@ -3,11 +3,8 @@ import GlobalGameState from "../util/global-game-state";
 import { BaseEnemySprite, ENEMY_TYPES } from "./base-enemy";
 
 export class CatEnemy extends BaseEnemySprite {
-	SPEED = 2;
-	updateTime = 0;
-	
-
-
+	VELOCITY = 0.1;
+	posUpdatedCount =0;
 	/**
 	 * constructor
 	 */
@@ -21,31 +18,25 @@ export class CatEnemy extends BaseEnemySprite {
 	 * update the entity
 	 */
 	update(dt) {	
-		this.updateTime += dt;
-		if( this.updateTime < 32 ) {
-			super.update(dt);
-			return false;
-		}
-		else {
-			this.updateTime = 0;
-		}
-
 		if( !this.isStunned ) {
 			if( !this.nextPositionFound) {					
+				this.posUpdatedCount = 0;
 				this.calculateNextPosition();			
 			}
+
 			if( this.nextPositionFound ) {
-				
-				this.pos.x += this.nextPosition.dx;
-				this.pos.y += this.nextPosition.dy;
+				let posFactor = (dt*this.VELOCITY);
+				this.pos.x += this.nextPosition.dx * posFactor;
+				this.pos.y += this.nextPosition.dy * posFactor;
 
 				if (this.nextPosition.dx < 0) this.flipX(false);
 				else if (this.nextPosition.dx > 0) this.flipX(true);
 
-				let x = Math.floor(this.pos.x / 32);
-				let y = Math.floor(this.pos.y / 32);
-				if( x == this.nextPosition.x && y == this.nextPosition.y) {
+				this.posUpdatedCount += dt;
+				posFactor = this.posUpdatedCount * this.VELOCITY;
+				if( posFactor >= 32 ) {
 					this.nextPositionFound = false;
+					this.posUpdatedCount = 0;
 				}
 			}        
 		}
@@ -60,11 +51,13 @@ export class CatEnemy extends BaseEnemySprite {
 	onCollision(response, other) {
 		if( other.body.collisionType === collision.types.PROJECTILE_OBJECT ) {			
 			if( other.isExploding && !this.isStunned) {
-				this.isStunned = true;
+				this.isStunned = true; 
+				this.nextPosition.isStunned = true;
 				GlobalGameState.score += GlobalGameState.scoreForStunningCat;
 				GlobalGameState.stunnedCats++;
 				this.flicker(GlobalGameState.enemyStunnedTime, () => {
 					this.isStunned = false;
+					this.nextPosition.isStunned = false;
 				});
 			}
 		}

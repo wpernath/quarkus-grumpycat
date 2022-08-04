@@ -44,18 +44,23 @@ command.help() {
   
   Examples:
       pipeline.sh init [--force] --git-user <user> --git-password <pwd> --registry-user <user> --registry-password <password> --argo-host <argo host> --argo-user <user name> --argo-password <password>
+      pipeline.sh build-all -r <source-branch> -p <target registry pwd>
       pipeline.sh build-client -u wpernath -p <nope> 
       pipeline.sh build-server -u wpernath -p <nope> 
+
+      pipeline.sh stage-all -r v1.2.5 
       pipeline.sh stage-client -r v1.2.5 [-g <config-git-rep>] 
       pipeline.sh stage-server -r v1.2.5 [-g <config-git-rep>] 
       pipeline.sh logs [-t <target-namespace]
   
   COMMANDS:
       init                           creates ConfigMap, Secrets, Tasks and Pipelines into $TARGET_NAMESPACE
-      build-client                   starts the client-dev-pipeline in $TARGET_NAMESPACE
-      stage-client                   starts the client-stage-pipeline in $TARGET_NAMESPACE
+      build-all                      starts both build pipelines as a pipeline
+      build-client                   starts the client-dev-pipeline in $TARGET_NAMESPACE      
       build-server                   starts the dev-pipeline in $TARGET_NAMESPACE
+      stage-all                      starts both stage pipelines as a pipeline
       stage-server                   starts the stage-pipeline in $TARGET_NAMESPACE
+      stage-client                   starts the client-stage-pipeline in $TARGET_NAMESPACE
       logs                           shows logs of the last pipeline run in $TARGET_NAMESPACE
       help                           Help about this command
 
@@ -277,7 +282,7 @@ spec:
       persistentVolumeClaim:
         claimName: builder-pvc
   pipelineRef:
-    name: stage-pipeline
+    name: stage-server
   serviceAccountName: pipeline-bot
 EOF
 
@@ -302,7 +307,7 @@ spec:
         name: maven-settings
       name: maven-settings
   pipelineRef:
-    name: dev-pipeline
+    name: build-server
   serviceAccountName: pipeline-bot
 EOF
 
@@ -324,7 +329,7 @@ spec:
       persistentVolumeClaim:
         claimName: client-builder-pvc
   pipelineRef:
-    name: client-stage-pipeline
+    name: stage-client
   serviceAccountName: pipeline-bot
 EOF
 
@@ -349,7 +354,7 @@ spec:
         name: maven-settings
       name: maven-settings
   pipelineRef:
-    name: client-dev-pipeline
+    name: build-client
   serviceAccountName: pipeline-bot
 EOF
 

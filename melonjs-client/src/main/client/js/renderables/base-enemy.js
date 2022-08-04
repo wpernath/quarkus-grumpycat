@@ -1,4 +1,5 @@
-import { collision, Entity, level, Rect, Sprite, Body } from "melonjs/dist/melonjs.module.js";
+import { collision, Entity, level, Rect, Sprite, Body, Vector2d } from "melonjs/dist/melonjs.module.js";
+import { EnemyAction } from "../util/game-updates";
 import GlobalGameState from "../util/global-game-state";
 
 export class Direction {
@@ -84,19 +85,7 @@ export class BaseEnemySprite extends Sprite {
 	enemyType = ENEMY_TYPES.cat;
 	enemyCanWalkDiagonally = true;
 
-	nextPosition = {
-		x: -1,
-		y: -1,
-		dx: 0,
-		dy: 0,
-		last: {
-			dx: 0,
-			dy: 0
-		},
-        toString : function() {
-            return "[" + this.x + ", " + this.y + ", " + this.dx + ", " + this.dy + "]";
-        }
-	};
+	nextPosition = new EnemyAction(this.name, this.enemyType);
 
 	constructor(x, y, w, h, img) {
 		super(x * 32 - (w / 2), y * 32 - (h / 2), {
@@ -104,7 +93,8 @@ export class BaseEnemySprite extends Sprite {
 			height: h,
 			image: img,
 			framewidth: w,
-			frameheight: h
+			frameheight: h,
+			anchorPoint: new Vector2d(0,0),
 		});
 
 		let layers = level.getCurrentLevel().getLayers();
@@ -132,17 +122,21 @@ export class BaseEnemySprite extends Sprite {
 		this.body.setCollisionMask(collision.types.PLAYER_OBJECT | collision.types.PROJECTILE_OBJECT);
 	}
 
-	calculateNextPosition() {
-		let mouse = this.transformPosition(this.player.pos.x, this.player.pos.y);
-		let mouseX = mouse.x;
-		let mouseY = mouse.y;
-		let cat = this.transformPosition(this.pos.x, this.pos.y);
-		let catX = cat.x;
-		let catY = cat.y;
+	calculateNextPosition(dt) {
+		let playerPos = this.transformPosition(this.player.pos.x, this.player.pos.y);
+		let playerX = playerPos.x;
+		let playerY = playerPos.y;
+		let myPos = this.transformPosition(this.pos.x, this.pos.y);
+		let posX = myPos.x;
+		let posY = myPos.y;
         let dirs = DIRS;
 		let queue = new Queue();
 		let discovered = this.discoveredPlaces;
 
+		//this.nextPosition = new EnemyAction(this.name, this.enemyType);
+		this.nextPosition.hasChanged = true;
+		this.nextPositionFound = false;
+		
 		if( this.enemyCanWalkDiagonally ) {
 			dirs = DIRS;
 		}
@@ -158,9 +152,9 @@ export class BaseEnemySprite extends Sprite {
 		}
 
 		// mark the current pos as visited
-		discovered[catY][catX] = true;
+		discovered[posY][posX] = true;
 
-		queue.enqueue(new Node(catX, catY, null));
+		queue.enqueue(new Node(posX, posY, null));
 		while (!queue.isEmpty) {
 			let node = queue.dequeue();
 
@@ -171,21 +165,18 @@ export class BaseEnemySprite extends Sprite {
 				let newDir = node.initialDir == null ? dir : node.initialDir;
 
 				// found mouse
-				if (newX == mouseX && newY == mouseY) {
-					catX = catX + newDir.dx;
-					catY = catY + newDir.dy;
-
-					this.catX = catX;
-					this.catY = catY;
+				if (newX == playerX && newY == playerY) {
+					posX = posX + newDir.dx;
+					posY = posY + newDir.dy;
 
 					queue.clear();
 					this.nextPosition.last.dx = this.nextPosition.dx;
 					this.nextPosition.last.dy = this.nextPosition.dy;
 					this.nextPositionFound = true;
-					this.nextPosition.x = this.catX;
-					this.nextPosition.y = this.catY;
-					this.nextPosition.dx = newDir.dx * this.SPEED;
-					this.nextPosition.dy = newDir.dy * this.SPEED;
+					this.nextPosition.x = posX;
+					this.nextPosition.y = posY;
+					this.nextPosition.dx = newDir.dx;
+					this.nextPosition.dy = newDir.dy;
 					break;
 				}				
 
@@ -196,7 +187,7 @@ export class BaseEnemySprite extends Sprite {
 			}
 		}
         if( !this.nextPositionFound ) {
-            
+			// try to find a new position without the need of a direct way to the player
         }
 	}
 
@@ -218,5 +209,9 @@ export class BaseEnemySprite extends Sprite {
 			x: Math.floor(x / 32),
 			y: Math.floor(y / 32),
 		};
+	}
+
+	getEnemyAction() {
+		return this.nextPosition;
 	}
 }

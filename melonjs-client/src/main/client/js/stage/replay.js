@@ -1,4 +1,4 @@
-import { Stage, state, game, event, level } from "melonjs"
+import { Stage, state, game, event, level, Light2d, Vector2d, ColorLayer } from "melonjs"
 import GlobalGameState from "../util/global-game-state";
 import { LevelManager } from "../util/level";
 import HUDContainer from "./hud/hud-container.js";
@@ -85,9 +85,11 @@ export default class ReplayGameScreen extends Stage {
 		emitTime: 5000,
 		emitCount: 10,
 	};
+	spotLight = null;
 
 	onResetEvent() {
 		this.player = null;
+		this.spotLight = null;
 		this.enemies = [];
 		this.enemyEmitter.isActive = false;
         state.pause();
@@ -95,10 +97,20 @@ export default class ReplayGameScreen extends Stage {
         
 		this.setupLevel();
 
+		//this.filterLayer = new ColorLayer("black", "#000");
+		//this.filterLayer.setOpacity(0.2);
+
+		//this.spotLight = new Light2d(this.player.pos.x, this.player.pos.y, 64);
+
 		this.hudContainer = new HUDContainer(0, 0);
 		this.virtualJoypad = new VirtualJoypad();
 		game.world.addChild(this.hudContainer);
 		game.world.addChild(this.virtualJoypad, Infinity);
+		//game.world.addChild(this.filterLayer);
+		//game.world.addChild(this.spotLight);
+		
+
+		//game.world.setOpacity(0.5);
 
 		this.handler = event.on(event.KEYDOWN, function (action, keyCode, edge) {
 			if (action === "pause") {
@@ -128,10 +140,13 @@ export default class ReplayGameScreen extends Stage {
 		console.log("RePlay.OnExit()");
 		game.world.removeChild(this.hudContainer);
 		game.world.removeChild(this.virtualJoypad);
+		//game.world.removeChild(this.spotLight);
 		event.off(event.KEYDOWN, this.handler);
 	}
 
 	update(dt) {
+		//this.spotLight.pos.x = this.player.pos.x;
+		//this.spotLight.pos.y = this.player.pos.y;
 		if (this.enemyEmitter.isActive && this.enemyEmitter.emitEvery <= 0 && this.enemyEmitter.emitCount > 0) {
 			// emit a new spider
 			this.enemyEmitter.emitCount--;

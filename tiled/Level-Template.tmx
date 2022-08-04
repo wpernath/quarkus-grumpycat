@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.8" tiledversion="1.8.6" orientation="orthogonal" renderorder="right-down" width="70" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="1">
  <properties>
+  <property name="Description" value="Set your description"/>
   <property name="Name">Set your name here!
 </property>
  </properties>

@@ -1,6 +1,8 @@
 import CONFIG from "../../config";
 import GlobalGameState from "./global-game-state";
 import { LevelManager } from "./level";
+//import { GameStateAction,EnemyAction } from "./game-updates";
+
 
 var networkManager = null;
 export default class NetworkManager {
@@ -127,9 +129,12 @@ export default class NetworkManager {
 		let name;
 		let resp;
 		let req = {
+			id: null,
 			name: name,
 			level: "0",
+			playerId: null,
 			player: {
+				id: null,
 				name: name,
 			},
 		};
@@ -144,6 +149,8 @@ export default class NetworkManager {
 		}
 
 		if( GlobalGameState.globalServerGame !== null ) {
+			console.log("  Initializing a new Game");
+			req.playerId = GlobalGameState.globalServerGame.playerId;
 			req.level = LevelManager.getInstance().getCurrentLevelIndex() + 1;
 			req.name  = LevelManager.getInstance().getCurrentLevel().longName;
 			req.player= GlobalGameState.globalServerGame.player;
@@ -154,6 +161,7 @@ export default class NetworkManager {
 		}
 		
 		req = JSON.stringify(req);		
+		console.log("  Sending: " + req);
 		resp = await fetch(this.createGameURL, {
 			method: "POST",
 			mode: "cors",
@@ -164,6 +172,7 @@ export default class NetworkManager {
 		});
 
 		GlobalGameState.globalServerGame = await resp.json();
+		
 		console.log("   Server API: " + JSON.stringify(GlobalGameState.globalServerVersion));
 		console.log("   New game  : " + JSON.stringify(GlobalGameState.globalServerGame));
 	}
