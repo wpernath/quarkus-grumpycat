@@ -47,6 +47,7 @@ melonjs-client/src/main/resources/META-INF/resources/generated/
 .DS_Store
 melonjs-client/package-lock.json
 melonjs-client/target/
+melonjs-client/src/main/client/config.js
 
 quarkus-server/target/
 *.class
