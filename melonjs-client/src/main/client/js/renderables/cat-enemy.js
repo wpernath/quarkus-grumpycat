@@ -3,7 +3,7 @@ import GlobalGameState from "../util/global-game-state";
 import { BaseEnemySprite, ENEMY_TYPES } from "./base-enemy";
 
 export class CatEnemy extends BaseEnemySprite {
-	VELOCITY = 0.1;
+	VELOCITY = 0.08;
 	posUpdatedCount =0;
 	/**
 	 * constructor

@@ -1,6 +1,7 @@
 import { collision, Entity, level, Rect, Sprite, Body, Vector2d } from "melonjs/dist/melonjs.module.js";
 import { EnemyAction } from "../util/game-updates";
 import GlobalGameState from "../util/global-game-state";
+import NetworkManager from "../util/network";
 
 export class Direction {
 	constructor(dx, dy) {
@@ -84,7 +85,7 @@ export class BaseEnemySprite extends Sprite {
 	isStunned = false;
 	enemyType = ENEMY_TYPES.cat;
 	enemyCanWalkDiagonally = true;
-
+	enemyName = "";
 	nextPosition = new EnemyAction(this.name, this.enemyType);
 
 	constructor(x, y, w, h, img) {
@@ -120,6 +121,13 @@ export class BaseEnemySprite extends Sprite {
 		this.body.ignoreGravity = true;
 		this.body.collisionType = collision.types.ENEMY_OBJECT;
 		this.body.setCollisionMask(collision.types.PLAYER_OBJECT | collision.types.PROJECTILE_OBJECT);
+	}
+
+
+	setEnemyName(name) {
+		this.name = name;
+		this.nextPosition.name = name;
+		this.enemyName = name;
 	}
 
 	calculateNextPosition(dt) {
@@ -189,6 +197,12 @@ export class BaseEnemySprite extends Sprite {
         if( !this.nextPositionFound ) {
 			// try to find a new position without the need of a direct way to the player
         }
+
+		if( this.nextPositionFound ) {
+			NetworkManager.getInstance().writeEnemyUpdate(this.nextPosition)
+			.then(() => console.log("Wrote enemy action"))
+			.catch((err) => console.err("error enemy action: " + err));
+		}
 	}
 
 	setPlayer(player) {

@@ -25,6 +25,7 @@ export default class NetworkManager {
 	BUFFER_SIZE = 50;
 	playerActions = [];
 
+
 	constructor() {
 		let baseURL = CONFIG.baseURL;
 		this.readHighscoreURL = baseURL + "highscore/10";
@@ -32,9 +33,35 @@ export default class NetworkManager {
 		this.createGameURL = baseURL + "game";
 		this.fakeNameURL = baseURL + "faker";
 		this.writePlayerMovementURL = baseURL + "movement";
-		this.readPlayerMovementsURL = baseURL + "movement/";
+		this.readPlayerMovementsURL = baseURL + "state/player/";
+		this.readEnemyMovementsURL  = baseURL + "state/enemy/";
 
 		this.playerActions = [];
+		let wsURLbase = baseURL.substring(baseURL.indexOf("://") + 3);
+		console.log(wsURLbase);
+		this.playerSocket = new WebSocket("ws://" + wsURLbase + "player-update");
+		this.enemySocket  = new WebSocket("ws://" + wsURLbase + "enemy-update");
+
+		this.enemySocket.addEventListener("close", function(ev) {
+			console.log("Trying to reconnect to 'player-update'");
+			
+		});
+
+		this.enemySocket.addEventListener("error", function (ev) {
+			console.log(ev);
+			//this.playerSocket.open();
+		});
+
+		this.playerSocket.addEventListener("close", function (ev) {
+			console.log("Trying to reconnect to 'player-update'");
+			
+		});
+
+		this.playerSocket.addEventListener("error", function (ev) {
+			console.log(ev);
+			//this.playerSocket.open();
+		});
+
 	}
 
 	async readTop10Highscores() {
@@ -87,7 +114,8 @@ export default class NetworkManager {
 	 * @param {boolean} flush flush the cache
 	 */
 	async writePlayerAction(action, flush = false) {
-		if( action !== null ) this.playerActions.push(action);
+		//if( action !== null ) this.playerActions.push(action);
+		/*
 		if( flush || this.playerActions.length > this.BUFFER_SIZE ) {
 			console.log("need to flush buffer");
 			if( this.playerActions.length == 0 ) {
@@ -105,6 +133,16 @@ export default class NetworkManager {
 				},
 				body: body,
 			});
+		}*/
+		if( action !== null ) {
+			console.log("logging player action");
+			this.playerSocket.send(JSON.stringify(action));
+		}
+	}
+
+	async writeEnemyUpdate(action, flush = false) {
+		if( action !== null ) {
+			this.enemySocket.send(JSON.stringify(action));
 		}
 	}
 

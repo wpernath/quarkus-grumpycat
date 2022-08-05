@@ -39,7 +39,7 @@ public class PlayerAction extends PanacheEntity {
     public long score = 0;
     public long time = System.currentTimeMillis();
 
-    @OneToMany
-    @JoinColumn(name ="player_action_id")
-    public Set<EnemyAction> enemies = new HashSet<>();
+    //@OneToMany
+    //@JoinColumn(name ="player_action_id")
+    //public Set<EnemyAction> enemies = new HashSet<>();
 }

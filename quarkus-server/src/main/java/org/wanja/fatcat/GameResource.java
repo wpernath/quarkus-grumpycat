@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -35,7 +36,7 @@ public class GameResource {
     PlayerMovementResource playerMovements;
 
     @POST
-    @Transactional
+    @Transactional(TxType.REQUIRED)
     public Game createNewGame(Game game) {
         Game g = new Game();
         if( game.player == null ) {
@@ -53,6 +54,8 @@ public class GameResource {
         g.playerId = g.player.id;
         g.level  = game.level;
         g.name   = game.name;
+
+        Log.info("Persisting Game: " + g.toString());
         g.persist();
 
         Log.info(g.toString());

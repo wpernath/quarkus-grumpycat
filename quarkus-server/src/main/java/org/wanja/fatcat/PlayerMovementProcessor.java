@@ -26,10 +26,20 @@ public class PlayerMovementProcessor {
 
             Log.info("Logging player action for " + action.gameId);
         action.persist();
+
+        /* 
         for( EnemyAction ea : action.enemies) {
             ea.playerActionId = action.id;
             ea.persist();
-        }
+        }*/
+    }
+
+    public void processEnemyAction(EnemyAction action) {
+        if (action.gameId == null || action.playerId == null)
+            throw new IllegalArgumentException("Neither gameId nor playerId must be null");
+
+        Log.info("Logging player action for " + action.gameId);
+        action.persist();
     }
 
 }

@@ -1,13 +1,17 @@
 import GlobalGameState from "./global-game-state";
 
 export class EnemyAction {
+	playerId;
+	gameId;
+
 	name;
 	type;
 	hasChanged = false;
 	isStunned = false;
 	isDead = false;
 	hasChanged = false;
-	
+	time;
+
 	x = 0;
 	y = 0;
 	dx = 0;
@@ -15,16 +19,19 @@ export class EnemyAction {
 
 	last = {
 		dx: 0,
-		dy: 0
+		dy: 0,
 	};
 
 	constructor(name, type, x, y, dx, dy) {
+		this.playerId = GlobalGameState.globalServerGame.player.id;
+		this.gameId = GlobalGameState.globalServerGame.id;
 		this.name = name;
 		this.type = type;
 		this.x = x;
 		this.y = y;
 		this.dx = dx;
 		this.dy = dy;
+		this.time = performance.now();
 	}
 }
 

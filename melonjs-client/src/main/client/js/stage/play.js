@@ -84,15 +84,14 @@ class PlayScreen extends Stage {
 			this.enemyEmitter.emitCount--;
 			this.enemyEmitter.emitEvery = this.enemyEmitter.emitTime;
 			let spider = new SpiderEnemy(this.enemyEmitter.emitAt.x, this.enemyEmitter.emitAt.y);
-			spider.name = "SpiderX";
+			spider.setEnemyName("Spider"+(this.enemyEmitter.emitCount+1));
 			this.enemies.push(spider);
 			game.world.addChild(spider);
 			spider.setPlayer(this.player);
 		}
 
 		this.enemyEmitter.emitEvery -= dt;
-
-		//this.collectAndSendActions();
+		
 		let dirty = super.update(dt);
 		return dirty;
 	}
@@ -123,6 +122,7 @@ class PlayScreen extends Stage {
                             console.log("Could not write game updates: " + err);
                         });
                     pa.hasChanged = false;
+					this.player.currentAction = null;
                 }
 			}
 		}
@@ -149,7 +149,7 @@ class PlayScreen extends Stage {
 							} 
                             else if (tile.tileId === 994) {
 								let enemy = new CatEnemy(x, y);
-								enemy.name = "CatEnemy" + enemynum++;
+								enemy.setEnemyName("CatEnemy" + enemynum++);
 								game.world.addChild(enemy);
 								this.enemies.push(enemy);
 								console.log("  enemy at (" + x + "/" + y + "): " + enemy);
@@ -166,7 +166,7 @@ class PlayScreen extends Stage {
 							}
                             else if( tile.tileId === 996) {
 								let enemy = new GolemEnemySprite(x, y);
-								enemy.name = "GolemEnemy" + enemynum++;
+								enemy.setEnemyName("GolemEnemy" + enemynum++);
 								game.world.addChild(enemy);
 								this.enemies.push(enemy);
 								console.log("  enemy at (" + x + "/" + y + "): " + enemy);

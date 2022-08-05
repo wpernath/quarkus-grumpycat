@@ -1,6 +1,7 @@
 package org.wanja.fatcat;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
 import javax.ws.rs.Path;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
@@ -15,22 +16,24 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 @ApplicationScoped
 //@Path("/state-collector")
-public class GameStateUpdateCollector {
+public class EnemyStateUpdateCollector {
     
-    @Channel("player-actions")
-    Emitter<PlayerAction> actionEmitter;
+    //@Channel("enemy-actions")
+    //Emitter<EnemyAction> enemyEmitter;
 
 
-    @Incoming("incoming-states")
-    @Outgoing("outgoing-states")
-    boolean collectPlayer(PlayerAction action) {
-        System.out.println("collectPlayer() " + action.toString());
-        if( action.gameId == null || action.playerId == null ) {
-            Log.info("Skipping game state action, because gameId || playerId is NULL");
+
+    @Incoming("incoming-enemy")
+    @Outgoing("outgoing-enemy")
+    @Transactional
+    boolean collectEnemy(EnemyAction action) {
+        System.out.println("collectEnemy() " + action.toString());
+        if (action.gameId == null || action.playerId == null) {
+            Log.info("Skipping enemy state action, because gameId || playerId is NULL");
             return false;
-        }
-        else {
-            actionEmitter.send(action);
+        } else {
+            //enemyEmitter.send(action);
+            action.persist();
             Log.info("Sending game action to Kafka");
             return true;
         }
