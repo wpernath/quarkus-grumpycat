@@ -1,6 +1,7 @@
 import { collision} from "melonjs/dist/melonjs.module.js";
 import GlobalGameState from "../util/global-game-state";
 import { BaseEnemySprite, ENEMY_TYPES } from "./base-enemy";
+import NetworkManager from "../util/network";
 
 export class CatEnemy extends BaseEnemySprite {
 	VELOCITY = 0.08;
@@ -38,6 +39,10 @@ export class CatEnemy extends BaseEnemySprite {
 					this.nextPositionFound = false;
 					this.posUpdatedCount = 0;
 				}
+				
+				NetworkManager.getInstance()
+					.writeEnemyUpdate(this.nextPosition)
+					.catch((err) => console.err("error enemy action: " + err));
 			}        
 		}
 		super.update(dt);

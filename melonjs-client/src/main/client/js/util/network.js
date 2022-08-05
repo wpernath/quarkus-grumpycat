@@ -134,14 +134,19 @@ export default class NetworkManager {
 				body: body,
 			});
 		}*/
-		if( action !== null ) {
-			console.log("logging player action");
+		if( action !== null ) {			
+			action.gameId = GlobalGameState.globalServerGame.id;
+			action.playerId = GlobalGameState.globalServerGame.player.id;
+			action.time = performance.now();
 			this.playerSocket.send(JSON.stringify(action));
 		}
 	}
 
 	async writeEnemyUpdate(action, flush = false) {
 		if( action !== null ) {
+			action.gameId = GlobalGameState.globalServerGame.id;
+			action.playerId = GlobalGameState.globalServerGame.player.id;
+			action.time = performance.now();
 			this.enemySocket.send(JSON.stringify(action));
 		}
 	}

@@ -15,27 +15,25 @@ import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 @ApplicationScoped
-//@Path("/state-collector")
 public class EnemyStateUpdateCollector {
     
     //@Channel("enemy-actions")
     //Emitter<EnemyAction> enemyEmitter;
 
-
-
-    @Incoming("incoming-enemy")
-    @Outgoing("outgoing-enemy")
-    @Transactional
-    boolean collectEnemy(EnemyAction action) {
-        System.out.println("collectEnemy() " + action.toString());
+    @Incoming("incoming-enemy")    
+    @Outgoing("enemy-actions")
+    //@Transactional
+    EnemyAction collectEnemy(EnemyAction action) {
         if (action.gameId == null || action.playerId == null) {
-            Log.info("Skipping enemy state action, because gameId || playerId is NULL");
-            return false;
-        } else {
+            Log.warn("Skipping enemy state action, because gameId || playerId is NULL");         
+            return null;
+        } 
+        else {
             //enemyEmitter.send(action);
-            action.persist();
-            Log.info("Sending game action to Kafka");
-            return true;
+            //action.persist();
+            Log.debug("Sending game action to Kafka");        
+            return action;
         }
+
     }
 }

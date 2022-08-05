@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Level1.tmx",
+    "activeFile": "Golems.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -41,11 +41,11 @@
             "scaleInEditor": 1.9537
         },
         "Golems.tmx": {
-            "scale": 4.149,
+            "scale": 1.5364,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 299.469751747409,
-                "y": 451.7956134008195
+                "x": 318.2764904972663,
+                "y": 483.27258526425413
             }
         },
         "Level-Template.tmx": {
@@ -107,13 +107,21 @@
         },
         "Terrain.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 0.4964,
+            "scaleInDock": 1.1542,
             "scaleInEditor": 1.01
         },
         "Utumno.tsx": {
             "dynamicWrapping": true,
             "scaleInDock": 1,
             "scaleInEditor": 1.3212
+        },
+        "Valentin.tmx": {
+            "scale": 0.6111,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 674.1940762559318,
+                "y": 697.9217803960073
+            }
         },
         "bomb.tsx": {
             "scaleInDock": 1,
@@ -137,7 +145,7 @@
         },
         "explosion.tsx": {
             "scaleInDock": 1,
-            "scaleInEditor": 1
+            "scaleInEditor": 0.98
         },
         "first-wave.tmx": {
             "scale": 0.8937,
@@ -165,23 +173,23 @@
         "Level4.tmx",
         "Level2.tmx",
         "Level5.tmx",
-        "Level1.tmx"
+        "Golems.tmx"
     ],
     "project": "grumpycat.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "bomb.tsx",
-        "Level1.tmx",
-        "spiders.tsx",
-        "Terrain.tsx",
         "Level3.tmx",
         "Level4.tmx",
         "Level2.tmx",
         "Level5.tmx",
-        "/Users/wanja/Devel/melonjs/examples/platformer/data/map/map1.tmx",
-        "Level-Template.tmx",
+        "Golems.tmx",
         "explosion.tsx",
-        "Animated Water.tsx"
+        "Valentin.tmx",
+        "bomb.tsx",
+        "Level1.tmx",
+        "spiders.tsx",
+        "Terrain.tsx",
+        "/Users/wanja/Devel/melonjs/examples/platformer/data/map/map1.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

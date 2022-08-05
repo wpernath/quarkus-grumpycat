@@ -197,12 +197,6 @@ export class BaseEnemySprite extends Sprite {
         if( !this.nextPositionFound ) {
 			// try to find a new position without the need of a direct way to the player
         }
-
-		if( this.nextPositionFound ) {
-			NetworkManager.getInstance().writeEnemyUpdate(this.nextPosition)
-			.then(() => console.log("Wrote enemy action"))
-			.catch((err) => console.err("error enemy action: " + err));
-		}
 	}
 
 	setPlayer(player) {
