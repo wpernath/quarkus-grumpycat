@@ -17,7 +17,6 @@ export default class NetworkManager {
 	readHighscoreURL = null;
 	createGameURL = null;
 	writeScoreURL = null;
-	writePlayerMovementURL = null;
 	readPlayerMovementsURL = null;
 	fakeNameURL = null;
 
@@ -32,7 +31,7 @@ export default class NetworkManager {
 		this.writeScoreURL = baseURL + "highscore";
 		this.createGameURL = baseURL + "game";
 		this.fakeNameURL = baseURL + "faker";
-		this.writePlayerMovementURL = baseURL + "movement";
+
 		this.readPlayerMovementsURL = baseURL + "state/player/";
 		this.readEnemyMovementsURL  = baseURL + "state/enemy/";
 
@@ -152,7 +151,14 @@ export default class NetworkManager {
 	}
 
 	async readPlayerActionsFromServer(game) {
-		let res = await fetch(this.writePlayerMovementURL + "/" + game.id + "/" + game.player.id, {
+		const gameState = {
+			gameId: game.id,
+			playerId: game.player.id,
+			playerMovements: [],
+			enemies: [],
+		};
+
+		let res = await fetch(this.readPlayerMovementsURL + "/" + game.id + "/" + game.player.id, {
 			method: "GET",
 			mode: "cors",
 			headers: {
@@ -160,7 +166,19 @@ export default class NetworkManager {
 			},			
 		});
 
-		return res.json();
+		gameState.playerMovements = await res.json();
+
+		// read enemy actions
+		res = await fetch(this.readEnemyMovementsURL + "/" + game.id + "/" + game.player.id, {
+			method: "GET",
+			mode: "cors",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+
+		gameState.enemies = await res.json();
+		return gameState;
 	}
 
 	/**

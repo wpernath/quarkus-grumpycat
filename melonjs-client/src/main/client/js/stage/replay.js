@@ -17,7 +17,8 @@ class PlayerRemoteSprite extends BasePlayerSprite {
 
     constructor(x,y) {
         super(x,y);
-        this.playerActions = GlobalGameState.replayActions;
+        this.playerActions = GlobalGameState.replayActions.playerMovements;
+		this.enemyActions = GlobalGameState.replayActions.enemies;
         this.replayActionIndex = 0;
         this.replayDone = false;
     }
