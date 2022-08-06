@@ -24,7 +24,7 @@ public class PlayerMovementProcessor {
         if (action.gameId == null || action.playerId == null)
             throw new IllegalArgumentException("Neither gameId nor playerId must be null");
 
-            Log.info("Logging player action for " + action.gameId);
+            Log.debug("Logging player action for " + action.gameId);
         action.persist();
     }
 
@@ -35,7 +35,7 @@ public class PlayerMovementProcessor {
         if (action.gameId == null || action.playerId == null)
             throw new IllegalArgumentException("Neither gameId nor playerId must be null");
 
-        Log.info("Logging enemy action for " + action.gameId);
+        Log.debug("Logging enemy action for " + action.gameId);
         action.persist();
     }
 
