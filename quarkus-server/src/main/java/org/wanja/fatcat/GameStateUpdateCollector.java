@@ -17,8 +17,7 @@ public class GameStateUpdateCollector {
 
 
     @Incoming("incoming-states")    
-    void collectPlayer(PlayerAction action) {
-        System.out.println("collectPlayer() " + action.toString());
+    void collectPlayer(PlayerAction action) {        
         if( action.gameId == null || action.playerId == null ) {
             Log.warn("Skipping game state action, because gameId || playerId is NULL");
         }
