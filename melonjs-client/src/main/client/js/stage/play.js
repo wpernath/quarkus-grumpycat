@@ -84,7 +84,7 @@ class PlayScreen extends Stage {
 			this.enemyEmitter.emitCount--;
 			this.enemyEmitter.emitEvery = this.enemyEmitter.emitTime;
 			let spider = new SpiderEnemy(this.enemyEmitter.emitAt.x, this.enemyEmitter.emitAt.y);
-			spider.setEnemyName("Spider"+(this.enemyEmitter.emitCount+1));
+			spider.setEnemyName("SpiderEnemy."+(this.enemyEmitter.emitCount+1));
 			this.enemies.push(spider);
 			game.world.addChild(spider);
 			spider.setPlayer(this.player);
@@ -149,7 +149,7 @@ class PlayScreen extends Stage {
 							} 
                             else if (tile.tileId === 994) {
 								let enemy = new CatEnemy(x, y);
-								enemy.setEnemyName("CatEnemy" + enemynum++);
+								enemy.setEnemyName("CatEnemy." + enemynum++);
 								game.world.addChild(enemy);
 								this.enemies.push(enemy);
 								console.log("  enemy at (" + x + "/" + y + "): " + enemy);
@@ -166,7 +166,7 @@ class PlayScreen extends Stage {
 							}
                             else if( tile.tileId === 996) {
 								let enemy = new GolemEnemySprite(x, y);
-								enemy.setEnemyName("GolemEnemy" + enemynum++);
+								enemy.setEnemyName("GolemEnemy." + enemynum++);
 								game.world.addChild(enemy);
 								this.enemies.push(enemy);
 								console.log("  enemy at (" + x + "/" + y + "): " + enemy);

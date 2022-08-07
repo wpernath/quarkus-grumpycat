@@ -1,6 +1,7 @@
 import { collision } from "melonjs/dist/melonjs.module.js";
 import { BaseEnemySprite, ENEMY_TYPES } from "./base-enemy";
 import GlobalGameState from "../util/global-game-state";
+import NetworkManager from "../util/network";
 
 export class SpiderEnemy extends BaseEnemySprite {
 	posUpdatedCount = 0;
@@ -60,6 +61,11 @@ export class SpiderEnemy extends BaseEnemySprite {
 					this.nextPositionFound = false;
 					this.posUpdatedCount = 0;
 				}
+
+				NetworkManager.getInstance()
+					.writeEnemyUpdate(this.nextPosition)
+					.catch((err) => console.err("error enemy action: " + err));
+
 			} 
 			else {
 				// no new position. enemy just stands still

@@ -2,6 +2,7 @@ import { collision, Vector2d } from "melonjs";
 import { BaseEnemySprite } from "./base-enemy";
 import { ENEMY_TYPES } from "./base-enemy";
 import GlobalGameState from "../util/global-game-state";
+import NetworkManager from "../util/network";
 
 export default class GolemEnemySprite extends BaseEnemySprite {
 	posUpdatedCount = 0;
@@ -56,6 +57,11 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 					this.nextPositionFound = false;
 					this.posUpdatedCount = 0;
 				}
+
+				NetworkManager.getInstance()
+					.writeEnemyUpdate(this.nextPosition)
+					.catch((err) => console.err("error enemy action: " + err));
+
 			} 
 			else {
 				// no new position. enemy just stands still

@@ -41,11 +41,11 @@
             "scaleInEditor": 1.9537
         },
         "Golems.tmx": {
-            "scale": 1.5364,
-            "selectedLayer": 1,
+            "scale": 1.6145,
+            "selectedLayer": 6,
             "viewCenter": {
-                "x": 318.2764904972663,
-                "y": 483.27258526425413
+                "x": 832.4558686899968,
+                "y": 748.2192629296997
             }
         },
         "Level-Template.tmx": {
@@ -61,71 +61,63 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 556.7721449687945,
-                "y": 505.31041278878786
+                "y": 505.85787802474545
             }
         },
         "Level1.tmx#Terrain": {
             "scaleInDock": 1
         },
         "Level2.tmx": {
-            "scale": 1.0035,
+            "scale": 0.79,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 578.4753363228699,
-                "y": 613.3532635774787
+                "x": 411.39240506329105,
+                "y": 636.7088607594936
             }
         },
         "Level2.tmx#Terrain": {
             "scaleInDock": 1
         },
         "Level3.tmx": {
-            "scale": 0.6905,
+            "scale": 0.87,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 866.7632150615495,
-                "y": 827.661115133961
+                "x": 1010.3448275862069,
+                "y": 790.8045977011493
             }
         },
         "Level4.tmx": {
-            "scale": 0.462,
+            "scale": 0.3951,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 1154.7619047619048,
-                "y": 111.47186147186153
+                "x": 888.3826879271069,
+                "y": 799.7975196152872
             }
         },
         "Level4.tmx#Terrain": {
             "scaleInDock": 1
         },
         "Level5.tmx": {
-            "scale": 0.7446,
-            "selectedLayer": 4,
+            "scale": 1.43,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 380.74133763094284,
-                "y": 688.2890142358312
+                "x": 527.2727272727274,
+                "y": 799.3006993006993
             }
         },
         "Terrain.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 1.1542,
-            "scaleInEditor": 1.01
+            "scaleInDock": 1.4038,
+            "scaleInEditor": 1.3389
         },
         "Utumno.tsx": {
             "dynamicWrapping": true,
             "scaleInDock": 1,
             "scaleInEditor": 1.3212
         },
-        "Valentin.tmx": {
-            "scale": 0.6111,
-            "selectedLayer": 1,
-            "viewCenter": {
-                "x": 674.1940762559318,
-                "y": 697.9217803960073
-            }
-        },
         "bomb.tsx": {
             "scaleInDock": 1,
-            "scaleInEditor": 4.3973
+            "scaleInEditor": 1
         },
         "desert-grass.tsx": {
             "scaleInDock": 1,
@@ -145,7 +137,7 @@
         },
         "explosion.tsx": {
             "scaleInDock": 1,
-            "scaleInEditor": 0.98
+            "scaleInEditor": 1
         },
         "first-wave.tmx": {
             "scale": 0.8937,
@@ -157,7 +149,7 @@
         },
         "spiders.tsx": {
             "scaleInDock": 1,
-            "scaleInEditor": 2.8955
+            "scaleInEditor": 1
         }
     },
     "frame.defaultDuration": 250,
@@ -169,27 +161,23 @@
     "map.lastUsedFormat": "tmx",
     "map.width": 32,
     "openFiles": [
-        "Level3.tmx",
-        "Level4.tmx",
-        "Level2.tmx",
-        "Level5.tmx",
         "Golems.tmx"
     ],
     "project": "grumpycat.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "Golems.tmx",
+        "Level2.tmx",
         "Level3.tmx",
         "Level4.tmx",
-        "Level2.tmx",
         "Level5.tmx",
-        "Golems.tmx",
-        "explosion.tsx",
-        "Valentin.tmx",
-        "bomb.tsx",
-        "Level1.tmx",
-        "spiders.tsx",
         "Terrain.tsx",
-        "/Users/wanja/Devel/melonjs/examples/platformer/data/map/map1.tmx"
+        "Level1.tmx",
+        "/Users/wanja/Devel/melonjs/examples/platformer/data/map/map1.tmx",
+        "Level-Template.tmx",
+        "spiders.tsx",
+        "explosion.tsx",
+        "bomb.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
