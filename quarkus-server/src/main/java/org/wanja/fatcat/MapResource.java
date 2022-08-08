@@ -64,7 +64,7 @@ public class MapResource {
                             lo.visible = false;
                             if( lo.point ) {
                                 //lo.clazz = "me.Vector2d";
-                                lo.name = "me.Vector2d";
+                                lo.name = "WayPoint";
                             }
                         }
                     }
