@@ -217,6 +217,16 @@ export class BaseEnemySprite extends Sprite {
         }
 	}
 
+
+	/**
+	 * Send enemy action to server
+	 */
+	sendEnemyMovement() {
+		NetworkManager.getInstance()
+			.writeEnemyUpdate(this.nextPosition)
+			.catch((err) => console.err("Error writing enemy action: " + err));
+	}
+
 	setPlayer(player) {
 		this.player = player;
 	}

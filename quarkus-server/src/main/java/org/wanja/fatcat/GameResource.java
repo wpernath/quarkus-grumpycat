@@ -72,7 +72,7 @@ public class GameResource {
             Log.info("Trying to read movements from Game " + g.id );
             List<PlayerAction> actions = playerMovements.movementsForGame(g.id, g.player.id);
 
-            if( actions != null && actions.size() > 50 ) {
+            if( actions != null && actions.size() > 5 ) {
                 gamesWithMovements.add(g);
             }
         }

@@ -9,6 +9,32 @@ export class EnemyReplayer {
 		this.replayDone = false;
 	}
 
+    /** 
+     * Calculate next position of enemy based on the list gotten from server
+     */
+    calculateNextPosition() {
+        this.enemy.nextPositionFound = false;
+        if( this.replayActionIndex < this.playerActions.length) {            
+            console.log("  calculateNextPos(): " + this.replayActionIndex + " / " +this.playerActions.length);
+			let playerAction = this.playerActions[this.replayActionIndex];
+
+            console.log("    New pos: " + JSON.stringify(playerAction));
+            this.enemy.nextPosition.x = playerAction.x;
+            this.enemy.nextPosition.y = playerAction.y;
+            this.enemy.nextPosition.dx = playerAction.dx;
+            this.enemy.nextPosition.dy = playerAction.dy;
+
+            if( this.lastPlayerAction !== null ) {
+                this.enemy.nextPosition.last.dx = this.lastPlayerAction.dx;
+                this.enemy.nextPosition.last.dy = this.lastPlayerAction.dy;
+            } 
+            this.lastPlayerAction = playerAction;
+            this.enemy.nextPositionFound = true;
+            this.replayActionIndex++;
+        }
+    }
+
+
 	playNext(dt) {
         if( this.replayDone ) return;
 

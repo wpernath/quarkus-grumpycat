@@ -8,7 +8,12 @@ export class RemoteCatSprite extends CatEnemy {
         this.replayer = new EnemyReplayer(this, actions);
     }
 
-    updatePosition(dt) {
-        this.replayer.playNext(dt);
+    calculateNextPosition() {
+        this.replayer.calculateNextPosition();
+    }
+
+
+    sendEnemyMovement() {
+        // replay enemies don't need to send anything to server
     }
 }

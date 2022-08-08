@@ -26,7 +26,9 @@ export class CatEnemy extends BaseEnemySprite {
 		if( !this.isStunned ) {
 			if( !this.nextPositionFound) {					
 				this.posUpdatedCount = 0;
-				this.calculateNextPosition();			
+				this.calculateNextPosition();		
+				if( this.nextPositionFound ) 
+					this.sendEnemyMovement();
 			}
 
 			if( this.nextPositionFound ) {
@@ -42,11 +44,7 @@ export class CatEnemy extends BaseEnemySprite {
 				if( posFactor >= 32 ) {
 					this.nextPositionFound = false;
 					this.posUpdatedCount = 0;
-				}
-				
-				NetworkManager.getInstance()
-					.writeEnemyUpdate(this.nextPosition)
-					.catch((err) => console.err("error enemy action: " + err));
+				}	
 			}        
 		}		
 		return true;

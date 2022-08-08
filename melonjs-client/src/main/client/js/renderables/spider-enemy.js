@@ -69,9 +69,7 @@ export class SpiderEnemy extends BaseEnemySprite {
 					this.posUpdatedCount = 0;
 				}
 
-				NetworkManager.getInstance()
-					.writeEnemyUpdate(this.nextPosition)
-					.catch((err) => console.err("error enemy action: " + err));
+				this.sendEnemyMovement();
 			} else {
 				// no new position. enemy just stands still
 

@@ -48,7 +48,7 @@ public class PlayerMovementResource {
     @GET
     @Path("/player/{gameId}/{playerId}")
     public List<PlayerAction> movementsForGame(long gameId, long playerId) {
-        Log.info("Loading movements from game " + gameId + " and player " + playerId );
+        Log.info("Loading player movements from game " + gameId + " and player " + playerId );
         List<PlayerAction> res = PlayerAction
                 .list("gameId = ?1 and playerId = ?2 order by time", gameId, playerId);                
         return res;
@@ -57,7 +57,7 @@ public class PlayerMovementResource {
     @GET
     @Path("/enemy/{gameId}/{playerId}")
     public List<EnemyAction> movementsForEnemy(long gameId, long playerId) {
-        Log.info("Loading movements from game " + gameId + " and player " + playerId);
+        Log.info("Loading enemy movements from game " + gameId + " and player " + playerId);
         List<EnemyAction> res = EnemyAction
                 .list("gameId = ?1 and playerId = ?2 order by type, name, time", gameId, playerId);
         return res;

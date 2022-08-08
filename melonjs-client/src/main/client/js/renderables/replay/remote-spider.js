@@ -11,4 +11,8 @@ export class RemoteSpiderSprite extends SpiderEnemy {
 	updatePosition(dt) {
 		this.replayer.playNext(dt);
 	}
+
+	sendEnemyMovement() {
+		// replay enemies don't need to send anything to server
+	}
 }
