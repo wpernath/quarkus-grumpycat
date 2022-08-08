@@ -59,7 +59,7 @@ public class PlayerMovementResource {
     public List<EnemyAction> movementsForEnemy(long gameId, long playerId) {
         Log.info("Loading movements from game " + gameId + " and player " + playerId);
         List<EnemyAction> res = EnemyAction
-                .list("gameId = ?1 and playerId = ?2 order by time", gameId, playerId);
+                .list("gameId = ?1 and playerId = ?2 order by type, name, time", gameId, playerId);
         return res;
     }
 

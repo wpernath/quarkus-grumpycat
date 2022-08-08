@@ -96,37 +96,6 @@ class PlayScreen extends Stage {
 		return dirty;
 	}
 
-	collectAndSendActions() {
-		if (this.player !== null) {
-			let pa = this.player.currentAction;
-			if (pa !== null ) {
-				//pa.hasChanged = false;
-
-				// now collect all enemy's movements
-                let enemyChanged = false;
-				this.enemies.forEach((enemy) => {                    
-					pa.addEnemyMovement(enemy.getEnemyAction());
-                    if( enemy.getEnemyAction().hasChanged ) {
-                        enemyChanged = true;
-                        enemy.getEnemyAction().hasChanged = false;
-                    }
-				});
-
-                if( pa.hasChanged || enemyChanged ) {
-				    NetworkManager.getInstance()
-                        .writePlayerAction(pa)
-                        .then( () => {
-                            console.log("successfully wrote game updates");
-                        })
-                        .catch( (err) => {
-                            console.log("Could not write game updates: " + err);
-                        });
-                    pa.hasChanged = false;
-					this.player.currentAction = null;
-                }
-			}
-		}
-	}
 
 	setupLevel() {
 		LevelManager.getInstance().prepareCurrentLevel();

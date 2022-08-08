@@ -4,77 +4,20 @@ import { LevelManager } from "../util/level";
 import HUDContainer from "./hud/hud-container.js";
 import VirtualJoypad from "./hud/virtual-joypad.js";
 
-import {BasePlayerSprite, BONUS_TILE, BARRIER_TILE} from "../renderables/base-player";
-import CatEnemy from "../renderables/cat-enemy.js";
+import { RemoteCatSprite } from "../renderables/replay/remote-cat";
 import { SpiderEnemy } from "../renderables/spider-enemy.js";
-import BombEntity from "../renderables/bomb";
+
 import GolemEnemySprite from "../renderables/golem-enemy.js";
+import { PlayerRemoteSprite } from "../renderables/replay/player-remote-sprite";
+import { RemoteSpiderSprite } from "../renderables/replay/remote-spider";
 
-
-class PlayerRemoteSprite extends BasePlayerSprite {
-    lastPlayerAction = null;
-    lastReplay = 0;
-
-    constructor(x,y) {
-        super(x,y);
-        this.playerActions = GlobalGameState.replayActions.playerMovements;
-		this.enemyActions = GlobalGameState.replayActions.enemies;
-        this.replayActionIndex = 0;
-        this.replayDone = false;
-    }
-
-    update(dt) {   
-        if (this.replayActionIndex < this.playerActions.length) {
-			let playerAction = this.playerActions[this.replayActionIndex];
-            let hasElapsed   = 0;
-            let mustElapsed  = 0;
-
-            if( this.lastPlayerAction != null ) {
-                // check for time
-                mustElapsed = new Date(playerAction.time).getMilliseconds() - new Date(this.lastPlayerAction.time).getMilliseconds();
-                hasElapsed  = performance.now() - this.lastReplay;
-                if( hasElapsed < mustElapsed ) {
-                    // skip this frame
-                    return super.update(dt);
-                }
-            }
-            this.lastReplay = performance.now();
-            this.lastPlayerAction = playerAction;
-            this.replayActionIndex++;
-
-            if( playerAction.gutterThrown ) {
-                this.placeBorderTile(playerAction.x + playerAction.dx, playerAction.y + playerAction.dy);
-            }
-            else if( playerAction.bombPlaced ) {
-                this.pos.x = playerAction.x * 32 + 16;
-                this.pos.y = playerAction.y * 32 + 16;
-
-                game.world.addChild(new BombEntity(this.pos.x, this.pos.y));
-                GlobalGameState.usedBombs++;
-                GlobalGameState.bombs--;
-            }
-            else { // just movement                
-                this.pos.x = playerAction.x * 32 + 16;
-                this.pos.y = playerAction.y * 32 + 16;
-
-                this.checkBonusTile(this.pos.x, this.pos.y);
-			}            
-		} 
-        else {
-            if( !this.replayDone ) {
-			    state.change(state.MENU);
-                this.replayDone = true;
-            }
-		}
-        return super.update(dt);        
-    }
-}
 
 export default class ReplayGameScreen extends Stage {
 	player;
 	enemies = [];
 	hudContainer = null;
 	virtualJoypad = null;
+	enemyActions = [];
 
 	enemyEmitter = {
 		isActive: false,
@@ -96,22 +39,28 @@ export default class ReplayGameScreen extends Stage {
         state.pause();
         LevelManager.getInstance().setCurrentLevel(GlobalGameState.gameToReplay.level-1);
         
+		// Sort & split loaded enemy actions by enemy
+		let currentEnemyName = "";
+		let currentMovementArray = [];
+		GlobalGameState.replayActions.enemies.forEach( (a, idx) => {
+			if( a.name !== currentEnemyName ) {
+				console.log("Loading & parsing actions for " + a.name);
+				if( currentEnemyName !== "" ) {
+					this.enemyActions[currentEnemyName] = currentMovementArray;
+				}
+				currentEnemyName = a.name;
+				currentMovementArray = [];
+			}
+			currentMovementArray.push(a);
+		});		
+		this.enemyActions[currentEnemyName] = currentMovementArray;
+
 		this.setupLevel();
-
-		//this.filterLayer = new ColorLayer("black", "#000");
-		//this.filterLayer.setOpacity(0.2);
-
-		//this.spotLight = new Light2d(this.player.pos.x, this.player.pos.y, 64);
 
 		this.hudContainer = new HUDContainer(0, 0);
 		this.virtualJoypad = new VirtualJoypad();
 		game.world.addChild(this.hudContainer);
 		game.world.addChild(this.virtualJoypad, Infinity);
-		//game.world.addChild(this.filterLayer);
-		//game.world.addChild(this.spotLight);
-		
-
-		//game.world.setOpacity(0.5);
 
 		this.handler = event.on(event.KEYDOWN, function (action, keyCode, edge) {
 			if (action === "pause") {
@@ -140,20 +89,18 @@ export default class ReplayGameScreen extends Stage {
 	onDestroyEvent() {
 		console.log("RePlay.OnExit()");
 		game.world.removeChild(this.hudContainer);
-		game.world.removeChild(this.virtualJoypad);
-		//game.world.removeChild(this.spotLight);
+		game.world.removeChild(this.virtualJoypad);		
 		event.off(event.KEYDOWN, this.handler);
 	}
 
 	update(dt) {
-		//this.spotLight.pos.x = this.player.pos.x;
-		//this.spotLight.pos.y = this.player.pos.y;
 		if (this.enemyEmitter.isActive && this.enemyEmitter.emitEvery <= 0 && this.enemyEmitter.emitCount > 0) {
 			// emit a new spider
 			this.enemyEmitter.emitCount--;
 			this.enemyEmitter.emitEvery = this.enemyEmitter.emitTime;
-			let spider = new SpiderEnemy(this.enemyEmitter.emitAt.x, this.enemyEmitter.emitAt.y);
-			spider.name = "SpiderX";
+			let name = "SpiderEnemy." + (this.enemyEmitter.emitCount + 1);
+			let spider = new RemoteSpiderSprite(this.enemyEmitter.emitAt.x, this.enemyEmitter.emitAt.y, this.enemyActions[name]);
+			spider.setEnemyName(name);
 			this.enemies.push(spider);
 			game.world.addChild(spider);
 			spider.setPlayer(this.player);
@@ -183,8 +130,9 @@ export default class ReplayGameScreen extends Stage {
 								game.world.addChild(this.player);
 							} 
                             else if (tile.tileId === 994) {
-								let enemy = new CatEnemy(x,y);
-								enemy.name = "CatEnemy" + enemynum++;
+								let name = "CatEnemy." + enemynum++;
+								let enemy = new RemoteCatSprite(x,y, this.enemyActions[name]);
+								enemy.name = name;
 								game.world.addChild(enemy);
 								this.enemies.push(enemy);
 								console.log("  enemy at (" + x + "/" + y + "): " + enemy);
@@ -199,6 +147,16 @@ export default class ReplayGameScreen extends Stage {
 								this.enemyEmitter.emitEvery = l.enemyTimeEmitting;
 								console.log("  enemyEmitter at (" + x + "/" + y + "): ");
 							}
+                            else if( tile.tileId === 996) {
+								let name = "GolemEnemy." + enemynum++;
+								let enemy = new GolemEnemySprite(x, y, this.enemyActions[name]);
+								
+								enemy.setEnemyName(name);
+								game.world.addChild(enemy);
+								this.enemies.push(enemy);
+								console.log("  enemy at (" + x + "/" + y + "): " + enemy);
+                            }
+
 						}
 					}
 				}

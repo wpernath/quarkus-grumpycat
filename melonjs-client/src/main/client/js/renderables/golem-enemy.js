@@ -9,9 +9,14 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 	VELOCITY = 0.05;
 
 	constructor(x, y) {
-		super(x, y, 64, 64, "golem-walk");
+		super(x, y, {
+			width: 64,
+			height: 64,
+			framewidth: 64,
+			frameheight: 64,
+			image: "golem-walk",
+		});
 		this.enemyType = ENEMY_TYPES.golem;
-		
 
 		this.addAnimation("stand-up", [0]);
 		this.addAnimation("walk-up", [0, 1, 2, 3, 4, 5, 6], 48);
@@ -31,9 +36,9 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 		this.enemyCanWalkDiagonally = false;
 	}
 
-	update(dt) {
+	updatePosition(dt) {
 		if (!this.isStunned) {
-			if (!this.nextPositionFound) {				
+			if (!this.nextPositionFound) {
 				this.posUpdatedCount = 0;
 				this.calculateNextPosition();
 			}
@@ -61,9 +66,7 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 				NetworkManager.getInstance()
 					.writeEnemyUpdate(this.nextPosition)
 					.catch((err) => console.err("error enemy action: " + err));
-
-			} 
-			else {
+			} else {
 				// no new position. enemy just stands still
 
 				if (this.nextPosition.dx < 0) this.setCurrentAnimation("stand-left");
@@ -72,8 +75,7 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 				if (this.nextPosition.dy < 0) this.setCurrentAnimation("stand-up");
 				else if (this.nextPosition.dy > 0) this.setCurrentAnimation("stand-down");
 			}
-		}
-		super.update(dt);
+		}		
 		return true;
 	}
 
@@ -93,14 +95,12 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 					GlobalGameState.score += GlobalGameState.scoreForStunningGolem;
 				});
 			}
-		} 
-		else if (other.body.collisionType === collision.types.PLAYER_OBJECT && !this.isDead && !this.isStunned && !GlobalGameState.invincible) {
+		} else if (other.body.collisionType === collision.types.PLAYER_OBJECT && !this.isDead && !this.isStunned && !GlobalGameState.invincible) {
 			if (this.nextPosition.dx < 0) this.setCurrentAnimation("stand-left");
 			else if (this.nextPosition.dx > 0) this.setCurrentAnimation("stand-right");
 
 			if (this.nextPosition.dy < 0) this.setCurrentAnimation("stand-up");
 			else if (this.nextPosition.dy > 0) this.setCurrentAnimation("stand-down");
-
 		}
 		return false;
 	}

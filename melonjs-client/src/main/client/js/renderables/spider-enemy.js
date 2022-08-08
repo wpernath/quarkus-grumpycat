@@ -8,7 +8,14 @@ export class SpiderEnemy extends BaseEnemySprite {
 	VELOCITY = 0.1;
 
 	constructor(x, y) {
-		super(x, y, 64, 64, "spider-red");
+		super(x, y, {
+			width: 64,
+			height: 64,
+			framewidth: 64,
+			frameheight: 64,
+			image: "spider-red",
+		});
+
 		this.enemyType = ENEMY_TYPES.spider;
 
 		this.addAnimation("stand-up", [0]);
@@ -35,7 +42,7 @@ export class SpiderEnemy extends BaseEnemySprite {
 		this.enemyCanWalkDiagonally = false;
 	}
 
-	update(dt) {
+	updatePosition(dt) {
 		if (!this.isStunned && !this.isDead) {
 			if (!this.nextPositionFound) {
 				this.posUpdatedCount = 0;
@@ -65,9 +72,7 @@ export class SpiderEnemy extends BaseEnemySprite {
 				NetworkManager.getInstance()
 					.writeEnemyUpdate(this.nextPosition)
 					.catch((err) => console.err("error enemy action: " + err));
-
-			} 
-			else {
+			} else {
 				// no new position. enemy just stands still
 
 				if (this.nextPosition.dx < 0) this.setCurrentAnimation("stand-left");
@@ -77,7 +82,6 @@ export class SpiderEnemy extends BaseEnemySprite {
 				else if (this.nextPosition.dy > 0) this.setCurrentAnimation("stand-down");
 			}
 		}
-		super.update(dt);
 		return true;
 	}
 
@@ -94,8 +98,7 @@ export class SpiderEnemy extends BaseEnemySprite {
 					this.setCurrentAnimation("dead");
 				});
 			}
-		} 
-		else if (other.body.collisionType === collision.types.PLAYER_OBJECT && !this.isDead && !this.isStunned && !GlobalGameState.invincible) {
+		} else if (other.body.collisionType === collision.types.PLAYER_OBJECT && !this.isDead && !this.isStunned && !GlobalGameState.invincible) {
 			if (this.nextPosition.dx < 0) this.setCurrentAnimation("attack-left");
 			else if (this.nextPosition.dx > 0) this.setCurrentAnimation("attack-right");
 

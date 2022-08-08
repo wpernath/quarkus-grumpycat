@@ -11,14 +11,18 @@ export class CatEnemy extends BaseEnemySprite {
 	 */
 	constructor(x, y) {
 		// call the parent constructor
-		super(x, y, 32, 32, "cat_left");
+		super(x, y, {
+			width: 32, 
+			height: 32, 
+			image: "cat_left"
+		});
 		this.enemyType = ENEMY_TYPES.cat;
 	}
 
 	/**
 	 * update the entity
 	 */
-	update(dt) {	
+	updatePosition(dt) {	
 		if( !this.isStunned ) {
 			if( !this.nextPositionFound) {					
 				this.posUpdatedCount = 0;
@@ -44,8 +48,7 @@ export class CatEnemy extends BaseEnemySprite {
 					.writeEnemyUpdate(this.nextPosition)
 					.catch((err) => console.err("error enemy action: " + err));
 			}        
-		}
-		super.update(dt);
+		}		
 		return true;
 	}
 

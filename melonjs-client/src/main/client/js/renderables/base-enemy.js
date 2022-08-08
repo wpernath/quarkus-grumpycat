@@ -88,13 +88,14 @@ export class BaseEnemySprite extends Sprite {
 	enemyName = "";
 	nextPosition = new EnemyAction(this.name, this.enemyType);
 
-	constructor(x, y, w, h, img) {
-		super(x * 32 - (w / 2), y * 32 - (h / 2), {
-			width: w,
-			height: h,
-			image: img,
-			framewidth: w,
-			frameheight: h,
+
+	constructor(x, y, settings) {
+		super(x * 32 - (settings.width / 2), y * 32 - (settings.height / 2), {
+			width: settings.width || 32,
+			height: settings.height || 32,
+			image: settings.image,
+			framewidth: settings.framewidth || 32,
+			frameheight: settings.frameheight || 32,
 			anchorPoint: new Vector2d(0,0),
 		});
 
@@ -129,6 +130,23 @@ export class BaseEnemySprite extends Sprite {
 		this.nextPosition.name = name;
 		this.enemyName = name;
 	}
+
+	/**
+	 * Needs to be overwritten by children of BaseEnemy. Implement it as needed.
+	 * @param {*} dt 
+	 */
+	updatePosition(dt) {
+	}
+
+	/**
+	 * Base 
+	 * @param {*} dt 
+	 */
+	update(dt) {
+		this.updatePosition(dt);
+		super.update(dt);
+	}
+
 
 	calculateNextPosition(dt) {
 		let playerPos = this.transformPosition(this.player.pos.x, this.player.pos.y);
