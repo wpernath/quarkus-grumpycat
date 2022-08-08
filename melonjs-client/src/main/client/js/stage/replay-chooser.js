@@ -153,7 +153,7 @@ class ReplayComponent extends Container {
 				if( i >= 10 ) break;
 			}
 			this.isDirty = true;
-		}
+		} 
 	}
 
 	useSelectedGame(game) {

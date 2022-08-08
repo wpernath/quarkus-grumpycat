@@ -8,17 +8,16 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 
-import org.eclipse.microprofile.reactive.messaging.Channel;
-import org.eclipse.microprofile.reactive.messaging.Emitter;
+import org.wanja.fatcat.model.EnemyAction;
 import org.wanja.fatcat.model.PlayerAction;
 
 import io.quarkus.logging.Log;
 
-@Path("/movement")
+@Path("/state")
 public class PlayerMovementResource {
     
-    @Channel("player-actions")
-    Emitter<PlayerAction> actionEmitter;
+    //@Channel("player-actions")
+    //Emitter<PlayerAction> actionEmitter;
 
     /**
      * Takes the REST playerAction and emitts a new message 
@@ -38,7 +37,7 @@ public class PlayerMovementResource {
                 a.id = null;
                 a.playerId = playerId;
                 a.gameId   = gameId;
-                actionEmitter.send(a);
+                //actionEmitter.send(a);
             }
         }
         else {
@@ -47,11 +46,21 @@ public class PlayerMovementResource {
     }
 
     @GET
-    @Path("/{gameId}/{playerId}")
+    @Path("/player/{gameId}/{playerId}")
     public List<PlayerAction> movementsForGame(long gameId, long playerId) {
-        Log.info("Loading movements from game " + gameId + " and player " + playerId );
+        Log.info("Loading player movements from game " + gameId + " and player " + playerId );
         List<PlayerAction> res = PlayerAction
                 .list("gameId = ?1 and playerId = ?2 order by time", gameId, playerId);                
         return res;
     }
+
+    @GET
+    @Path("/enemy/{gameId}/{playerId}")
+    public List<EnemyAction> movementsForEnemy(long gameId, long playerId) {
+        Log.info("Loading enemy movements from game " + gameId + " and player " + playerId);
+        List<EnemyAction> res = EnemyAction
+                .list("gameId = ?1 and playerId = ?2 order by type, name, time", gameId, playerId);
+        return res;
+    }
+
 }

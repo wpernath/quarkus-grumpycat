@@ -2,15 +2,21 @@ import { collision, Vector2d } from "melonjs";
 import { BaseEnemySprite } from "./base-enemy";
 import { ENEMY_TYPES } from "./base-enemy";
 import GlobalGameState from "../util/global-game-state";
+import NetworkManager from "../util/network";
 
 export default class GolemEnemySprite extends BaseEnemySprite {
 	posUpdatedCount = 0;
 	VELOCITY = 0.05;
 
 	constructor(x, y) {
-		super(x, y, 64, 64, "golem-walk");
+		super(x, y, {
+			width: 64,
+			height: 64,
+			framewidth: 64,
+			frameheight: 64,
+			image: "golem-walk",
+		});
 		this.enemyType = ENEMY_TYPES.golem;
-		
 
 		this.addAnimation("stand-up", [0]);
 		this.addAnimation("walk-up", [0, 1, 2, 3, 4, 5, 6], 48);
@@ -30,11 +36,19 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 		this.enemyCanWalkDiagonally = false;
 	}
 
-	update(dt) {
+	/**
+	 * Overwritten method to make sure we are going to get the path from Map
+	 */
+	calculateNextPosition() {
+
+	}
+
+	updatePosition(dt) {
 		if (!this.isStunned) {
-			if (!this.nextPositionFound) {				
+			if (!this.nextPositionFound) {
 				this.posUpdatedCount = 0;
 				this.calculateNextPosition();
+				if (this.nextPositionFound) this.sendEnemyMovement();
 			}
 			if (this.nextPositionFound) {
 				let posFactor = dt * this.VELOCITY;
@@ -43,11 +57,11 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 
 				// change walking anim if changed
 				if (this.nextPosition.last.dx != this.nextPosition.dx || this.nextPosition.last.dy != this.nextPosition.dy) {
-					if (this.nextPosition.dx < 0) this.setCurrentAnimation("walk-left", "walk-left");
-					else if (this.nextPosition.dx > 0) this.setCurrentAnimation("walk-right", "walk-right");
+					if (this.nextPosition.dx < 0) this.setCurrentAnimation("walk-left");
+					else if (this.nextPosition.dx > 0) this.setCurrentAnimation("walk-right");
 
-					if (this.nextPosition.dy < 0) this.setCurrentAnimation("walk-up", "walk-up");
-					else if (this.nextPosition.dy > 0) this.setCurrentAnimation("walk-down", "walk-down");
+					if (this.nextPosition.dy < 0) this.setCurrentAnimation("walk-up");
+					else if (this.nextPosition.dy > 0) this.setCurrentAnimation("walk-down");
 				}
 
 				this.posUpdatedCount += dt;
@@ -56,8 +70,8 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 					this.nextPositionFound = false;
 					this.posUpdatedCount = 0;
 				}
-			} 
-			else {
+
+			} else {
 				// no new position. enemy just stands still
 
 				if (this.nextPosition.dx < 0) this.setCurrentAnimation("stand-left");
@@ -66,8 +80,7 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 				if (this.nextPosition.dy < 0) this.setCurrentAnimation("stand-up");
 				else if (this.nextPosition.dy > 0) this.setCurrentAnimation("stand-down");
 			}
-		}
-		super.update(dt);
+		}		
 		return true;
 	}
 
@@ -94,7 +107,6 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 
 			if (this.nextPosition.dy < 0) this.setCurrentAnimation("stand-up");
 			else if (this.nextPosition.dy > 0) this.setCurrentAnimation("stand-down");
-
 		}
 		return false;
 	}

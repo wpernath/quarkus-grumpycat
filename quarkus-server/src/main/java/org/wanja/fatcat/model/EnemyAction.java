@@ -2,12 +2,7 @@ package org.wanja.fatcat.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import org.hibernate.action.internal.EntityAction;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
@@ -22,6 +17,12 @@ public class EnemyAction extends PanacheEntity{
     @Column(name = "player_action_id")
     public Long playerActionId;
 
+    @Column(name="player_id")
+    public Long playerId;
+
+    @Column(name = "game_id")
+    public Long gameId;
+
     public String name;
     public String type;
     public int x;
@@ -30,7 +31,19 @@ public class EnemyAction extends PanacheEntity{
     public int dy;
     public boolean isStunned = false;
     public boolean isDead = false;
-
+    public Long time;
+    
     public EnemyAction() {}
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("EnemyAction [dx=").append(dx).append(", dy=").append(dy).append(", gameId=").append(gameId)
+                .append(", isDead=").append(isDead).append(", isStunned=").append(isStunned).append(", name=")
+                .append(name).append(", playerActionId=").append(playerActionId).append(", playerId=").append(playerId)
+                .append(", type=").append(type).append(", x=").append(x).append(", y=").append(y).append("]");
+        return builder.toString();
+    }
+
+    
 }

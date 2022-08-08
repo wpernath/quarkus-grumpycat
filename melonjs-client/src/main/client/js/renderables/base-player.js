@@ -19,7 +19,7 @@ export const BONUS_TILE = {
 
 export class BasePlayerSprite extends Sprite {
 
-	VELOCITY = 0.4;
+	VELOCITY = 0.3;
 	
 	borderLayer;
 	bonusLayer;

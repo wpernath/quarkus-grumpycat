@@ -14,4 +14,5 @@ public class Layer {
     public boolean visible;
     public long[] data;
     public List<LayerProperty> properties;
+    public List<LayerObject> objects;
 }

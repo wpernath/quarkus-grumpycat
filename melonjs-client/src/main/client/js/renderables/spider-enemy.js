@@ -1,13 +1,21 @@
 import { collision } from "melonjs/dist/melonjs.module.js";
 import { BaseEnemySprite, ENEMY_TYPES } from "./base-enemy";
 import GlobalGameState from "../util/global-game-state";
+import NetworkManager from "../util/network";
 
 export class SpiderEnemy extends BaseEnemySprite {
 	posUpdatedCount = 0;
 	VELOCITY = 0.1;
 
 	constructor(x, y) {
-		super(x, y, 64, 64, "spider-red");
+		super(x, y, {
+			width: 64,
+			height: 64,
+			framewidth: 64,
+			frameheight: 64,
+			image: "spider-red",
+		});
+
 		this.enemyType = ENEMY_TYPES.spider;
 
 		this.addAnimation("stand-up", [0]);
@@ -34,11 +42,12 @@ export class SpiderEnemy extends BaseEnemySprite {
 		this.enemyCanWalkDiagonally = false;
 	}
 
-	update(dt) {
+	updatePosition(dt) {
 		if (!this.isStunned && !this.isDead) {
 			if (!this.nextPositionFound) {
 				this.posUpdatedCount = 0;
 				this.calculateNextPosition();
+				if (this.nextPositionFound) this.sendEnemyMovement();
 			}
 			if (this.nextPositionFound) {
 				let posFactor = dt * this.VELOCITY;
@@ -59,7 +68,7 @@ export class SpiderEnemy extends BaseEnemySprite {
 				if (posFactor >= 32) {
 					this.nextPositionFound = false;
 					this.posUpdatedCount = 0;
-				}
+				}	
 			} 
 			else {
 				// no new position. enemy just stands still
@@ -71,7 +80,6 @@ export class SpiderEnemy extends BaseEnemySprite {
 				else if (this.nextPosition.dy > 0) this.setCurrentAnimation("stand-down");
 			}
 		}
-		super.update(dt);
 		return true;
 	}
 
@@ -88,8 +96,7 @@ export class SpiderEnemy extends BaseEnemySprite {
 					this.setCurrentAnimation("dead");
 				});
 			}
-		} 
-		else if (other.body.collisionType === collision.types.PLAYER_OBJECT && !this.isDead && !this.isStunned && !GlobalGameState.invincible) {
+		} else if (other.body.collisionType === collision.types.PLAYER_OBJECT && !this.isDead && !this.isStunned && !GlobalGameState.invincible) {
 			if (this.nextPosition.dx < 0) this.setCurrentAnimation("attack-left");
 			else if (this.nextPosition.dx > 0) this.setCurrentAnimation("attack-right");
 

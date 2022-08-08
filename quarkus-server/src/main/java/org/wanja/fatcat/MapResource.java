@@ -12,6 +12,7 @@ import javax.ws.rs.Path;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.wanja.fatcat.map.Layer;
+import org.wanja.fatcat.map.LayerObject;
 import org.wanja.fatcat.map.LayerProperty;
 import org.wanja.fatcat.map.Map;
 import org.wanja.fatcat.map.MapTileSet;
@@ -55,7 +56,20 @@ public class MapResource {
                     if( l.name.equalsIgnoreCase("Persons")) {
                         l.visible = false;
                     }
+                    else if( l.type.equalsIgnoreCase("objectgroup")) {
+                        // make sure any objectgroup layer is not shown && no LayerObject neither
+                        l.visible = false;
+
+                        for( LayerObject lo : l.objects ) {
+                            lo.visible = false;
+                            if( lo.point ) {
+                                //lo.clazz = "me.Vector2d";
+                                lo.name = "me.Vector2d";
+                            }
+                        }
+                    }
                 });
+            
                 
                 // Make filename the name of the level without extension
                 map.name = level.substring(0, level.lastIndexOf('.')).toLowerCase();

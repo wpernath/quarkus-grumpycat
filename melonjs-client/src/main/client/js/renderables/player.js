@@ -6,6 +6,7 @@ import { LevelManager } from '../util/level';
 
 import { GameStateAction } from "../util/game-updates";
 import { BONUS_TILE, BasePlayerSprite, BARRIER_TILE } from './base-player';
+import NetworkManager from '../util/network';
 
 class PlayerEntity extends BasePlayerSprite {
 
@@ -16,8 +17,7 @@ class PlayerEntity extends BasePlayerSprite {
      */
     constructor(x, y) {
         // call the parent constructor
-        super(x,y);
-        this.currentAction = new GameStateAction();
+        super(x,y);        
     }
 
 
@@ -66,8 +66,7 @@ class PlayerEntity extends BasePlayerSprite {
                     action.dy = dy;
                     action.gutterThrown = true;
                     action.hasChanged = true;
-
-                   this.currentAction = action;
+                    NetworkManager.getInstance().writePlayerAction(action);
                 }
             }
         }
@@ -78,6 +77,11 @@ class PlayerEntity extends BasePlayerSprite {
                     GlobalGameState.usedBombs++;         
                     GlobalGameState.bombs--;
                     action.bombPlaced = true;
+                    action.dx = dx;
+                    action.dy = dy;
+                    action.hasChanged = true;
+                    NetworkManager.getInstance().writePlayerAction(action);
+                    return super.update(dt);
                 }
             }
             if( input.isKeyPressed("explode")) {
@@ -128,6 +132,7 @@ class PlayerEntity extends BasePlayerSprite {
                     // level done, check to see if there are more levels
                     action.gameWon = true;
                     this.levelOver = true;
+                    NetworkManager.getInstance().writePlayerAction(action);
                     if( LevelManager.getInstance().hasNext() ) {
                         LevelManager.getInstance().next();
                         state.change(state.READY);
@@ -151,7 +156,7 @@ class PlayerEntity extends BasePlayerSprite {
                     this.lastMapX = mapX;
                     this.lastMapY = mapY;
                     action.hasChanged = true;
-                    this.currentAction = action;
+                    NetworkManager.getInstance().writePlayerAction(action);
                 }
             }
         }
@@ -163,7 +168,7 @@ class PlayerEntity extends BasePlayerSprite {
             state.change(state.GAMEOVER);
             action.gameOver = true;
             action.hasChanged = true;
-            this.currentAction = action;
+            NetworkManager.getInstance().writePlayerAction(action);
         }
 
         // call the parent method

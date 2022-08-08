@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.6" orientation="orthogonal" renderorder="right-down" width="33" height="42" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="4">
+<map version="1.9" tiledversion="1.9.0" orientation="orthogonal" renderorder="right-down" width="33" height="42" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="22">
  <editorsettings>
   <export target="../quarkus-server/src/main/resources/maps/Golems.tmj" format="json"/>
  </editorsettings>
  <properties>
-  <property name="Description" value="Set your description"/>
-  <property name="Name">Set your name here!
-</property>
+  <property name="Description">Golems are terrifying beasts. They are mighty
+and strong! But they are also a little bit stupid.
+Not to say they are more stupid than terrifying.
+
+Be careful not to get too close to them. </property>
+  <property name="Name" value="Golems!"/>
  </properties>
  <tileset firstgid="1" source="Terrain.tsx"/>
  <layer id="1" name="Ground" width="33" height="42">
@@ -286,16 +289,34 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,993,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,993,0,0,996,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="7" name="Golems">
-  <object id="1" name="golem1" x="722.647" y="752.302">
-   <polygon points="0,0 284.064,1.56079 284.064,99.8907 -1.56079,92.0868 0,127.985 284.064,124.863 287.186,-3.12159"/>
+ <objectgroup id="7" name="Paths">
+  <object id="14" name="end" x="240.078" y="147.1">
+   <properties>
+    <property name="forEnemy" value="Golem.1"/>
+   </properties>
+   <point/>
   </object>
-  <object id="3" name="golem2" x="243.484" y="143.593">
-   <polygon points="0,0 -6.24317,106.134 -106.134,99.8907 -99.8907,-93.6476 285.625,-96.7692 287.186,93.6476 187.295,96.7692 185.734,-3.12159 191.978,99.8907 285.625,95.2084 288.747,-93.6476 -96.7692,-93.6476 -107.695,95.2084 4.68238,88.9652"/>
+  <object id="15" name="start" x="428.809" y="141.549">
+   <properties>
+    <property name="forEnemy" value="Golem.1"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="20" name="Path2" x="722.193" y="752.199">
+   <properties>
+    <property name="forEnemy" value="Golem.2"/>
+   </properties>
+   <polygon points="0,0 287.636,0 286.601,96.2235 -4.13864,96.2235 -4.13864,131.402 285.566,131.402 286.601,543.197 250.388,543.197 251.423,2.06932"/>
+  </object>
+  <object id="21" name="Path3" x="239.451" y="1206.02">
+   <properties>
+    <property name="forEnemy" value="Golem.3"/>
+   </properties>
+   <polygon points="0,0 4.3802,-106.585 -100.745,-106.585 -96.3644,93.4443 290.553,90.5242 290.553,-105.125 191.269,-106.585 189.809,1.46007 188.349,-103.665 292.013,-103.665 290.553,87.604 -93.4443,87.604 -90.5242,-106.585 1.46007,-96.3644"/>
   </object>
  </objectgroup>
 </map>

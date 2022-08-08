@@ -1,6 +1,7 @@
 import { collision, Entity, level, Rect, Sprite, Body, Vector2d } from "melonjs/dist/melonjs.module.js";
 import { EnemyAction } from "../util/game-updates";
 import GlobalGameState from "../util/global-game-state";
+import NetworkManager from "../util/network";
 
 export class Direction {
 	constructor(dx, dy) {
@@ -84,16 +85,17 @@ export class BaseEnemySprite extends Sprite {
 	isStunned = false;
 	enemyType = ENEMY_TYPES.cat;
 	enemyCanWalkDiagonally = true;
-
+	enemyName = "";
 	nextPosition = new EnemyAction(this.name, this.enemyType);
 
-	constructor(x, y, w, h, img) {
-		super(x * 32 - (w / 2), y * 32 - (h / 2), {
-			width: w,
-			height: h,
-			image: img,
-			framewidth: w,
-			frameheight: h,
+
+	constructor(x, y, settings) {
+		super(x * 32 - (settings.width / 2), y * 32 - (settings.height / 2), {
+			width: settings.width || 32,
+			height: settings.height || 32,
+			image: settings.image,
+			framewidth: settings.framewidth || 32,
+			frameheight: settings.frameheight || 32,
 			anchorPoint: new Vector2d(0,0),
 		});
 
@@ -121,6 +123,30 @@ export class BaseEnemySprite extends Sprite {
 		this.body.collisionType = collision.types.ENEMY_OBJECT;
 		this.body.setCollisionMask(collision.types.PLAYER_OBJECT | collision.types.PROJECTILE_OBJECT);
 	}
+
+
+	setEnemyName(name) {
+		this.name = name;
+		this.nextPosition.name = name;
+		this.enemyName = name;
+	}
+
+	/**
+	 * Needs to be overwritten by children of BaseEnemy. Implement it as needed.
+	 * @param {*} dt 
+	 */
+	updatePosition(dt) {
+	}
+
+	/**
+	 * Base 
+	 * @param {*} dt 
+	 */
+	update(dt) {
+		this.updatePosition(dt);
+		super.update(dt);
+	}
+
 
 	calculateNextPosition(dt) {
 		let playerPos = this.transformPosition(this.player.pos.x, this.player.pos.y);
@@ -189,6 +215,16 @@ export class BaseEnemySprite extends Sprite {
         if( !this.nextPositionFound ) {
 			// try to find a new position without the need of a direct way to the player
         }
+	}
+
+
+	/**
+	 * Send enemy action to server
+	 */
+	sendEnemyMovement() {
+		NetworkManager.getInstance()
+			.writeEnemyUpdate(this.nextPosition)
+			.catch((err) => console.err("Error writing enemy action: " + err));
 	}
 
 	setPlayer(player) {

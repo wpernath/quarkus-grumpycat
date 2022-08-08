@@ -1,27 +1,34 @@
 import { collision} from "melonjs/dist/melonjs.module.js";
 import GlobalGameState from "../util/global-game-state";
 import { BaseEnemySprite, ENEMY_TYPES } from "./base-enemy";
+import NetworkManager from "../util/network";
 
 export class CatEnemy extends BaseEnemySprite {
-	VELOCITY = 0.1;
+	VELOCITY = 0.08;
 	posUpdatedCount =0;
 	/**
 	 * constructor
 	 */
 	constructor(x, y) {
 		// call the parent constructor
-		super(x, y, 32, 32, "cat_left");
+		super(x, y, {
+			width: 32, 
+			height: 32, 
+			image: "cat_left"
+		});
 		this.enemyType = ENEMY_TYPES.cat;
 	}
 
 	/**
 	 * update the entity
 	 */
-	update(dt) {	
+	updatePosition(dt) {	
 		if( !this.isStunned ) {
 			if( !this.nextPositionFound) {					
 				this.posUpdatedCount = 0;
-				this.calculateNextPosition();			
+				this.calculateNextPosition();		
+				if( this.nextPositionFound ) 
+					this.sendEnemyMovement();
 			}
 
 			if( this.nextPositionFound ) {
@@ -37,10 +44,9 @@ export class CatEnemy extends BaseEnemySprite {
 				if( posFactor >= 32 ) {
 					this.nextPositionFound = false;
 					this.posUpdatedCount = 0;
-				}
+				}	
 			}        
-		}
-		super.update(dt);
+		}		
 		return true;
 	}
 

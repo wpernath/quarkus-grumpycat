@@ -18,6 +18,7 @@ class PlayScreen extends Stage {
 	hudContainer = null;
 	virtualJoypad = null;
 	isActive = false;
+	spriteLayer = 6;
 
 	enemyEmitter = {
 		isActive: false,
@@ -55,7 +56,7 @@ class PlayScreen extends Stage {
 				}
 			}
 			if (action === "exit") {
-				state.change(state.MENU);
+				state.change(state.GAMEOVER);
 			}
 			if (action === "fullscreen") {
 				console.log("requesting full screen");
@@ -84,58 +85,29 @@ class PlayScreen extends Stage {
 			this.enemyEmitter.emitCount--;
 			this.enemyEmitter.emitEvery = this.enemyEmitter.emitTime;
 			let spider = new SpiderEnemy(this.enemyEmitter.emitAt.x, this.enemyEmitter.emitAt.y);
-			spider.name = "SpiderX";
+			spider.setEnemyName("SpiderEnemy."+(this.enemyEmitter.emitCount+1));
 			this.enemies.push(spider);
-			game.world.addChild(spider);
+			game.world.addChild(spider,this.spriteLayer);
 			spider.setPlayer(this.player);
 		}
 
 		this.enemyEmitter.emitEvery -= dt;
-
-		//this.collectAndSendActions();
+		
 		let dirty = super.update(dt);
 		return dirty;
 	}
 
-	collectAndSendActions() {
-		if (this.player !== null) {
-			let pa = this.player.currentAction;
-			if (pa !== null ) {
-				//pa.hasChanged = false;
-
-				// now collect all enemy's movements
-                let enemyChanged = false;
-				this.enemies.forEach((enemy) => {                    
-					pa.addEnemyMovement(enemy.getEnemyAction());
-                    if( enemy.getEnemyAction().hasChanged ) {
-                        enemyChanged = true;
-                        enemy.getEnemyAction().hasChanged = false;
-                    }
-				});
-
-                if( pa.hasChanged || enemyChanged ) {
-				    NetworkManager.getInstance()
-                        .writePlayerAction(pa)
-                        .then( () => {
-                            console.log("successfully wrote game updates");
-                        })
-                        .catch( (err) => {
-                            console.log("Could not write game updates: " + err);
-                        });
-                    pa.hasChanged = false;
-                }
-			}
-		}
-	}
 
 	setupLevel() {
 		LevelManager.getInstance().prepareCurrentLevel();
 
 		let layers = level.getCurrentLevel().getLayers();
+		let layerNum = 0;
 		layers.forEach((l) => {
 			console.log(l.name);
 			if (l.name === "Persons") {
 				let enemynum = 0;
+				this.spriteLayer = layerNum;
 				for (let y = 0; y < l.height; y++) {
 					for (let x = 0; x < l.width; x++) {
 						let tile = l.cellAt(x, y);
@@ -145,12 +117,12 @@ class PlayScreen extends Stage {
 								this.player = new PlayerEntity(x, y);
 								this.player.name = "Player";
 								console.log("  player at (" + x + "/" + y + "): " + this.player);
-								game.world.addChild(this.player);
+								game.world.addChild(this.player, this.spriteLayer);
 							} 
                             else if (tile.tileId === 994) {
 								let enemy = new CatEnemy(x, y);
-								enemy.name = "CatEnemy" + enemynum++;
-								game.world.addChild(enemy);
+								enemy.setEnemyName("CatEnemy." + enemynum++);
+								game.world.addChild(enemy, this.spriteLayer);
 								this.enemies.push(enemy);
 								console.log("  enemy at (" + x + "/" + y + "): " + enemy);
 							} 
@@ -166,8 +138,8 @@ class PlayScreen extends Stage {
 							}
                             else if( tile.tileId === 996) {
 								let enemy = new GolemEnemySprite(x, y);
-								enemy.name = "GolemEnemy" + enemynum++;
-								game.world.addChild(enemy);
+								enemy.setEnemyName("GolemEnemy." + enemynum++);
+								game.world.addChild(enemy, this.spriteLayer);
 								this.enemies.push(enemy);
 								console.log("  enemy at (" + x + "/" + y + "): " + enemy);
 
@@ -176,6 +148,7 @@ class PlayScreen extends Stage {
 					}
 				}
 			}
+			layerNum++;
 		});
 		// make sure, all enemies know the player
 		this.enemies.forEach((e) => e.setPlayer(this.player));

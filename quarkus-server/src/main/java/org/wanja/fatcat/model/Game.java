@@ -28,7 +28,7 @@ public class Game extends PanacheEntity {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("Game [id=").append(id)
-                .append(", level=").append(level).append(", name=").append(name).append(", player=").append(player)
+                .append(", level=").append(level).append(", name=").append(name).append(", player=").append(player.toString())
                 .append(", playerId=").append(playerId).append(", time=").append(time).append("]");
         return builder.toString();
     }
