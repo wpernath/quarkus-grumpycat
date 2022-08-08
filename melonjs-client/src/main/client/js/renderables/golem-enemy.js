@@ -41,6 +41,7 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 			if (!this.nextPositionFound) {
 				this.posUpdatedCount = 0;
 				this.calculateNextPosition();
+				if (this.nextPositionFound) this.sendEnemyMovement();
 			}
 			if (this.nextPositionFound) {
 				let posFactor = dt * this.VELOCITY;
@@ -63,7 +64,6 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 					this.posUpdatedCount = 0;
 				}
 
-				this.sendEnemyMovement();
 			} else {
 				// no new position. enemy just stands still
 

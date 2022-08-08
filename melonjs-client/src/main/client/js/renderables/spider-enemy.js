@@ -47,6 +47,7 @@ export class SpiderEnemy extends BaseEnemySprite {
 			if (!this.nextPositionFound) {
 				this.posUpdatedCount = 0;
 				this.calculateNextPosition();
+				if (this.nextPositionFound) this.sendEnemyMovement();
 			}
 			if (this.nextPositionFound) {
 				let posFactor = dt * this.VELOCITY;
@@ -67,10 +68,9 @@ export class SpiderEnemy extends BaseEnemySprite {
 				if (posFactor >= 32) {
 					this.nextPositionFound = false;
 					this.posUpdatedCount = 0;
-				}
-
-				this.sendEnemyMovement();
-			} else {
+				}	
+			} 
+			else {
 				// no new position. enemy just stands still
 
 				if (this.nextPosition.dx < 0) this.setCurrentAnimation("stand-left");

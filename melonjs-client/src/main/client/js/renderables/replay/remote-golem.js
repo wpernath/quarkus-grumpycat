@@ -8,8 +8,8 @@ export class RemoteGolemSprite extends GolemEnemySprite {
 		this.replayer = new EnemyReplayer(this, actions);
 	}
 
-	updatePosition(dt) {
-		this.replayer.playNext(dt);
+	calculateNextPosition() {
+		this.replayer.calculateNextPosition();
 	}
 
 	sendEnemyMovement() {
