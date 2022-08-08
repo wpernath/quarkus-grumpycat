@@ -32,6 +32,17 @@
                 "y": 284.26966292134836
             }
         },
+        "/Users/wpernath/Devel/examples/platformer/data/map/map1.tmx": {
+            "scale": 0.44031746031746033,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 1853.2083633741888,
+                "y": 860.7426099495312
+            }
+        },
+        "/Users/wpernath/Devel/examples/platformer/data/map/tileset.tsx": {
+            "scaleInDock": 1
+        },
         "/Users/wpernath/Downloads/opengameart/LPC_Terrain/Terrain.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 1
@@ -41,11 +52,11 @@
             "scaleInEditor": 1.9537
         },
         "Golems.tmx": {
-            "scale": 1.6145,
+            "scale": 0.6849,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 832.4558686899968,
-                "y": 748.2192629296997
+                "x": 239.45101474667837,
+                "y": 1204.5554095488392
             }
         },
         "Level-Template.tmx": {
@@ -166,6 +177,7 @@
     "project": "grumpycat.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "/Users/wpernath/Devel/examples/platformer/data/map/map1.tmx",
         "Golems.tmx",
         "Level2.tmx",
         "Level3.tmx",
@@ -176,8 +188,7 @@
         "/Users/wanja/Devel/melonjs/examples/platformer/data/map/map1.tmx",
         "Level-Template.tmx",
         "spiders.tsx",
-        "explosion.tsx",
-        "bomb.tsx"
+        "explosion.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

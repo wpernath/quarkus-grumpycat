@@ -18,6 +18,7 @@ class PlayScreen extends Stage {
 	hudContainer = null;
 	virtualJoypad = null;
 	isActive = false;
+	spriteLayer = 6;
 
 	enemyEmitter = {
 		isActive: false,
@@ -86,7 +87,7 @@ class PlayScreen extends Stage {
 			let spider = new SpiderEnemy(this.enemyEmitter.emitAt.x, this.enemyEmitter.emitAt.y);
 			spider.setEnemyName("SpiderEnemy."+(this.enemyEmitter.emitCount+1));
 			this.enemies.push(spider);
-			game.world.addChild(spider);
+			game.world.addChild(spider,this.spriteLayer);
 			spider.setPlayer(this.player);
 		}
 
@@ -101,10 +102,12 @@ class PlayScreen extends Stage {
 		LevelManager.getInstance().prepareCurrentLevel();
 
 		let layers = level.getCurrentLevel().getLayers();
+		let layerNum = 0;
 		layers.forEach((l) => {
 			console.log(l.name);
 			if (l.name === "Persons") {
 				let enemynum = 0;
+				this.spriteLayer = layerNum;
 				for (let y = 0; y < l.height; y++) {
 					for (let x = 0; x < l.width; x++) {
 						let tile = l.cellAt(x, y);
@@ -114,12 +117,12 @@ class PlayScreen extends Stage {
 								this.player = new PlayerEntity(x, y);
 								this.player.name = "Player";
 								console.log("  player at (" + x + "/" + y + "): " + this.player);
-								game.world.addChild(this.player);
+								game.world.addChild(this.player, this.spriteLayer);
 							} 
                             else if (tile.tileId === 994) {
 								let enemy = new CatEnemy(x, y);
 								enemy.setEnemyName("CatEnemy." + enemynum++);
-								game.world.addChild(enemy);
+								game.world.addChild(enemy, this.spriteLayer);
 								this.enemies.push(enemy);
 								console.log("  enemy at (" + x + "/" + y + "): " + enemy);
 							} 
@@ -136,7 +139,7 @@ class PlayScreen extends Stage {
                             else if( tile.tileId === 996) {
 								let enemy = new GolemEnemySprite(x, y);
 								enemy.setEnemyName("GolemEnemy." + enemynum++);
-								game.world.addChild(enemy);
+								game.world.addChild(enemy, this.spriteLayer);
 								this.enemies.push(enemy);
 								console.log("  enemy at (" + x + "/" + y + "): " + enemy);
 
@@ -145,6 +148,7 @@ class PlayScreen extends Stage {
 					}
 				}
 			}
+			layerNum++;
 		});
 		// make sure, all enemies know the player
 		this.enemies.forEach((e) => e.setPlayer(this.player));

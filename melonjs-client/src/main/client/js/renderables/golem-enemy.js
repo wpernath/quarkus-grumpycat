@@ -36,6 +36,13 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 		this.enemyCanWalkDiagonally = false;
 	}
 
+	/**
+	 * Overwritten method to make sure we are going to get the path from Map
+	 */
+	calculateNextPosition() {
+
+	}
+
 	updatePosition(dt) {
 		if (!this.isStunned) {
 			if (!this.nextPositionFound) {
@@ -50,11 +57,11 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 
 				// change walking anim if changed
 				if (this.nextPosition.last.dx != this.nextPosition.dx || this.nextPosition.last.dy != this.nextPosition.dy) {
-					if (this.nextPosition.dx < 0) this.setCurrentAnimation("walk-left", "walk-left");
-					else if (this.nextPosition.dx > 0) this.setCurrentAnimation("walk-right", "walk-right");
+					if (this.nextPosition.dx < 0) this.setCurrentAnimation("walk-left");
+					else if (this.nextPosition.dx > 0) this.setCurrentAnimation("walk-right");
 
-					if (this.nextPosition.dy < 0) this.setCurrentAnimation("walk-up", "walk-up");
-					else if (this.nextPosition.dy > 0) this.setCurrentAnimation("walk-down", "walk-down");
+					if (this.nextPosition.dy < 0) this.setCurrentAnimation("walk-up");
+					else if (this.nextPosition.dy > 0) this.setCurrentAnimation("walk-down");
 				}
 
 				this.posUpdatedCount += dt;
@@ -93,7 +100,8 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 					GlobalGameState.score += GlobalGameState.scoreForStunningGolem;
 				});
 			}
-		} else if (other.body.collisionType === collision.types.PLAYER_OBJECT && !this.isDead && !this.isStunned && !GlobalGameState.invincible) {
+		} 
+		else if (other.body.collisionType === collision.types.PLAYER_OBJECT && !this.isDead && !this.isStunned && !GlobalGameState.invincible) {
 			if (this.nextPosition.dx < 0) this.setCurrentAnimation("stand-left");
 			else if (this.nextPosition.dx > 0) this.setCurrentAnimation("stand-right");
 

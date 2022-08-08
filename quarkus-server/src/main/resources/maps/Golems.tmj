@@ -342,76 +342,168 @@
          "name":"Paths",
          "objects":[
                 {
-                 "class":"GolemEnemy.1",
+                 "class":"",
                  "height":0,
-                 "id":8,
-                 "name":"GolemEnemy.1_b",
+                 "id":14,
+                 "name":"end",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"forEnemy",
+                         "type":"string",
+                         "value":"Golem.1"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":239.66065747614,
-                 "y":146.341463414634
+                 "x":240.078,
+                 "y":147.1
                 }, 
                 {
-                 "class":"GolemEnemy.1",
+                 "class":"",
                  "height":0,
-                 "id":9,
-                 "name":"GolemEnemy.1_a",
+                 "id":15,
+                 "name":"start",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"forEnemy",
+                         "type":"string",
+                         "value":"Golem.1"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":429.480381760339,
-                 "y":143.160127253446
+                 "x":428.809,
+                 "y":141.549
                 }, 
                 {
-                 "class":"GolemEnemy.2",
+                 "class":"",
                  "height":0,
-                 "id":10,
-                 "name":"GolemEnemy.2_b",
-                 "point":true,
+                 "id":20,
+                 "name":"Path2",
+                 "polygon":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":287.636,
+                         "y":0
+                        }, 
+                        {
+                         "x":286.601,
+                         "y":96.2235
+                        }, 
+                        {
+                         "x":-4.13864,
+                         "y":96.2235
+                        }, 
+                        {
+                         "x":-4.13864,
+                         "y":131.402
+                        }, 
+                        {
+                         "x":285.566,
+                         "y":131.402
+                        }, 
+                        {
+                         "x":286.601,
+                         "y":543.197
+                        }, 
+                        {
+                         "x":250.388,
+                         "y":543.197
+                        }, 
+                        {
+                         "x":251.423,
+                         "y":2.06932
+                        }],
+                 "properties":[
+                        {
+                         "name":"forEnemy",
+                         "type":"string",
+                         "value":"Golem.2"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":720.413436692506,
-                 "y":754.521963824289
+                 "x":722.193,
+                 "y":752.199
                 }, 
                 {
-                 "class":"GolemEnemy.2",
+                 "class":"",
                  "height":0,
-                 "id":11,
-                 "name":"GolemEnemy.2_a",
-                 "point":true,
+                 "id":21,
+                 "name":"Path3",
+                 "polygon":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":4.3802,
+                         "y":-106.585
+                        }, 
+                        {
+                         "x":-100.745,
+                         "y":-106.585
+                        }, 
+                        {
+                         "x":-96.3644,
+                         "y":93.4443
+                        }, 
+                        {
+                         "x":290.553,
+                         "y":90.5242
+                        }, 
+                        {
+                         "x":290.553,
+                         "y":-105.125
+                        }, 
+                        {
+                         "x":191.269,
+                         "y":-106.585
+                        }, 
+                        {
+                         "x":189.809,
+                         "y":1.46007
+                        }, 
+                        {
+                         "x":188.349,
+                         "y":-103.665
+                        }, 
+                        {
+                         "x":292.013,
+                         "y":-103.665
+                        }, 
+                        {
+                         "x":290.553,
+                         "y":87.604
+                        }, 
+                        {
+                         "x":-93.4443,
+                         "y":87.604
+                        }, 
+                        {
+                         "x":-90.5242,
+                         "y":-106.585
+                        }, 
+                        {
+                         "x":1.46007,
+                         "y":-96.3644
+                        }],
+                 "properties":[
+                        {
+                         "name":"forEnemy",
+                         "type":"string",
+                         "value":"Golem.3"
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":718.346253229974,
-                 "y":852.713178294574
-                }, 
-                {
-                 "class":"GolemEnemy.3",
-                 "height":0,
-                 "id":12,
-                 "name":"GolemEnemy.3_a",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":237.467018469657,
-                 "y":1199.64819700967
-                }, 
-                {
-                 "class":"GolemEnemy.3",
-                 "height":0,
-                 "id":13,
-                 "name":"GolemEnemy.3_b",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":429.19964819701,
-                 "y":1201.4072119613
+                 "x":239.451,
+                 "y":1206.02
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -420,13 +512,13 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":14,
+ "nextobjectid":22,
  "orientation":"orthogonal",
  "properties":[
         {
          "name":"Description",
          "type":"string",
-         "value":"Golems are terrifying beasts. "
+         "value":"Golems are terrifying beasts. They are mighty\nand strong! But they are also a little bit stupid.\nNot to say they are more stupid than terrifying.\n\nBe careful not to get too close to them. "
         }, 
         {
          "name":"Name",

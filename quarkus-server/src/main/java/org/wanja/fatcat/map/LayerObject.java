@@ -1,5 +1,7 @@
 package org.wanja.fatcat.map;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class LayerObject {
@@ -14,4 +16,6 @@ public class LayerObject {
     public boolean visible;
     public float x;
     public float y;
+
+    public Set<LayerProperty> properties;
 }
