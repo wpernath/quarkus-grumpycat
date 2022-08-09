@@ -9,7 +9,8 @@ import {
     plugin,
     Vector2d,
     input,
-    TextureAtlas
+    TextureAtlas,
+    pool,
 } from 'melonjs/dist/melonjs.module.js';
 
 import 'index.css';
@@ -28,7 +29,8 @@ import { LevelManager } from './js/util/level';
 import NetworkManager from './js/util/network';
 import { my_state } from './js/util/constants';
 import ReplayChooserScreen from './js/stage/replay-chooser';
-
+import {WayPoint, WayPath} from './js/util/walk-path';
+import { GameStateAction, EnemyAction } from "./js/util/game-updates";
 
 
 
@@ -80,6 +82,10 @@ device.onReady(() => {
 
         // set and load all resources.
         loader.preload(DataManifest, function() {
+            pool.register("WayPoint", WayPoint, true);
+            pool.register("WayPath", WayPath, true);
+            pool.register("GameStateAction", GameStateAction, true);
+            pool.register("EnemyAction", EnemyAction, true);
 
             GlobalGameState.screenControlsTexture = new TextureAtlas(loader.getJSON("screen-controls"), loader.getImage("screen-controls"));
 

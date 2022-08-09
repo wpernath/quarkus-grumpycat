@@ -14,7 +14,7 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 			height: 64,
 			framewidth: 64,
 			frameheight: 64,
-			image: "golem-walk",
+			image: "golem-walk",			
 		});
 		this.enemyType = ENEMY_TYPES.golem;
 
@@ -34,13 +34,25 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 
 		// golems can only walk up/down/left/right
 		this.enemyCanWalkDiagonally = false;
+		this.wayPath = null;
+	}
+
+	setWayPath(p) {
+		this.wayPath = p;
+		console.log(this.name + " path = " + JSON.stringify(p));
 	}
 
 	/**
 	 * Overwritten method to make sure we are going to get the path from Map
 	 */
 	calculateNextPosition() {
-
+		let weAreAt = this.transformPosition();
+		let goTo = this.wayPath.getCurrentWayPoint();
+		if( weAreAt.x === goTo.x && weAreAt.y === goTo.y ) {
+			goTo = this.wayPath.getNextWayPoint();
+		}
+		this.calculateNextPositionToTarget(goTo.x, goTo.y);
+		console.log(this.name + " next move: " + JSON.stringify(weAreAt) + " / " + JSON.stringify(goTo));
 	}
 
 	updatePosition(dt) {

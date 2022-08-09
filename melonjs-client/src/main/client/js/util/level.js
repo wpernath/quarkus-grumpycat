@@ -1,29 +1,96 @@
 import { level, loader } from "melonjs/dist/melonjs.module.js";
 import CONFIG from "../../config";
+import { WayPath, WayPoint } from "./walk-path";
 
 export class Level {
-    constructor(info, name, longName, data) {
-        this.info = info;
-        this.id = info.id;
-        this.name = name;
-        this.longName = longName;
-        this.data = data; 
-        this.description = data.description;
-        this.loadedIntoMelon = false;
-    }
+	constructor(info, name, longName, data) {
+		this.info = info;
+		this.id = info.id;
+		this.name = name;
+		this.longName = longName;
+		this.data = data;
+		this.description = data.description;
+		this.loadedIntoMelon = false;
 
-    loadIntoMelon() {
-        if( !this.loadedIntoMelon ) {
-            loader.load(
-                {name: this.id, src: this.info.path, type: 'tmx', format: 'json', data: this.data},
-                this.onLoaded
-            );
+		this.wayPoints = [];
+		this.wayPaths = [];
+		this.parseObjects();
+	}
 
-            this.loadedIntoMelon = true;      
+	loadIntoMelon() {
+		if (!this.loadedIntoMelon) {
+			loader.load({ name: this.id, src: this.info.path, type: "tmx", format: "json", data: this.data }, this.onLoaded);
+
+			this.loadedIntoMelon = true;
+		}
+	}
+
+	onLoaded() {}
+
+	applyProperties(obj, point) {
+        if( obj.properties !== null ) {
+            obj.properties.forEach( (p) => {
+                if( p.name === 'forEnemy' ) {
+                    point.forEnemy = p.value;
+                }
+            });
         }
     }
 
-    onLoaded() {  
+	parseObjects() {
+		this.data.layers.forEach((l) => {
+			if (l.type === "objectgroup" && l.objects !== null) {
+				l.objects.forEach((obj) => {
+					if (obj.name === "WayPoint") {
+						let point = new WayPoint(Math.floor(obj.x / 32), Math.floor(obj.y / 32));
+						this.applyProperties(obj, point);
+						this.wayPoints.push(point);
+
+                        //console.log("  Read point: " + JSON.stringify(point));
+					}
+                    else if( obj.name === 'WayPath' && obj.polygon !== null ) {
+                        let path = new WayPath(Math.floor(obj.x / 32), Math.floor(obj.y / 32));                        
+                        let startX = obj.x;
+                        let startY = obj.y;
+
+                        this.applyProperties(obj, path);
+                        path.addWayPoint(new WayPoint(Math.floor(startX / 32), Math.floor(startY / 32)));
+                        this.wayPaths[path.forEnemy] = path;
+
+                        obj.polygon.forEach( (point) => {
+                            startX += point.x;
+                            startY += point.y;
+                            let wayPoint = new WayPoint(Math.floor(startX / 32), Math.floor(startY / 32));
+                            path.addWayPoint(wayPoint);
+                        });
+
+                        //console.log("  Read path: " + JSON.stringify(path));
+                    }
+
+				});
+                l.objects = null;
+			}
+		});
+
+        // create wayPath objects for each group of waypoint
+        if( this.wayPoints.length > 0 ) {
+            this.wayPoints.forEach( (p) => {
+                if( this.wayPaths[p.forEnemy] !== undefined ) {
+                    console.log(this.wayPaths[p.forEnemy]);
+                    this.wayPaths[p.forEnemy].addWayPoint(p);
+                }
+                else {
+                    this.wayPaths[p.forEnemy] = new WayPath(p.x,p.y);
+                    this.wayPaths[p.forEnemy].addWayPoint(p);
+                }
+            });
+        }
+	}
+
+    getPathForEnemy(name) {
+        if( this.wayPoints !== null && this.wayPaths[name] !== undefined ) {
+            return this.wayPaths[name];
+        }
     }
 }
 
@@ -178,4 +245,6 @@ export class LevelManager {
         l.loadIntoMelon();
         level.load(l.id);
     }
+
+
 }

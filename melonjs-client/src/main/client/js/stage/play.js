@@ -19,6 +19,7 @@ class PlayScreen extends Stage {
 	virtualJoypad = null;
 	isActive = false;
 	spriteLayer = 6;
+	currentLevel = null;
 
 	enemyEmitter = {
 		isActive: false,
@@ -100,6 +101,7 @@ class PlayScreen extends Stage {
 
 	setupLevel() {
 		LevelManager.getInstance().prepareCurrentLevel();
+		this.currentLevel = LevelManager.getInstance().getCurrentLevel();
 
 		let layers = level.getCurrentLevel().getLayers();
 		let layerNum = 0;
@@ -121,7 +123,8 @@ class PlayScreen extends Stage {
 							} 
                             else if (tile.tileId === 994) {
 								let enemy = new CatEnemy(x, y);
-								enemy.setEnemyName("CatEnemy." + enemynum++);
+								let name = "CatEnemy." + enemynum++;
+								enemy.setEnemyName(name);
 								game.world.addChild(enemy, this.spriteLayer);
 								this.enemies.push(enemy);
 								console.log("  enemy at (" + x + "/" + y + "): " + enemy);
@@ -137,8 +140,12 @@ class PlayScreen extends Stage {
 								console.log("  enemyEmitter at (" + x + "/" + y + "): ");
 							}
                             else if( tile.tileId === 996) {
-								let enemy = new GolemEnemySprite(x, y);
-								enemy.setEnemyName("GolemEnemy." + enemynum++);
+								let enemy = new GolemEnemySprite(x, y);			
+								let name = "Golem." + (enemynum+1);
+								enemynum++;					
+								enemy.setEnemyName(name);
+								enemy.setWayPath(this.currentLevel.getPathForEnemy(name));
+
 								game.world.addChild(enemy, this.spriteLayer);
 								this.enemies.push(enemy);
 								console.log("  enemy at (" + x + "/" + y + "): " + enemy);

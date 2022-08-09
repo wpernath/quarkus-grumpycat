@@ -23,6 +23,10 @@ export class EnemyAction {
 	};
 
 	constructor(name, type, x, y, dx, dy) {
+		this.onResetEvent(name, type,x,y,dx,dy);
+	}
+
+	onResetEvent(name, type, x, y, dx, dy) {
 		this.playerId = GlobalGameState.globalServerGame.player.id;
 		this.gameId = GlobalGameState.globalServerGame.id;
 		this.name = name;
@@ -56,6 +60,10 @@ export class GameStateAction {
 	enemies = [];
 
 	constructor(x, y, dx, dy) {
+		this.onResetEvent(x,y,dx,dy);
+	}
+
+	onResetEvent(x,y,dx,dy) {
 		this.x = x;
 		this.y = y;
 		this.dx = dx;
