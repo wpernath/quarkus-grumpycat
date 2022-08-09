@@ -7,6 +7,7 @@
     "expandedProjectPaths": [
         "."
     ],
+    "exportAsImage.useCurrentScale": true,
     "file.lastUsedOpenFilter": "Alle Dateien (*)",
     "fileStates": {
         "": {
@@ -34,10 +35,10 @@
         },
         "/Users/wpernath/Devel/examples/platformer/data/map/map1.tmx": {
             "scale": 0.44031746031746033,
-            "selectedLayer": 4,
+            "selectedLayer": 9,
             "viewCenter": {
-                "x": 1853.2083633741888,
-                "y": 860.7426099495312
+                "x": 876.6402307137707,
+                "y": 910.7065609228553
             }
         },
         "/Users/wpernath/Devel/examples/platformer/data/map/tileset.tsx": {
@@ -52,11 +53,14 @@
             "scaleInEditor": 1.9537
         },
         "Golems.tmx": {
-            "scale": 0.6849,
+            "expandedObjectLayers": [
+                7
+            ],
+            "scale": 0.33,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 239.45101474667837,
-                "y": 1204.5554095488392
+                "x": 912.1212121212121,
+                "y": 1090.909090909091
             }
         },
         "Level-Template.tmx": {
@@ -68,22 +72,22 @@
             }
         },
         "Level1.tmx": {
-            "scale": 0.9133,
+            "scale": 0.33,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 556.7721449687945,
-                "y": 505.85787802474545
+                "x": 557.5757575757575,
+                "y": 506.0606060606061
             }
         },
         "Level1.tmx#Terrain": {
             "scaleInDock": 1
         },
         "Level2.tmx": {
-            "scale": 0.79,
+            "scale": 0.33,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 411.39240506329105,
-                "y": 636.7088607594936
+                "x": 412.1212121212121,
+                "y": 639.3939393939395
             }
         },
         "Level2.tmx#Terrain": {
@@ -94,31 +98,31 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 1010.3448275862069,
-                "y": 790.8045977011493
+                "y": 789.655172413793
             }
         },
         "Level4.tmx": {
-            "scale": 0.3951,
+            "scale": 0.33,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 888.3826879271069,
-                "y": 799.7975196152872
+                "x": 890.9090909090909,
+                "y": 800.0000000000001
             }
         },
         "Level4.tmx#Terrain": {
             "scaleInDock": 1
         },
         "Level5.tmx": {
-            "scale": 1.43,
+            "scale": 0.33,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 527.2727272727274,
-                "y": 799.3006993006993
+                "x": 527.2727272727273,
+                "y": 800.0000000000001
             }
         },
         "Terrain.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 1.4038,
+            "scaleInDock": 2.0682,
             "scaleInEditor": 1.3389
         },
         "Utumno.tsx": {
@@ -177,8 +181,8 @@
     "project": "grumpycat.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "/Users/wpernath/Devel/examples/platformer/data/map/map1.tmx",
         "Golems.tmx",
+        "/Users/wpernath/Devel/examples/platformer/data/map/map1.tmx",
         "Level2.tmx",
         "Level3.tmx",
         "Level4.tmx",

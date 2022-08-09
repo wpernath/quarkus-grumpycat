@@ -18,6 +18,18 @@ class PlayButton extends BaseTextButton {
 	}
 }
 
+class LevelChooserButton extends BaseTextButton {
+	constructor(x,y) {
+		super(x,y, {
+			text: "Choose Level",
+			borderWidth: 250,
+		});
+	}
+
+	onClick(event) {
+		state.change(my_state.CHOOSE_LEVEL)
+	}
+}
 class ReplayButton extends BaseTextButton {
 	constructor(x, y) {
 		super(x, y, {
@@ -61,7 +73,8 @@ export default class TitleMenu extends Container {
 
 		let center = Math.round((game.viewport.width - 250) / 2);
 		this.addChild(new PlayButton(center, 300));
-		this.addChild(new ReplayButton(center, 360));
-		this.addChild(new HighscoreButton(center, 420));
+		this.addChild(new LevelChooserButton(center, 360));
+		this.addChild(new ReplayButton(center, 420));		
+		this.addChild(new HighscoreButton(center, 480));
 	}
 }
