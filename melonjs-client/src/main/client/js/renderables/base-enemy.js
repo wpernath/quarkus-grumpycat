@@ -87,18 +87,20 @@ export class BaseEnemySprite extends Sprite {
 	enemyCanWalkDiagonally = true;
 	enemyName = "";
 	nextPosition = new EnemyAction(this.name, this.enemyType);
-
+	mapX = 0;
+	mapY = 0;
 
 	constructor(x, y, settings) {
-		super(x * 32 - settings.width / 2, y * 32 - settings.height / 2, {
-			width: settings.width || 32,
-			height: settings.height || 32,
-			image: settings.image,
-			framewidth: settings.framewidth || 32,
-			frameheight: settings.frameheight || 32,
-			anchorPoint: new Vector2d(0,0),
-		});
+		settings.width = settings.width || 32;
+		settings.height= settings.height || 32;
+		settings.image = settings.image;
+		settings.framewidth = settings.framewidth || 32;
+		settings.frameheight= settings.frameheight || 32;
+		settings.anchorPoint = settings.anchorPoint || new Vector2d(0, 0);
 
+		super(x * 32, y * 32, settings);
+		this.mapX = x;
+		this.mapY = y;
 
 		let layers = level.getCurrentLevel().getLayers();
 		this.mapWidth = level.getCurrentLevel().cols;
