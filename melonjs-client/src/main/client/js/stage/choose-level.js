@@ -116,7 +116,7 @@ class ListEntry extends BaseClickableComponent {
 
 class ChooserComponent extends Container {
 	listComponents = [];
-
+    levelChosen = false;
 	constructor() {
 		super();
 
@@ -197,9 +197,12 @@ class ChooserComponent extends Container {
     }
 
 	useSelectedGame(levelIndex) {
-		console.log("  selected level = " + levelIndex );
-        LevelManager.getInstance().setCurrentLevel(levelIndex);
-        state.change(state.READY);
+        if( !this.levelChosen ) {
+            console.log("  selected level = " + levelIndex );
+            LevelManager.getInstance().setCurrentLevel(levelIndex);
+            state.change(state.READY);
+            this.levelChosen = true;
+        }
 	}
 }
 
