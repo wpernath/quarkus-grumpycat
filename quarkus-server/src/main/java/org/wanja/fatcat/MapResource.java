@@ -11,6 +11,8 @@ import javax.ws.rs.Path;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.quarkus.logging.Log;
+
 import org.wanja.fatcat.map.Layer;
 import org.wanja.fatcat.map.LayerObject;
 import org.wanja.fatcat.map.LayerProperty;
@@ -66,6 +68,9 @@ public class MapResource {
                                 //lo.clazz = "me.Vector2d";
                                 lo.name = "WayPoint";
                             }
+                            else {
+                                lo.name = "WayPath";
+                            }
                         }
                     }
                 });
@@ -108,7 +113,11 @@ public class MapResource {
     @GET
     @Path("/{level}")
     public Map mapByLevelId(int level) {
-        return mapByLevel(level);
+        if( level >= 0 && level < maps.size()) {
+            Log.info("Requesting Level #" + (level+1));
+            return mapByLevel(level);
+        }
+        return null;
     }
 
     @GET

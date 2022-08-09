@@ -17,5 +17,6 @@ public class LayerObject {
     public float x;
     public float y;
 
+    public Set<LayerObjectPoint> polygon;
     public Set<LayerProperty> properties;
 }

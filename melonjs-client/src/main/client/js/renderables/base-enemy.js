@@ -90,7 +90,7 @@ export class BaseEnemySprite extends Sprite {
 
 
 	constructor(x, y, settings) {
-		super(x * 32 - (settings.width / 2), y * 32 - (settings.height / 2), {
+		super(x * 32 - settings.width / 2, y * 32 - settings.height / 2, {
 			width: settings.width || 32,
 			height: settings.height || 32,
 			image: settings.image,
@@ -98,6 +98,7 @@ export class BaseEnemySprite extends Sprite {
 			frameheight: settings.frameheight || 32,
 			anchorPoint: new Vector2d(0,0),
 		});
+
 
 		let layers = level.getCurrentLevel().getLayers();
 		this.mapWidth = level.getCurrentLevel().cols;
@@ -148,10 +149,20 @@ export class BaseEnemySprite extends Sprite {
 	}
 
 
-	calculateNextPosition(dt) {
+	/**
+	 * Calculate the path from where WE are to target position
+	 */
+	calculateNextPosition() {
 		let playerPos = this.transformPosition(this.player.pos.x, this.player.pos.y);
 		let playerX = playerPos.x;
 		let playerY = playerPos.y;
+
+		return this.calculateNextPositionToTarget(playerX, playerY);
+	}
+
+	calculateNextPositionToTarget(targetX, targetY) {
+		let playerX = targetX;
+		let playerY = targetY;
 		let myPos = this.transformPosition(this.pos.x, this.pos.y);
 		let posX = myPos.x;
 		let posY = myPos.y;
@@ -240,7 +251,7 @@ export class BaseEnemySprite extends Sprite {
 		else return true;
 	}
 
-	transformPosition(x, y) {
+	transformPosition(x = this.pos.x, y = this.pos.y) {
 		return {
 			x: Math.floor(x / 32),
 			y: Math.floor(y / 32),
