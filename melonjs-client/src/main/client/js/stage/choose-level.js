@@ -93,9 +93,6 @@ class ListEntry extends BaseClickableComponent {
 
 	draw(renderer) {
         renderer.drawImage(this.image, this.pos.x + 15, this.pos.y + 20, 348, 444);
-
-		//this.titleFont.draw(renderer, this.name, 348 + 200, 240);
-		//this.descriptionFont.draw(renderer, this.description, 348 + 200, 280);		
         super.draw(renderer);
 	}
 
@@ -104,7 +101,6 @@ class ListEntry extends BaseClickableComponent {
 	}
 
 	onClick(event) {
-		console.log("onClick");
 		this.callbackOnClick(this.levelIndex);
 	}
 	onOver(event) {
@@ -170,21 +166,23 @@ class ChooserComponent extends Container {
         let levelIndex = 0;
         while( LevelManager.getInstance().hasNext() ) {
             let entry = new ListEntry(levelIndex, 130, 220);
-            entry.setCallbackOnClick(this.useSelectedGame);
+            entry.setCallbackOnClick(this.useSelectedGame.bind(this));
+            entry.setOpacity(0);
             this.listComponents.push(entry);
             LevelManager.getInstance().next();
             levelIndex++;
+            this.addChild(entry);
         }
         LevelManager.getInstance().setCurrentLevel(0);
-        this.addChild(this.listComponents[0]);
+        this.listComponents[0].setOpacity(1);
 	}
 
     prevLevel() {
         let currentLevel = LevelManager.getInstance().getCurrentLevelIndex();
         if( LevelManager.getInstance().hasPrev()) {
-            this.removeChild(this.listComponents[currentLevel]);
+            this.listComponents[currentLevel].setOpacity(0);
             LevelManager.getInstance().prev();
-            this.addChild(this.listComponents[currentLevel-1]);
+            this.listComponents[currentLevel-1].setOpacity(1);
         }
 
     }
@@ -192,9 +190,9 @@ class ChooserComponent extends Container {
     nextLevel() {
         let currentLevel = LevelManager.getInstance().getCurrentLevelIndex();
         if (LevelManager.getInstance().hasNext()) {
-            this.removeChild(this.listComponents[currentLevel]);
+            this.listComponents[currentLevel].setOpacity(0);
             LevelManager.getInstance().next();
-            this.addChild(this.listComponents[currentLevel + 1]);
+            this.listComponents[currentLevel + 1].setOpacity(1);
         }        
     }
 

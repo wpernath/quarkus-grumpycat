@@ -245,7 +245,7 @@ export class LevelManager {
         if( this.currentLevel > 0 ) return true;
         return false;
     }
-    
+
     prepareCurrentLevel() {
         let l = this.getCurrentLevel();
         console.log("  LevelManager.prepareCurrentLevel('" + this.getCurrentLevelId() + "')");        
