@@ -103,14 +103,13 @@ class ListEntry extends BaseClickableComponent {
 	onClick(event) {
 		this.callbackOnClick(this.levelIndex);
 	}
-	onOver(event) {
-		this.borderColor = "#00aa00";
-		this.isDirty = true;
+
+	onOver(event) {		
+		this.setOpacity(1.0)	
 	}
 
-	onOut(event) {
-		this.borderColor = "#008800";
-		this.isDirty = true;
+	onOut(event) {		
+		this.setOpacity(0.8)
 	}
 }
 
@@ -167,22 +166,22 @@ class ChooserComponent extends Container {
         while( LevelManager.getInstance().hasNext() ) {
             let entry = new ListEntry(levelIndex, 130, 220);
             entry.setCallbackOnClick(this.useSelectedGame.bind(this));
-            entry.setOpacity(0);
+            entry.setOpacity(0.8);
             this.listComponents.push(entry);
             LevelManager.getInstance().next();
             levelIndex++;
-            this.addChild(entry);
+            //this.addChild(entry);
         }
         LevelManager.getInstance().setCurrentLevel(0);
-        this.listComponents[0].setOpacity(1);
+        this.addChild(this.listComponents[0]);
 	}
 
     prevLevel() {
         let currentLevel = LevelManager.getInstance().getCurrentLevelIndex();
         if( LevelManager.getInstance().hasPrev()) {
-            this.listComponents[currentLevel].setOpacity(0);
+            this.removeChild(this.listComponents[currentLevel], true);
             LevelManager.getInstance().prev();
-            this.listComponents[currentLevel-1].setOpacity(1);
+            this.addChild(this.listComponents[currentLevel-1]);
         }
 
     }
@@ -190,9 +189,9 @@ class ChooserComponent extends Container {
     nextLevel() {
         let currentLevel = LevelManager.getInstance().getCurrentLevelIndex();
         if (LevelManager.getInstance().hasNext()) {
-            this.listComponents[currentLevel].setOpacity(0);
+            this.removeChild(this.listComponents[currentLevel], true);
             LevelManager.getInstance().next();
-            this.listComponents[currentLevel + 1].setOpacity(1);
+            this.addChild(this.listComponents[currentLevel + 1]);
         }        
     }
 

@@ -96,7 +96,7 @@ export class BaseEnemySprite extends Sprite {
 		settings.image = settings.image;
 		settings.framewidth = settings.framewidth || 32;
 		settings.frameheight= settings.frameheight || 32;
-		settings.anchorPoint = settings.anchorPoint || new Vector2d(0, 0);
+		settings.anchorPoint = settings.anchorPoint || new Vector2d(0.5, 0.5);
 
 		super(x * 32, y * 32, settings);
 		this.mapX = x;
