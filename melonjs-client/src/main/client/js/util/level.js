@@ -12,7 +12,8 @@ export class Level {
 		this.data = data;
 		this.description = data.description;
 		this.loadedIntoMelon = false;
-
+        this.mapWidth = data.width;
+        this.mapHeight = data.height;
 		this.wayPoints = [];
 		this.wayPaths = [];
 		this.parseObjects();
@@ -216,7 +217,7 @@ export class LevelManager {
         console.log("  LevelManager.next() ");        
         let oldLevel = this.currentLevel;
         this.currentLevel++;
-        if( this.currentLevel > LEVEL_NAMES.length) {
+        if( this.currentLevel >= LEVEL_NAMES.length) {
             this.reset();
         }
         this._fireLevelChanged(oldLevel, this.currentLevel);        
@@ -237,13 +238,17 @@ export class LevelManager {
     }
 
     hasNext() {        
-        if (this.currentLevel < LEVEL_NAMES.length) return true;
+        if (this.currentLevel < LEVEL_NAMES.length - 1) return true;
         return false;
     }
 
     hasPrev() {
         if( this.currentLevel > 0 ) return true;
         return false;
+    }
+
+    levelCount() {
+        return LEVEL_NAMES.length;
     }
 
     prepareCurrentLevel() {

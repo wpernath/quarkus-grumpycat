@@ -52,7 +52,7 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 			goTo = this.wayPath.getNextWayPoint();
 		}
 		this.calculateNextPositionToTarget(goTo.x, goTo.y);
-		console.log(this.name + " next move: " + JSON.stringify(weAreAt) + " / " + JSON.stringify(goTo));
+		//console.log(this.name + " next move: " + JSON.stringify(weAreAt) + " / " + JSON.stringify(goTo));
 	}
 
 	updatePosition(dt) {

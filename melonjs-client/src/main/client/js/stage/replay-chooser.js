@@ -182,6 +182,7 @@ export default class ReplayChooserScreen extends Stage {
 		//input.bindPointer(input.pointer.LEFT, input.KEY.ESC);
 
 		this.handler = event.on(event.KEYDOWN, function (action, keyCode, edge) {
+			if (!state.isCurrent(my_state.REPLAY_GAME_CHOOSER)) return;
 			if (action === "exit") {
 				state.change(state.MENU);
 			}

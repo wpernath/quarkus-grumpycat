@@ -47,7 +47,7 @@ class PlayScreen extends Stage {
 		game.world.addChild(this.hudContainer);
 		game.world.addChild(this.virtualJoypad, Infinity);
 
-		this.handler = event.on(event.KEYDOWN, function (action, keyCode, edge) {
+		this.handler = event.on(event.KEYDOWN,  (action, keyCode, edge) => {
 			if (!state.isCurrent(state.PLAY)) return;
 			if (action === "pause") {
 				if (!state.isPaused()) {
@@ -133,8 +133,7 @@ class PlayScreen extends Stage {
 								// create a spider emitter, which emits up to X spiders every
 								// 10 seconds
 								this.enemyEmitter.isActive = true;
-								this.enemyEmitter.emitAt.x = x + 1;
-								this.enemyEmitter.emitAt.y = y + 1;
+								this.enemyEmitter.emitAt.x = x;
 								this.enemyEmitter.emitCount = l.enemyNumEmitting;
 								this.enemyEmitter.emitEvery = l.enemyTimeEmitting;
 								console.log("  enemyEmitter at (" + x + "/" + y + "): ");

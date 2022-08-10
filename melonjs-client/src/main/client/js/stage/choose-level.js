@@ -2,6 +2,7 @@ import { Stage, state, game, event, Sprite, BitmapText, Container, loader, Vecto
 import BaseClickableComponent from "../util/base-clickable-component";
 import { LevelManager } from "../util/level";
 import GlobalGameState from "../util/global-game-state";
+import { my_state } from "../util/constants";
 
 class LeftButton extends GUI_Object {
 	constructor(x, y, callback) {
@@ -59,6 +60,7 @@ class ListEntry extends BaseClickableComponent {
     levelIndex;
     name;
     description;
+	mapSize;
     image;
 	callbackOnClick;
 
@@ -71,8 +73,10 @@ class ListEntry extends BaseClickableComponent {
 		this.currentLevel = LevelManager.getInstance().setCurrentLevel(levelIndex);
         this.name = this.currentLevel.longName;
         this.description = this.currentLevel.description;
+		this.mapSize = "Map size: " + this.currentLevel.mapWidth + " x " + this.currentLevel.mapHeight;
         this.image = loader.getImage(this.currentLevel.previewImage);
 
+		console.log("  creating LevelEntry(" + this.name + ")");
 		this.titleFont = new BitmapText(15+348+15, 20, {
 			font: "18Outline",		
 			text: this.name,
@@ -86,8 +90,15 @@ class ListEntry extends BaseClickableComponent {
 			anchorPoint: new Vector2d(0, 0),
 		});
 
+		this.mapSizeFont = new BitmapText(15 + 348 + 15, 450, {
+			font: "18Outline",
+			text: this.mapSize,
+			anchorPoint: new Vector2d(0, 0),
+		});
+
         this.addChild(this.titleFont);
         this.addChild(this.descriptionFont);
+		this.addChild(this.mapSizeFont);
 		this.callbackOnClick = undefined;
 	}
 
@@ -161,18 +172,16 @@ class ChooserComponent extends Container {
 		this.addChild(this.subTitleText);
         this.addChild(this.prev);
         this.addChild(this.next);
-
-        let levelIndex = 0;
-        while( LevelManager.getInstance().hasNext() ) {
+        
+		LevelManager.getInstance().reset();
+        for(let levelIndex = 0; levelIndex < LevelManager.getInstance().levelCount(); levelIndex++ ) {
             let entry = new ListEntry(levelIndex, 130, 220);
             entry.setCallbackOnClick(this.useSelectedGame.bind(this));
             entry.setOpacity(0.8);
-            this.listComponents.push(entry);
-            LevelManager.getInstance().next();
-            levelIndex++;
-            //this.addChild(entry);
-        }
-        LevelManager.getInstance().setCurrentLevel(0);
+            this.listComponents.push(entry);            
+        } 
+		
+        LevelManager.getInstance().reset();
         this.addChild(this.listComponents[0]);
 	}
 
@@ -183,7 +192,6 @@ class ChooserComponent extends Container {
             LevelManager.getInstance().prev();
             this.addChild(this.listComponents[currentLevel-1]);
         }
-
     }
 
     nextLevel() {
@@ -206,24 +214,34 @@ class ChooserComponent extends Container {
 }
 
 export class ChooseLevelScreen extends Stage {
+    chooserComponent = null;
+
 	onResetEvent() {
-		this.replay = new ChooserComponent();
-		game.world.addChild(this.replay);
+        console.log("ChooserLevel.onEnter()")
+		this.chooserComponent = new ChooserComponent();
+		game.world.addChild(this.chooserComponent);
 
-		//input.bindPointer(input.pointer.LEFT, input.KEY.ESC);
-
-		this.handler = event.on(event.KEYDOWN, function (action, keyCode, edge) {
+		this.handler = event.on(event.KEYDOWN, (action, keyCode, edge) => {
+            if (!state.isCurrent(my_state.CHOOSE_LEVEL)) return;
 			if (action === "exit") {
 				state.change(state.MENU);
 			}
+            else if( action === "left") {
+                this.chooserComponent.prevLevel();
+            }
+            else if( action === "right") {
+                this.chooserComponent.nextLevel();
+            }
+            else if( action === "bomb") {
+                this.chooserComponent.useSelectedGame(LevelManager.getInstance().getCurrentLevelIndex());
+            }
 		});
 
 	}
 
 	onDestroyEvent() {
-		event.off(event.KEYDOWN, this.handler);
-		//input.unbindPointer(input.pointer.LEFT);
-		game.world.removeChild(this.replay);
-        //LevelManager.getInstance().reset();
+        console.log("ChooserLevel.onExit()");
+		event.off(event.KEYDOWN, this.handler);		
+		game.world.removeChild(this.chooserComponent);        
 	}
 }
