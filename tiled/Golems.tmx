@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.0" orientation="orthogonal" renderorder="right-down" width="33" height="42" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="34">
+<map version="1.9" tiledversion="1.9.0" orientation="orthogonal" renderorder="right-down" width="33" height="42" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="53">
  <editorsettings>
   <export target="../quarkus-server/src/main/resources/maps/Golems.tmj" format="json"/>
  </editorsettings>
@@ -253,6 +253,13 @@ Be careful not to get too close to them. </property>
 0,0,0,0,996,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,996,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,996,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -262,14 +269,7 @@ Be careful not to get too close to them. </property>
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,996,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,996,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,996,0,0,0,0,0,0,0,0,0,0,
@@ -294,87 +294,111 @@ Be careful not to get too close to them. </property>
 </data>
  </layer>
  <objectgroup id="7" name="Paths">
-  <object id="14" name="end" x="240.078" y="147.1">
+  <object id="33" name="golem 1 stop" x="241.362" y="151.761">
    <properties>
     <property name="forEnemy" value="Golem.1"/>
    </properties>
    <point/>
   </object>
-  <object id="15" name="start" x="428.809" y="141.549">
+  <object id="34" name="golem 1 start" x="432.883" y="139.441">
    <properties>
     <property name="forEnemy" value="Golem.1"/>
    </properties>
    <point/>
   </object>
-  <object id="22" name="end" x="720.287" y="857.956">
-   <properties>
-    <property name="forEnemy" value="Golem.3"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="23" name="start" x="722.431" y="756.601">
-   <properties>
-    <property name="forEnemy" value="Golem.3"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="24" name="end" x="1008.24" y="1301.93">
-   <properties>
-    <property name="forEnemy" value="Golem.3"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="25" name="end" x="240.334" y="1202.37">
-   <properties>
-    <property name="forEnemy" value="Golem.5"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="26" name="end" x="431.959" y="1205.18">
-   <properties>
-    <property name="forEnemy" value="Golem.5"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="27" name="end" x="720.638" y="1075.31">
-   <properties>
-    <property name="forEnemy" value="Golem.5"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="28" name="end" x="881.564" y="1073.19">
-   <properties>
-    <property name="forEnemy" value="Golem.5"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="29" name="start" x="880.15" y="242.631">
-   <properties>
-    <property name="forEnemy" value="Golem.1"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="30" name="start" x="530.324" y="754.326">
+  <object id="35" name="golem 2 start" x="431.203" y="148.961">
    <properties>
     <property name="forEnemy" value="Golem.2"/>
    </properties>
    <point/>
   </object>
-  <object id="31" name="start" x="145.041" y="755.446">
+  <object id="37" name="golem 2 stop" x="882.007" y="237.442">
    <properties>
     <property name="forEnemy" value="Golem.2"/>
    </properties>
    <point/>
   </object>
-  <object id="32" name="start" x="529.204" y="881.447">
+  <object id="38" name="golem 3 start" x="54.8804" y="345.523">
+   <properties>
+    <property name="forEnemy" value="Golem.3"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="40" name="golem 3 stpp" x="1008.01" y="334.883">
+   <properties>
+    <property name="forEnemy" value="Golem.3"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="41" name="golem 4 start" x="1009.13" y="652.965">
    <properties>
     <property name="forEnemy" value="Golem.4"/>
    </properties>
    <point/>
   </object>
-  <object id="33" name="start" x="142.801" y="881.447">
+  <object id="42" name="golem 4 stop" x="40.8803" y="662.485">
    <properties>
     <property name="forEnemy" value="Golem.4"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="43" name="golem 5 start" x="145.601" y="753.766">
+   <properties>
+    <property name="forEnemy" value="Golem.5"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="44" name="golem 5 stop" x="528.644" y="755.446">
+   <properties>
+    <property name="forEnemy" value="Golem.5"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="45" name="golem 6 start" x="717.366" y="751.526">
+   <properties>
+    <property name="forEnemy" value="Golem.6"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="46" name="golem 6 mid" x="720.166" y="850.087">
+   <properties>
+    <property name="forEnemy" value="Golem.6"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="47" name="golem 6 end" x="1010.25" y="1298.09">
+   <properties>
+    <property name="forEnemy" value="Golem.6"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="48" name="golem 7 start" x="533.124" y="879.767">
+   <properties>
+    <property name="forEnemy" value="Golem.7"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="49" name="golem 7 end" x="144.481" y="884.247">
+   <properties>
+    <property name="forEnemy" value="Golem.7"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="50" name="golem 8 start" x="135.521" y="1296.97">
+   <properties>
+    <property name="forEnemy" value="Golem.8"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="51" name="golem 8 mid" x="241.362" y="1204.57">
+   <properties>
+    <property name="forEnemy" value="Golem.8"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="52" name="golem 8 end" x="433.443" y="1204.01">
+   <properties>
+    <property name="forEnemy" value="Golem.8"/>
    </properties>
    <point/>
   </object>

@@ -272,6 +272,13 @@
             0, 0, 0, 0, 996, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 996, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 996, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -281,14 +288,7 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 996, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 996, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 996, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -344,8 +344,8 @@
                 {
                  "class":"",
                  "height":0,
-                 "id":14,
-                 "name":"end",
+                 "id":33,
+                 "name":"golem 1 stop",
                  "point":true,
                  "properties":[
                         {
@@ -356,14 +356,14 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":240.078,
-                 "y":147.1
+                 "x":241.361788486308,
+                 "y":151.7611625133
                 }, 
                 {
                  "class":"",
                  "height":0,
-                 "id":15,
-                 "name":"start",
+                 "id":34,
+                 "name":"golem 1 start",
                  "point":true,
                  "properties":[
                         {
@@ -374,158 +374,14 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":428.809,
-                 "y":141.549
+                 "x":432.883463067704,
+                 "y":139.441115528924
                 }, 
                 {
                  "class":"",
                  "height":0,
-                 "id":22,
-                 "name":"end",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.3"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":720.287082953025,
-                 "y":857.956229328892
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":23,
-                 "name":"start",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.3"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":722.430625311725,
-                 "y":756.601355338179
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":24,
-                 "name":"end",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.3"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":1008.24164330837,
-                 "y":1301.92862820566
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":25,
-                 "name":"end",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.5"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":240.334319856496,
-                 "y":1202.37355420452
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":26,
-                 "name":"end",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.5"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":431.959345002823,
-                 "y":1205.18068887634
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":27,
-                 "name":"end",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.5"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":720.638057594579,
-                 "y":1075.31055900621
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":28,
-                 "name":"end",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.5"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":881.564088085827,
-                 "y":1073.19311123659
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":29,
-                 "name":"start",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.1"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":880.149812734082,
-                 "y":242.631493242143
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":30,
-                 "name":"start",
+                 "id":35,
+                 "name":"golem 2 start",
                  "point":true,
                  "properties":[
                         {
@@ -536,14 +392,14 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":530.324242593941,
-                 "y":754.326034608277
+                 "x":431.203449627597,
+                 "y":148.961191689534
                 }, 
                 {
                  "class":"",
                  "height":0,
-                 "id":31,
-                 "name":"start",
+                 "id":37,
+                 "name":"golem 2 stop",
                  "point":true,
                  "properties":[
                         {
@@ -554,44 +410,260 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":145.041160329283,
+                 "x":882.007056056448,
+                 "y":237.441899535196
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":38,
+                 "name":"golem 3 start",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"forEnemy",
+                         "type":"string",
+                         "value":"Golem.3"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":54.8804390435123,
+                 "y":345.522764182113
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":40,
+                 "name":"golem 3 stpp",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"forEnemy",
+                         "type":"string",
+                         "value":"Golem.3"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":1008.00806406451,
+                 "y":334.882679061432
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":41,
+                 "name":"golem 4 start",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"forEnemy",
+                         "type":"string",
+                         "value":"Golem.4"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":1009.12807302458,
+                 "y":652.96522372179
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":42,
+                 "name":"golem 4 stop",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"forEnemy",
+                         "type":"string",
+                         "value":"Golem.4"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":40.8803270426164,
+                 "y":662.485299882399
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":43,
+                 "name":"golem 5 start",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"forEnemy",
+                         "type":"string",
+                         "value":"Golem.5"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":145.601164809318,
+                 "y":753.766030128241
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":44,
+                 "name":"golem 5 stop",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"forEnemy",
+                         "type":"string",
+                         "value":"Golem.5"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":528.644229153833,
                  "y":755.446043568349
                 }, 
                 {
                  "class":"",
                  "height":0,
-                 "id":32,
-                 "name":"start",
+                 "id":45,
+                 "name":"golem 6 start",
                  "point":true,
                  "properties":[
                         {
                          "name":"forEnemy",
                          "type":"string",
-                         "value":"Golem.4"
+                         "value":"Golem.6"
                         }],
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":529.204233633869,
-                 "y":881.447051576412
+                 "x":717.365738925911,
+                 "y":751.526012208098
                 }, 
                 {
                  "class":"",
                  "height":0,
-                 "id":33,
-                 "name":"start",
+                 "id":46,
+                 "name":"golem 6 mid",
                  "point":true,
                  "properties":[
                         {
                          "name":"forEnemy",
                          "type":"string",
-                         "value":"Golem.4"
+                         "value":"Golem.6"
                         }],
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":142.801142409139,
-                 "y":881.447051576412
+                 "x":720.165761326091,
+                 "y":850.086800694405
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":47,
+                 "name":"golem 6 end",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"forEnemy",
+                         "type":"string",
+                         "value":"Golem.6"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":1010.24808198466,
+                 "y":1298.09038472308
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":48,
+                 "name":"golem 7 start",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"forEnemy",
+                         "type":"string",
+                         "value":"Golem.7"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":533.12426499412,
+                 "y":879.767038136305
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":49,
+                 "name":"golem 7 end",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"forEnemy",
+                         "type":"string",
+                         "value":"Golem.7"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":144.481155849247,
+                 "y":884.247073976592
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":50,
+                 "name":"golem 8 start",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"forEnemy",
+                         "type":"string",
+                         "value":"Golem.8"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":135.521084168673,
+                 "y":1296.97037576301
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":51,
+                 "name":"golem 8 mid",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"forEnemy",
+                         "type":"string",
+                         "value":"Golem.8"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":241.361930895447,
+                 "y":1204.56963655709
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":52,
+                 "name":"golem 8 end",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"forEnemy",
+                         "type":"string",
+                         "value":"Golem.8"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":433.44346754774,
+                 "y":1204.00963207706
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -600,7 +672,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":34,
+ "nextobjectid":53,
  "orientation":"orthogonal",
  "properties":[
         {

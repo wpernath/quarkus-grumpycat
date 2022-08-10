@@ -21,7 +21,7 @@ export default class TitleScreen extends Stage {
 		game.world.addChild(this.menu);
 
 
-        this.handler = event.on(event.KEYDOWN, function (action, keyCode, edge) {
+        this.handler = event.on(event.KEYDOWN, (action, keyCode, edge) => {
 			if (!state.isCurrent(state.MENU)) return;
 			if (action === "pause") {
 				if (!state.isPaused()) {

@@ -1,23 +1,23 @@
 {
   "name": "grumpycat-melonjs",
-  "version": "0.5.3",
+  "version": "0.5.5",
   "main": "src/main/client/index.js",
   "author": "Wanja Pernath",
   "license": "GPL",
   "devDependencies": {
-    "@babel/cli": "^7.17.10",
-    "@babel/core": "^7.18.5",
-    "@babel/preset-env": "^7.18.2",
-    "@babel/register": "^7.17.7",
+    "@babel/cli": "^7.18.10",
+    "@babel/core": "^7.18.10",
+    "@babel/preset-env": "^7.18.10",
+    "@babel/register": "^7.18.9",
     "babel-loader": "^8.2.5",
     "copy-webpack-plugin": "^11.0.0",
     "favicons": "^6.2.2",
     "favicons-webpack-plugin": "^5.0.2",
     "fs": "^0.0.1-security",
     "html-webpack-plugin": "^5.5.0",
-    "webpack": "^5.73.0",
+    "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.9.2"
+    "webpack-dev-server": "^4.9.3"
   },
   "scripts": {
     "dev": "webpack-dev-server --mode=development --config webpack.config.js",
@@ -26,12 +26,15 @@
     "docker-build": "docker build -f src/main/docker/Dockerfile.nginx -t quay.io/wpernath/grumpycat-melonjs:latest .",
     "docker-push": "docker push quay.io/wpernath/grumpycat-melonjs -a"
   },
-  "dependencies": {
-    "@babel/polyfill": "^7.12.1",
+
+  "browserslist": "defaults", 
+
+  "dependencies": {    
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-node-resolve": "^13.3.0",
+    "core-js": "^3.24.1",
     "css-loader": "^6.7.1",
-    "melonjs": "^13.0.0",
+    "melonjs": "^13.1.1",
     "rollup": "^2.75.7",
     "style-loader": "^3.3.1"
   }

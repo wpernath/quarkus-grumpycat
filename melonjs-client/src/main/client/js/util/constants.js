@@ -11,4 +11,8 @@ export const my_state = {
      */
     REPLAY_GAME : state.USER + 1,
 
+    /**
+     * Choose a level
+     */
+    CHOOSE_LEVEL: state.USER + 2,
 }

@@ -31,7 +31,7 @@ import { my_state } from './js/util/constants';
 import ReplayChooserScreen from './js/stage/replay-chooser';
 import {WayPoint, WayPath} from './js/util/walk-path';
 import { GameStateAction, EnemyAction } from "./js/util/game-updates";
-
+import {ChooseLevelScreen} from "./js/stage/choose-level";
 
 
 device.onReady(() => {
@@ -94,6 +94,7 @@ device.onReady(() => {
             state.set(state.PLAY, new PlayScreen());
             state.set(my_state.REPLAY_GAME_CHOOSER, new ReplayChooserScreen());
             state.set(my_state.REPLAY_GAME, new ReplayGameScreen());
+            state.set(my_state.CHOOSE_LEVEL, new ChooseLevelScreen());
             state.set(state.READY, new GetReadyScreen());
             state.set(state.GAMEOVER, new GameOverScreen(true));
             state.set(state.GAME_END, new GameOverScreen(false));

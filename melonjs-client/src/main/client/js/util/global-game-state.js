@@ -34,9 +34,9 @@ const GlobalGameState = {
 	bombsForBombBonus: 5,
 
 	// how much energy do you loose if
-	energyLostBySpider: 15,
+	energyLostBySpider: 25,
 	energyLostByCat: 10,
-	energyLostByGolem: 25,
+	energyLostByGolem: 50,
 
 	// energy on start of the game
 	energyOnBegin: 100, 
@@ -62,8 +62,7 @@ const GlobalGameState = {
 	// reset statistics and player state
 	reset: function() {
 		this.energy = this.energyOnBegin;		
-		LevelManager.getInstance().reset();
-		LevelManager.getInstance().setCurrentLevel(2);
+		LevelManager.getInstance().reset();		
 		this.score = 0;
 		this.bombs = 0;
 		this.invincible = false;

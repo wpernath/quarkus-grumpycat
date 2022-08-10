@@ -13,7 +13,6 @@ const DataManifest = [
 		src: "./data/img/screen-controls.json",
 	},
 
-
 	/* Bitmap Text */
 	{
 		name: "24Outline",
@@ -162,11 +161,13 @@ const DataManifest = [
 		type: "image",
 		src: "./data/img/cat_right.png",
 	},
-	{
-		name: "Terrain",
-		type: "tsx",
-		src: "./data/map/Terrain.json",
-	},
+
+	{ name: "Level1", type: "image", src: "./data/map/Level1.png" },
+	{ name: "Level2", type: "image", src: "./data/map/Level2.png" },
+	{ name: "Level3", type: "image", src: "./data/map/Level3.png" },
+	{ name: "Level4", type: "image", src: "./data/map/Level4.png" },
+	{ name: "Level5", type: "image", src: "./data/map/Level5.png" },
+	{ name: "Level6", type: "image", src: "./data/map/Level6.png" },
 
 ];
 

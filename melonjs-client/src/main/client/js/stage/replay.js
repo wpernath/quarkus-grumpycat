@@ -10,6 +10,7 @@ import { SpiderEnemy } from "../renderables/spider-enemy.js";
 import GolemEnemySprite from "../renderables/golem-enemy.js";
 import { PlayerRemoteSprite } from "../renderables/replay/player-remote-sprite";
 import { RemoteSpiderSprite } from "../renderables/replay/remote-spider";
+import { my_state } from "../util/constants";
 
 
 export default class ReplayGameScreen extends Stage {
@@ -63,6 +64,7 @@ export default class ReplayGameScreen extends Stage {
 		game.world.addChild(this.virtualJoypad, Infinity);
 
 		this.handler = event.on(event.KEYDOWN, function (action, keyCode, edge) {
+			if (!state.isCurrent(my_state.REPLAY_GAME)) return;
 			if (action === "pause") {
 				if (!state.isPaused()) {
 					state.pause();

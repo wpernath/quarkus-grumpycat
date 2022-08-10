@@ -6,12 +6,14 @@ export class Level {
 	constructor(info, name, longName, data) {
 		this.info = info;
 		this.id = info.id;
+        this.previewImage = info.preview;
 		this.name = name;
 		this.longName = longName;
 		this.data = data;
 		this.description = data.description;
 		this.loadedIntoMelon = false;
-
+        this.mapWidth = data.width;
+        this.mapHeight = data.height;
 		this.wayPoints = [];
 		this.wayPaths = [];
 		this.parseObjects();
@@ -98,12 +100,12 @@ var levelManager = null;
 
 const LEVEL_NAMES = [
 	// GUIDs from manifest.js
-	{ id: "level1", path: "maps/0.json", loaded: false, error: false },
-	{ id: "level2", path: "maps/1.json", loaded: false, error: false },
-	{ id: "level3", path: "maps/2.json", loaded: false, error: false },
-	{ id: "level4", path: "maps/3.json", loaded: false, error: false },
-	{ id: "level5", path: "maps/4.json", loaded: false, error: false },
-	{ id: "level6", path: "maps/5.json", loaded: false, error: false },
+	{ id: "level1", path: "maps/0.json", loaded: false, error: false, preview: "Level1" },
+	{ id: "level2", path: "maps/1.json", loaded: false, error: false, preview: "Level2" },
+	{ id: "level3", path: "maps/2.json", loaded: false, error: false, preview: "Level3" },
+	{ id: "level4", path: "maps/3.json", loaded: false, error: false, preview: "Level4" },
+	{ id: "level5", path: "maps/4.json", loaded: false, error: false, preview: "Level5" },
+	{ id: "level6", path: "maps/5.json", loaded: false, error: false, preview: "Level6" },
 ];
 
 export class LevelManager {
@@ -204,6 +206,7 @@ export class LevelManager {
      */
     setCurrentLevel(lvl) {
         this.currentLevel = lvl;
+        return this.getCurrentLevel();
     }
 
     /**
@@ -214,7 +217,7 @@ export class LevelManager {
         console.log("  LevelManager.next() ");        
         let oldLevel = this.currentLevel;
         this.currentLevel++;
-        if( this.currentLevel > LEVEL_NAMES.length) {
+        if( this.currentLevel >= LEVEL_NAMES.length) {
             this.reset();
         }
         this._fireLevelChanged(oldLevel, this.currentLevel);        
@@ -235,8 +238,17 @@ export class LevelManager {
     }
 
     hasNext() {        
-        if (this.currentLevel < LEVEL_NAMES.length) return true;
+        if (this.currentLevel < LEVEL_NAMES.length - 1) return true;
         return false;
+    }
+
+    hasPrev() {
+        if( this.currentLevel > 0 ) return true;
+        return false;
+    }
+
+    levelCount() {
+        return LEVEL_NAMES.length;
     }
 
     prepareCurrentLevel() {
