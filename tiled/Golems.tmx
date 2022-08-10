@@ -293,7 +293,7 @@ Be careful not to get too close to them. </property>
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="7" name="Paths">
+ <objectgroup id="7" name="Paths" visible="0">
   <object id="14" name="end" x="240.078" y="147.1">
    <properties>
     <property name="forEnemy" value="Golem.1"/>

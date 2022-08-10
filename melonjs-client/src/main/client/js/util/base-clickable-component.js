@@ -1,8 +1,8 @@
-import { Container, input, timer } from "melonjs";
+import { Container, game, input, timer } from "melonjs";
 
 export default class BaseClickableComponent extends Container {
-	constructor(x, y) {
-		super(x, y);
+	constructor(x, y, w = game.viewport.width, h = game.viewport.height) {
+		super(x, y, w, h);
 		/**
 		 * object can be clicked or not
 		 * @public

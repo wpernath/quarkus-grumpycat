@@ -61,9 +61,10 @@ class LevelDescription extends Container {
 			offScreenCanvas: false,
 		});
 
-		this.levelDescr = new BitmapText(4, 40, {
+		this.levelDescr = new BitmapText(4, 52, {
 			font: "18Outline",
 			size: "1",
+			lineHeight: 1.5,
 			fillStyle: "white",
 			textAlign: "left",
 			text: LevelManager.getInstance().getCurrentLevel().description,
@@ -116,7 +117,6 @@ class GetReadyBack extends Container {
 
 		this.subTitleText = new BitmapText(126, 170, {
 			font: "Shadow",
-			size: "1",
 			fillStyle: "white",
 			textAlign: "left",
 			text: "GET READY",
