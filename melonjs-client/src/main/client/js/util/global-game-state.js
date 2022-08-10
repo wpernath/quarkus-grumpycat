@@ -63,7 +63,7 @@ const GlobalGameState = {
 	reset: function() {
 		this.energy = this.energyOnBegin;		
 		LevelManager.getInstance().reset();
-		LevelManager.getInstance().setCurrentLevel(2);
+		LevelManager.getInstance().setCurrentLevel(0);
 		this.score = 0;
 		this.bombs = 0;
 		this.invincible = false;
