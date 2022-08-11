@@ -1,5 +1,5 @@
-version: "3"
-name: "grumpycat"
+version: "3.3"
+#name: 'grumpycat'
 
 services:
 
@@ -50,7 +50,7 @@ services:
       - catsdb
       - zookeeper
       - kafka
-    image: quay.io/wpernath/quarkus-grumpycat:latest
+    image: quay.io/wpernath/quarkus-grumpycat:v0.5.5
     ports:
       - "9001:8080"
     restart: always
@@ -65,9 +65,9 @@ services:
   cat-client: 
     depends_on:
       - cat-server
-    image: quay.io/wpernath/grumpycat-melonjs:latest
+    image: quay.io/wpernath/grumpycat-melonjs:v0.5.5
     ports:
-      - "8085:8088"
+      - "8086:8088"
     restart: always
     environment:
       APPLICATION_BASESERVERURL: "http://0.0.0.0:9001/"
