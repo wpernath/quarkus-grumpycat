@@ -134,6 +134,7 @@ class PlayScreen extends Stage {
 								// 10 seconds
 								this.enemyEmitter.isActive = true;
 								this.enemyEmitter.emitAt.x = x;
+								this.enemyEmitter.emitAt.y = y;
 								this.enemyEmitter.emitCount = l.enemyNumEmitting;
 								this.enemyEmitter.emitEvery = l.enemyTimeEmitting;
 								console.log("  enemyEmitter at (" + x + "/" + y + "): ");

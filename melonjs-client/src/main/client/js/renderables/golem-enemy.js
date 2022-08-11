@@ -52,7 +52,7 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 			goTo = this.wayPath.getNextWayPoint();
 		}
 		this.calculateNextPositionToTarget(goTo.x, goTo.y);
-		//console.log(this.name + " next move: " + JSON.stringify(weAreAt) + " / " + JSON.stringify(goTo));
+		
 	}
 
 	updatePosition(dt) {
@@ -114,11 +114,13 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 			}
 		} 
 		else if (other.body.collisionType === collision.types.PLAYER_OBJECT && !this.isDead && !this.isStunned && !GlobalGameState.invincible) {
-			if (this.nextPosition.dx < 0) this.setCurrentAnimation("stand-left");
-			else if (this.nextPosition.dx > 0) this.setCurrentAnimation("stand-right");
+			// golems don't attack (because they don't have an attacking animation)
+			// golems just go their path
+			//if (this.nextPosition.dx < 0) this.setCurrentAnimation("stand-left");
+			//else if (this.nextPosition.dx > 0) this.setCurrentAnimation("stand-right");
 
-			if (this.nextPosition.dy < 0) this.setCurrentAnimation("stand-up");
-			else if (this.nextPosition.dy > 0) this.setCurrentAnimation("stand-down");
+			//if (this.nextPosition.dy < 0) this.setCurrentAnimation("stand-up");
+			//else if (this.nextPosition.dy > 0) this.setCurrentAnimation("stand-down");
 		}
 		return false;
 	}

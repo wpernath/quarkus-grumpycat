@@ -37,12 +37,12 @@ public class MapResource {
         
         // add new levels here! All levels are stored in /java/resources/maps
         String[] levels = new String[] {
-            "Level1.tmj",
-            "Level2.tmj",
+            "JustCats.tmj",
+            "Spiders.tmj",
             "Golems.tmj",
-            "Level5.tmj",
-            "Level4.tmj",
-            "Level3.tmj",
+            "CatsSpiders.tmj",
+            "TheOcean.tmj",
+            "FireAndDragons.tmj", 
         };
 
         try {
@@ -77,7 +77,7 @@ public class MapResource {
             
                 
                 // Make filename the name of the level without extension
-                map.name = level.substring(0, level.lastIndexOf('.')).toLowerCase();
+                map.name = level.substring(0, level.lastIndexOf('.'));
 
                 // look for a map property named 'name' and make it 'longName'
                 if( map.properties != null && map.properties.size() > 0 ) {
