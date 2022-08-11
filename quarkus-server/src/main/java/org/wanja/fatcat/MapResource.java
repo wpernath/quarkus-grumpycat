@@ -42,7 +42,7 @@ public class MapResource {
             "Golems.tmj",
             "Level5.tmj",
             "Level4.tmj",
-            "Level3.tmj",
+            "Level3.tmj", 
         };
 
         try {

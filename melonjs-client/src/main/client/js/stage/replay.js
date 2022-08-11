@@ -143,18 +143,20 @@ export default class ReplayGameScreen extends Stage {
 								// create a spider emitter, which emits up to X spiders every
 								// 10 seconds
 								this.enemyEmitter.isActive = true;
-								this.enemyEmitter.emitAt.x = x + 1;
-								this.enemyEmitter.emitAt.y = y + 1;
+								this.enemyEmitter.emitAt.x = x;
+								this.enemyEmitter.emitAt.y = y;
 								this.enemyEmitter.emitCount = l.enemyNumEmitting;
 								this.enemyEmitter.emitEvery = l.enemyTimeEmitting;
 								console.log("  enemyEmitter at (" + x + "/" + y + "): ");
 							}
                             else if( tile.tileId === 996) {
-								let name = "GolemEnemy." + enemynum++;
-								let enemy = new GolemEnemySprite(x, y, this.enemyActions[name]);
-								
+								let enemy = new GolemEnemySprite(x, y);
+								let name = "Golem." + (enemynum + 1);
+								enemynum++;
 								enemy.setEnemyName(name);
-								game.world.addChild(enemy);
+								enemy.setWayPath(LevelManager.getInstance().getCurrentLevel().getPathForEnemy(name));
+
+								game.world.addChild(enemy, this.spriteLayer);
 								this.enemies.push(enemy);
 								console.log("  enemy at (" + x + "/" + y + "): " + enemy);
                             }
