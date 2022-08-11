@@ -56,11 +56,11 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 0.33,
+            "scale": 2.1805,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 912.1212121212121,
-                "y": 1090.909090909091
+                "x": 49.07131391882595,
+                "y": 51.36436597110756
             }
         },
         "Level-Template.tmx": {
@@ -122,7 +122,7 @@
         },
         "Terrain.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 2.0682,
+            "scaleInDock": 1.2645,
             "scaleInEditor": 1.3389
         },
         "Utumno.tsx": {
@@ -181,12 +181,12 @@
     "project": "grumpycat.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "Golems.tmx",
         "Level1.tmx",
         "Level2.tmx",
         "Level5.tmx",
         "Level4.tmx",
         "Level3.tmx",
-        "Golems.tmx",
         "/Users/wpernath/Devel/examples/platformer/data/map/map1.tmx",
         "Terrain.tsx",
         "/Users/wanja/Devel/melonjs/examples/platformer/data/map/map1.tmx",

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.9" tiledversion="1.9.0" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="1">
  <editorsettings>
-  <export target="../src/main/resources/maps/Level1.tmj" format="json"/>
+  <export target="../src/main/resources/maps/JustCats.tmj" format="json"/>
  </editorsettings>
  <properties>
   <property name="Description">Welcome to the promised grumpy cat land. A land full of joy and meat and
 cheese but also full of grumpy cats. 
 Collect all pills to leave that part of the world. Cats don't like noise.
 Perhaps you can find something to stunn the cat?</property>
-  <property name="Name" value="It's just a cat."/>
+  <property name="Name" value="Just Cats"/>
  </properties>
  <tileset firstgid="1" source="Terrain.tsx"/>
  <layer id="1" name="Ground" width="32" height="32">

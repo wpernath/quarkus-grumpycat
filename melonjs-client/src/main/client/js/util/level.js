@@ -136,7 +136,7 @@ export class LevelManager {
         let res = await fetch(url);
         let data = await res.json();
         let level = new Level(info, data.name, data.longName, data);
-        console.log("  Loaded: " + info.id);
+        console.log("  Loaded: " + info.id + " = " + level.name);
         this.allLevels[info.id] = level;
         return level;
     }

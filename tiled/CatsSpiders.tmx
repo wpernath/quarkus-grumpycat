@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.9" tiledversion="1.9.0" orientation="orthogonal" renderorder="right-down" width="37" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="1">
  <editorsettings>
-  <export target="../src/main/resources/maps/Level5.tmj" format="json"/>
+  <export target="../src/main/resources/maps/CatsSpiders.tmj" format="json"/>
  </editorsettings>
  <properties>
   <property name="Description" value="Did you know that the grumpy cat and spiders could work together?"/>
