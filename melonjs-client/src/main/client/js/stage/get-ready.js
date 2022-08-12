@@ -1,10 +1,11 @@
-import { Container, Sprite, Text, BitmapText, game,loader, Vector2d, Stage, input,event, state, ParticleEmitter, Color } from "melonjs/dist/melonjs.module.js";
+import { Container, Sprite, BitmapText, game,loader, Vector2d, Stage, input,event, state, ParticleEmitter, Color, pool } from "melonjs/dist/melonjs.module.js";
 //import { Math } from "melonjs/dist/melonjs.module.js";
 import CONFIG from "../../config";
 import GlobalGameState from "../util/global-game-state";
 import SpiderEnemy from "../renderables/spider-enemy";
 import { LevelManager } from "../util/level";
 import NetworkManager from "../util/network";
+import PlayerEntity from "../renderables/player";
 
 class MySpider extends SpiderEnemy {
 	walkRight = true;
@@ -132,6 +133,24 @@ class GetReadyBack extends Container {
 		this.addChild(this.titleText, 2);
 		this.addChild(this.subTitleText, 5);
 		this.addChild(new LevelDescription(190, game.viewport.height - 400), game.viewport.width - 400, game.viewport.height - 400);
+
+		let player1 = new PlayerEntity(13, 9, true);
+		player1.tint = pool.pull("Color", 255,55,55);
+		this.addChild(player1);
+
+		let player2 = new PlayerEntity(17, 9, true);
+		player2.tint = pool.pull("Color", 55,55,255);
+		player2.flipX(true);
+		this.addChild(player2);
+
+		let player3 = new PlayerEntity(15, 7, true);
+		player3.tint = pool.pull("Color", 55, 255, 55);
+		this.addChild(player3);
+
+		let player4 = new PlayerEntity(15, 11, true);
+		player4.tint = pool.pull("Color", 255, 255, 55);
+		this.addChild(player4);
+
 	}	
 }
 

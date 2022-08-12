@@ -11,13 +11,13 @@ import NetworkManager from '../util/network';
 class PlayerEntity extends BasePlayerSprite {
 
     levelOver = false;
-
+    
     /**
      * constructor
      */
-    constructor(x, y) {
+    constructor(x, y, justImage = false) {
         // call the parent constructor
-        super(x,y);        
+        super(x,y, justImage);        
     }
 
 
@@ -25,7 +25,9 @@ class PlayerEntity extends BasePlayerSprite {
     /**
      * update the entity
      */
-    update(dt) {        
+    update(dt) {  
+        if( this.justImage )  return true;
+
         let mapX = Math.floor(this.pos.x / 32);
         let mapY = Math.floor(this.pos.y / 32);
         let dx = 0,
@@ -120,13 +122,7 @@ class PlayerEntity extends BasePlayerSprite {
             }
 
 
-            if ((dx != 0 || dy != 0) && this.isWalkable(this.pos.x + dx, this.pos.y + dy)) {
-                this.pos.x += dx;
-                this.pos.y += dy;
-
-                action.dx = dx;
-                action.dy = dy;
-                
+            if ((dx != 0 || dy != 0) && this.updateWalkable(action, dx, dy)) {
                 this.checkBonusTile(this.pos.x, this.pos.y);
                 if( this.collectedBonusTiles >= this.numberOfBonusTiles ) {
                     // level done, check to see if there are more levels
@@ -141,11 +137,6 @@ class PlayerEntity extends BasePlayerSprite {
                         state.change(state.GAME_END);
                     }
                 }
-
-                if (this.pos.x < 0) this.pos.x = 0;
-                if (this.pos.x > this.mapWidth * 32) this.pos.x = this.mapWidth * 32;
-                if (this.pos.y < 0) this.pos.y = 0;
-                if (this.pos.y > this.mapHeight * 32) this.pos.y = this.mapHeight * 32;
 
                 mapX = Math.floor(this.pos.x / 32);
                 mapY = Math.floor(this.pos.y / 32);

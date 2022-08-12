@@ -37,7 +37,9 @@ export class BasePlayerSprite extends Sprite {
 	lastMapX = 0;
 	lastMapY = 0;
 
-	constructor(x, y) {
+	justImage = false;
+
+	constructor(x, y, justImage = false) {
 		let settings = {
 			width: 32,
 			height: 32,
@@ -46,36 +48,39 @@ export class BasePlayerSprite extends Sprite {
 			image: "player", //image: "animals-walk"
 		};
 		super(x * 32 + 16, y * 32 + 16, settings);
+		this.justImage = justImage;
 		this.xInMap = x;
 		this.yInMap = y;
 		this.lastMapX = x;
 		this.lastMapY = y;
 
-		this.body = new Body(this);
-		this.body.ignoreGravity = true;
-		this.body.addShape(new Rect(0, 0, this.width, this.height));
-		this.body.collisionType = collision.types.PLAYER_OBJECT;
-		this.body.setCollisionMask(collision.types.ENEMY_OBJECT);
+		if( !this.justImage ) {
+			this.body = new Body(this);
+			this.body.ignoreGravity = true;
+			this.body.addShape(new Rect(0, 0, this.width, this.height));
+			this.body.collisionType = collision.types.PLAYER_OBJECT;
+			this.body.setCollisionMask(collision.types.ENEMY_OBJECT);
 
-		// set the display to follow our position on both axis
-		game.viewport.follow(this.pos, game.viewport.AXIS.BOTH, 0.1);
+			// set the display to follow our position on both axis
+			game.viewport.follow(this.pos, game.viewport.AXIS.BOTH, 0.1);
 
-		// ensure the player is updated even when outside of the viewport
-		this.alwaysUpdate = true;
-		this.mapHeight = level.getCurrentLevel().rows;
-		this.mapWidth = level.getCurrentLevel().cols;
+			// ensure the player is updated even when outside of the viewport
+			this.alwaysUpdate = true;
+			this.mapHeight = level.getCurrentLevel().rows;
+			this.mapWidth = level.getCurrentLevel().cols;
 
-		let layers = level.getCurrentLevel().getLayers();
-		layers.forEach((l) => {
-			if (l.name === "Bonus") this.bonusLayer = l;
-			else if (l.name === "Frame") this.borderLayer = l;
-			else if (l.name === "Ground") this.groundLayer = l;
-		});
+			let layers = level.getCurrentLevel().getLayers();
+			layers.forEach((l) => {
+				if (l.name === "Bonus") this.bonusLayer = l;
+				else if (l.name === "Frame") this.borderLayer = l;
+				else if (l.name === "Ground") this.groundLayer = l;
+			});
 
-		for (let x = 0; x < this.mapWidth; x++) {
-			for (let y = 0; y < this.mapHeight; y++) {
-				let tile = this.bonusLayer.cellAt(x, y);
-				if (tile !== null) this.numberOfBonusTiles++;
+			for (let x = 0; x < this.mapWidth; x++) {
+				for (let y = 0; y < this.mapHeight; y++) {
+					let tile = this.bonusLayer.cellAt(x, y);
+					if (tile !== null) this.numberOfBonusTiles++;
+				}
 			}
 		}
 	}
@@ -83,9 +88,38 @@ export class BasePlayerSprite extends Sprite {
 	isWalkable(x, y) {
 		let realX = Math.floor(x / 32);
 		let realY = Math.floor(y / 32);
+
+		if( realX < 0 || realY < 0 || realX > this.mapWidth || realY > this.mapHeight ){
+			return false;
+		}
 		let tile = this.borderLayer.cellAt(realX, realY);
-		if (tile !== null && tile != undefined) return false;
+		if (tile !== null && tile != undefined ) return false;
 		else return true;
+	}
+
+	updateWalkable(action, dx,dy) {
+		let pos = this.pos;
+		if( this.isWalkable(pos.x + dx, pos.y + dy)) {
+			this.pos.x += dx;
+			this.pos.y += dy;
+
+			action.dx = dx;
+			action.dy = dy;
+			return true;
+		}
+		if( this.isWalkable(pos.x + dx, pos.y)) {
+			this.pos.x += dx;			
+			action.dx = dx;
+			action.dy = 0;
+			return true;
+		}
+		if( this.isWalkable(pos.x, pos.y + dy)) {
+			this.pos.y += dy;
+			action.dx = 0;
+			action.dy = dy;
+			return true;
+		}
+		return false;
 	}
 
 	collectBonusTile(x, y) {
