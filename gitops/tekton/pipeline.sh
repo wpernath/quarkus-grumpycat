@@ -84,7 +84,7 @@ EOF
 
 while (( "$#" )); do
   case "$1" in
-    build-client|stage-client|logs|init|build-server|stage-server)
+    build-client|stage-client|logs|init|build-server|stage-server|build-all|stage-all)
       COMMAND=$1
       shift
       ;;
@@ -359,6 +359,11 @@ spec:
 EOF
 
     oc apply -f /tmp/pipelinerun.yaml -n $TARGET_NAMESPACE
+}
+
+
+command.build-all() {
+
 }
 
 main() {
