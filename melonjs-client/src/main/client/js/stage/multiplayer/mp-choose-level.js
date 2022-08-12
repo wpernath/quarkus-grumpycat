@@ -93,7 +93,6 @@ class ListEntry extends BaseClickableComponent {
 		this.mapSizeFont = new BitmapText(15 + 348 + 15, 450, {
 			font: "18Outline",
 			text: this.mapSize,
-			//fillStyle: "#ff0000",
 			anchorPoint: new Vector2d(0, 0),
 		});
 
@@ -214,7 +213,7 @@ class ChooserComponent extends Container {
 	}
 }
 
-export class ChooseLevelScreen extends Stage {
+export class MPChooseLevelScreen extends Stage {
     chooserComponent = null;
 
 	onResetEvent() {
@@ -225,7 +224,7 @@ export class ChooseLevelScreen extends Stage {
 		this.handler = event.on(event.KEYDOWN, (action, keyCode, edge) => {
             if (!state.isCurrent(my_state.CHOOSE_LEVEL)) return;
 			if (action === "exit") {
-				state.change(my_state.SINGLE_PLAYER_MENU);
+				state.change(state.MENU);
 			}
             else if( action === "left") {
                 this.chooserComponent.prevLevel();

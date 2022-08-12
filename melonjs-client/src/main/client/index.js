@@ -32,6 +32,8 @@ import ReplayChooserScreen from './js/stage/replay-chooser';
 import {WayPoint, WayPath} from './js/util/walk-path';
 import { GameStateAction, EnemyAction } from "./js/util/game-updates";
 import {ChooseLevelScreen} from "./js/stage/choose-level";
+import MultiplayerMenuScreen from './js/stage/multiplayer/mp-menu';
+import SingleplayerMenuScreen from './js/stage/sp-menu';
 
 
 device.onReady(() => {
@@ -99,6 +101,10 @@ device.onReady(() => {
             state.set(state.GAMEOVER, new GameOverScreen(true));
             state.set(state.GAME_END, new GameOverScreen(false));
             state.set(state.SCORE, new HighscoreScreen());
+            state.set(my_state.SINGLE_PLAYER_MENU, new SingleplayerMenuScreen());
+            
+            // multiplayer states
+            state.set(my_state.MULTIPLAYER_MENU, new MultiplayerMenuScreen());
 
             // set the fade transition effect
             state.transition("fade", "#000000", 500);

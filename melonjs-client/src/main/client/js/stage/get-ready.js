@@ -6,6 +6,7 @@ import SpiderEnemy from "../renderables/spider-enemy";
 import { LevelManager } from "../util/level";
 import NetworkManager from "../util/network";
 import PlayerEntity from "../renderables/player";
+import { my_state } from "../util/constants";
 
 class MySpider extends SpiderEnemy {
 	walkRight = true;
@@ -217,7 +218,7 @@ export default class GetReadyScreen extends Stage {
 				});				
 			}
 			if (action === "exit") {
-				state.change(state.MENU);
+				state.change(my_state.SINGLE_PLAYER_MENU);
 			}
 		});
 	}

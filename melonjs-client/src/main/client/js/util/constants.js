@@ -15,4 +15,21 @@ export const my_state = {
      * Choose a level
      */
     CHOOSE_LEVEL: state.USER + 2,
+
+    SINGLE_PLAYER_MENU: state.USER + 3,
+    /** 
+     * Menu with Start MP game, Join MP game 
+     */ 
+    MULTIPLAYER_MENU: state.USER + 10,
+
+    /**
+     * Choose level and start the game
+     */
+    MULTIPLAYER_START_GAME: state.USER + 11,
+
+    /**
+     * Choose a game with open seats
+     */
+    MULTIPLAYER_JOIN_GAME: state.USER + 12,
+
 }
