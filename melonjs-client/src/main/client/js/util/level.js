@@ -50,23 +50,33 @@ export class Level {
 
                         //console.log("  Read point: " + JSON.stringify(point));
 					}
-                    else if( obj.name === 'WayPath' && obj.polygon !== null ) {
-                        let path = new WayPath(Math.floor(obj.x / 32), Math.floor(obj.y / 32));                        
-                        let startX = obj.x;
-                        let startY = obj.y;
+                    else if( obj.name === 'WayPath' && obj.polyline !== null ) {
+                        let path = new WayPath(Math.floor(Math.round(obj.x) / 32), Math.floor(Math.round(obj.y) / 32));                        
+                        let startX = Math.round(obj.x);
+                        let startY = Math.round(obj.y);
 
                         this.applyProperties(obj, path);
                         path.addWayPoint(new WayPoint(Math.floor(startX / 32), Math.floor(startY / 32)));
                         this.wayPaths[path.forEnemy] = path;
 
-                        obj.polygon.forEach( (point) => {
-                            startX += point.x;
-                            startY += point.y;
-                            let wayPoint = new WayPoint(Math.floor(startX / 32), Math.floor(startY / 32));
-                            path.addWayPoint(wayPoint);
-                        });
+                        console.log("  Start: " + startX + " | " + startY);
+                        for( let i = 0; i < obj.polyline.length; i++ ) {
+                            let point = obj.polyline[i];
+                            startX += Math.round(point.x);
+                            startY += Math.round(point.y);
+                            console.log("   dx = " + point.x + " / " + Math.round(point.x));
+                            console.log("   dy = " + point.y + " / " + Math.round(point.y));
+                            if( point.x !== 0 && point.y !== 0 ) {
+                                let wayPoint = new WayPoint(Math.floor(startX / 32), Math.floor(startY / 32));
+                                path.addWayPoint(wayPoint);
+                            }
+                            console.log("");
+                        };
 
                         //console.log("  Read path: " + JSON.stringify(path));
+                        for(let i = 0; i < path.points.length; i++) {
+                            console.log(path.forEnemy + " path element " + i + " = (" + path.points[i].x + " | " + path.points[i].y + ")" );
+                        }
                     }
 
 				});
@@ -90,7 +100,7 @@ export class Level {
 	}
 
     getPathForEnemy(name) {
-        if( this.wayPoints !== null && this.wayPaths[name] !== undefined ) {
+        if( this.wayPaths[name] !== undefined ) {
             return this.wayPaths[name];
         }
     }

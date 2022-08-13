@@ -7,12 +7,10 @@ import { my_state } from "../../util/constants";
 class StartGameButton extends BaseTextButton {
     constructor(x,y) {
         super(x,y, {
-            text: "Start Game",
+            text: "Host Game",
             borderWidth: 250,
             fillStyle: pool.pull("Color", 255,100,100),
-        });
-
-        
+        });   
     }
 
     onClick() {

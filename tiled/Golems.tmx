@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.0" orientation="orthogonal" renderorder="right-down" width="33" height="42" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="57">
+<map version="1.9" tiledversion="1.9.0" orientation="orthogonal" renderorder="right-down" width="33" height="42" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="58">
  <editorsettings>
   <export target="../quarkus-server/src/main/resources/maps/Golems.tmj" format="json"/>
  </editorsettings>
@@ -425,6 +425,12 @@ Be careful not to get too close to them. </property>
     <property name="forEnemy" value="Golem.9"/>
    </properties>
    <point/>
+  </object>
+  <object id="57" name="golem 1 path" x="240.515" y="144.22">
+   <properties>
+    <property name="forEnemy" value="Golem.1"/>
+   </properties>
+   <polyline points="0,0 -0.887508,98.0697 -95.8509,95.8509 -97.1822,-104.282 95.4071,-101.62 290.52,-99.8851 288.057,94.6962 191.012,93.2183 189.535,-3.82601"/>
   </object>
  </objectgroup>
 </map>
