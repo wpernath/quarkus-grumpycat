@@ -222,7 +222,7 @@ export class ChooseLevelScreen extends Stage {
 		this.chooserComponent = new ChooserComponent();
 		game.world.addChild(this.chooserComponent);
 
-		this.handler = event.on(event.KEYDOWN, (action, keyCode, edge) => {
+		this.handler = event.on(event.KEYUP, (action, keyCode, edge) => {
             if (!state.isCurrent(my_state.CHOOSE_LEVEL)) return;
 			if (action === "exit") {
 				state.change(my_state.SINGLE_PLAYER_MENU);
@@ -242,7 +242,7 @@ export class ChooseLevelScreen extends Stage {
 
 	onDestroyEvent() {
         console.log("ChooserLevel.onExit()");
-		event.off(event.KEYDOWN, this.handler);		
+		event.off(event.KEYUP, this.handler);		
 		game.world.removeChild(this.chooserComponent);        
 	}
 }

@@ -47,7 +47,7 @@ class PlayScreen extends Stage {
 		game.world.addChild(this.hudContainer);
 		game.world.addChild(this.virtualJoypad, Infinity);
 
-		this.handler = event.on(event.KEYDOWN,  (action, keyCode, edge) => {
+		this.handler = event.on(event.KEYUP,  (action, keyCode, edge) => {
 			if (!state.isCurrent(state.PLAY)) return;
 			if (action === "pause") {
 				if (!state.isPaused()) {
@@ -75,7 +75,7 @@ class PlayScreen extends Stage {
 		console.log("Play.OnExit()");
 		game.world.removeChild(this.hudContainer);
 		game.world.removeChild(this.virtualJoypad);
-		event.off(event.KEYDOWN, this.handler);
+		event.off(event.KEYUP, this.handler);
 		this.isActive = false;
 	}
 

@@ -181,7 +181,7 @@ export default class ReplayChooserScreen extends Stage {
 
 		//input.bindPointer(input.pointer.LEFT, input.KEY.ESC);
 
-		this.handler = event.on(event.KEYDOWN, function (action, keyCode, edge) {
+		this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
 			if (!state.isCurrent(my_state.REPLAY_GAME_CHOOSER)) return;
 			if (action === "exit") {
 				state.change(my_state.SINGLE_PLAYER_MENU);
@@ -195,7 +195,7 @@ export default class ReplayChooserScreen extends Stage {
 	}
 
 	onDestroyEvent() {
-		event.off(event.KEYDOWN, this.handler);
+		event.off(event.KEYUP, this.handler);
 		//input.unbindPointer(input.pointer.LEFT);
 		game.world.removeChild(this.replay);
 	}

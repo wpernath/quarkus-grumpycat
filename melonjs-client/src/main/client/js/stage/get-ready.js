@@ -201,7 +201,7 @@ export default class GetReadyScreen extends Stage {
 		input.bindKey(input.KEY.ENTER, "enter", true);
 		input.bindPointer(input.pointer.LEFT, input.KEY.ENTER);
 
-		this.handler = event.on(event.KEYDOWN, function (action, keyCode, edge) {
+		this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
 			if (!state.isCurrent(state.READY)) return;
 			console.log("GetReady.EventHandler()");
 			if (action === "enter" || action === "bomb") {
@@ -230,7 +230,7 @@ export default class GetReadyScreen extends Stage {
 		console.log("GetReady.OnExit()");
 		input.unbindKey(input.KEY.ENTER);
 		input.unbindPointer(input.pointer.LEFT);
-		event.off(event.KEYDOWN, this.handler);
+		event.off(event.KEYUP, this.handler);
 		game.world.removeChild(this.back);
 		for( let i = 0; i < this.spiders.length; i++ ) {
 			game.world.removeChild(this.spiders[i]);

@@ -197,7 +197,7 @@ export default class HighscoreScreen extends Stage {
 
 		input.bindPointer(input.pointer.LEFT, input.KEY.ESC);
 
-        this.handler = event.on(event.KEYDOWN, function (action, keyCode, edge) {
+        this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
             if (!state.isCurrent(state.SCORE)) return;
             if (action === "exit") {
                 state.change(state.MENU);
@@ -210,7 +210,7 @@ export default class HighscoreScreen extends Stage {
     }
 
     onDestroyEvent() {
-        event.off(event.KEYDOWN, this.handler);
+        event.off(event.KEYUP, this.handler);
 		input.unbindPointer(input.pointer.LEFT);
         game.world.removeChild(this.highscore);
     }

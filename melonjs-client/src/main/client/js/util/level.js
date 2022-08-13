@@ -67,6 +67,8 @@ export class Level {
                     }
 
 				});
+
+                // we are deleting the objects from the source to be able load it into melonjs
                 l.objects = null;
 			}
 		});

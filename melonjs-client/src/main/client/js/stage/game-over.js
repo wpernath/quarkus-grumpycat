@@ -168,7 +168,7 @@ export default class GameOverScreen extends Stage {
 			input.bindKey(input.KEY.ENTER, "enter", true);
 			input.bindPointer(input.pointer.LEFT, input.KEY.ENTER);
 
-			this.handler = event.on(event.KEYDOWN, function (action, keyCode, edge) {
+			this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
 				if (!state.isCurrent(state.GAMEOVER)) return;
 				console.log("GameOver.EventHandler()");
 				if (action === "enter" || action === "bomb") {
@@ -188,7 +188,7 @@ export default class GameOverScreen extends Stage {
 		console.log("GameOver.OnExit()");
 		input.unbindKey(input.KEY.ENTER);
 		input.unbindPointer(input.pointer.LEFT);
-		event.off(event.KEYDOWN, this.handler);
+		event.off(event.KEYUP, this.handler);
 		game.world.removeChild(this.back);
 		game.world.removeChild(this.emitter);
 	}
