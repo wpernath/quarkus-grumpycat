@@ -70,7 +70,7 @@ public class MapResource {
                             }
                             else {
                                 lo.name = "WayPath";
-                            }
+                            } 
                         }
                     }
                 });

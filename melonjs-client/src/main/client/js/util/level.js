@@ -56,27 +56,14 @@ export class Level {
                         let startY = Math.round(obj.y);
 
                         this.applyProperties(obj, path);
-                        path.addWayPoint(new WayPoint(Math.floor(startX / 32), Math.floor(startY / 32)));
                         this.wayPaths[path.forEnemy] = path;
 
-                        console.log("  Start: " + startX + " | " + startY);
-                        for( let i = 0; i < obj.polyline.length; i++ ) {
-                            let point = obj.polyline[i];
-                            startX += Math.round(point.x);
-                            startY += Math.round(point.y);
-                            console.log("   dx = " + point.x + " / " + Math.round(point.x));
-                            console.log("   dy = " + point.y + " / " + Math.round(point.y));
-                            if( point.x !== 0 && point.y !== 0 ) {
-                                let wayPoint = new WayPoint(Math.floor(startX / 32), Math.floor(startY / 32));
-                                path.addWayPoint(wayPoint);
-                            }
-                            console.log("");
-                        };
-
-                        //console.log("  Read path: " + JSON.stringify(path));
-                        for(let i = 0; i < path.points.length; i++) {
-                            console.log(path.forEnemy + " path element " + i + " = (" + path.points[i].x + " | " + path.points[i].y + ")" );
-                        }
+                        obj.polyline.forEach( (point) => {                
+                            let x = Math.round(startX + point.x);
+                            let y = Math.round(startY + point.y);
+                            let wayPoint = new WayPoint(Math.floor(x / 32), Math.floor(y / 32));
+    						path.addWayPoint(wayPoint);
+                        });
                     }
 
 				});
