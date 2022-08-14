@@ -3,9 +3,10 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Golems.tmx",
+    "activeFile": "multiplayer/mp_golems.tmx",
     "expandedProjectPaths": [
-        "."
+        ".",
+        "multiplayer"
     ],
     "exportAsImage.useCurrentScale": true,
     "file.lastUsedOpenFilter": "Alle Dateien (*)",
@@ -56,11 +57,11 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 2.1805,
+            "scale": 1.2696,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 241.45838110525114,
-                "y": 1202.247191011236
+                "x": 486.37366099558915,
+                "y": 743.9350976685571
             }
         },
         "Level-Template.tmx": {
@@ -162,25 +163,38 @@
                 "y": 224.90768714333666
             }
         },
+        "multiplayer/Terrain.tsx": {
+            "scaleInDock": 1
+        },
+        "multiplayer/mp_golems.tmx": {
+            "scale": 0.25,
+            "selectedLayer": 6,
+            "viewCenter": {
+                "x": 1270,
+                "y": 1174
+            }
+        },
         "spiders.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
         }
     },
     "frame.defaultDuration": 250,
-    "last.exportedFilePath": "/Users/wpernath/Devel/grumpycat/quarkus-grumpycat/quarkus-server/src/main/resources/maps",
+    "last.exportedFilePath": "/Users/wanja/Devel/grumpycat/quarkus-grumpycat/quarkus-server/src/main/resources/maps",
+    "last.externalTilesetPath": "/Users/wanja/Devel/grumpycat/quarkus-grumpycat/tiled",
     "last.imagePath": "/Users/wanja/Devel/grumpycat/quarkus-grumpycat/tiled/images/tilesets",
     "lastUsedTilesetExportFilter": "JSON-Kachelsatz-Dateien (*.tsj *.json)",
     "map.height": 36,
-    "map.lastUsedExportFilter": "JSON-Kartendateien (*.tmj *.json)",
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
     "map.width": 32,
     "openFiles": [
-        "Golems.tmx"
+        "multiplayer/mp_golems.tmx"
     ],
     "project": "grumpycat.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "multiplayer/mp_golems.tmx",
         "Golems.tmx",
         "Level1.tmx",
         "Level2.tmx",
@@ -191,8 +205,7 @@
         "Terrain.tsx",
         "/Users/wanja/Devel/melonjs/examples/platformer/data/map/map1.tmx",
         "Level-Template.tmx",
-        "spiders.tsx",
-        "explosion.tsx"
+        "spiders.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

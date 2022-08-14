@@ -25,6 +25,7 @@ import org.wanja.fatcat.map.RealTileSet;
 public class MapResource {
     
     List<Map> maps = new ArrayList<>();
+    List<Map> multiplayerMaps = new ArrayList<>();
 
     @Inject
     ObjectMapper mapper;
@@ -43,6 +44,9 @@ public class MapResource {
             "CatsSpiders.tmj",
             "TheOcean.tmj",
             "FireAndDragons.tmj", 
+
+            // multiplayer maps
+            "mp_golems.tmj",
         };
 
         try {
@@ -50,8 +54,7 @@ public class MapResource {
                 Map map = mapper.readValue(
                         getClass().getResourceAsStream("/maps/" + level ), 
                         Map.class);
-                maps.add(map);   
-
+                  
                 // make sure person layer is not visible
                 List<Layer> layers = map.layers;
                 layers.forEach(l -> {
@@ -88,6 +91,12 @@ public class MapResource {
                         else if( p.name.equalsIgnoreCase("Description")) {
                             map.description = p.value;
                         }
+                        else if( p.name.equalsIgnoreCase("forMultiPlayer")) {
+                            map.forMultiplayer = true;
+                        }
+                        else if( p.name.equalsIgnoreCase("numPlayers")) {
+                            map.numPlayers = Integer.parseInt(p.value);
+                        }
                     }
                 }
 
@@ -104,6 +113,13 @@ public class MapResource {
                     rts.firstGid = mts.firstGid;
                     map.tilesets.add(rts);
                 });
+
+                if( map.forMultiplayer ) {
+                    multiplayerMaps.add(map);
+                }
+                else {
+                    maps.add(map);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -134,4 +150,30 @@ public class MapResource {
     public int numLevels() {
         return maps.size();
     }
+
+    @GET
+    @Path("/mp/{level}")
+    public Map mpmapByLevelId(int level) {
+        if (level >= 0 && level < multiplayerMaps.size()) {
+            Log.info("Requesting Level #" + (level + 1));
+            return mpmapByLevel(level);
+        }
+        return null;
+    }
+
+    @GET
+    @Path("/mp/{level}.json")
+    public Map mpmapByLevel(int level) {
+        if (level >= 0 && level < multiplayerMaps.size()) {
+            return multiplayerMaps.get(level);
+        }
+        return null;
+    }
+
+    @GET
+    @Path("/mp/")
+    public int mpnumLevels() {
+        return multiplayerMaps.size();
+    }
+
 }
