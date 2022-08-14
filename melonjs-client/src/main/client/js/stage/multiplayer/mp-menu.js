@@ -3,6 +3,7 @@ import { Stage, event, loader, game, state, Vector2d, Container, BitmapText, Rec
 import BaseTextButton from "../../util/base-text-button";
 
 import { my_state } from "../../util/constants";
+import { StateBackground } from "../state_background";
 
 class StartGameButton extends BaseTextButton {
     constructor(x,y) {
@@ -60,35 +61,7 @@ class MenuComponent extends Container {
 
 		// give a name
 		this.name = "TitleBack";
-
-		// add elements
-		//this.imageLayer = new ImageLayer()
-		this.backgroundImage = new Sprite(game.viewport.width / 2, game.viewport.height / 2, {
-			image: loader.getImage("sensa_grass"),
-		});
-
-		// scale to fit with the viewport size
-		this.backgroundImage.scale(game.viewport.width / this.backgroundImage.width, game.viewport.height / this.backgroundImage.height);
-		this.backgroundImage.setOpacity(0.4);
-		this.addChild(this.backgroundImage);
-
-		// title and subtitle
-		this.titleText = new Sprite(86, -10, {
-			image: loader.getImage("title"),
-			anchorPoint: new Vector2d(0, 0),
-		});
-
-		this.subTitleText = new BitmapText(126, 160, {
-			font: "Shadow",
-			size: "1",
-			fillStyle: "white",
-			textAlign: "left",
-			text: "MULTIPLAYER",			
-		});
-
-		this.addChild(this.titleText);
-		this.addChild(this.subTitleText);
-
+		this.addChild(new StateBackground("MULTIPLAYER"));
         this.addChild(new StartGameButton((game.viewport.width - 250)/2, 300));
         this.addChild(new JoinGameButton((game.viewport.width - 250) / 2, 360));
         this.addChild(new BackButton((game.viewport.width - 250) / 2, 420));        

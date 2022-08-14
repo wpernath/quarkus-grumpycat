@@ -2,6 +2,7 @@ import { Stage, event, loader, game, state, Vector2d, Text, Container, BitmapTex
 import GlobalGameState from "../util/global-game-state";
 import CONFIG from "../../config";
 import NetworkManager from "../util/network";
+import { StateBackground } from "./state_background";
 
 class HighscoreEntry extends Container {
     font;
@@ -138,34 +139,7 @@ class HighscoreComponent extends Container {
 		// give a name
 		this.name = "TitleBack";
 
-		// add elements
-		this.backgroundImage = new Sprite(game.viewport.width / 2, game.viewport.height / 2, {
-			image: loader.getImage("sensa_grass"),
-		});
-
-		// scale to fit with the viewport size
-		this.backgroundImage.scale(game.viewport.width / this.backgroundImage.width, game.viewport.height / this.backgroundImage.height);
-		this.backgroundImage.setOpacity(0.4);
-		this.addChild(this.backgroundImage);
-
-		// title and subtitle
-		this.titleText = new Sprite(86, -10, {
-			image: loader.getImage("title"),
-			anchorPoint: new Vector2d(0, 0),
-		});
-
-		this.subTitleText = new BitmapText(126, 160, {
-			font: "Shadow",
-			size: "1",
-			fillStyle: "white",
-			textAlign: "left",
-			text: "HIGHSCORES",
-			offScreenCanvas: false,
-		});
-
-		this.addChild(this.titleText);
-		this.addChild(this.subTitleText);
-
+		this.addChild(new StateBackground("HIGHSCORES", false, false));
 		// write the highest 10 scores
 		for (let i = 0; i < this.highscores.length; i++) {
 			let se = this.highscores[i];
