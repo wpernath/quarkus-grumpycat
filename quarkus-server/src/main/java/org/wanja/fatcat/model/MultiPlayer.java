@@ -2,6 +2,8 @@ package org.wanja.fatcat.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
@@ -10,6 +12,10 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 @Table(name = "multi_player")
 public class MultiPlayer extends PanacheEntity {
     public String name;
+
+    @ManyToOne
+    @JoinColumn(name = "player_id", insertable = false, updatable = false)
+    public Player player;
 
     public long score;    
 
@@ -50,6 +56,7 @@ public class MultiPlayer extends PanacheEntity {
 
     public MultiPlayer(Player p) {
         this.name = p.name;
+        this.player = p;
     }
 
     @Override

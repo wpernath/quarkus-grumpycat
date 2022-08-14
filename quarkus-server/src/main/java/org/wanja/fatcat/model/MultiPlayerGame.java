@@ -13,22 +13,27 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 @Entity
 @Table(name = "mp_game")
 public class MultiPlayerGame extends PanacheEntity {
+    @Column(name = "is_open")
     public boolean isOpen;
+
+    @Column(name = "is_running")
     public boolean isRunning;
+
+    @Column(name = "is_closed")
     public boolean isClosed;
     public int level; // multiplayer level, eg, level from MapResource.mpLevel(x)
     
     @Column(name = "time_started")
     public Date timeStarted;
 
-    @Column(name = "time_started")
+    @Column(name = "time_stopped")
     public Date timeStopped;
 
     // we only support up to 4 players 
     @ManyToOne
     @JoinColumn(name = "player1_id", insertable = false, updatable = false)
     public MultiPlayer player1;
-
+    
     @ManyToOne
     @JoinColumn(name = "player2_id", insertable = false, updatable = false)
     public MultiPlayer player2;
@@ -40,4 +45,17 @@ public class MultiPlayerGame extends PanacheEntity {
     @ManyToOne
     @JoinColumn(name = "player4_id", insertable = false, updatable = false)
     public MultiPlayer player4;
+
+    @Column(name ="player1_id")
+    public Long player1Id;
+
+    @Column(name = "player2_id")
+    public Long player2Id;
+
+    @Column(name = "player3_id")
+    public Long player3Id;
+
+    @Column(name = "player4_id")
+    public Long player4Id;
+
 }
