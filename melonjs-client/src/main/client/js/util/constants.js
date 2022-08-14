@@ -32,4 +32,10 @@ export const my_state = {
      */
     MULTIPLAYER_JOIN_GAME: state.USER + 12,
 
+
+    /**
+     * The lobby screen where the host waits for joiners
+     */
+    MULTIPLAYER_LOBBY: state.USER + 13,
+
 }

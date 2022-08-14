@@ -74,7 +74,7 @@ export default class MultiplayerMenuScreen extends Stage {
 		this.menu = new MenuComponent();
 		game.world.addChild(this.menu);
 
-		this.handler = event.on(event.KEYDOWN, function (action, keyCode, edge) {
+		this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
 			if (!state.isCurrent(my_state.MULTIPLAYER_MENU)) return;
 			if (action === "exit") {
 				state.change(state.MENU);
@@ -83,7 +83,7 @@ export default class MultiplayerMenuScreen extends Stage {
 	}
 
 	onDestroyEvent() {
-		event.off(event.KEYDOWN, this.handler);
+		event.off(event.KEYUP, this.handler);
 		//input.unbindPointer(input.pointer.LEFT);
 		game.world.removeChild(this.menu);
 	}

@@ -34,6 +34,9 @@ import { GameStateAction, EnemyAction } from "./js/util/game-updates";
 import {ChooseLevelScreen} from "./js/stage/choose-level";
 import MultiplayerMenuScreen from './js/stage/multiplayer/mp-menu';
 import SingleplayerMenuScreen from './js/stage/sp-menu';
+import HostGameScreen from './js/stage/multiplayer/mp-host-game';
+import JoinGameScreen from './js/stage/multiplayer/mp-join-game';
+import MultiplayerLobbyScreen from './js/stage/multiplayer/mp-lobby';
 
 
 device.onReady(() => {
@@ -105,6 +108,9 @@ device.onReady(() => {
             
             // multiplayer states
             state.set(my_state.MULTIPLAYER_MENU, new MultiplayerMenuScreen());
+            state.set(my_state.MULTIPLAYER_START_GAME, new HostGameScreen());
+            state.set(my_state.MULTIPLAYER_JOIN_GAME, new JoinGameScreen());
+            state.set(my_state.MULTIPLAYER_LOBBY, new MultiplayerLobbyScreen());
 
             // set the fade transition effect
             state.transition("fade", "#000000", 500);

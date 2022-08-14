@@ -43,18 +43,18 @@ class MenuComponent extends Container {
 
 		// give a name
 		this.name = "TitleBack";
-		this.addChild(new StateBackground("JOIN GAME", false, false));
+		this.addChild(new StateBackground("LOBBY", false, false));
 		this.addChild(new BackButton(5, game.viewport.height - 60));
 	}
 }
 
-export default class JoinGameScreen extends Stage {
+export default class MultiplayerLobbyScreen extends Stage {
 	onResetEvent() {
 		this.menu = new MenuComponent();
 		game.world.addChild(this.menu);
 
 		this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
-			if (!state.isCurrent(my_state.MULTIPLAYER_JOIN_GAME)) return;
+			if (!state.isCurrent(my_state.MULTIPLAYER_LOBBY)) return;
 			if (action === "exit") {
 				state.change(my_state.MULTIPLAYER_MENU);
 			}
