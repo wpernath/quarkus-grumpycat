@@ -3,7 +3,9 @@ import { Stage, event, loader, game, state, Vector2d, Container, BitmapText, Rec
 import BaseTextButton from "../../util/base-text-button";
 
 import { my_state } from "../../util/constants";
+import MultiplayerManager  from "../../util/multiplayer";
 import { StateBackground } from "../state_background";
+import GlobalGameState from "../../util/global-game-state";
 
 class StartGameButton extends BaseTextButton {
     constructor(x,y) {
@@ -72,7 +74,13 @@ class MenuComponent extends Container {
 export default class MultiplayerMenuScreen extends Stage {
 	onResetEvent() {
 		this.menu = new MenuComponent();
+		this.multiplayerManager = MultiplayerManager.getInstance();
 		game.world.addChild(this.menu);
+
+		this.multiplayerManager.createPlayerFromMe().then((player) => {
+			GlobalGameState.multiplayerPlayer = player;
+						
+		});
 
 		this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
 			if (!state.isCurrent(my_state.MULTIPLAYER_MENU)) return;

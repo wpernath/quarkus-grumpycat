@@ -23,6 +23,7 @@ import org.wanja.fatcat.model.MultiplayerMessageEncoder;
 import org.wanja.fatcat.model.MultiplayerMessageDecoder;
 
 import io.quarkus.logging.Log;
+import io.smallrye.common.annotation.Blocking;
 
 
 
@@ -40,34 +41,29 @@ public class MultiplayerSocket {
     // a gameId / game list
     Map<Long, MultiPlayerGame> gameIdGames = new ConcurrentHashMap<>();
 
-    // a playerId to player association
-    Map<Long, MultiPlayer> playerIdPlayer = new ConcurrentHashMap<>();
-
     // a map containing gameId --> Set of players in game
     Map<Long, Set<Long>> playersInGame = new ConcurrentHashMap<>();
 
-    @OnOpen
-    @Transactional
+    @OnOpen   
     public void onOpen(Session session, @PathParam("gameId") Long gameId, @PathParam("playerId") Long playerId ) {
         MultiPlayerGame game = null;
-        MultiPlayer     player = MultiPlayer.findById(playerId);
         Set<Long> players = playersInGame.get(gameId);
 
-        if( !gameIdGames.containsKey(gameId)) { // host is opening the game
+        if( !playersInGame.containsKey(gameId)) { // host is opening the game
             players = new HashSet<>();
             players.add(playerId);
             playersInGame.put(gameId, players);
-
-            game = MultiPlayerGame.findById(gameId);
+            game = new MultiPlayerGame();
+            game.id = gameId;
+            //game = MultiPlayerGame.findById(gameId);
             gameIdGames.put(gameId, game);
-            game.player1 = player;
-            game.persist();
+            game.player1Id = playerId;
         }
         else { // game is existing, we have another player for it
             game = gameIdGames.get(gameId);            
-            if( game.player2 == null ) game.player2 = player;
-            else if( game.player3 == null) game.player3 = player;
-            else if( game.player4 == null ) game.player4 = player;
+            if( game.player2Id == null ) game.player2Id = playerId;
+            else if( game.player3Id == null) game.player3Id = playerId;
+            else if( game.player4Id == null ) game.player4Id = playerId;
             else {
                 // game already full
                 Log.info("Game " + gameId + " is allready full");
@@ -77,60 +73,51 @@ public class MultiplayerSocket {
                 return;
             }
             players.add(playerId);
-        }
-        playerIdPlayer.put(playerId, player);
-        playerSessions.put(playerId, session);
-        game.persist();
-        
+        }        
+        playerSessions.put(playerId, session);        
     }
 
-    @OnClose
-    @Transactional
+    @OnClose    
     public void onClose(Session session, @PathParam("gameId") Long gameId, @PathParam("playerId") Long playerId) {
-        playerSessions.remove(playerId);
-        playerIdPlayer.remove(playerId);
+        playerSessions.remove(playerId);        
         Set<Long> players = playersInGame.get(gameId);
 
         MultiPlayerGame game = gameIdGames.get(gameId);
-        if( game.player1.id == playerId) {
-            // game closed
-            playersInGame.remove(gameId);
-            gameIdGames.remove(gameId);
-            game.delete();            
-            return;
+        if( game != null ) {
+            if( game.player1.id == playerId) {
+                // game closed
+                playersInGame.remove(gameId);
+                gameIdGames.remove(gameId);
+                return;
+            }
+            else if( game.player2.id == playerId) {
+                game.player2 = null;
+                players.remove(playerId);
+            }
+            else if( game.player3.id == playerId) {
+                game.player3 = null;
+                players.remove(playerId);
+            }
+            else if( game.player4.id == playerId) {
+                game.player4 = null;
+                players.remove(playerId);
+            }
+            else {
+                Log.error("Player " + playerId + " did not belong to game " + gameId);
+            }        
         }
-        else if( game.player2.id == playerId) {
-            game.player2 = null;
-            players.remove(playerId);
-            game.persist();
-        }
-        else if( game.player3.id == playerId) {
-            game.player3 = null;
-            players.remove(playerId);
-            game.persist();
-        }
-        else if( game.player4.id == playerId) {
-            game.player4 = null;
-            players.remove(playerId);
-            game.persist();
-        }
-        else {
-            Log.error("Player " + playerId + " did not belong to game " + gameId);
-        }        
     }
 
     @OnError
     public void onError(Session session, @PathParam("gameId") Long gameId, @PathParam("playerId") Long playerId, Throwable error) {
-        Log.error("Player " + playerId + " needs to be removed from game " + gameId);
+        Log.error("Player " + playerId + " needs to be removed from game " + gameId, error);
         onClose(session, gameId, playerId);
     }
 
     @OnMessage
     public void onMessage(MultiplayerMessage message, @PathParam("gameId") Long gameId, @PathParam("playerId") Long playerId) {
-        MultiPlayerGame game = gameIdGames.get(gameId);
-        MultiPlayer player = playerIdPlayer.get(playerId);
         Set<Long> players = playersInGame.get(gameId);
-        if( game != null && player != null && players != null ) {
+        if( players != null ) {
             players.forEach(pid -> {
                 if(pid != playerId ) { // broadcast only to others in this game!
                     playerSessions.get(pid).getAsyncRemote().sendObject(message, res -> {

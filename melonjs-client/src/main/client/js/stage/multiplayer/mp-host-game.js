@@ -1,6 +1,8 @@
 import { Stage, event, game, state, Container } from "melonjs";
 import BaseTextButton from "../../util/base-text-button";
 import { my_state } from "../../util/constants";
+import GlobalGameState from "../../util/global-game-state";
+import MultiplayerManager from "../../util/multiplayer";
 import { StateBackground } from "../state_background";
 
 class BackButton extends BaseTextButton {
@@ -25,7 +27,10 @@ class StartGameButton extends BaseTextButton {
 	}
 
 	onClick() {
-		state.change(my_state.MULTIPLAYER_LOBBY);
+		MultiplayerManager.getInstance().createGame(0).then( (game) => {
+			GlobalGameState.multiplayerGame = game;
+			state.change(my_state.MULTIPLAYER_LOBBY);
+		});		
 	}
 }
 
@@ -54,6 +59,7 @@ export default class HostGameScreen extends Stage {
 	onResetEvent() {
 		this.menu = new MenuComponent();
 		game.world.addChild(this.menu);
+
 
 		this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
 			if (!state.isCurrent(my_state.MULTIPLAYER_START_GAME)) return;

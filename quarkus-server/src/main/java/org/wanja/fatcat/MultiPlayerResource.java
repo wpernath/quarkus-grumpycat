@@ -1,5 +1,6 @@
 package org.wanja.fatcat;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -12,12 +13,18 @@ import org.wanja.fatcat.model.MultiPlayer;
 import org.wanja.fatcat.model.MultiPlayerGame;
 import org.wanja.fatcat.model.Player;
 
+import io.quarkus.logging.Log;
+
 @Path("/mp-game")
 public class MultiPlayerResource {
 
-    private class MultiPlayerPlayerGame {
+    public static class MultiPlayerPlayerGame {
         public MultiPlayerGame game;
         public MultiPlayer host;
+
+        MultiPlayerPlayerGame() {
+
+        }
     }
 
 
@@ -33,7 +40,12 @@ public class MultiPlayerResource {
         MultiPlayerGame game = gamestr.game;
         MultiPlayer     host = gamestr.host;
         game.player1 = host;
+        game.isClosed = false;
+        game.isRunning = false;
+        game.isOpen = true;
+        game.timeStarted = new Date();
         game.persist();
+        Log.info("New Multiplayer game created with id: " + game.id);
         return game;
     }
 
@@ -47,17 +59,17 @@ public class MultiPlayerResource {
             else if( game.player3 != null ) game.player3 = player;
             else if( game.player4 != null ) game.player4 = player;
             else throw new IllegalStateException("Game " + game.id + " is allready full");
-
             game.persist();
         }
     }
      
     @POST
-    @Path("/")
+    @Path("/player")
     @Transactional
     public MultiPlayer createMultiPlayerFromPlayer(Player p) {
         MultiPlayer mp = new MultiPlayer(p);
         mp.persist();
+        Log.info("New Multiplayer Player created with id " + mp.id);
         return mp;
     }
 
