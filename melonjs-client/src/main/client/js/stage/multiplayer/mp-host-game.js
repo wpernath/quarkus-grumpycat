@@ -40,7 +40,7 @@ class MenuComponent extends Container {
 		this.z = 10;
 
 		this.setOpacity(1.0);
-
+		
 		// give a name
 		this.name = "TitleBack";
 
