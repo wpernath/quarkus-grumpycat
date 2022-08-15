@@ -1,6 +1,7 @@
 import { Stage, event, game, state, Container } from "melonjs";
 import BaseTextButton from "../../util/base-text-button";
 import { my_state } from "../../util/constants";
+import MultiplayerManager from "../../util/multiplayer";
 import { StateBackground } from "../state_background";
 
 class BackButton extends BaseTextButton {
@@ -12,6 +13,7 @@ class BackButton extends BaseTextButton {
 	}
 
 	onClick() {
+		MultiplayerManager.getInstance().closeActiveGame();
 		state.change(my_state.MULTIPLAYER_MENU);
 	}
 }

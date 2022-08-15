@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.transaction.Transactional;
+
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -16,14 +16,12 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-import org.wanja.fatcat.model.MultiPlayer;
 import org.wanja.fatcat.model.MultiPlayerGame;
 import org.wanja.fatcat.model.MultiplayerMessage;
 import org.wanja.fatcat.model.MultiplayerMessageEncoder;
 import org.wanja.fatcat.model.MultiplayerMessageDecoder;
 
 import io.quarkus.logging.Log;
-import io.smallrye.common.annotation.Blocking;
 
 
 
@@ -73,6 +71,9 @@ public class MultiplayerSocket {
                 return;
             }
             players.add(playerId);
+
+            broadcastOthersInGame(gameId, MultiplayerMessage.playerJoined(playerId, gameId));
+            
         }        
         playerSessions.put(playerId, session);        
     }
@@ -84,27 +85,37 @@ public class MultiplayerSocket {
 
         MultiPlayerGame game = gameIdGames.get(gameId);
         if( game != null ) {
-            if( game.player1.id == playerId) {
+            if( game.player1Id == playerId) {
                 // game closed
+                Log.info("Closing Multiplayer Game " + game.id );
                 playersInGame.remove(gameId);
                 gameIdGames.remove(gameId);
                 return;
             }
-            else if( game.player2.id == playerId) {
-                game.player2 = null;
-                players.remove(playerId);
-            }
-            else if( game.player3.id == playerId) {
-                game.player3 = null;
-                players.remove(playerId);
-            }
-            else if( game.player4.id == playerId) {
-                game.player4 = null;
-                players.remove(playerId);
-            }
             else {
-                Log.error("Player " + playerId + " did not belong to game " + gameId);
-            }        
+                MultiplayerMessage mm = MultiplayerMessage.playerRemoved(playerId, gameId);
+                if( game.player2Id == playerId) {
+                    game.player2 = null;
+                    mm.message = "Player 2 removed";
+                    players.remove(playerId);
+                }
+                else if( game.player3Id == playerId) {
+                    game.player3 = null;
+                    mm.message = "Player 3 removed";                    
+                    players.remove(playerId);
+                }
+                else if( game.player4Id == playerId) {
+                    game.player4 = null;
+                    mm.message = "Player 4 removed";                    
+                    players.remove(playerId);
+                }
+                else {
+                    Log.error("Player " + playerId + " did not belong to game " + gameId);
+                    return;
+                }        
+
+                broadcastOthersInGame(gameId, mm);
+            }
         }
     }
 
@@ -116,17 +127,25 @@ public class MultiplayerSocket {
 
     @OnMessage
     public void onMessage(MultiplayerMessage message, @PathParam("gameId") Long gameId, @PathParam("playerId") Long playerId) {
+        broadcastOthersInGame(gameId, message);
+    }
+
+    private void broadcastOthersInGame(Long gameId, MultiplayerMessage message) {
         Set<Long> players = playersInGame.get(gameId);
-        if( players != null ) {
+        Long playerId = message.playerId;
+        if (players != null) {
             players.forEach(pid -> {
-                if(pid != playerId ) { // broadcast only to others in this game!
+                if (pid != playerId) { // broadcast only to others in this game!
                     playerSessions.get(pid).getAsyncRemote().sendObject(message, res -> {
-                        if( res.getException() != null ) {
-                            Log.error("Updating message to " + pid + " in game " + gameId + " failed!", res.getException());
+                        if (res.getException() != null) {
+                            Log.error("Updating message to " + pid + " in game " + gameId + " failed!",
+                                    res.getException());
                         }
                     });
                 }
             });
         }
+
     }
+
 }

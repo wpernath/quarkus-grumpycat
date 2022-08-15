@@ -4,24 +4,33 @@ import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
 
-public class MultiplayerMessageEncoder implements Encoder.Text<MultiplayerMessage> {
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+public class MultiplayerMessageEncoder implements Encoder.Text<MultiplayerMessage> {
+    ObjectMapper om;
+    
     @Override
     public void init(EndpointConfig config) {
-        // TODO Auto-generated method stub
+        this.om = new ObjectMapper();
         
     }
 
     @Override
     public void destroy() {
-        // TODO Auto-generated method stub
+        this.om = null;
         
     }
 
     @Override
     public String encode(MultiplayerMessage object) throws EncodeException {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            return om.writeValueAsString(object);
+        } 
+        catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new EncodeException(object, e.getMessage());
+        }
     }
 
     

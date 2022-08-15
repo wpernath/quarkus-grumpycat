@@ -39,7 +39,9 @@ public class MultiPlayerResource {
     public MultiPlayerGame createGame(MultiPlayerPlayerGame gamestr) {
         MultiPlayerGame game = gamestr.game;
         MultiPlayer     host = gamestr.host;
+        
         game.player1 = host;
+        game.player1Id = host.id;
         game.isClosed = false;
         game.isRunning = false;
         game.isOpen = true;
@@ -47,6 +49,33 @@ public class MultiPlayerResource {
         game.persist();
         Log.info("New Multiplayer game created with id: " + game.id);
         return game;
+    }
+
+    @PUT
+    @Path("/close/{gameId}/{playerId}")
+    @Transactional
+    public void closeGame(Long gameId, Long playerId) {
+        MultiPlayerGame game = MultiPlayerGame.findById(gameId);
+        if( game != null ) {
+            // remove player from game. If it's player1, we close the entire game
+            if(game.player1Id == playerId ) {
+                game.delete();
+            }
+            else{
+                if( game.player2Id == playerId) {
+                    game.player2 = null;
+                    game.persist();
+                }
+                else if( game.player3Id == playerId) {
+                    game.player3 = null;
+                    game.persist();
+                }
+                else if (game.player3Id == playerId) {
+                    game.player4 = null;
+                    game.persist();
+                }
+            }
+        }
     }
 
     @PUT  

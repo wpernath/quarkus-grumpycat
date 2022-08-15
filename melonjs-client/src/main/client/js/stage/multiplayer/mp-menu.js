@@ -68,7 +68,6 @@ class MenuComponent extends Container {
         this.addChild(new JoinGameButton((game.viewport.width - 250) / 2, 360));
         this.addChild(new BackButton((game.viewport.width - 250) / 2, 420));        
 	}
-
 }
 
 export default class MultiplayerMenuScreen extends Stage {
@@ -77,22 +76,20 @@ export default class MultiplayerMenuScreen extends Stage {
 		this.multiplayerManager = MultiplayerManager.getInstance();
 		game.world.addChild(this.menu);
 
-		this.multiplayerManager.createPlayerFromMe().then((player) => {
-			GlobalGameState.multiplayerPlayer = player;
-						
+		this.multiplayerManager.createPlayerFromMe().then((player) => {			
+			console.log("  Got new MultiPlayer: " + player.id);			
+			this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
+				if (!state.isCurrent(my_state.MULTIPLAYER_MENU)) return;
+				if (action === "exit") {
+					state.change(state.MENU);
+				}
+			});
 		});
 
-		this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
-			if (!state.isCurrent(my_state.MULTIPLAYER_MENU)) return;
-			if (action === "exit") {
-				state.change(state.MENU);
-			}
-		});
 	}
 
 	onDestroyEvent() {
-		event.off(event.KEYUP, this.handler);
-		//input.unbindPointer(input.pointer.LEFT);
+		event.off(event.KEYUP, this.handler);		
 		game.world.removeChild(this.menu);
 	}
 }

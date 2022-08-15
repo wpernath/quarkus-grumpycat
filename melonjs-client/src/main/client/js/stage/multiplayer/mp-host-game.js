@@ -14,6 +14,7 @@ class BackButton extends BaseTextButton {
 	}
 
 	onClick() {
+		MultiplayerManager.getInstance().closeActiveGame();
 		state.change(my_state.MULTIPLAYER_MENU);
 	}
 }

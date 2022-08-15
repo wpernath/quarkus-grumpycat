@@ -57,13 +57,7 @@ const GlobalGameState = {
 	killedSpiders: 0,
 	stunnedCats: 0,
 	stunnedGolems: 0,
-	bonusCollected: 0,
-
-
-	// multiplayer game
-	multiplayerPlayer: null, // do we already have a multiplayerPlayer
-	multiplayerGame: null,   // are we part of a multiplyayer game?
-	
+	bonusCollected: 0,	
 
 	// reset statistics and player state
 	reset: function() {
