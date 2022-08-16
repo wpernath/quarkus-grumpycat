@@ -81,6 +81,20 @@ public class MultiPlayerResource {
         }
     }
 
+    @PUT
+    @Path("/start/{gameId}")
+    @Transactional
+    public void startGame(Long gameId) {
+        MultiPlayerGame game = MultiPlayerGame.findById(gameId);
+        if (game != null) {
+            game.isOpen = false;
+            game.isRunning = true;
+            game.timePlaying = new Date();
+            game.persist();
+        }
+    }
+
+
     @PUT  
     @Path("/join/{gameId}/{playerId}")
     @Transactional

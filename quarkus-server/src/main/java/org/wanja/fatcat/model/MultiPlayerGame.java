@@ -29,6 +29,9 @@ public class MultiPlayerGame extends PanacheEntity {
     @Column(name = "time_stopped")
     public Date timeStopped;
 
+    @Column(name = "time_playing")
+    public Date timePlaying;
+
     // we only support up to 4 players 
     @ManyToOne
     @JoinColumn(name = "player1_id", insertable = false, updatable = false)

@@ -121,7 +121,10 @@ class MenuComponent extends Container {
 	}
 
 	gameClosed(message) {
-		state.change(my_state.MULTIPLAYER_MENU);
+		MultiplayerManager.getInstance().closeActiveGame()
+			then( () => {
+				state.change(my_state.MULTIPLAYER_MENU);
+			});
 	}
 
 	broadcasted(message) {
@@ -146,5 +149,13 @@ export default class MultiplayerLobbyScreen extends Stage {
 	onDestroyEvent() {
 		event.off(event.KEYUP, this.handler);		
 		game.world.removeChild(this.menu);
+
+		// make sure dead components won't get notified on changes
+		MultiplayerManager.getInstance().setOnJoinCallback(null);
+		MultiplayerManager.getInstance().setOnLeaveCallback(null);
+		MultiplayerManager.getInstance().setOnGameCloseCallback(null);
+		MultiplayerManager.getInstance().setOnBroadcastCallback(null);
+		MultiplayerManager.getInstance().setOnGameStartedCallback(null);
+
 	}
 }

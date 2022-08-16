@@ -4,7 +4,6 @@ import { SpiderEnemy } from '../renderables/spider-enemy.js';
 import GolemEnemySprite from '../renderables/golem-enemy';
 
 import PlayerEntity from "../renderables/player.js";
-import GlobalGameState from '../util/global-game-state';
 import HUDContainer from './hud/hud-container.js';
 import VirtualJoypad from './hud/virtual-joypad.js';
 import { LevelManager } from '../util/level.js';

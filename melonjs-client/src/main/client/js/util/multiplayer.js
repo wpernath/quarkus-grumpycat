@@ -70,7 +70,8 @@ export class MultiplayerMessage {
         this.listGamesURL   = baseURL + "mp-game/open";
         this.closeGameURL   = baseURL + "mp-game/close/"; // append gameId/playerId
         this.getGameURL     = baseURL + "mp-game/" // append gameId
-        
+        this.startGameURL   = baseURL + "mp-game/start/"; // append gameId
+
         // the websocket
         this.multiplayerSocket = null;      
    		this.socketBaseURL = baseURL.substring(baseURL.indexOf("://") + 3);
@@ -193,10 +194,26 @@ export class MultiplayerMessage {
         this.multiplayerSocket.send(JSON.stringify(action));
     }
 
+    /**
+     * Notify other clients that we're going to start now!
+     */
     async sendGameStarted() {
         let mm = MultiplayerMessage.gameStarted();
         this.sendAction(mm);
+    }
 
+    /**
+     * Update server to indicate that this game does not accept any more
+     * players. Notify other players that we are starting NOW
+     */
+    async startGame() {
+        if( this.weAreHost ) {
+            await fetch(this.startGameURL + this.multiplayerGame.id, {
+                method: "PUT",
+                mode: "cors",
+            });
+            this.sendGameStarted();
+        }
     }
 
     /**
