@@ -64,14 +64,17 @@ public class MultiPlayerResource {
             else{
                 if( game.player2Id == playerId) {
                     game.player2 = null;
+                    game.player2Id = null;
                     game.persist();
                 }
                 else if( game.player3Id == playerId) {
                     game.player3 = null;
+                    game.player3Id = null;
                     game.persist();
                 }
                 else if (game.player3Id == playerId) {
                     game.player4 = null;
+                    game.player4Id = null;
                     game.persist();
                 }
             }
@@ -117,6 +120,12 @@ public class MultiPlayerResource {
         mp.persist();
         Log.info("New Multiplayer Player created with id " + mp.id);
         return mp;
+    }
+
+    @GET
+    @Path("/{gameId}")
+    public MultiPlayerGame getOpenGames(Long gameId) {
+        return MultiPlayerGame.findById(gameId);
     }
 
     @GET

@@ -1,4 +1,4 @@
-import { Stage, event, game, state, Container, BitmapText } from "melonjs";
+import { Stage, event, game, state, Container, BitmapText, Rect } from "melonjs";
 import BaseTextButton from "../../util/base-text-button";
 import { my_state } from "../../util/constants";
 import MultiplayerManager from "../../util/multiplayer";
@@ -27,7 +27,20 @@ class StartGameButton extends BaseTextButton {
 	}
 
 	onClick() {
-		state.change(my_state.MULTIPLAYER_LOBBY);
+		MultiplayerManager.getInstance().startGame()
+			.then(() => {
+				state.change(my_state.MULTIPLAYER_PLAY);
+			});	
+	}
+}
+
+class PlayerEntry extends Container {
+	constructor(x, y, player, num) {
+		super(x,y);
+		this.player = player;
+		this.playerNum = num;
+
+
 	}
 }
 
@@ -42,6 +55,25 @@ class MenuComponent extends Container {
 		this.z = 10;
 
 		this.setOpacity(1.0);
+		
+		this.players = [];
+		this.playerComponents = [];
+		this.startButton = null;
+
+
+		this.addChild(new BitmapText(126, 250, {
+			font: "18Outline",
+			fillStyle: "#ffa000",
+			text: "Status:"
+		}));
+
+		
+		this.statusMessage = new BitmapText(126, 276, {
+			font: "12Outline",
+			text: "Waiting..."
+		});
+
+		this.addChild(this.statusMessage);
 
 		// give a name
 		this.name = "TitleBack";
@@ -55,6 +87,45 @@ class MenuComponent extends Container {
 		);
 
 		this.addChild(new BackButton(5, game.viewport.height - 60));
+
+		MultiplayerManager.getInstance().setOnJoinCallback(this.playerJoined.bind(this));
+		MultiplayerManager.getInstance().setOnLeaveCallback(this.playerLeft.bind(this));
+		MultiplayerManager.getInstance().setOnGameCloseCallback(this.gameClosed.bind(this));
+		MultiplayerManager.getInstance().setOnBroadcastCallback(this.broadcasted.bind(this));
+		MultiplayerManager.getInstance().setOnGameStartedCallback(this.gameStarted.bind(this));
+		
+	}
+
+	gameStarted(message, theGame) {
+		this.statusMessage.setText("Game starting now!");
+		state.change(my_state.MULTIPLAYER_PLAY);
+	}
+
+	playerJoined(message, theGame) {
+		this.statusMessage.setText(message.message);
+		if( MultiplayerManager.getInstance().weAreHost ) {
+			if( this.startButton === null ) {
+				this.startButton = new StartGameButton(game.viewport.width - 105, game.viewport.height - 60);			
+			}
+			this.addChild(this.startButton);
+		}
+	}
+
+	playerLeft(message, theGame) {
+		this.statusMessage.setText(message.message);
+		if( MultiplayerManager.getInstance().weAreHost ) {
+			if ((this.startButton !== null && theGame.player1 !== undefined) || theGame.player2 !== undefined || theGame.player3 !== undefined || theGame.player4 !== undefined) {
+				this.removeChild(this.startButton, true);
+			}
+		}
+	}
+
+	gameClosed(message) {
+		state.change(my_state.MULTIPLAYER_MENU);
+	}
+
+	broadcasted(message) {
+		this.statusMessage.setText(message.message);
 	}
 }
 

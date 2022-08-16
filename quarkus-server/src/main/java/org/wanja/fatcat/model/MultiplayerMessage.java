@@ -8,6 +8,7 @@ public class MultiplayerMessage {
         START_GAME,
         CLOSE_GAME,
         GAME_UPDATE,
+        GAME_STARTED,
         BROADCAST_CHAT,
     }
 

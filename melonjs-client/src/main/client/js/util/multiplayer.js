@@ -12,6 +12,7 @@ export const MultiplayerMessageType = {
 	START_GAME      : "START_GAME",
 	CLOSE_GAME      : "CLOSE_GAME",
 	GAME_UPDATE     : "GAME_UPDATE",
+    GAME_STARTED    : "GAME_STARTED",
 	BROADCAST_CHAT  : "BROADCAST_CHAT",
 };
 export class MultiplayerMessage {
@@ -22,6 +23,13 @@ export class MultiplayerMessage {
         mm.gameId   = multiplayerManager.multiplayerGame.id;
         return mm;
     }    
+
+    static gameStarted() {
+        let mm = new MultiplayerMessage(MultiplayerMessageType.GAME_STARTED);
+        mm.gameId = multiplayerManager.multiplayerGame.id;
+        mm.playerId = multiplayerManager.multiplayerPlayer.id;
+        return mm;
+    }
 
     constructor(type) {
         this.type = type;
@@ -61,6 +69,7 @@ export class MultiplayerMessage {
         this.joinGameURL    = baseURL + "mp-game/join/"; // append gameId
         this.listGamesURL   = baseURL + "mp-game/open";
         this.closeGameURL   = baseURL + "mp-game/close/"; // append gameId/playerId
+        this.getGameURL     = baseURL + "mp-game/" // append gameId
         
         // the websocket
         this.multiplayerSocket = null;      
@@ -76,6 +85,14 @@ export class MultiplayerMessage {
         this.weAreHost            = false;
         this.multiplayerGameToJoin= null;
 
+        // callbacks for socket
+        this.onErrorCallback = null;
+        this.onLeaveCallback = null;
+        this.onJoinCallback  = null;
+        this.onMessageCallback = null;
+        this.onGameCloseCallback = null;
+        this.onBroadcastCallback = null;
+        this.onGameStartedCallback = null;
     }
 
     /**
@@ -105,6 +122,14 @@ export class MultiplayerMessage {
         if( this.multiplayerSocket !== null && this.multiplayerSocket.readyState !== 3) {
             this.multiplayerSocket.close();
             this.multiplayerSocket = null;
+
+            this.onBroadcastCallback = null;
+            this.onErrorCallback = null;
+            this.onGameCloseCallback = null;
+            this.onGameStartedCallback = null;
+            this.onJoinCallback = null;
+            this.onLeaveCallback = null;
+            this.onMessageCallback = null;
         }
         if( this.multiplayerGame !== null ) {
             this.weAreHost = false;
@@ -153,19 +178,8 @@ export class MultiplayerMessage {
         this.multiplayerGame = await res.json(); 
         
         console.log("  Created new MultiplayerGame: " + this.multiplayerGame.id);
-        if( this.multiplayerSocket !== null ) {
-            this.multiplayerSocket.close();
-            this.multiplayerSocket = null;
-        }
+        this._createMultiplayerSocket();
 
-        this.multiplayerSocket = new WebSocket("ws://" + this.socketBaseURL + "multiplayer/" + this.multiplayerGame.id + "/" + this.multiplayerPlayer.id);        
-        this.multiplayerSocket.addEventListener("error", (evt) => {
-            console.log("  Socket error: " + evt);
-        });      
-
-        this.multiplayerSocket.addEventListener("message", (evt) => {
-            console.log(  "Got message from server: " + JSON.stringify(evt.data));
-        });
         this.weAreHost = true;
         return this.multiplayerGame;
     }
@@ -177,6 +191,12 @@ export class MultiplayerMessage {
      */
     async sendAction(action) {
         this.multiplayerSocket.send(JSON.stringify(action));
+    }
+
+    async sendGameStarted() {
+        let mm = MultiplayerMessage.gameStarted();
+        this.sendAction(mm);
+
     }
 
     /**
@@ -207,21 +227,94 @@ export class MultiplayerMessage {
                 },
             });
 
-            
-            this.multiplayerSocket = new WebSocket("ws://" + this.socketBaseURL + "multiplayer/" + this.multiplayerGameToJoin.id + "/" + this.multiplayerPlayer.id);
-            this.multiplayerSocket.addEventListener("error", (evt) => {
-                console.log("  Socket error: " + evt);
-            });
-
-            this.multiplayerSocket.addEventListener("message", (evt) => {
-                const message = JSON.parse(evt.data);
-                if( message.type === MultiplayerMessageType.PLAYER_JOINED)
-                console.log("Got message from server: " + message.type);
-            });
-            this.weAreHost = false;
+            this.multiplayerGame = this.multiplayerGameToJoin;
+            this._createMultiplayerSocket();
+            this.weAreHost = false;            
+            this.multiplayerGameToJoin = null;
         }
     }
 
+    _createMultiplayerSocket() {
+        if (this.multiplayerSocket !== null) {
+            this.multiplayerSocket.close();
+            this.multiplayerSocket = null;
+        }
+
+        this.multiplayerSocket = new WebSocket("ws://" + this.socketBaseURL + "multiplayer/" + this.multiplayerGame.id + "/" + this.multiplayerPlayer.id);
+        this.multiplayerSocket.addEventListener("error", (evt) => {
+            console.log("  Socket error: " + evt);
+            if( this.onErrorCallback !== null ) {
+                this.onErrorCallback(evt);
+            }
+        });
+
+        this.multiplayerSocket.addEventListener("message", (evt) => {
+            const data = JSON.parse(evt.data);
+            console.log("Got message from server: " );
+            if( data.type === MultiplayerMessageType.PLAYER_JOINED ) {
+                console.log("  Player " + data.playerId + " joined the game:  " + data.message);
+                fetch(this.getGameURL + data.gameId)
+                    .then( (res) => {
+                        return res.json();
+                    })
+                    .then( (json) => {
+                        this.multiplayerGame = json;
+                        if( this.onJoinCallback !== null ) {
+                            this.onJoinCallback(data, json);
+                        }
+                    });                
+            }            
+            else if( data.type === MultiplayerMessageType.PLAYER_REMOVED ) {
+                console.log("  Player " + data.playerId + " removed from game: " + data.message);
+                fetch(this.getGameURL + data.gameId)
+                    .then((res) => {
+                        return res.json();
+                    })
+                    .then((json) => {
+                        this.multiplayerGame = json;
+
+                        if (this.onLeaveCallback !== null) {
+                            this.onLeaveCallback(data, json);
+                        }
+                    });                
+            }
+            else if( data.type === MultiplayerMessageType.CLOSE_GAME ) {
+                console.log("  Game is going to be closed now: " + data.message);
+                this.closeActiveGame().then( () => {
+                    if( this.onGameCloseCallback !== null ) {
+                        this.onGameCloseCallback(data);
+                    }
+                });
+            }
+            else if( data.type === MultiplayerMessageType.GAME_STARTED) {
+                console.log("  Game will be started now: " + data.message);
+                fetch(this.getGameURL + data.gameId)
+                    .then((res) => {
+                        return res.json();
+                    })
+                    .then((json) => {
+                        this.multiplayerGame = json;
+
+                        if (this.onGameStartedCallback !== null) {
+                            this.onGameStartedCallback(data, json);
+                        }
+                    });                
+            }
+            else if( data.type === MultiplayerMessageType.BROADCAST_CHAT) {
+                console.log("  [BROADCAST]: " + data.message);
+                if( this.onBroadcastCallback !== null ) {
+                    this.onBroadcastCallback(data);
+                }
+            }
+            else if( data.type === MultiplayerMessageType.GAME_UPDATE) {
+                // sending game update to game screen
+                if( this.onMessageCallback !== null ) {
+                    this.onMessageCallback(data);
+                }
+            }
+        });
+
+    }
     /**
      * 
      * @returns a array of open games coming from server to join them
@@ -232,27 +325,32 @@ export class MultiplayerMessage {
     }
 
     
-    removeOnMessage(callback) {
-        this.multiplayerSocket.removeEventListener("message", callback);
+    setOnMessageCallback(callback) {
+        this.onMessageCallback = callback;
     }
 
-    addOnMessage(callback) {
-        this.multiplayerSocket.addEventListener("message", callback);
+    setOnJoinCallback(callback) {
+        this.onJoinCallback = callback;
     }
 
-    removeOnOpen(callback) {
-        this.multiplayerSocket.removeEventListener("open", callback);
+    setOnLeaveCallback(callback) {
+        this.onLeaveCallback = callback;
     }
-    addOnOpen(callback) {
-        this.multiplayerSocket.addEventListener("open", callback);
-    }
-
-    removeOnError(callback) {
-        this.multiplayerSocket.removeEventListener("error", callback);
+    
+    setOnErrorCallback(callback) {
+        this.onErrorCallback = callback;
     }
 
-    addOnError(callback) {
-        this.multiplayerSocket.addEventListener("error", callback);
+    setOnGameCloseCallback(callback) {
+        this.onGameCloseCallback = callback;
+    }
+
+    setOnBroadcastCallback(callback) {
+        this.onBroadcastCallback = callback;
+    }
+
+    setOnGameStartedCallback(callback) {
+        this.onGameStartedCallback = callback;
     }
 
     /**
@@ -261,7 +359,7 @@ export class MultiplayerMessage {
      */
     useSelectedLevel(levelIndex) {
         this.selectedLevelIndex = levelIndex;
-        this.selectedLevelForGame = this.levelManager.allMuiltiplayerLevels()[levelIndex];
+        this.selectedLevelForGame = this.levelManager.allMultiplayerLevels()[levelIndex];
     }
 
     /**
