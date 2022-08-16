@@ -14,6 +14,7 @@ export class StateBackground extends Container {
 
 		// give a name
 		this.name = "Background";
+		this.transparent = true;
 		
 		// new sprite for the title screen, position at the center of the game viewport
 		this.backgroundImage = new Sprite(game.viewport.width / 2, game.viewport.height / 2, {

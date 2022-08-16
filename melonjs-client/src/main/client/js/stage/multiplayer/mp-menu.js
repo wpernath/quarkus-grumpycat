@@ -64,32 +64,44 @@ class MenuComponent extends Container {
 		// give a name
 		this.name = "TitleBack";
 		this.addChild(new StateBackground("MULTIPLAYER"));
+
+		this.addChild(new BitmapText(game.viewport.width-75, 170, {
+			font: "24Outline",
+			textAlign: "right",
+			text: MultiplayerManager.getInstance().multiplayerPlayer.name 
+		}));
         this.addChild(new StartGameButton((game.viewport.width - 250)/2, 300));
         this.addChild(new JoinGameButton((game.viewport.width - 250) / 2, 360));
-        this.addChild(new BackButton((game.viewport.width - 250) / 2, 420));        
+        this.addChild(new BackButton((game.viewport.width - 250) / 2, 420));        		
 	}
 }
 
 export default class MultiplayerMenuScreen extends Stage {
 	onResetEvent() {
-		this.menu = new MenuComponent();
 		this.multiplayerManager = MultiplayerManager.getInstance();
-		game.world.addChild(this.menu);
-
+		this.menu = null;
 		this.multiplayerManager.createPlayerFromMe().then((player) => {			
 			console.log("  Got new MultiPlayer: " + player.id);			
+			this.menu = new MenuComponent();
+			game.world.addChild(this.menu);
+
 			this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
 				if (!state.isCurrent(my_state.MULTIPLAYER_MENU)) return;
 				if (action === "exit") {
 					state.change(state.MENU);
 				}
 			});
+		})
+		.catch( (err) => {
+			console.log("ERROR: " + err);
+			state.change(state.MENU);
 		});
 
 	}
 
 	onDestroyEvent() {
 		event.off(event.KEYUP, this.handler);		
-		game.world.removeChild(this.menu);
+		if( this.menu !== null ) game.world.removeChild(this.menu);
+		this.menu = null;
 	}
 }

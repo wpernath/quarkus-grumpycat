@@ -1,4 +1,4 @@
-import { Stage, event, game, state, Container } from "melonjs";
+import { Stage, event, game, state, Container, BitmapText } from "melonjs";
 import BaseTextButton from "../../util/base-text-button";
 import { my_state } from "../../util/constants";
 import GlobalGameState from "../../util/global-game-state";
@@ -52,6 +52,14 @@ class MenuComponent extends Container {
 
 		this.levelChooser = new ChooserComponent(MultiplayerManager.getInstance().allLevels());
         this.addChild(new StateBackground("HOST GAME", false, false));
+
+		this.addChild(
+			new BitmapText(game.viewport.width - 75, 170, {
+				font: "24Outline",
+				textAlign: "right",
+				text: MultiplayerManager.getInstance().multiplayerPlayer.name,
+			})
+		);
 
 		this.addChild(this.levelChooser);
 

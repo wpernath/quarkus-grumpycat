@@ -48,6 +48,7 @@ public class MultiplayerSocket {
         Set<Long> players = playersInGame.get(gameId);
 
         if( !playersInGame.containsKey(gameId)) { // host is opening the game
+            Log.info("New multiplayer session with game " + gameId + " hosted by " + playerId);
             players = new HashSet<>();
             players.add(playerId);
             playersInGame.put(gameId, players);
@@ -59,6 +60,7 @@ public class MultiplayerSocket {
         }
         else { // game is existing, we have another player for it
             game = gameIdGames.get(gameId);            
+            Log.info("A new player " + playerId + " joins multiplayer session with game " + gameId );
             if( game.player2Id == null ) game.player2Id = playerId;
             else if( game.player3Id == null) game.player3Id = playerId;
             else if( game.player4Id == null ) game.player4Id = playerId;
@@ -85,15 +87,21 @@ public class MultiplayerSocket {
 
         MultiPlayerGame game = gameIdGames.get(gameId);
         if( game != null ) {
+            MultiplayerMessage mm = MultiplayerMessage.playerRemoved(playerId, gameId);
+            Log.info("Player " + playerId + " is leaving game " + gameId);
+            
             if( game.player1Id == playerId) {
+                mm.message = "Host has left the game. Game will be closed.";
+                broadcastOthersInGame(gameId, mm);
+
                 // game closed
                 Log.info("Closing Multiplayer Game " + game.id );
                 playersInGame.remove(gameId);
-                gameIdGames.remove(gameId);
+                gameIdGames.remove(gameId);                
+                broadcastOthersInGame(gameId, MultiplayerMessage.gameClosing(gameId));
                 return;
             }
             else {
-                MultiplayerMessage mm = MultiplayerMessage.playerRemoved(playerId, gameId);
                 if( game.player2Id == playerId) {
                     game.player2 = null;
                     mm.message = "Player 2 removed";
@@ -112,8 +120,7 @@ public class MultiplayerSocket {
                 else {
                     Log.error("Player " + playerId + " did not belong to game " + gameId);
                     return;
-                }        
-
+                }                        
                 broadcastOthersInGame(gameId, mm);
             }
         }

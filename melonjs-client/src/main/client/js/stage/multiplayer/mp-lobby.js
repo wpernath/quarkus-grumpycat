@@ -1,4 +1,4 @@
-import { Stage, event, game, state, Container } from "melonjs";
+import { Stage, event, game, state, Container, BitmapText } from "melonjs";
 import BaseTextButton from "../../util/base-text-button";
 import { my_state } from "../../util/constants";
 import MultiplayerManager from "../../util/multiplayer";
@@ -46,6 +46,14 @@ class MenuComponent extends Container {
 		// give a name
 		this.name = "TitleBack";
 		this.addChild(new StateBackground("LOBBY", false, false));
+		this.addChild(
+			new BitmapText(game.viewport.width - 75, 170, {
+				font: "24Outline",
+				textAlign: "right",
+				text: MultiplayerManager.getInstance().multiplayerPlayer.name,
+			})
+		);
+
 		this.addChild(new BackButton(5, game.viewport.height - 60));
 	}
 }

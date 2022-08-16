@@ -34,6 +34,7 @@ public class MultiplayerMessage {
         MultiplayerMessage mm = new MultiplayerMessage(MessageType.PLAYER_JOINED);
         mm.gameId = gameId;
         mm.playerId = playerId;
+        mm.message  = "New player joined the game";
         return mm;
     }
 
@@ -41,18 +42,21 @@ public class MultiplayerMessage {
         MultiplayerMessage mm = new MultiplayerMessage(MessageType.PLAYER_REMOVED);
         mm.gameId = gameId;
         mm.playerId = playerId;
+        mm.message  = "Player removed from game";
         return mm;
     }
 
     public static MultiplayerMessage gameStarting(Long gameId) {
         MultiplayerMessage mm = new MultiplayerMessage(MessageType.START_GAME);
         mm.gameId = gameId;        
+        mm.message= "Game is starting";
         return mm;
     }
 
     public static MultiplayerMessage gameClosing(Long gameId) {
         MultiplayerMessage mm = new MultiplayerMessage(MessageType.CLOSE_GAME);
         mm.gameId = gameId;
+        mm.message="Game is closing";
         return mm;
     }
 
