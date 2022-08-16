@@ -79,16 +79,33 @@ public class MultiPlayerResource {
     }
 
     @PUT  
-    @Path("/join/{gameId}")
+    @Path("/join/{gameId}/{playerId}")
     @Transactional
-    public void joinGame(Long gameId, MultiPlayer player ) {
+    public void joinGame(Long gameId, Long playerId ) {
         MultiPlayerGame game = MultiPlayerGame.findById(gameId);
-        if( game != null ) {
-            if( game.player2 != null ) game.player2 = player;
-            else if( game.player3 != null ) game.player3 = player;
-            else if( game.player4 != null ) game.player4 = player;
-            else throw new IllegalStateException("Game " + game.id + " is allready full");
+        MultiPlayer     player = MultiPlayer.findById(playerId);
+        
+        if( game != null && player != null) {
+            Log.info(player.name + " (" + playerId + ") wants to join game " + gameId);
+            if( game.player2 == null ) {
+                game.player2 = player;
+                game.player2Id = playerId;
+            }
+            else if( game.player3 == null ) {
+                game.player3 = player;
+                game.player3Id = playerId;
+            }
+            else if( game.player4 == null ) {
+                game.player4 = player;
+                game.player4Id = playerId;
+            }
+            else {
+                throw new IllegalStateException("Game " + game.id + " is allready full");
+            }
             game.persist();
+        }
+        else {
+            Log.error("Game " + gameId + " or player " + playerId + " not found!");
         }
     }
      

@@ -73,8 +73,7 @@ export default class MultiplayerLobbyScreen extends Stage {
 	}
 
 	onDestroyEvent() {
-		event.off(event.KEYUP, this.handler);
-		//input.unbindPointer(input.pointer.LEFT);
+		event.off(event.KEYUP, this.handler);		
 		game.world.removeChild(this.menu);
 	}
 }

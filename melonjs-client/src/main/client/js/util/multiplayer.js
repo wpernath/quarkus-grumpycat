@@ -73,8 +73,15 @@ export class MultiplayerMessage {
         this.selectedLevelForGame = null;
         this.selectedLevelIndex   = 0;
         this.multiplayerLevels    = this.levelManager.allMultiplayerLevels();
+        this.weAreHost            = false;
+        this.multiplayerGameToJoin= null;
+
     }
 
+    /**
+     * 
+     * @returns Returns initialized multiplayerPlayer
+     */
     async createPlayerFromMe() {
         if( this.multiplayerPlayer === null || this.multiplayerPlayer.id === null ) {
             let res = await fetch(this.createPlayerURL, {
@@ -91,12 +98,16 @@ export class MultiplayerMessage {
         return this.multiplayerPlayer;
     }
 
+    /**
+     * Closes the current active game, weather it is a host or just a player
+     */
     async closeActiveGame() {
         if( this.multiplayerSocket !== null && this.multiplayerSocket.readyState !== 3) {
             this.multiplayerSocket.close();
             this.multiplayerSocket = null;
         }
         if( this.multiplayerGame !== null ) {
+            this.weAreHost = false;
             console.log("CLOSING: ");
             console.log("  Game  : " + this.multiplayerGame.id);
             console.log("  Player: " + this.multiplayerPlayer.id);
@@ -109,7 +120,13 @@ export class MultiplayerMessage {
         }        
     }
 
-    async createGame(level) {
+    /**
+     * Creates the multiplayer game and initializes the serverSocket to communicate
+     * with other clients.
+     * 
+     * @returns the initialized MultiplayerGame
+     */
+    async createGame() {
         if( this.multiplayerGame !== null ) {
             await this.closeActiveGame();
         }
@@ -119,7 +136,7 @@ export class MultiplayerMessage {
 
         const req = {
             game: {
-                level: level,
+                level: this.selectedLevelIndex,
             },
             host: this.multiplayerPlayer
         };
@@ -143,20 +160,72 @@ export class MultiplayerMessage {
 
         this.multiplayerSocket = new WebSocket("ws://" + this.socketBaseURL + "multiplayer/" + this.multiplayerGame.id + "/" + this.multiplayerPlayer.id);        
         this.multiplayerSocket.addEventListener("error", (evt) => {
-
+            console.log("  Socket error: " + evt);
         });      
 
+        this.multiplayerSocket.addEventListener("message", (evt) => {
+            console.log(  "Got message from server: " + JSON.stringify(evt.data));
+        });
+        this.weAreHost = true;
         return this.multiplayerGame;
     }
 
+    /**
+     * Sends the given action to the server so that all clients will recieve the update
+     * 
+     * @param {MultiplayerMessage} action 
+     */
     async sendAction(action) {
         this.multiplayerSocket.send(JSON.stringify(action));
     }
 
-    async joinGame(game) {
+    /**
+     * Joins the selected game as player
+     *
+     */
+    async joinGame() {
+        if( this.multiplayerGame !== null ) {
+            await this.closeActiveGame();
+        }
 
+        if( this.multiplayerPlayer === null ) {
+            await this.createPlayerFromMe();
+        }
+
+        if( this.multiplayerGameToJoin !== null ) {
+            console.log("  Joining multi player game: " + this.multiplayerGameToJoin.id);
+            if (this.multiplayerSocket !== null) {
+                this.multiplayerSocket.close();
+                this.multiplayerSocket = null;
+            }
+
+            let res = await fetch(this.joinGameURL + this.multiplayerGameToJoin.id + "/" + this.multiplayerPlayer.id, {
+                method: "PUT",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            
+            this.multiplayerSocket = new WebSocket("ws://" + this.socketBaseURL + "multiplayer/" + this.multiplayerGameToJoin.id + "/" + this.multiplayerPlayer.id);
+            this.multiplayerSocket.addEventListener("error", (evt) => {
+                console.log("  Socket error: " + evt);
+            });
+
+            this.multiplayerSocket.addEventListener("message", (evt) => {
+                const message = JSON.parse(evt.data);
+                if( message.type === MultiplayerMessageType.PLAYER_JOINED)
+                console.log("Got message from server: " + message.type);
+            });
+            this.weAreHost = false;
+        }
     }
 
+    /**
+     * 
+     * @returns a array of open games coming from server to join them
+     */
     async listOpenGames() {
         let res = await fetch(this.listGamesURL);
         return res.json();
@@ -186,14 +255,26 @@ export class MultiplayerMessage {
         this.multiplayerSocket.addEventListener("error", callback);
     }
 
+    /**
+     * Uses the levelIndex as selected level to start a multiplayer game
+     * @param {number} levelIndex 
+     */
     useSelectedLevel(levelIndex) {
         this.selectedLevelIndex = levelIndex;
         this.selectedLevelForGame = this.levelManager.allMuiltiplayerLevels()[levelIndex];
     }
 
+    /**
+     * 
+     * @returns array of all multiplayerLevels 
+     */
     allLevels() {       
         console.log("MultiplayerManager.allLevels() => " + this.multiplayerLevels.length); 
         return this.multiplayerLevels;
+    }
+
+    setGameToJoin(game) {
+        this.multiplayerGameToJoin = game;
     }
     
 }

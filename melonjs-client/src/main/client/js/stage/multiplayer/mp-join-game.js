@@ -3,7 +3,7 @@ import BaseTextButton from "../../util/base-text-button";
 import { my_state } from "../../util/constants";
 import { StateBackground } from "../state_background";
 import MultiplayerManager from "../../util/multiplayer";
-
+import { GameChooserComponent } from "./mp-choose-game";
 class BackButton extends BaseTextButton {
 	constructor(x, y) {
 		super(x, y, {
@@ -54,6 +54,19 @@ class MenuComponent extends Container {
 		);
 
 		this.addChild(new BackButton(5, game.viewport.height - 60));
+
+
+		MultiplayerManager.getInstance()
+			.listOpenGames()
+			.then((games) => {
+				this.gameChooser = new GameChooserComponent(games);
+				this.addChild(this.gameChooser);
+			})
+			.catch( (err) => {
+				console.log("  ERROR can't read open games: " +err);
+				state.change(my_state.MULTIPLAYER_MENU);
+			});
+
 	}
 }
 
