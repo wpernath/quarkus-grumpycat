@@ -1,8 +1,9 @@
 import { Stage, state, game, event, Sprite, BitmapText, Container, loader, Vector2d, input, GUI_Object } from "melonjs";
-import BaseClickableComponent from "../util/base-clickable-component";
-import { LevelManager } from "../util/level";
-import GlobalGameState from "../util/global-game-state";
-import { my_state } from "../util/constants";
+import BaseClickableComponent from "../../util/base-clickable-component";
+import { LevelManager } from "../../util/level";
+import GlobalGameState from "../../util/global-game-state";
+import { my_state } from "../../util/constants";
+import MultiplayerManager from "../../util/multiplayer";
 
 class LeftButton extends GUI_Object {
 	constructor(x, y, callback) {
@@ -64,17 +65,18 @@ class ListEntry extends BaseClickableComponent {
     image;
 	callbackOnClick;
 
-	constructor(levelIndex, x, y) {
+	constructor(level, x, y) {
 		super(x, y, game.viewport.width - 280, 500);
 
         this.clipping = true;
         this.floating = false;
-        this.levelIndex = levelIndex;
-		this.currentLevel = LevelManager.getInstance().setCurrentLevel(levelIndex);
-        this.name = this.currentLevel.longName;
-        this.description = this.currentLevel.description;
-		this.mapSize = "Map size: " + this.currentLevel.mapWidth + " x " + this.currentLevel.mapHeight;
-        this.image = loader.getImage(this.currentLevel.previewImage);
+        
+		this.level = level;
+        this.name = this.level.longName;
+        this.description = this.level.description;
+		this.mapSize = "Map size: " + this.level.mapWidth + " x " + this.level.mapHeight;
+		this.numPlayers = "Max players: " + this.level.numPlayers;		
+        this.image = loader.getImage(this.level.previewImage);
 
 		console.log("  creating LevelEntry(" + this.name + ")");
 		this.titleFont = new BitmapText(15+348+15, 20, {
@@ -90,15 +92,22 @@ class ListEntry extends BaseClickableComponent {
 			anchorPoint: new Vector2d(0, 0),
 		});
 
-		this.mapSizeFont = new BitmapText(15 + 348 + 15, 450, {
+		this.mapSizeFont = new BitmapText(15 + 348 + 15, 400, {
 			font: "18Outline",
 			text: this.mapSize,
+			anchorPoint: new Vector2d(0, 0),
+		});
+
+		this.numPlayersFont = new BitmapText(15 + 348 + 15, 440, {
+			font: "18Outline",
+			text: this.numPlayers,
 			anchorPoint: new Vector2d(0, 0),
 		});
 
         this.addChild(this.titleFont);
         this.addChild(this.descriptionFont);
 		this.addChild(this.mapSizeFont);
+		this.addChild(this.numPlayersFont);
 		this.callbackOnClick = undefined;
 	}
 
@@ -124,11 +133,15 @@ class ListEntry extends BaseClickableComponent {
 	}
 }
 
-class ChooserComponent extends Container {
+export class ChooserComponent extends Container {
 	listComponents = [];
     levelChosen = false;
-	constructor() {
+	levelIndex = 0;
+
+	constructor(levels) {
 		super();
+
+		this.levels = levels;
 
 		// make sure we use screen coordinates
 		this.floating = true;
@@ -139,66 +152,42 @@ class ChooserComponent extends Container {
 		this.setOpacity(1.0);
 
 		// give a name
-		this.name = "TitleBack";
-
-		// add elements
-        //this.imageLayer = new ImageLayer()
-		this.backgroundImage = new Sprite(game.viewport.width / 2, game.viewport.height / 2, {
-			image: loader.getImage("sensa_grass"),
-		});
-
-		// scale to fit with the viewport size
-		this.backgroundImage.scale(game.viewport.width / this.backgroundImage.width, game.viewport.height / this.backgroundImage.height);
-		this.backgroundImage.setOpacity(0.4);
-		this.addChild(this.backgroundImage);
-
-		// title and subtitle
-		this.titleText = new Sprite(86, -10, {
-			image: loader.getImage("title"),
-			anchorPoint: new Vector2d(0, 0),
-		});
-
-		this.subTitleText = new BitmapText(126, 160, {
-			font: "Shadow",
-			size: "1",
-			fillStyle: "white",
-			textAlign: "left",
-			text: "Choose Level",			
-		});
+		this.name = "LevelChooser";
 
         this.prev = new LeftButton(86, 360, this.prevLevel.bind(this));
         this.next = new RightButton(game.viewport.width - 86, 360, this.nextLevel.bind(this));
-		this.addChild(this.titleText);
-		this.addChild(this.subTitleText);
         this.addChild(this.prev);
         this.addChild(this.next);
         
-		LevelManager.getInstance().reset();
-        for(let levelIndex = 0; levelIndex < LevelManager.getInstance().levelCount(); levelIndex++ ) {
-            let entry = new ListEntry(levelIndex, 130, 220);
+        for(let levelIndex = 0; levelIndex < this.levels.length; levelIndex++ ) {
+            let entry = new ListEntry(this.levels[levelIndex], 130, 220);
             entry.setCallbackOnClick(this.useSelectedGame.bind(this));
             entry.setOpacity(0.8);
             this.listComponents.push(entry);            
-        } 
-		
-        LevelManager.getInstance().reset();
-        this.addChild(this.listComponents[0]);
+        }
+
+		if( this.listComponents.length > 0 ) {       
+        	this.addChild(this.listComponents[0]);
+		}
+		else {
+			console.log("no entries in list");
+		}
 	}
 
     prevLevel() {
-        let currentLevel = LevelManager.getInstance().getCurrentLevelIndex();
-        if( LevelManager.getInstance().hasPrev()) {
+        let currentLevel = this.levelIndex;
+        if( currentLevel > 0 ) {
             this.removeChild(this.listComponents[currentLevel], true);
-            LevelManager.getInstance().prev();
+            this.levelIndex -= 1;
             this.addChild(this.listComponents[currentLevel-1]);
         }
     }
 
     nextLevel() {
-        let currentLevel = LevelManager.getInstance().getCurrentLevelIndex();
-        if (LevelManager.getInstance().hasNext()) {
+        let currentLevel = this.levelIndex;
+        if (currentLevel < this.levels.length -1 ) {
             this.removeChild(this.listComponents[currentLevel], true);
-            LevelManager.getInstance().next();
+            this.levelIndex += 1;
             this.addChild(this.listComponents[currentLevel + 1]);
         }        
     }
@@ -206,42 +195,9 @@ class ChooserComponent extends Container {
 	useSelectedGame(levelIndex) {
         if( !this.levelChosen ) {
             console.log("  selected level = " + levelIndex );
-            LevelManager.getInstance().setCurrentLevel(levelIndex);
-            state.change(state.READY);
+			MultiplayerManager.getInstance().useSelectedLevel(this.levelIndex);            
             this.levelChosen = true;
         }
 	}
 }
 
-export class MPChooseLevelScreen extends Stage {
-    chooserComponent = null;
-
-	onResetEvent() {
-        console.log("ChooserLevel.onEnter()")
-		this.chooserComponent = new ChooserComponent();
-		game.world.addChild(this.chooserComponent);
-
-		this.handler = event.on(event.KEYDOWN, (action, keyCode, edge) => {
-            if (!state.isCurrent(my_state.CHOOSE_LEVEL)) return;
-			if (action === "exit") {
-				state.change(state.MENU);
-			}
-            else if( action === "left") {
-                this.chooserComponent.prevLevel();
-            }
-            else if( action === "right") {
-                this.chooserComponent.nextLevel();
-            }
-            else if( action === "bomb") {
-                this.chooserComponent.useSelectedGame(LevelManager.getInstance().getCurrentLevelIndex());
-            }
-		});
-
-	}
-
-	onDestroyEvent() {
-        console.log("ChooserLevel.onExit()");
-		event.off(event.KEYDOWN, this.handler);		
-		game.world.removeChild(this.chooserComponent);        
-	}
-}

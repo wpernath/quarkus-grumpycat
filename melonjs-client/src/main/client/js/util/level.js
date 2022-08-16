@@ -99,16 +99,22 @@ var levelManager = null;
 
 const LEVEL_NAMES = [
 	// GUIDs from manifest.js
-	{ id: "level1", path: "maps/0.json", loaded: false, error: false, preview: "Level1" },
-	{ id: "level2", path: "maps/1.json", loaded: false, error: false, preview: "Level2" },
-	{ id: "level3", path: "maps/2.json", loaded: false, error: false, preview: "Level3" },
-	{ id: "level4", path: "maps/3.json", loaded: false, error: false, preview: "Level4" },
-	{ id: "level5", path: "maps/4.json", loaded: false, error: false, preview: "Level5" },
-	{ id: "level6", path: "maps/5.json", loaded: false, error: false, preview: "Level6" },
+	{ id: "level1", path: "maps/0.json", loaded: false, error: false, multiplayer: false, preview: "Level1" },
+	{ id: "level2", path: "maps/1.json", loaded: false, error: false, multiplayer: false, preview: "Level2" },
+	{ id: "level3", path: "maps/2.json", loaded: false, error: false, multiplayer: false, preview: "Level3" },
+	{ id: "level4", path: "maps/3.json", loaded: false, error: false, multiplayer: false, preview: "Level4" },
+	{ id: "level5", path: "maps/4.json", loaded: false, error: false, multiplayer: false, preview: "Level5" },
+	{ id: "level6", path: "maps/5.json", loaded: false, error: false, multiplayer: false, preview: "Level6" },
+];
+
+const MULTIPLAYER_LEVELS = [
+	// multiplayer levels
+	{ id: "mp1", path: "maps/mp/0.json", loaded: false, error: false, multiplayer: true, preview: "mp1" },
 ];
 
 export class LevelManager {
     allLevels = [];
+    mpLevels = [];
     currentLevel = 0;
     levelChangeListeners = [];
 
@@ -136,7 +142,12 @@ export class LevelManager {
         let data = await res.json();
         let level = new Level(info, data.name, data.longName, data);
         console.log("  Loaded: " + info.id + " = " + level.name);
-        this.allLevels[info.id] = level;
+        if( info.multiplayer ) {
+            this.mpLevels[info.id] = level;
+        }
+        else {
+            this.allLevels[info.id] = level;
+        }        
         return level;
     }
 
@@ -149,7 +160,12 @@ export class LevelManager {
         const promises = [];
         for (let i = 0; i < LEVEL_NAMES.length; i++) {
             let info = LEVEL_NAMES[i];
-            promises.push(this._loadLevelData(LEVEL_NAMES[i]));
+            promises.push(this._loadLevelData(info));
+        }
+
+        for( let i = 0; i < MULTIPLAYER_LEVELS.length; i++ ) {
+            let info = MULTIPLAYER_LEVELS[i];
+			promises.push(this._loadLevelData(info));
         }
 
         Promise.all(promises).then((res) => {
@@ -258,4 +274,11 @@ export class LevelManager {
     }
 
 
+    allMultiplayerLevels() {
+        let levels = [];
+        MULTIPLAYER_LEVELS.forEach( (l) => {
+            levels.push(this.mpLevels[l.id]);
+        });
+        return levels;
+    }
 }

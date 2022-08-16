@@ -58,6 +58,7 @@ export default class MultiplayerLobbyScreen extends Stage {
 		this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
 			if (!state.isCurrent(my_state.MULTIPLAYER_LOBBY)) return;
 			if (action === "exit") {
+				MultiplayerManager.getInstance().closeActiveGame();
 				state.change(my_state.MULTIPLAYER_MENU);
 			}
 		});

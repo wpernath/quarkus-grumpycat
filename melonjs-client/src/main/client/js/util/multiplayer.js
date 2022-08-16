@@ -69,6 +69,10 @@ export class MultiplayerMessage {
         // game and player
         this.multiplayerGame   = null;
         this.multiplayerPlayer = null;
+
+        this.selectedLevelForGame = null;
+        this.selectedLevelIndex   = 0;
+        this.multiplayerLevels    = this.levelManager.allMultiplayerLevels();
     }
 
     async createPlayerFromMe() {
@@ -182,6 +186,14 @@ export class MultiplayerMessage {
         this.multiplayerSocket.addEventListener("error", callback);
     }
 
+    useSelectedLevel(levelIndex) {
+        this.selectedLevelIndex = levelIndex;
+        this.selectedLevelForGame = this.levelManager.allMuiltiplayerLevels()[levelIndex];
+    }
 
+    allLevels() {       
+        console.log("MultiplayerManager.allLevels() => " + this.multiplayerLevels.length); 
+        return this.multiplayerLevels;
+    }
     
 }

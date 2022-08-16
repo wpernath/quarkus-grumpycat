@@ -4,6 +4,7 @@ import { my_state } from "../../util/constants";
 import GlobalGameState from "../../util/global-game-state";
 import MultiplayerManager from "../../util/multiplayer";
 import { StateBackground } from "../state_background";
+import { ChooserComponent } from "./mp-choose-level";
 
 class BackButton extends BaseTextButton {
 	constructor(x, y) {
@@ -29,7 +30,6 @@ class StartGameButton extends BaseTextButton {
 
 	onClick() {
 		MultiplayerManager.getInstance().createGame(0).then( (game) => {
-			GlobalGameState.multiplayerGame = game;
 			state.change(my_state.MULTIPLAYER_LOBBY);
 		});		
 	}
@@ -50,7 +50,11 @@ class MenuComponent extends Container {
 		// give a name
 		this.name = "TitleBack";
 
+		this.levelChooser = new ChooserComponent(MultiplayerManager.getInstance().allLevels());
         this.addChild(new StateBackground("HOST GAME", false, false));
+
+		this.addChild(this.levelChooser);
+
 		this.addChild(new BackButton(5, game.viewport.height - 60));
         this.addChild(new StartGameButton(game.viewport.width - 105, game.viewport.height - 60));
 	}
@@ -65,6 +69,7 @@ export default class HostGameScreen extends Stage {
 		this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
 			if (!state.isCurrent(my_state.MULTIPLAYER_START_GAME)) return;
 			if (action === "exit") {
+				MultiplayerManager.getInstance().closeActiveGame();
 				state.change(my_state.MULTIPLAYER_MENU);
 			}
 		});

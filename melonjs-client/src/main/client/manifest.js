@@ -169,6 +169,8 @@ const DataManifest = [
 	{ name: "Level5", type: "image", src: "./data/map/Level5.png" },
 	{ name: "Level6", type: "image", src: "./data/map/Level6.png" },
 
+	// multiplayer
+	{ name: "mp1", type: "image", src: "./data/map/mp_golems.png" },
 ];
 
 export default DataManifest;
