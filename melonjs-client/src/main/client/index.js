@@ -39,7 +39,6 @@ import JoinGameScreen from './js/stage/multiplayer/mp-join-game';
 import MultiplayerLobbyScreen from './js/stage/multiplayer/mp-lobby';
 import MultiplayerPlayScreen from './js/stage/multiplayer/mp-play';
 
-
 device.onReady(() => {
 
     // initialize the display canvas once the device/browser is ready
@@ -78,6 +77,7 @@ device.onReady(() => {
     CONFIG.baseURL = baseURL;
 
     loader.crossOrigin = "anonymous";
+
 
     // initialize NetworkManager
     NetworkManager.getInstance();

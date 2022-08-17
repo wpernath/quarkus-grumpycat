@@ -104,8 +104,7 @@ class GetReadyBack extends Container {
 
 		let player2 = new PlayerEntity(17, 9, true);
 		player2.tint = pool.pull("Color", 55,55,255);
-		player2.flipX(true);
-		player2.alpha = 0.3;
+		player2.flipX(true);		
 		this.addChild(player2);
 
 		let player3 = new PlayerEntity(15, 7, true);

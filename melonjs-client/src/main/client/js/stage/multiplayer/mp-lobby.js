@@ -35,12 +35,27 @@ class StartGameButton extends BaseTextButton {
 }
 
 class PlayerEntry extends Container {
-	constructor(x, y, player, num) {
+	constructor(x, y, name, num) {
 		super(x,y);
-		this.player = player;
+		
 		this.playerNum = num;
 
+		this.playerNum = new BitmapText(15, 4, {
+			font: "24Outline",
+			text: "Player " + (num+1),
+		});
 
+		this.playerName = new BitmapText(120, 4, {
+			font: "24Outline",
+			text: name,
+		});
+
+		this.addChild(this.playerNum);
+		this.addChild(this.playerName);		
+	}
+
+	updateName(name) {
+		this.playerName.setText(name);
 	}
 }
 
@@ -76,7 +91,7 @@ class MenuComponent extends Container {
 		this.addChild(this.statusMessage);
 
 		// give a name
-		this.name = "TitleBack";
+		this.name = "mp-lobby";
 		this.addChild(new StateBackground("LOBBY", false, false));
 		this.addChild(
 			new BitmapText(game.viewport.width - 75, 170, {
@@ -94,6 +109,29 @@ class MenuComponent extends Container {
 		MultiplayerManager.getInstance().setOnBroadcastCallback(this.broadcasted.bind(this));
 		MultiplayerManager.getInstance().setOnGameStartedCallback(this.gameStarted.bind(this));
 		
+		this.players = this.playersFromGame(MultiplayerManager.getInstance().multiplayerGame);
+		for( let i = 0; i < 4; i++ ) {
+			let pe = new PlayerEntry(70, 330 + i * 42, this.players[i] !== null ? this.players[i].name : "", i);
+			this.playerComponents.push(pe);
+			this.addChild(pe);
+		}
+	}
+
+	playersFromGame(theGame) {
+		let players = [];
+		players[0] = theGame.player1 !== undefined? theGame.player1 : null;
+		players[1] = theGame.player2 !== undefined ? theGame.player2 : null;
+		players[2] = theGame.player3 !== undefined ? theGame.player3 : null;
+		players[3] = theGame.player4 !== undefined ? theGame.player4 : null;
+		return players;
+	}
+
+	updatePlayers(theGame) {
+		this.players = this.playersFromGame(MultiplayerManager.getInstance().multiplayerGame);
+		for (let i = 0; i < 4; i++) {
+			let pe = this.playerComponents[i];
+			pe.updateName(this.players[i] !== null ? this.players[i].name : "");
+		}
 	}
 
 	gameStarted(message, theGame) {
@@ -109,6 +147,7 @@ class MenuComponent extends Container {
 			}
 			this.addChild(this.startButton);
 		}
+		this.updatePlayers(theGame);
 	}
 
 	playerLeft(message, theGame) {
@@ -118,6 +157,7 @@ class MenuComponent extends Container {
 				this.removeChild(this.startButton, true);
 			}
 		}
+		this.updatePlayers(theGame);
 	}
 
 	gameClosed(message) {

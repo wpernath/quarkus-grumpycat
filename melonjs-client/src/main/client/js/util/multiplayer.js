@@ -1,4 +1,5 @@
 import CONFIG from "../../config";
+import { EventEmitter } from "./eventemitter";
 import GlobalGameState from "./global-game-state";
 import { LevelManager } from "./level";
 import NetworkManager from "./network";
@@ -87,10 +88,12 @@ export class MultiplayerMessage {
         this.multiplayerGameToJoin= null;
 
         // callbacks for socket
+        this.eventEmitter = new EventEmitter();
+
         this.onErrorCallback = null;
         this.onLeaveCallback = null;
         this.onJoinCallback  = null;
-        this.onMessageCallback = null;
+        this.onMessageCallback = [];
         this.onGameCloseCallback = null;
         this.onBroadcastCallback = null;
         this.onGameStartedCallback = null;
@@ -130,8 +133,9 @@ export class MultiplayerMessage {
             this.onGameStartedCallback = null;
             this.onJoinCallback = null;
             this.onLeaveCallback = null;
-            this.onMessageCallback = null;
+            this.onMessageCallback = [];            
         }
+        
         if( this.multiplayerGame !== null ) {
             this.weAreHost = false;
             console.log("CLOSING: ");
@@ -144,6 +148,8 @@ export class MultiplayerMessage {
 
             this.multiplayerGame = null;
         }        
+
+        this.eventEmitter.reset();
     }
 
     /**
@@ -260,6 +266,8 @@ export class MultiplayerMessage {
         this.multiplayerSocket = new WebSocket("ws://" + this.socketBaseURL + "multiplayer/" + this.multiplayerGame.id + "/" + this.multiplayerPlayer.id);
         this.multiplayerSocket.addEventListener("error", (evt) => {
             console.log("  Socket error: " + evt);
+//            this.eventEmitter.emit("error", evt);
+
             if( this.onErrorCallback !== null ) {
                 this.onErrorCallback(evt);
             }
@@ -325,13 +333,14 @@ export class MultiplayerMessage {
             }
             else if( data.type === MultiplayerMessageType.GAME_UPDATE) {
                 // sending game update to game screen
-                if( this.onMessageCallback !== null ) {
+                if( this.onMessageCallback.length !== 0 ) {
                     this.onMessageCallback(data);
                 }
             }
         });
 
     }
+
     /**
      * 
      * @returns a array of open games coming from server to join them
@@ -342,8 +351,8 @@ export class MultiplayerMessage {
     }
 
     
-    setOnMessageCallback(callback) {
-        this.onMessageCallback = callback;
+    addOnMessageCallback(playerId, callback) {
+        this.onMessageCallback[playerId] = callback;
     }
 
     setOnJoinCallback(callback) {

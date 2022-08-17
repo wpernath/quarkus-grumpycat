@@ -137,6 +137,12 @@ public class MultiplayerSocket {
         broadcastOthersInGame(gameId, message);
     }
 
+    /**
+     * Broadcasting a message to all players in a game. 
+     * 
+     * @param gameId the game to broadcast to
+     * @param message the message to broadcast
+     */
     private void broadcastOthersInGame(Long gameId, MultiplayerMessage message) {
         Set<Long> players = playersInGame.get(gameId);
         Long playerId = message.playerId;
