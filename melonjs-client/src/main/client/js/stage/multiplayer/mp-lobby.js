@@ -149,8 +149,8 @@ class MenuComponent extends Container {
 		if( MultiplayerManager.getInstance().weAreHost ) {
 			if( this.startButton === null ) {
 				this.startButton = new StartGameButton(game.viewport.width - 105, game.viewport.height - 60);			
-			}
-			this.addChild(this.startButton);
+				this.addChild(this.startButton);
+			}			
 		}
 		this.updatePlayers(theGame);
 	}
@@ -161,8 +161,9 @@ class MenuComponent extends Container {
 
 		this.statusMessage.setText(message.message);
 		if( MultiplayerManager.getInstance().weAreHost ) {
-			if ((this.startButton !== null && theGame.player1 !== undefined) || theGame.player2 !== undefined || theGame.player3 !== undefined || theGame.player4 !== undefined) {
-				this.removeChild(this.startButton, true);
+			if ((this.startButton !== null && theGame.player1 !== undefined) || theGame.player2 === undefined || theGame.player3 === undefined || theGame.player4 === undefined) {
+				this.removeChild(this.startButton);				
+				this.startButton = null;
 			}
 		}
 		this.updatePlayers(theGame);

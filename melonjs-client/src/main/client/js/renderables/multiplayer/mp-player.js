@@ -10,10 +10,33 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 	constructor(x, y, player) {
 		super(x, y);
 		this.player = player;
-		//MultiplayerManager.getInstance().
+		MultiplayerManager.getInstance().addOnMessageCallback(this.onUpdate.bind(this));
 	}
 
 	update(dt) {
 		return super.update(dt);
+	}
+
+	onUpdate(event) {
+		let message = event.message;
+		if( message.playerId === this.player.id) {
+			// only ours
+			if (message.gutterThrown) {
+				this.placeBorderTile(message.x + message.dx, message.y + message.dy);
+			} 
+			else if (playerAction.bombPlaced) {
+				this.pos.x = message.x * 32 + 16;
+				this.pos.y = message.y * 32 + 16;
+
+				game.world.addChild(new BombEntity(this.pos.x, this.pos.y));
+			} 
+			else {
+				// just movement
+				this.pos.x = message.x * 32 + 16;
+				this.pos.y = message.y * 32 + 16;
+
+				this.checkBonusTile(this.pos.x, this.pos.y);
+			}
+		}
 	}
 }

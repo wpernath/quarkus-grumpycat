@@ -9,10 +9,13 @@ import HUDContainer from "../hud/hud-container.js";
 import VirtualJoypad from "../hud/virtual-joypad.js";
 
 import { my_state } from "../../util/constants";
+import { MPRemotePlayerSprite } from "../../renderables/multiplayer/mp-player";
 
 
 export default class MultiplayerPlayScreen extends Stage {
-	player;
+	player = null;
+	players = [];
+    remotePlayers = [];
 	enemies = [];
 	hudContainer = null;
 	virtualJoypad = null;
@@ -33,16 +36,23 @@ export default class MultiplayerPlayScreen extends Stage {
 
 	onResetEvent() {
 		this.isActive = false;
-		this.player = null;
+		this.players = [];
+        this.player = null;
 		this.enemies = [];
 		this.enemyEmitter.isActive = false;
 
+        this.players = this.playersFromGame(MultiplayerManager.getInstance().multiplayerGame);
+        let x = 0;
+        this.players.forEach((p) => {
+            console.log("Player " + x + ": " + p.name);
+        });
 		this.setupLevel();
 
 		this.hudContainer = new HUDContainer(0, 0);
 		this.virtualJoypad = new VirtualJoypad();
 		game.world.addChild(this.hudContainer);
 		game.world.addChild(this.virtualJoypad, Infinity);
+
 
 		this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
 			if (!state.isCurrent(my_state.MULTIPLAYER_PLAY)) return;
@@ -53,6 +63,15 @@ export default class MultiplayerPlayScreen extends Stage {
 		});
 
 		this.isActive = true;
+	}
+
+	playersFromGame(theGame) {
+		let players = [];
+		players[0] = theGame.player1 !== undefined ? theGame.player1 : null;
+		players[1] = theGame.player2 !== undefined ? theGame.player2 : null;
+		players[2] = theGame.player3 !== undefined ? theGame.player3 : null;
+		players[3] = theGame.player4 !== undefined ? theGame.player4 : null;
+		return players;
 	}
 
 	update(dt) {
@@ -77,11 +96,12 @@ export default class MultiplayerPlayScreen extends Stage {
 	setupLevel() {
 		this.multiplayerGame = MultiplayerManager.getInstance().multiplayerGame;
 		this.currentLevel = MultiplayerManager.getInstance().allLevels()[this.multiplayerGame.level];
-        this.currentLevel.loadIntoMelon();
+		this.currentLevel.loadIntoMelon();
 		level.load(this.currentLevel.id);
 
 		let layers = level.getCurrentLevel().getLayers();
 		let layerNum = 0;
+        let playerNum = 0;
 		layers.forEach((l) => {
 			console.log(l.name);
 			if (l.name === "Persons") {
@@ -92,11 +112,20 @@ export default class MultiplayerPlayScreen extends Stage {
 						let tile = l.cellAt(x, y);
 						if (tile !== null && tile !== undefined) {
 							if (tile.tileId === 993) {
-								// player
-								this.player = new PlayerEntity(x, y);
-								this.player.name = "Player";
-								console.log("  player at (" + x + "/" + y + "): " + this.player);
-								game.world.addChild(this.player, this.spriteLayer);
+								if( this.players[playerNum] !== null ) {
+                                    if( this.players[this.playerNum].id === MultiplayerManager.getInstance().multiplayerPlayer.id ) {
+                                        // this player will be controlled by us
+                                        this.player = new MPLocalPlayerSprite(x,y, this.players[playerNum]);
+                                    }
+                                    else {
+                                        // this player will be controlled by someone else
+                                        this.remotePlayers.push(new MPRemotePlayerSprite(x, y, this.players[playerNum]));
+                                    }
+                                    this.player.name = this.players[playerNum].name;
+                                    console.log("  player at (" + x + "/" + y + "): " + this.player);
+                                    game.world.addChild(this.player, this.spriteLayer);
+                                }
+                                playerNum++;
 							} 
                             else if (tile.tileId === 994) {
 								let enemy = new CatEnemy(x, y);
@@ -137,7 +166,6 @@ export default class MultiplayerPlayScreen extends Stage {
 		this.enemies.forEach((e) => e.setPlayer(this.player));
 	}
 
-
 	onDestroyEvent() {
 		console.log("Play.OnExit()");
 		game.world.removeChild(this.hudContainer);
@@ -151,6 +179,5 @@ export default class MultiplayerPlayScreen extends Stage {
 		MultiplayerManager.getInstance().setOnGameCloseCallback(null);
 		MultiplayerManager.getInstance().setOnBroadcastCallback(null);
 		MultiplayerManager.getInstance().setOnGameStartedCallback(null);
-		MultiplayerManager.getInstance().setOnMessageCallback(null);
 	}
 }

@@ -251,7 +251,7 @@ export class MultiplayerMessage {
                 },
             });
 
-            this.multiplayerGame = this.multiplayerGameToJoin;
+            this.multiplayerGame = await res.json();
             this._createMultiplayerSocket();
             this.weAreHost = false;            
             this.multiplayerGameToJoin = null;
@@ -351,7 +351,7 @@ export class MultiplayerMessage {
     }
 
     
-    addOnMessageCallback(playerId, callback) {
+    addOnMessageCallback(callback) {
         this.eventEmitter.on(MultiplayerMessageType.GAME_UPDATE, callback);
     }
 
@@ -359,7 +359,7 @@ export class MultiplayerMessage {
         if( callback ) 
             this.eventEmitter.on(MultiplayerMessageType.PLAYER_JOINED, callback);
         else 
-            this.eventEmitter.off(MultiplayerMessageType.PLAYER_JOINED, callback);
+            this.eventEmitter.allOff(MultiplayerMessageType.PLAYER_JOINED);
     }
 
     setOnLeaveCallback(callback) {
@@ -367,7 +367,7 @@ export class MultiplayerMessage {
             this.eventEmitter.on(MultiplayerMessageType.PLAYER_REMOVED, callback);
         }   
         else {
-            this.eventEmitter.off(MultiplayerMessageType.PLAYER_REMOVED, callback);
+            this.eventEmitter.allOff(MultiplayerMessageType.PLAYER_REMOVED);
         }     
     }
     
@@ -376,20 +376,29 @@ export class MultiplayerMessage {
             this.eventEmitter.on(MultiplayerMessageType.ERROR, callback);
         }
         else {
-            this.eventEmitter.off(MultiplayerMessageType.ERROR, callback);
+            this.eventEmitter.allOff(MultiplayerMessageType.ERROR);
         }
     }
 
     setOnGameCloseCallback(callback) {
-        this.eventEmitter.on(MultiplayerMessageType.CLOSE_GAME, callback);
+        if( callback )
+            this.eventEmitter.on(MultiplayerMessageType.CLOSE_GAME, callback);
+        else 
+            this.eventEmitter.allOff(MultiplayerMessageType.CLOSE_GAME);
     }
 
     setOnBroadcastCallback(callback) {
-        this.eventEmitter.on(MultiplayerMessageType.BROADCAST_CHAT, callback);
+        if( callback )
+            this.eventEmitter.on(MultiplayerMessageType.BROADCAST_CHAT, callback);
+        else 
+            this.eventEmitter.allOff(MultiplayerMessageType.BROADCAST_CHAT);
     }
 
     setOnGameStartedCallback(callback) {
-        this.eventEmitter.on(MultiplayerMessageType.GAME_STARTED, callback);
+        if( callback ) 
+            this.eventEmitter.on(MultiplayerMessageType.GAME_STARTED, callback);
+        else 
+            this.eventEmitter.allOff(MultiplayerMessageType.GAME_STARTED);
     }
 
     /**

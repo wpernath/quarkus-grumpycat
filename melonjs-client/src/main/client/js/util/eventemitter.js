@@ -20,17 +20,21 @@ export class EventEmitter {
         this._events[name] = this._events[name].filter(filterListeners);        
     }
 
+    allOff(name) {
+        if (this._events[name]) {
+            this._events[name] = [];            
+        }
+    }
+
     emit(name, data) {
         if( !this._events[name] ) {
             //throw new Error("Can't emit listener from event ${name}");
             return;
         }
 
-        const fireCallbacks = (callback) => {
-            callback(data);
-        };
-
-        this._events[name].forEach(fireCallbacks);
+        this._events[name].forEach( (l) => {
+            l(data);
+        });
     }
 
     reset() {

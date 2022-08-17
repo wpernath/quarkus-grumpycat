@@ -98,7 +98,7 @@ public class MultiPlayerResource {
     @PUT  
     @Path("/join/{gameId}/{playerId}")
     @Transactional
-    public void joinGame(Long gameId, Long playerId ) {
+    public MultiPlayerGame joinGame(Long gameId, Long playerId ) {
         MultiPlayerGame game = MultiPlayerGame.findById(gameId);
         MultiPlayer     player = MultiPlayer.findById(playerId);
         
@@ -120,9 +120,11 @@ public class MultiPlayerResource {
                 throw new IllegalStateException("Game " + game.id + " is allready full");
             }
             game.persist();
+            return game;
         }
         else {
             Log.error("Game " + gameId + " or player " + playerId + " not found!");
+            return null;
         }
     }
      
