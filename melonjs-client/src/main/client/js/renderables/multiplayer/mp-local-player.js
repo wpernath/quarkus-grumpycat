@@ -1,37 +1,43 @@
 import { game, input, state } from "melonjs/dist/melonjs.module.js";
-import BombEntity from "..bomb";
+import BombEntity from "../bomb";
 import ExplosionEntity from "../explosion";
 import GlobalGameState from "../../util/global-game-state";
-import { LevelManager } from "../../util/level";
 
 import { GameStateAction } from "../../util/game-updates";
 import { BONUS_TILE, BasePlayerSprite, BARRIER_TILE } from "../base-player";
-import NetworkManager from "../util/network";
 
-class MPPlayerEntity extends BasePlayerSprite {
+import MultiplayerManager from "../../util/multiplayer";
+import { MultiplayerMessage } from "../../util/multiplayer";
+import { MultiplayerMessageType } from "../../util/multiplayer";
+
+export class MPLocalPlayerSprite extends BasePlayerSprite {
 	levelOver = false;
 
 	/**
 	 * constructor
 	 */
-	constructor(x, y, justImage = false) {
+	constructor(x, y, player, color) {
 		// call the parent constructor
-		super(x, y, justImage);
+		super(x, y, false);
+		this.player = player;
+		this.color = color;
+		this.tint = color;
+
+		// set the display to follow our position on both axis
+		game.viewport.follow(this.pos, game.viewport.AXIS.BOTH, 0.1);
 	}
 
 	/**
 	 * update the entity
 	 */
 	update(dt) {
-		if (this.justImage) return true;
-
 		let mapX = Math.floor(this.pos.x / 32);
 		let mapY = Math.floor(this.pos.y / 32);
 		let dx = 0,
 			dy = 0;
 
 		// this is the data to be stored on the server
-		let action = new GameStateAction();
+		let action = MultiplayerMessage.gameUpdate();
 
 		if (this.levelOver) return super.update(dt);
 		action.x = mapX;
@@ -40,9 +46,11 @@ class MPPlayerEntity extends BasePlayerSprite {
 		if (input.isKeyPressed("barrier")) {
 			if (input.isKeyPressed("left")) {
 				dx = -1;
-			} else if (input.isKeyPressed("right")) {
+			} 
+			else if (input.isKeyPressed("right")) {
 				dx = +1;
 			}
+			
 			if (input.isKeyPressed("up")) {
 				dy = -1;
 			} else if (input.isKeyPressed("down")) {
@@ -60,11 +68,11 @@ class MPPlayerEntity extends BasePlayerSprite {
 					action.dx = dx;
 					action.dy = dy;
 					action.gutterThrown = true;
-					action.hasChanged = true;
-					NetworkManager.getInstance().writePlayerAction(action);
+					MultiplayerManager.getInstance().sendAction(action);
 				}
 			}
-		} else {
+		} 
+		else {
 			if (input.isKeyPressed("bomb")) {
 				if (GlobalGameState.bombs > 0) {
 					game.world.addChild(new BombEntity(this.pos.x, this.pos.y));
@@ -73,8 +81,7 @@ class MPPlayerEntity extends BasePlayerSprite {
 					action.bombPlaced = true;
 					action.dx = dx;
 					action.dy = dy;
-					action.hasChanged = true;
-					NetworkManager.getInstance().writePlayerAction(action);
+					MultiplayerManager.getInstance().sendAction(action);
 					return super.update(dt);
 				}
 			}
@@ -89,7 +96,8 @@ class MPPlayerEntity extends BasePlayerSprite {
 					//this.setCurrentAnimation("walk-left");
 					this.oldDx = dx;
 				}
-			} else if (input.isKeyPressed("right")) {
+			} 
+			else if (input.isKeyPressed("right")) {
 				this.flipX(false);
 				dx = dt * this.VELOCITY;
 				if (this.oldDx <= 0) {
@@ -115,15 +123,11 @@ class MPPlayerEntity extends BasePlayerSprite {
 				this.checkBonusTile(this.pos.x, this.pos.y);
 				if (this.collectedBonusTiles >= this.numberOfBonusTiles) {
 					// level done, check to see if there are more levels
-					action.gameWon = true;
+					action.levelOver = true;
 					this.levelOver = true;
-					NetworkManager.getInstance().writePlayerAction(action);
-					if (LevelManager.getInstance().hasNext()) {
-						LevelManager.getInstance().next();
-						state.change(state.READY);
-					} else {
-						state.change(state.GAME_END);
-					}
+					MultiplayerManager.getInstance().sendAction(action);
+
+					// TODO: implement level over
 				}
 
 				mapX = Math.floor(this.pos.x / 32);
@@ -134,8 +138,7 @@ class MPPlayerEntity extends BasePlayerSprite {
 					action.y = mapY;
 					this.lastMapX = mapX;
 					this.lastMapY = mapY;
-					action.hasChanged = true;
-					NetworkManager.getInstance().writePlayerAction(action);
+					MultiplayerManager.getInstance().sendAction(action);
 				}
 			}
 		}
@@ -144,15 +147,15 @@ class MPPlayerEntity extends BasePlayerSprite {
 			console.log("GAME OVER!");
 			GlobalGameState.isGameOver = true;
 			this.levelOver = true;
-			state.change(state.GAMEOVER);
-			action.gameOver = true;
+			
+			// TODO: implement
+			action.levelOver = true;
 			action.hasChanged = true;
-			NetworkManager.getInstance().writePlayerAction(action);
+			MultiplayerManager.getInstance().sendAction(action);
+			
 		}
 
 		// call the parent method
 		return super.update(dt);
 	}
 }
-
-export default PlayerEntity;

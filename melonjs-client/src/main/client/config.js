@@ -8,7 +8,7 @@ const CONFIG = {
 
 	local: {
 		//baseURL: "http://localhost:8080/",
-		baseURL: "http://192.168.2.198:8080/",
+		baseURL: "http://192.168.2.171:8080/",
 	},
 
 	dev: {

@@ -1,20 +1,27 @@
-import { Stage, game, event, state, level } from "melonjs";
+import { Stage, game, event, state, level, pool } from "melonjs";
 import MultiplayerManager from "../../util/multiplayer";
 import CatEnemy from "../../renderables/cat-enemy.js";
 import { SpiderEnemy } from "../../renderables/spider-enemy.js";
 import GolemEnemySprite from "../../renderables/golem-enemy";
 
-import PlayerEntity from "../../renderables/player.js";
 import HUDContainer from "../hud/hud-container.js";
 import VirtualJoypad from "../hud/virtual-joypad.js";
 
 import { my_state } from "../../util/constants";
 import { MPRemotePlayerSprite } from "../../renderables/multiplayer/mp-player";
+import { MPLocalPlayerSprite } from "../../renderables/multiplayer/mp-local-player";
 
 
 export default class MultiplayerPlayScreen extends Stage {
 	player = null;
 	players = [];
+	playerColors = [
+		pool.pull("Color", 255,255,255),
+		pool.pull("Color", 255, 255, 55),
+		pool.pull("Color", 55, 255, 55),
+		pool.pull("Color", 255, 55, 55)
+	];
+
     remotePlayers = [];
 	enemies = [];
 	hudContainer = null;
@@ -41,11 +48,13 @@ export default class MultiplayerPlayScreen extends Stage {
 		this.enemies = [];
 		this.enemyEmitter.isActive = false;
 
-        this.players = this.playersFromGame(MultiplayerManager.getInstance().multiplayerGame);
-        let x = 0;
-        this.players.forEach((p) => {
-            console.log("Player " + x + ": " + p.name);
-        });
+        this.players = this.playersFromGame(MultiplayerManager.getInstance().multiplayerGame);        
+		for( let x = 0; x < this.players.length; x++) {
+			let p = this.players[x];
+			if( p !== null ) {
+            	console.log("Player " + x + ": " + p.name);
+			}
+		}
 		this.setupLevel();
 
 		this.hudContainer = new HUDContainer(0, 0);
@@ -113,17 +122,22 @@ export default class MultiplayerPlayScreen extends Stage {
 						if (tile !== null && tile !== undefined) {
 							if (tile.tileId === 993) {
 								if( this.players[playerNum] !== null ) {
-                                    if( this.players[this.playerNum].id === MultiplayerManager.getInstance().multiplayerPlayer.id ) {
+                                    if( this.players[playerNum].id === MultiplayerManager.getInstance().multiplayerPlayer.id ) {
                                         // this player will be controlled by us
-                                        this.player = new MPLocalPlayerSprite(x,y, this.players[playerNum]);
+                                        this.player = new MPLocalPlayerSprite(x,y, this.players[playerNum], this.playerColors[playerNum]);
+										game.world.addChild(this.player, this.spriteLayer);
+										this.player.name = this.players[playerNum].name;
+
+										console.log("  local player at (" + x + "/" + y + "): " + this.player.name);
                                     }
                                     else {
                                         // this player will be controlled by someone else
-                                        this.remotePlayers.push(new MPRemotePlayerSprite(x, y, this.players[playerNum]));
-                                    }
-                                    this.player.name = this.players[playerNum].name;
-                                    console.log("  player at (" + x + "/" + y + "): " + this.player);
-                                    game.world.addChild(this.player, this.spriteLayer);
+										let remotePlayer = new MPRemotePlayerSprite(x, y, this.players[playerNum], this.playerColors[playerNum]);
+										remotePlayer.name = this.players[playerNum].name;
+                                        this.remotePlayers.push(remotePlayer);
+										game.world.addChild(remotePlayer, this.spriteLayer);
+										console.log("  remote player at (" + x + "/" + y + "): " + remotePlayer.name);
+                                    }                                    
                                 }
                                 playerNum++;
 							} 

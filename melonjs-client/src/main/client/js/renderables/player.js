@@ -17,8 +17,11 @@ class PlayerEntity extends BasePlayerSprite {
      */
     constructor(x, y, justImage = false) {
         // call the parent constructor
-        super(x,y, justImage);        
-    }
+        super(x, y, justImage);
+        
+        // set the display to follow our position on both axis
+        game.viewport.follow(this.pos, game.viewport.AXIS.BOTH, 0.1);
+	}
 
 
 

@@ -13,6 +13,9 @@ export class PlayerRemoteSprite extends BasePlayerSprite {
 		this.playerActions = GlobalGameState.replayActions.playerMovements;
 		this.replayActionIndex = 0;
 		this.replayDone = false;
+
+		// set the display to follow our position on both axis
+		game.viewport.follow(this.pos, game.viewport.AXIS.BOTH, 0.1);
 	}
 
 	update(dt) {

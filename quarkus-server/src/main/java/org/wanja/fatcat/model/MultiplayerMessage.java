@@ -30,6 +30,8 @@ public class MultiplayerMessage {
     public boolean gutterThrown = false;
     public long score = 0L;
     public int energy;
+    public boolean hasChanged;
+    public boolean levelOver;
 
     public static MultiplayerMessage playerJoined(Long playerId, Long gameId) {
         MultiplayerMessage mm = new MultiplayerMessage(MessageType.PLAYER_JOINED);

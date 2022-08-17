@@ -48,6 +48,9 @@ export class MultiplayerMessage {
         this.gutterThrown = false;
         this.score = 0;
         this.energy = 0;
+
+        this.levelOver = false;
+        this.hasChanged = false;
     }    
 }
 
@@ -271,8 +274,7 @@ export class MultiplayerMessage {
         });
 
         this.multiplayerSocket.addEventListener("message", (evt) => {
-            const data = JSON.parse(evt.data);
-            console.log("Got message from server: " );
+            const data = JSON.parse(evt.data);            
             if( data.type === MultiplayerMessageType.PLAYER_JOINED ) {
                 console.log("  Player " + data.playerId + " joined the game:  " + data.message);
                 fetch(this.getGameURL + data.gameId)

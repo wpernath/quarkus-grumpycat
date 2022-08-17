@@ -60,10 +60,7 @@ export class BasePlayerSprite extends Sprite {
 			this.body.addShape(new Rect(0, 0, this.width, this.height));
 			this.body.collisionType = collision.types.PLAYER_OBJECT;
 			this.body.setCollisionMask(collision.types.ENEMY_OBJECT);
-
-			// set the display to follow our position on both axis
-			game.viewport.follow(this.pos, game.viewport.AXIS.BOTH, 0.1);
-
+	
 			// ensure the player is updated even when outside of the viewport
 			this.alwaysUpdate = true;
 			this.mapHeight = level.getCurrentLevel().rows;

@@ -98,8 +98,7 @@ class GetReadyBack extends Container {
 		this.addChild(new LevelDescription(190, game.viewport.height - 400), game.viewport.width - 400, game.viewport.height - 400);
 
 		let player1 = new PlayerEntity(13, 9, true);
-		player1.tint = pool.pull("Color", 255,55,55);
-		player1.setOpacity(0.4);
+		player1.tint = pool.pull("Color", 255,55,55);		
 		this.addChild(player1);
 
 		let player2 = new PlayerEntity(17, 9, true);

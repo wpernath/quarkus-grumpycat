@@ -7,10 +7,13 @@ import MultiplayerManager from "../../util/multiplayer";
 
 export class MPRemotePlayerSprite extends BasePlayerSprite {
 
-	constructor(x, y, player) {
+	constructor(x, y, player, color) {
 		super(x, y);
 		this.player = player;
+		this.color  = color;
+		this.tint   = color;
 		MultiplayerManager.getInstance().addOnMessageCallback(this.onUpdate.bind(this));
+		
 	}
 
 	update(dt) {
@@ -24,13 +27,12 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 			if (message.gutterThrown) {
 				this.placeBorderTile(message.x + message.dx, message.y + message.dy);
 			} 
-			else if (playerAction.bombPlaced) {
+			else if (message.bombPlaced) {
 				this.pos.x = message.x * 32 + 16;
 				this.pos.y = message.y * 32 + 16;
 
 				game.world.addChild(new BombEntity(this.pos.x, this.pos.y));
-			} 
-			else {
+			} else {
 				// just movement
 				this.pos.x = message.x * 32 + 16;
 				this.pos.y = message.y * 32 + 16;
