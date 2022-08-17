@@ -15,6 +15,7 @@ export const MultiplayerMessageType = {
 	GAME_UPDATE     : "GAME_UPDATE",
     GAME_STARTED    : "GAME_STARTED",
 	BROADCAST_CHAT  : "BROADCAST_CHAT",
+    ERROR           : "ERROR",
 };
 export class MultiplayerMessage {
     
@@ -266,11 +267,7 @@ export class MultiplayerMessage {
         this.multiplayerSocket = new WebSocket("ws://" + this.socketBaseURL + "multiplayer/" + this.multiplayerGame.id + "/" + this.multiplayerPlayer.id);
         this.multiplayerSocket.addEventListener("error", (evt) => {
             console.log("  Socket error: " + evt);
-//            this.eventEmitter.emit("error", evt);
-
-            if( this.onErrorCallback !== null ) {
-                this.onErrorCallback(evt);
-            }
+            this.eventEmitter.emit(MultiplayerMessageType.ERROR, evt);
         });
 
         this.multiplayerSocket.addEventListener("message", (evt) => {
@@ -284,9 +281,10 @@ export class MultiplayerMessage {
                     })
                     .then( (json) => {
                         this.multiplayerGame = json;
-                        if( this.onJoinCallback !== null ) {
-                            this.onJoinCallback(data, json);
-                        }
+                        this.eventEmitter.emit(data.type, {
+                            message: data,
+                            game: json,
+                        });
                     });                
             }            
             else if( data.type === MultiplayerMessageType.PLAYER_REMOVED ) {
@@ -298,17 +296,18 @@ export class MultiplayerMessage {
                     .then((json) => {
                         this.multiplayerGame = json;
 
-                        if (this.onLeaveCallback !== null) {
-                            this.onLeaveCallback(data, json);
-                        }
+                        this.eventEmitter.emit(data.type, {
+                            message: data,
+                            game: json,
+                        });
                     });                
             }
             else if( data.type === MultiplayerMessageType.CLOSE_GAME ) {
                 console.log("  Game is going to be closed now: " + data.message);
                 this.closeActiveGame().then( () => {
-                    if( this.onGameCloseCallback !== null ) {
-                        this.onGameCloseCallback(data);
-                    }
+                    this.eventEmitter.emit(data.type, {
+                        message: data,
+                    });
                 });
             }
             else if( data.type === MultiplayerMessageType.GAME_STARTED) {
@@ -319,23 +318,24 @@ export class MultiplayerMessage {
                     })
                     .then((json) => {
                         this.multiplayerGame = json;
+                        this.eventEmitter.emit(data.type, {
+                            message: data,
+                            game: json,
+                        });
 
-                        if (this.onGameStartedCallback !== null) {
-                            this.onGameStartedCallback(data, json);
-                        }
                     });                
             }
             else if( data.type === MultiplayerMessageType.BROADCAST_CHAT) {
                 console.log("  [BROADCAST]: " + data.message);
-                if( this.onBroadcastCallback !== null ) {
-                    this.onBroadcastCallback(data);
-                }
+                this.eventEmitter.emit(data.type, {
+                    message: data,
+                });
             }
             else if( data.type === MultiplayerMessageType.GAME_UPDATE) {
                 // sending game update to game screen
-                if( this.onMessageCallback.length !== 0 ) {
-                    this.onMessageCallback(data);
-                }
+                this.eventEmitter.emit(data.type, {
+                    message: data,
+                });
             }
         });
 
@@ -352,31 +352,44 @@ export class MultiplayerMessage {
 
     
     addOnMessageCallback(playerId, callback) {
-        this.onMessageCallback[playerId] = callback;
+        this.eventEmitter.on(MultiplayerMessageType.GAME_UPDATE, callback);
     }
 
     setOnJoinCallback(callback) {
-        this.onJoinCallback = callback;
+        if( callback ) 
+            this.eventEmitter.on(MultiplayerMessageType.PLAYER_JOINED, callback);
+        else 
+            this.eventEmitter.off(MultiplayerMessageType.PLAYER_JOINED, callback);
     }
 
     setOnLeaveCallback(callback) {
-        this.onLeaveCallback = callback;
+        if( callback ) {
+            this.eventEmitter.on(MultiplayerMessageType.PLAYER_REMOVED, callback);
+        }   
+        else {
+            this.eventEmitter.off(MultiplayerMessageType.PLAYER_REMOVED, callback);
+        }     
     }
     
     setOnErrorCallback(callback) {
-        this.onErrorCallback = callback;
+        if( callback ) {
+            this.eventEmitter.on(MultiplayerMessageType.ERROR, callback);
+        }
+        else {
+            this.eventEmitter.off(MultiplayerMessageType.ERROR, callback);
+        }
     }
 
     setOnGameCloseCallback(callback) {
-        this.onGameCloseCallback = callback;
+        this.eventEmitter.on(MultiplayerMessageType.CLOSE_GAME, callback);
     }
 
     setOnBroadcastCallback(callback) {
-        this.onBroadcastCallback = callback;
+        this.eventEmitter.on(MultiplayerMessageType.BROADCAST_CHAT, callback);
     }
 
     setOnGameStartedCallback(callback) {
-        this.onGameStartedCallback = callback;
+        this.eventEmitter.on(MultiplayerMessageType.GAME_STARTED, callback);
     }
 
     /**

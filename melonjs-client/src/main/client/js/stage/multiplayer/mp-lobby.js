@@ -42,12 +42,12 @@ class PlayerEntry extends Container {
 
 		this.playerNum = new BitmapText(15, 4, {
 			font: "24Outline",
-			text: "Player " + (num+1),
+			text: "Player " + (num+1) + ":",
 		});
 
 		this.playerName = new BitmapText(120, 4, {
 			font: "24Outline",
-			text: name,
+			text: name !== "" ? name : "waiting...",
 		});
 
 		this.addChild(this.playerNum);
@@ -134,12 +134,17 @@ class MenuComponent extends Container {
 		}
 	}
 
-	gameStarted(message, theGame) {
+
+	// event handlers
+	gameStarted(event) {
+		let message = event.message;
 		this.statusMessage.setText("Game starting now!");
 		state.change(my_state.MULTIPLAYER_PLAY);
 	}
 
-	playerJoined(message, theGame) {
+	playerJoined(event) {
+		let message = event.message;
+		let theGame = event.game;
 		this.statusMessage.setText(message.message);
 		if( MultiplayerManager.getInstance().weAreHost ) {
 			if( this.startButton === null ) {
@@ -150,7 +155,10 @@ class MenuComponent extends Container {
 		this.updatePlayers(theGame);
 	}
 
-	playerLeft(message, theGame) {
+	playerLeft(event) {
+		let message = event.message;
+		let theGame = event.game;
+
 		this.statusMessage.setText(message.message);
 		if( MultiplayerManager.getInstance().weAreHost ) {
 			if ((this.startButton !== null && theGame.player1 !== undefined) || theGame.player2 !== undefined || theGame.player3 !== undefined || theGame.player4 !== undefined) {
@@ -160,14 +168,15 @@ class MenuComponent extends Container {
 		this.updatePlayers(theGame);
 	}
 
-	gameClosed(message) {
+	gameClosed(event) {
 		MultiplayerManager.getInstance().closeActiveGame()
 			then( () => {
 				state.change(my_state.MULTIPLAYER_MENU);
 			});
 	}
 
-	broadcasted(message) {
+	broadcasted(event) {
+		let message = event.message;
 		this.statusMessage.setText(message.message);
 	}
 }

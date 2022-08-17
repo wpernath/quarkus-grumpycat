@@ -149,6 +149,12 @@ public class MultiPlayerResource {
     }
 
     @GET
+    @Path("/running")
+    public List<MultiPlayerGame> listRunningGames() {
+        return MultiPlayerGame.list("isClosed=false and isRunning=true and isOpen=false order by timeStarted desc");
+    }
+
+    @GET
     @Path("/open/{playerId}")
     public List<MultiPlayerGame> myOpenGame(Long playerId) {
         return MultiPlayerGame.find("isOpen = true and isClosed=false AND (player1Id = ?1 or player2Id = ?1 or player3Id = ?1 or player4Id = ?1)", playerId).list();

@@ -39,7 +39,7 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 
 	setWayPath(p) {
 		this.wayPath = p;
-		console.log(this.name + " path = " + JSON.stringify(p));
+		//console.log(this.name + " path = " + JSON.stringify(p));
 	}
 
 	/**
