@@ -23,13 +23,15 @@ class BombEntity extends Sprite {
 		});
 
 		this.body = new Body(this);
-		this.body.addShape(new Rect(0, 0, this.width, this.height));
+		this.body.addShape(new Rect(0, 0, 96, 96));
 		this.body.ignoreGravity = true;
 		this.body.collisionType = collision.types.PROJECTILE_OBJECT;
 		this.body.setCollisionMask(collision.types.ENEMY_OBJECT);
 
 		// add animations
 		this.alwaysUpdate = true;
+		this.thrownByPlayer = null;
+
 		this.addAnimation("bzzz", [0, 1, 2, 3, 4, 5, 6]);
 		this.addAnimation("boom", [7, 8, 9, 10, 11, 12, 13]);
 		this.setCurrentAnimation("bzzz", function () {

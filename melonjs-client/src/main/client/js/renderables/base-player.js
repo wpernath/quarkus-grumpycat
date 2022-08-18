@@ -119,7 +119,7 @@ export class BasePlayerSprite extends Sprite {
 		return false;
 	}
 
-	collectBonusTile(x, y) {
+	_collectBonusTile(x, y) {
 		let realX = Math.floor(x / 32);
 		let realY = Math.floor(y / 32);
 		let tile = this.bonusLayer.cellAt(realX, realY);
@@ -130,31 +130,33 @@ export class BasePlayerSprite extends Sprite {
 		return 0;
 	}
 
-	checkBonusTile(x,y) {
-		let bonus = this.collectBonusTile(this.pos.x, this.pos.y);
+	checkBonusTile(x,y, update = true) {
+		let bonus = this._collectBonusTile(this.pos.x, this.pos.y);
 		if( bonus !== 0 ) {
 			this.collectedBonusTiles++;
-			GlobalGameState.bonusCollected++;
-			if( bonus === BONUS_TILE.bomb ) { // bomb                        
-				GlobalGameState.bombs += GlobalGameState.bombsForBombBonus;
-				GlobalGameState.score += GlobalGameState.scoreForBombs;
-			}
-			else if( bonus === BONUS_TILE.cactus) { // cactus
-				GlobalGameState.score += GlobalGameState.scoreForPills;
-			}
-			else if( bonus === BONUS_TILE.meat) { // meat
-				GlobalGameState.energy+= GlobalGameState.energyForMeat;
-				GlobalGameState.score += GlobalGameState.scoreForMeat;
-			}
-			else if( bonus === BONUS_TILE.cheese) { // cheese
-				GlobalGameState.energy+= GlobalGameState.energyForCheese;
-				GlobalGameState.score += GlobalGameState.scoreForCheese;
+			if( update ) {
+				GlobalGameState.bonusCollected++;
+				if( bonus === BONUS_TILE.bomb ) { // bomb                        
+					GlobalGameState.bombs += GlobalGameState.bombsForBombBonus;
+					GlobalGameState.score += GlobalGameState.scoreForBombs;
+				}
+				else if( bonus === BONUS_TILE.cactus) { // cactus
+					GlobalGameState.score += GlobalGameState.scoreForPills;
+				}
+				else if( bonus === BONUS_TILE.meat) { // meat
+					GlobalGameState.energy+= GlobalGameState.energyForMeat;
+					GlobalGameState.score += GlobalGameState.scoreForMeat;
+				}
+				else if( bonus === BONUS_TILE.cheese) { // cheese
+					GlobalGameState.energy+= GlobalGameState.energyForCheese;
+					GlobalGameState.score += GlobalGameState.scoreForCheese;
+				}
 			}
 		}
 		return bonus;
 	}
 
-	placeBorderTile(bX, bY) {
+	placeBorderTile(bX, bY, update = true) {
 		if( this.borderLayer.cellAt(bX, bY) == null ) {
 			let newBorderId = 184;
 			let ground = this.groundLayer.cellAt(bX,bY);
@@ -166,7 +168,7 @@ export class BasePlayerSprite extends Sprite {
 			}
 			let tile = this.borderLayer.getTileById(newBorderId, bX, bY);
 			this.borderLayer.setTile(tile, bX, bY);
-			GlobalGameState.placedBarriers++;
+			if( update ) GlobalGameState.placedBarriers++;
 			return true;
 		}
 		return false;

@@ -25,10 +25,11 @@ const GlobalGameState = {
 	scoreForStunningCat: 50,
 	scoreForStunningGolem: 150,
 	scoreForKillingSpider: 100,
+	scoreForBombingRemotePlayers: 150,
 
 	// Amount of energy to get back 
-	energyForMeat: 10,
-	energyForCheese: 5,
+	energyForMeat: 25,
+	energyForCheese: 20,
 
 	// bombs for picking up a bomb bonus
 	bombsForBombBonus: 5,
@@ -37,6 +38,7 @@ const GlobalGameState = {
 	energyLostBySpider: 25,
 	energyLostByCat: 10,
 	energyLostByGolem: 50,
+	energyLostByRemoteBomb: 50,
 
 	// energy on start of the game
 	energyOnBegin: 100, 
@@ -57,7 +59,8 @@ const GlobalGameState = {
 	killedSpiders: 0,
 	stunnedCats: 0,
 	stunnedGolems: 0,
-	bonusCollected: 0,	
+	bonusCollected: 0,
+	hitByRemotePlayerBomb: 0,	
 
 	// reset statistics and player state
 	reset: function() {
@@ -76,6 +79,7 @@ const GlobalGameState = {
 		this.stunnedGolems = 0;
 		this.catchedByGolems=0;
 		this.bonusCollected = 0;
+		this.hitByRemotePlayerBomb = 0;
 	}
 };
 

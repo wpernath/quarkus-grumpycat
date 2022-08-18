@@ -3,6 +3,7 @@ import { BaseEnemySprite } from "./base-enemy";
 import { ENEMY_TYPES } from "./base-enemy";
 import GlobalGameState from "../util/global-game-state";
 import NetworkManager from "../util/network";
+import { my_collision_types } from "../util/constants";
 
 export default class GolemEnemySprite extends BaseEnemySprite {
 	posUpdatedCount = 0;
@@ -98,7 +99,7 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 	}
 
 	onCollision(response, other) {
-		if (other.body.collisionType === collision.types.PROJECTILE_OBJECT) {
+		if (other.body.collisionType === collision.types.PROJECTILE_OBJECT || other.body.collisionType === my_collision_types.REMOTE_BOMB) {
 			if (other.isExploding) {
 				this.isStunned = true;
 				if (this.nextPosition.dx < 0) this.setCurrentAnimation("stand-left");
@@ -109,8 +110,10 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 
 				this.flicker(GlobalGameState.enemyStunnedTime, () => {
 					this.isStunned = false;
-					GlobalGameState.stunnedGolems++;
-					GlobalGameState.score += GlobalGameState.scoreForStunningGolem;
+					if( other.body.collisionType === collision.types.PROJECTILE_OBJECT ) {
+						GlobalGameState.stunnedGolems++;
+						GlobalGameState.score += GlobalGameState.scoreForStunningGolem;
+					}
 				});
 			}
 		} 

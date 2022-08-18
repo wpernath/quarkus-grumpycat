@@ -1,4 +1,4 @@
-import { state } from "melonjs";
+import { collision, state } from "melonjs";
 
 export const my_state = {
 	/**
@@ -47,3 +47,18 @@ export const my_state = {
 	 */
 	MULTIPLAYER_GAME_OVER: state.USER + 15,
 };
+
+export const my_collision_types = {
+
+	/**
+	 * This is a remote player in Multiplayer games
+	 */
+	REMOTE_PLAYER: collision.types.USER << 0,
+
+	/**
+	 * A remote bomb in multiplayer games
+	 */
+	REMOTE_BOMB: collision.types.USER << 1,
+
+
+}
