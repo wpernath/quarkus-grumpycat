@@ -12,18 +12,14 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 		this.player = player;
 		this.color  = color;
 		this.tint   = color;
-		let globalThis = this;
+		//let globalThis = this;
 
 		MultiplayerManager.getInstance().addOnMessageCallback( (event) => {
 			let message = event.message;
-			if (message.playerId === this.player.id) {
 
-				console.log("MESSAGE: " + message);
-							console.log(this);
-							console.log(globalThis);
-							if (this !== globalThis) {
-								console.log("globalThis !== this");
-							}
+			// make sure we only interpret movements for THIS sprite
+			if (message.playerId === this.player.id) {
+				//console.log("MESSAGE: " + JSON.stringify(message));
 
 				// only ours
 				if (message.gutterThrown) {
@@ -36,7 +32,8 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 					game.world.addChild(new BombEntity(this.pos.x, this.pos.y));
 				} 
 				else {
-					// just movement
+					//console.log(" updating pos of " + this.name + " to " + this.pos );
+					// just movement					
 					this.pos.x = message.x * 32 + 16;
 					this.pos.y = message.y * 32 + 16;
 
@@ -52,25 +49,5 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 	}
 
 	onUpdate(event) {
-		let message = event.message;
-		if( message.playerId === this.player.id) {
-			// only ours
-			if (message.gutterThrown) {
-				this.placeBorderTile(message.x + message.dx, message.y + message.dy);
-			} 
-			else if (message.bombPlaced) {
-				this.pos.x = message.x * 32 + 16;
-				this.pos.y = message.y * 32 + 16;
-
-				game.world.addChild(new BombEntity(this.pos.x, this.pos.y));
-			} 
-			else {
-				// just movement
-				this.pos.x = message.x * 32 + 16;
-				this.pos.y = message.y * 32 + 16;
-
-				this.checkBonusTile(this.pos.x, this.pos.y);
-			}
-		}
 	}
 }

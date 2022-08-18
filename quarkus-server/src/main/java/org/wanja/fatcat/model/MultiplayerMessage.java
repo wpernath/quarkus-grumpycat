@@ -10,6 +10,7 @@ public class MultiplayerMessage {
         GAME_UPDATE,
         GAME_STARTED,
         BROADCAST_CHAT,
+        GAME_OVER,
     }
 
     // message type

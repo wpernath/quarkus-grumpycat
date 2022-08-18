@@ -8,7 +8,7 @@ import { BONUS_TILE, BasePlayerSprite, BARRIER_TILE } from "../base-player";
 
 import MultiplayerManager from "../../util/multiplayer";
 import { MultiplayerMessage } from "../../util/multiplayer";
-import { MultiplayerMessageType } from "../../util/multiplayer";
+
 
 export class MPLocalPlayerSprite extends BasePlayerSprite {
 	levelOver = false;
