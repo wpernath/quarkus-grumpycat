@@ -1,13 +1,20 @@
+class Listener {
+    constructor(fn, context, event) {
+        this.fn = fn;
+        this.context = context;
+        this.event = event;
+    }
+}
 export class EventEmitter {
     constructor() {
         this._events = {};
     }
 
-    on(name, listener) {
+    on(name, listener, context) {
         if( !this._events[name]) {
             this._events[name] = [];
         }
-        this._events[name].push(listener);
+        this._events[name].push(new Listener(listener, context, name));
     }
 
     off(name, listenerToRemove) {
@@ -15,9 +22,10 @@ export class EventEmitter {
             //throw new Error("Can't remove listener from event ${name}");
             return;
         }
-
-        const filterListeners = (listener) => listener !== listenerToRemove;
-        this._events[name] = this._events[name].filter(filterListeners);        
+        
+        this._events[name] = this._events[name].filter( (l) => {
+            return l.fn !== listenerToRemove;
+        });        
     }
 
     allOff(name) {
@@ -29,11 +37,11 @@ export class EventEmitter {
     emit(name, data) {
         if( !this._events[name] ) {
             //throw new Error("Can't emit listener from event ${name}");
-            return;
+            return false;
         }
 
         this._events[name].forEach( (l) => {
-            l(data);
+            l.fn.call(l.context, data);
         });
     }
 

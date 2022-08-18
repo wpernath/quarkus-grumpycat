@@ -5,6 +5,7 @@ import BombEntity from "../bomb";
 import MultiplayerManager from "../../util/multiplayer";
 import { my_collision_types } from "../../util/constants";
 
+import { ENEMY_TYPES } from "../base-enemy";
 
 export class MPRemotePlayerSprite extends BasePlayerSprite {
 	constructor(x, y, player, color) {
@@ -17,7 +18,7 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 		this.body.collisionType = my_collision_types.REMOTE_PLAYER;
 		this.body.setCollisionMask(collision.types.ENEMY_OBJECT | my_collision_types.REMOTE_BOMB | collision.types.PROJECTILE_OBJECT);
 
-		MultiplayerManager.getInstance().addOnMessageCallback((event) => {
+		MultiplayerManager.getInstance().addOnMessageCallback( async (event) => {
 			let message = event.message;
 
 			// make sure we only interpret movements for THIS sprite
@@ -42,11 +43,10 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 					// just movement
 					this.pos.x = message.x * 32 + 16;
 					this.pos.y = message.y * 32 + 16;
-
 					this.checkBonusTile(this.pos.x, this.pos.y, false);
 				}
 			}
-		});
+		}, this);
 	}
 
 	update(dt) {

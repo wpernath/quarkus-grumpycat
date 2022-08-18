@@ -382,9 +382,18 @@ export class MultiplayerMessage {
         return res.json();
     }
 
-    
-    addOnMessageCallback(callback) {
-        this.eventEmitter.on(MultiplayerMessageType.GAME_UPDATE, callback);
+    /**
+     * Add onMessage callback listener
+     * @param {*} callback method to call
+     * @param {*} context (this)
+     */
+    addOnMessageCallback(callback, context) {
+        if( callback !== null ) {
+            this.eventEmitter.on(MultiplayerMessageType.GAME_UPDATE, callback, context);
+        }
+        else {
+            this.eventEmitter.allOff(MultiplayerMessageType.GAME_UPDATE);
+        }
     }
 
     setOnJoinCallback(callback) {

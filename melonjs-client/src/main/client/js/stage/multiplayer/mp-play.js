@@ -47,6 +47,7 @@ export default class MultiplayerPlayScreen extends Stage {
         this.player = null;
 		this.enemies = [];
 		this.enemyEmitter.isActive = false;
+        this.remotePlayers = [];
 
         this.players = this.playersFromGame(MultiplayerManager.getInstance().multiplayerGame);        
 		for( let x = 0; x < this.players.length; x++) {
@@ -125,23 +126,25 @@ export default class MultiplayerPlayScreen extends Stage {
 						let tile = l.cellAt(x, y);
 						if (tile !== null && tile !== undefined) {
 							if (tile.tileId === 993) {
-								if( this.players[playerNum] !== null ) {
-                                    if( this.players[playerNum].id === MultiplayerManager.getInstance().multiplayerPlayer.id ) {
-                                        // this player will be controlled by us
-                                        this.player = new MPLocalPlayerSprite(x,y, this.players[playerNum], this.playerColors[playerNum]);
-										game.world.addChild(this.player, this.spriteLayer);
-										this.player.name = this.players[playerNum].name;
+                                if( playerNum < this.playerColors.length ) {
+                                    if( this.players[playerNum] !== null ) {
+                                        if( this.players[playerNum].id === MultiplayerManager.getInstance().multiplayerPlayer.id ) {
+                                            // this player will be controlled by us
+                                            this.player = new MPLocalPlayerSprite(x,y, this.players[playerNum], this.playerColors[playerNum]);
+                                            game.world.addChild(this.player, this.spriteLayer);
+                                            this.player.name = this.players[playerNum].name;
 
-										console.log("  local player at (" + x + "/" + y + "): " + this.player.name);
+                                            console.log("  local player at (" + x + "/" + y + "): " + this.player.name);
+                                        }
+                                        else {
+                                            // this player will be controlled by someone else
+                                            let remotePlayer = new MPRemotePlayerSprite(x, y, this.players[playerNum], this.playerColors[playerNum]);
+                                            remotePlayer.name = this.players[playerNum].name;
+                                            this.remotePlayers.push(remotePlayer);
+                                            game.world.addChild(remotePlayer, this.spriteLayer);
+                                            console.log("  remote player at (" + x + "/" + y + "): " + remotePlayer.name);
+                                        }                                    
                                     }
-                                    else {
-                                        // this player will be controlled by someone else
-										let remotePlayer = new MPRemotePlayerSprite(x, y, this.players[playerNum], this.playerColors[playerNum]);
-										remotePlayer.name = this.players[playerNum].name;
-                                        this.remotePlayers.push(remotePlayer);
-										game.world.addChild(remotePlayer, this.spriteLayer);
-										console.log("  remote player at (" + x + "/" + y + "): " + remotePlayer.name);
-                                    }                                    
                                 }
                                 playerNum++;
 							} 
@@ -202,6 +205,6 @@ export default class MultiplayerPlayScreen extends Stage {
 		MultiplayerManager.getInstance().setOnGameCloseCallback(null);
 		MultiplayerManager.getInstance().setOnBroadcastCallback(null);
 		MultiplayerManager.getInstance().setOnGameStartedCallback(null);
-
+        MultiplayerManager.getInstance().addOnMessageCallback(null);
 	}
 }

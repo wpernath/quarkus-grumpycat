@@ -8,6 +8,7 @@ import { BONUS_TILE, BasePlayerSprite, BARRIER_TILE } from "../base-player";
 import MultiplayerManager from "../../util/multiplayer";
 import { MultiplayerMessage } from "../../util/multiplayer";
 import { my_collision_types } from "../../util/constants";
+import { ENEMY_TYPES } from "../base-enemy";
 
 
 export class MPLocalPlayerSprite extends BasePlayerSprite {
