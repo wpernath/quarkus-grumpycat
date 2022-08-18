@@ -71,6 +71,10 @@ export default class MultiplayerPlayScreen extends Stage {
 			}
 		});
 
+		MultiplayerManager.getInstance().setOnGameOverCallback( (message) => {
+			this.isActive = false;
+			state.change(my_state.MULTIPLAYER_GAME_OVER);
+		});
 		this.isActive = true;
 	}
 
@@ -182,10 +186,15 @@ export default class MultiplayerPlayScreen extends Stage {
 
 	onDestroyEvent() {
 		console.log("Play.OnExit()");
+		this.isActive = false;
 		game.world.removeChild(this.hudContainer);
 		game.world.removeChild(this.virtualJoypad);
 		event.off(event.KEYUP, this.handler);
-		this.isActive = false;
+		
+		if( this.player !== null ) game.world.removeChild(this.player);
+		for( let i = 0; i < this.remotePlayers.length; i++) {
+			game.world.removeChild(this.remotePlayers[i]);
+		}
 
 		// make sure dead components won't get notified on changes
 		MultiplayerManager.getInstance().setOnJoinCallback(null);
@@ -193,5 +202,6 @@ export default class MultiplayerPlayScreen extends Stage {
 		MultiplayerManager.getInstance().setOnGameCloseCallback(null);
 		MultiplayerManager.getInstance().setOnBroadcastCallback(null);
 		MultiplayerManager.getInstance().setOnGameStartedCallback(null);
+
 	}
 }

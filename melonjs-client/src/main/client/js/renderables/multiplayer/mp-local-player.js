@@ -85,9 +85,6 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 					return super.update(dt);
 				}
 			}
-			if (input.isKeyPressed("explode")) {
-				game.world.addChild(new ExplosionEntity(this.pos.x, this.pos.y));
-			}
 
 			if (input.isKeyPressed("left")) {
 				this.flipX(true);
@@ -125,9 +122,8 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 					// level done, check to see if there are more levels
 					action.levelOver = true;
 					this.levelOver = true;
-					MultiplayerManager.getInstance().sendAction(action);
-
-					// TODO: implement level over
+					MultiplayerManager.getInstance().sendAction(action);					
+					MultiplayerManager.getInstance().sendAction(MultiplayerMessage.gameOver());
 				}
 
 				mapX = Math.floor(this.pos.x / 32);
@@ -151,7 +147,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 			// TODO: implement
 			action.levelOver = true;
 			action.hasChanged = true;
-			MultiplayerManager.getInstance().sendAction(action);
+			MultiplayerManager.getInstance().sendAction(MultiplayerMessage.gameOver());
 			
 		}
 

@@ -37,5 +37,13 @@ export const my_state = {
 	 */
 	MULTIPLAYER_LOBBY: state.USER + 13,
 
+	/**
+	 * The actual gaming screen
+	 */
 	MULTIPLAYER_PLAY: state.USER + 14,
+
+	/**
+	 * Multiplyer game over
+	 */
+	MULTIPLAYER_GAME_OVER: state.USER + 15,
 };

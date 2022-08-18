@@ -12,7 +12,38 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 		this.player = player;
 		this.color  = color;
 		this.tint   = color;
-		MultiplayerManager.getInstance().addOnMessageCallback(this.onUpdate.bind(this));
+		let globalThis = this;
+
+		MultiplayerManager.getInstance().addOnMessageCallback( (event) => {
+			let message = event.message;
+			if (message.playerId === this.player.id) {
+
+				console.log("MESSAGE: " + message);
+							console.log(this);
+							console.log(globalThis);
+							if (this !== globalThis) {
+								console.log("globalThis !== this");
+							}
+
+				// only ours
+				if (message.gutterThrown) {
+					this.placeBorderTile(message.x + message.dx, message.y + message.dy);
+				} 
+				else if (message.bombPlaced) {
+					this.pos.x = message.x * 32 + 16;
+					this.pos.y = message.y * 32 + 16;
+
+					game.world.addChild(new BombEntity(this.pos.x, this.pos.y));
+				} 
+				else {
+					// just movement
+					this.pos.x = message.x * 32 + 16;
+					this.pos.y = message.y * 32 + 16;
+
+					this.checkBonusTile(this.pos.x, this.pos.y);
+				}
+			}
+		});
 		
 	}
 
@@ -32,7 +63,8 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 				this.pos.y = message.y * 32 + 16;
 
 				game.world.addChild(new BombEntity(this.pos.x, this.pos.y));
-			} else {
+			} 
+			else {
 				// just movement
 				this.pos.x = message.x * 32 + 16;
 				this.pos.y = message.y * 32 + 16;

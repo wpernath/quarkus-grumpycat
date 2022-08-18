@@ -14,6 +14,7 @@ export const MultiplayerMessageType = {
 	CLOSE_GAME      : "CLOSE_GAME",
 	GAME_UPDATE     : "GAME_UPDATE",
     GAME_STARTED    : "GAME_STARTED",
+    GAME_OVER       : "GAME_OVER",
 	BROADCAST_CHAT  : "BROADCAST_CHAT",
     ERROR           : "ERROR",
 };
@@ -28,6 +29,13 @@ export class MultiplayerMessage {
 
     static gameStarted() {
         let mm = new MultiplayerMessage(MultiplayerMessageType.GAME_STARTED);
+        mm.gameId = multiplayerManager.multiplayerGame.id;
+        mm.playerId = multiplayerManager.multiplayerPlayer.id;
+        return mm;
+    }
+
+    static gameOver() {
+        let mm = new MultiplayerMessage(MultiplayerMessageType.GAME_OVER);
         mm.gameId = multiplayerManager.multiplayerGame.id;
         mm.playerId = multiplayerManager.multiplayerPlayer.id;
         return mm;
@@ -261,6 +269,9 @@ export class MultiplayerMessage {
         }
     }
 
+    /**
+     * Creates the WebSocket to talk to server and other clients
+     */
     _createMultiplayerSocket() {
         if (this.multiplayerSocket !== null) {
             this.multiplayerSocket.close();
@@ -274,70 +285,89 @@ export class MultiplayerMessage {
         });
 
         this.multiplayerSocket.addEventListener("message", (evt) => {
-            const data = JSON.parse(evt.data);            
-            if( data.type === MultiplayerMessageType.PLAYER_JOINED ) {
-                console.log("  Player " + data.playerId + " joined the game:  " + data.message);
-                fetch(this.getGameURL + data.gameId)
-                    .then( (res) => {
-                        return res.json();
-                    })
-                    .then( (json) => {
-                        this.multiplayerGame = json;
-                        this.eventEmitter.emit(data.type, {
-                            message: data,
-                            game: json,
-                        });
-                    });                
-            }            
-            else if( data.type === MultiplayerMessageType.PLAYER_REMOVED ) {
-                console.log("  Player " + data.playerId + " removed from game: " + data.message);
-                fetch(this.getGameURL + data.gameId)
-                    .then((res) => {
-                        return res.json();
-                    })
-                    .then((json) => {
-                        this.multiplayerGame = json;
+            const data = JSON.parse(evt.data);    
+            
+            switch(data.type) {
+                case MultiplayerMessageType.PLAYER_JOINED:
+                    console.log("  Player " + data.playerId + " joined the game:  " + data.message);
+                    fetch(this.getGameURL + data.gameId)
+                        .then( (res) => {
+                            return res.json();
+                        })
+                        .then( (json) => {
+                            this.multiplayerGame = json;
+                            this.eventEmitter.emit(data.type, {
+                                message: data,
+                                game: json,
+                            });
+                        });                
+                    break;
 
+                case MultiplayerMessageType.PLAYER_REMOVED:
+                    console.log("  Player " + data.playerId + " removed from game: " + data.message);
+                    fetch(this.getGameURL + data.gameId)
+                        .then((res) => {
+                            return res.json();
+                        })
+                        .then((json) => {
+                            this.multiplayerGame = json;
+
+                            this.eventEmitter.emit(data.type, {
+                                message: data,
+                                game: json,
+                            });
+                        });                
+                    break;
+
+                case MultiplayerMessageType.CLOSE_GAME:
+                    console.log("  Game is going to be closed now: " + data.message);
+                    this.closeActiveGame().then( () => {
                         this.eventEmitter.emit(data.type, {
                             message: data,
-                            game: json,
                         });
-                    });                
-            }
-            else if( data.type === MultiplayerMessageType.CLOSE_GAME ) {
-                console.log("  Game is going to be closed now: " + data.message);
-                this.closeActiveGame().then( () => {
+                    });
+                    break;
+
+                case MultiplayerMessageType.GAME_STARTED:
+                    console.log("  Game will be started now: " + data.message);
+                    fetch(this.getGameURL + data.gameId)
+                        .then((res) => {
+                            return res.json();
+                        })
+                        .then((json) => {
+                            this.multiplayerGame = json;
+                            this.eventEmitter.emit(data.type, {
+                                message: data,
+                                game: json,
+                            });
+
+                        });                
+                    break;
+
+                case MultiplayerMessageType.BROADCAST_CHAT:
+                    console.log("  [BROADCAST]: " + data.message);
                     this.eventEmitter.emit(data.type, {
                         message: data,
                     });
-                });
-            }
-            else if( data.type === MultiplayerMessageType.GAME_STARTED) {
-                console.log("  Game will be started now: " + data.message);
-                fetch(this.getGameURL + data.gameId)
-                    .then((res) => {
-                        return res.json();
-                    })
-                    .then((json) => {
-                        this.multiplayerGame = json;
-                        this.eventEmitter.emit(data.type, {
-                            message: data,
-                            game: json,
-                        });
+                    break;
 
-                    });                
-            }
-            else if( data.type === MultiplayerMessageType.BROADCAST_CHAT) {
-                console.log("  [BROADCAST]: " + data.message);
-                this.eventEmitter.emit(data.type, {
-                    message: data,
-                });
-            }
-            else if( data.type === MultiplayerMessageType.GAME_UPDATE) {
-                // sending game update to game screen
-                this.eventEmitter.emit(data.type, {
-                    message: data,
-                });
+                case MultiplayerMessageType.GAME_UPDATE:
+                    // sending game update to game screen
+                    this.eventEmitter.emit(data.type, {
+                        message: data,
+                    });
+                    break;
+
+                case MultiplayerMessageType.GAME_OVER:
+                    // sending game update to game screen
+                    this.eventEmitter.emit(data.type, {
+                        message: data,
+                    });
+                    break;
+
+                default:
+                    console.log("Unknown Message Type: " + data.type);
+                    break;
             }
         });
 
@@ -403,6 +433,11 @@ export class MultiplayerMessage {
             this.eventEmitter.allOff(MultiplayerMessageType.GAME_STARTED);
     }
 
+    setOnGameOverCallback(callback) {
+        if (callback) this.eventEmitter.on(MultiplayerMessageType.GAME_OVER, callback);
+		else this.eventEmitter.allOff(MultiplayerMessageType.GAME_OVER);
+    }
+    
     /**
      * Uses the levelIndex as selected level to start a multiplayer game
      * @param {number} levelIndex 
