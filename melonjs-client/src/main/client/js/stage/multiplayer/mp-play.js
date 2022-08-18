@@ -93,7 +93,7 @@ export default class MultiplayerPlayScreen extends Stage {
 			// emit a new spider
 			this.enemyEmitter.emitCount--;
 			this.enemyEmitter.emitEvery = this.enemyEmitter.emitTime;
-			let spider = new SpiderEnemy(this.enemyEmitter.emitAt.x, this.enemyEmitter.emitAt.y);
+			let spider = new SpiderEnemy(this.enemyEmitter.emitAt.x, this.enemyEmitter.emitAt.y, false);
 			spider.setEnemyName("SpiderEnemy." + (this.enemyEmitter.emitCount + 1));
 			this.enemies.push(spider);
 			game.world.addChild(spider, this.spriteLayer);
@@ -146,7 +146,7 @@ export default class MultiplayerPlayScreen extends Stage {
                                 playerNum++;
 							} 
                             else if (tile.tileId === 994) {
-								let enemy = new CatEnemy(x, y);
+								let enemy = new CatEnemy(x, y, false);
 								let name = "CatEnemy." + enemynum++;
 								enemy.setEnemyName(name);
 								game.world.addChild(enemy, this.spriteLayer);
@@ -164,7 +164,7 @@ export default class MultiplayerPlayScreen extends Stage {
 								console.log("  enemyEmitter at (" + x + "/" + y + "): ");
 							} 
                             else if (tile.tileId === 996) {
-								let enemy = new GolemEnemySprite(x, y);
+								let enemy = new GolemEnemySprite(x, y, false);
 								let name = "Golem." + (enemynum + 1);
 								enemynum++;
 								enemy.setEnemyName(name);

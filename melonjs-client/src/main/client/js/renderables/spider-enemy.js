@@ -7,16 +7,18 @@ export class SpiderEnemy extends BaseEnemySprite {
 	posUpdatedCount = 0;
 	VELOCITY = 0.1;
 
-	constructor(x, y) {
+	constructor(x, y, storeEnemyMovements = true) {
 		super(x, y, {
 			width: 64,
 			height: 64,
 			framewidth: 64,
 			frameheight: 64,
 			image: "spider-red",
+			storeEnemyMovements: storeEnemyMovements,
 		});
 
 		this.enemyType = ENEMY_TYPES.spider;
+		this.storeEnemyMovements = storeEnemyMovements;
 
 		this.addAnimation("stand-up", [0]);
 		this.addAnimation("walk-up", [4, 5, 6, 7, 8, 9], 32);

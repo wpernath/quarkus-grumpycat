@@ -8,15 +8,16 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 	posUpdatedCount = 0;
 	VELOCITY = 0.08;
 
-	constructor(x, y) {
+	constructor(x, y, storeEnemyMovements = true) {
 		super(x, y, {
 			width: 64,
 			height: 64,
 			framewidth: 64,
 			frameheight: 64,
-			image: "golem-walk",				
+			image: "golem-walk",			
 		});
 		this.enemyType = ENEMY_TYPES.golem;
+		this.storeEnemyMovements = storeEnemyMovements;
 
 		this.addAnimation("stand-up", [0]);
 		this.addAnimation("walk-up", [0, 1, 2, 3, 4, 5, 6], 48);
