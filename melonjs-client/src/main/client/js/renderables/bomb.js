@@ -80,6 +80,11 @@ class BombEntity extends Sprite {
 
 		return false;
 	}
+
+	destroy() {
+		this.tint = undefined;
+		super.destroy();
+	}
 }
 
 export default BombEntity;

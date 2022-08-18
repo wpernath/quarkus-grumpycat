@@ -101,14 +101,6 @@ export class MultiplayerMessage {
 
         // callbacks for socket
         this.eventEmitter = new EventEmitter();
-
-        this.onErrorCallback = null;
-        this.onLeaveCallback = null;
-        this.onJoinCallback  = null;
-        this.onMessageCallback = [];
-        this.onGameCloseCallback = null;
-        this.onBroadcastCallback = null;
-        this.onGameStartedCallback = null;
     }
 
     /**
@@ -137,17 +129,11 @@ export class MultiplayerMessage {
     async closeActiveGame() {
         if( this.multiplayerSocket !== null && this.multiplayerSocket.readyState !== 3) {
             this.multiplayerSocket.close();
-            this.multiplayerSocket = null;
-
-            this.onBroadcastCallback = null;
-            this.onErrorCallback = null;
-            this.onGameCloseCallback = null;
-            this.onGameStartedCallback = null;
-            this.onJoinCallback = null;
-            this.onLeaveCallback = null;
-            this.onMessageCallback = [];            
+            this.multiplayerSocket = null;             
         }
         
+        this.eventEmitter.reset();    
+
         if( this.multiplayerGame !== null ) {
             this.weAreHost = false;
             console.log("CLOSING: ");
@@ -217,6 +203,14 @@ export class MultiplayerMessage {
      */
     async sendGameStarted() {
         let mm = MultiplayerMessage.gameStarted();
+        this.sendAction(mm);
+    }
+
+    /**
+     * Notify other clients that this game is over now
+     */
+    async sendGameOver() {
+        let mm = MultiplayerMessage.gameOver();
         this.sendAction(mm);
     }
 
@@ -396,22 +390,34 @@ export class MultiplayerMessage {
         }
     }
 
-    setOnJoinCallback(callback) {
+    /**
+     * adds a listener for other players to join
+     * @param {*} callback 
+     */
+    setOnJoinCallback(callback, context) {
         if( callback ) 
-            this.eventEmitter.on(MultiplayerMessageType.PLAYER_JOINED, callback);
+            this.eventEmitter.on(MultiplayerMessageType.PLAYER_JOINED, callback, context);
         else 
             this.eventEmitter.allOff(MultiplayerMessageType.PLAYER_JOINED);
     }
 
-    setOnLeaveCallback(callback) {
+    /**
+     * Sets a listener for other players to leave that game
+     * @param {*} callback 
+     */
+    setOnLeaveCallback(callback, context) {
         if( callback ) {
-            this.eventEmitter.on(MultiplayerMessageType.PLAYER_REMOVED, callback);
+            this.eventEmitter.on(MultiplayerMessageType.PLAYER_REMOVED, callback, context);
         }   
         else {
             this.eventEmitter.allOff(MultiplayerMessageType.PLAYER_REMOVED);
         }     
     }
-    
+
+    /**
+     * Sets a listener for ERROR events
+     * @param {*} callback 
+     */
     setOnErrorCallback(callback) {
         if( callback ) {
             this.eventEmitter.on(MultiplayerMessageType.ERROR, callback);
@@ -421,13 +427,21 @@ export class MultiplayerMessage {
         }
     }
 
-    setOnGameCloseCallback(callback) {
+    /**
+     * 
+     * @param {*} callback 
+     */
+    setOnGameCloseCallback(callback, context) {
         if( callback )
-            this.eventEmitter.on(MultiplayerMessageType.CLOSE_GAME, callback);
+            this.eventEmitter.on(MultiplayerMessageType.CLOSE_GAME, callback, context);
         else 
             this.eventEmitter.allOff(MultiplayerMessageType.CLOSE_GAME);
     }
 
+    /**
+     * 
+     * @param {*} callback 
+     */
     setOnBroadcastCallback(callback) {
         if( callback )
             this.eventEmitter.on(MultiplayerMessageType.BROADCAST_CHAT, callback);
@@ -435,15 +449,23 @@ export class MultiplayerMessage {
             this.eventEmitter.allOff(MultiplayerMessageType.BROADCAST_CHAT);
     }
 
-    setOnGameStartedCallback(callback) {
+    /**
+     * 
+     * @param {*} callback 
+     */
+    setOnGameStartedCallback(callback, context) {
         if( callback ) 
-            this.eventEmitter.on(MultiplayerMessageType.GAME_STARTED, callback);
+            this.eventEmitter.on(MultiplayerMessageType.GAME_STARTED, callback, context);
         else 
             this.eventEmitter.allOff(MultiplayerMessageType.GAME_STARTED);
     }
 
-    setOnGameOverCallback(callback) {
-        if (callback) this.eventEmitter.on(MultiplayerMessageType.GAME_OVER, callback);
+    /**
+     * 
+     * @param {*} callback 
+     */
+    setOnGameOverCallback(callback, context) {
+        if (callback) this.eventEmitter.on(MultiplayerMessageType.GAME_OVER, callback, context);
 		else this.eventEmitter.allOff(MultiplayerMessageType.GAME_OVER);
     }
     

@@ -2,7 +2,7 @@ package org.wanja.fatcat.model;
 
 
 public class MultiplayerMessage {
-    enum MessageType {
+    public enum MessageType {
         PLAYER_JOINED,
         PLAYER_REMOVED,
         START_GAME,

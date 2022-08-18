@@ -199,4 +199,5 @@ export class BasePlayerSprite extends Sprite {
 		}
 		return false;
 	}
+
 }

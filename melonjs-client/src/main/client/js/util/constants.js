@@ -1,4 +1,4 @@
-import { collision, state } from "melonjs";
+import { collision, state, pool, Color } from "melonjs";
 
 export const my_state = {
 	/**
@@ -59,6 +59,20 @@ export const my_collision_types = {
 	 * A remote bomb in multiplayer games
 	 */
 	REMOTE_BOMB: collision.types.USER << 1,
+};
 
-
-}
+/**
+ * 
+ */
+export const PLAYER_COLORS = [
+	new Color(255, 255, 255, 1.0),
+	new Color(255, 255, 55, 1.0),
+	new Color(55, 255, 255, 1.0),
+	new Color(255, 55, 55, 1.0),
+	/*
+	pool.pull("Color", 255, 255, 255), 
+	pool.pull("Color", 255, 255, 55), 
+	pool.pull("Color", 55, 255, 55), 
+	pool.pull("Color", 255, 55, 55)
+	*/
+];

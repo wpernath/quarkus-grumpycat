@@ -6,7 +6,7 @@ import SpiderEnemy from "../renderables/spider-enemy";
 import { LevelManager } from "../util/level";
 import NetworkManager from "../util/network";
 import PlayerEntity from "../renderables/player";
-import { my_state } from "../util/constants";
+import { my_state, PLAYER_COLORS } from "../util/constants";
 import { StateBackground } from "./state_background";
 
 class MySpider extends SpiderEnemy {
@@ -98,20 +98,20 @@ class GetReadyBack extends Container {
 		this.addChild(new LevelDescription(190, game.viewport.height - 400), game.viewport.width - 400, game.viewport.height - 400);
 
 		let player1 = new PlayerEntity(13, 9, true);
-		player1.tint = pool.pull("Color", 255,55,55);		
+		player1.tint = PLAYER_COLORS[0];
 		this.addChild(player1);
 
 		let player2 = new PlayerEntity(17, 9, true);
-		player2.tint = pool.pull("Color", 55,55,255);
+		player2.tint = PLAYER_COLORS[1];
 		player2.flipX(true);		
 		this.addChild(player2);
 
 		let player3 = new PlayerEntity(15, 7, true);
-		player3.tint = pool.pull("Color", 55, 255, 55);
+		player3.tint = PLAYER_COLORS[2];
 		this.addChild(player3);
 
 		let player4 = new PlayerEntity(15, 11, true);
-		player4.tint = pool.pull("Color", 255, 255, 55);
+		player4.tint = PLAYER_COLORS[3];
 		this.addChild(player4);
 
 	}	

@@ -39,6 +39,7 @@ import JoinGameScreen from './js/stage/multiplayer/mp-join-game';
 import MultiplayerLobbyScreen from './js/stage/multiplayer/mp-lobby';
 import MultiplayerPlayScreen from './js/stage/multiplayer/mp-play';
 import MultiplayerGameOverScreen from './js/stage/multiplayer/mp-game-over';
+import { MultiplayerMessage } from './js/util/multiplayer';
 
 device.onReady(() => {
 
@@ -93,6 +94,7 @@ device.onReady(() => {
             pool.register("WayPath", WayPath, true);
             pool.register("GameStateAction", GameStateAction, true);
             pool.register("EnemyAction", EnemyAction, true);
+            //pool.register("MultiplayerMessage", MultiplayerMessage, )
 
             GlobalGameState.screenControlsTexture = new TextureAtlas(loader.getJSON("screen-controls"), loader.getImage("screen-controls"));
 

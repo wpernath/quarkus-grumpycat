@@ -149,6 +149,9 @@ public class MultiplayerSocket {
         if (players != null) {
             players.forEach(pid -> {
                 if (pid != playerId) { // broadcast only to others in this game!
+                    if( message.type == MultiplayerMessage.MessageType.GAME_STARTED ) {
+                        Log.info("Notifying player " + pid + " to start the game");
+                    }
                     playerSessions.get(pid).getAsyncRemote().sendObject(message, res -> {
                         if (res.getException() != null) {
                             Log.error("Updating message to " + pid + " in game " + gameId + " failed!",

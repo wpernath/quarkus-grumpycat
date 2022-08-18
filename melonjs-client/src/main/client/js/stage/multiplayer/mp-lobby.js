@@ -1,6 +1,7 @@
 import { Stage, event, game, state, Container, BitmapText, Rect } from "melonjs";
+import PlayerEntity from "../../renderables/player";
 import BaseTextButton from "../../util/base-text-button";
-import { my_state } from "../../util/constants";
+import { my_state, PLAYER_COLORS } from "../../util/constants";
 import MultiplayerManager from "../../util/multiplayer";
 import { StateBackground } from "../state_background";
 
@@ -27,6 +28,7 @@ class StartGameButton extends BaseTextButton {
 	}
 
 	onClick() {
+		console.log("**** onClick() ****")
 		MultiplayerManager.getInstance().startGame()
 			.then(() => {
 				state.change(my_state.MULTIPLAYER_PLAY);
@@ -40,22 +42,26 @@ class PlayerEntry extends Container {
 		
 		this.playerNum = num;
 
-		this.playerNum = new BitmapText(15, 4, {
+		this.playerNumText = new BitmapText(40, 4, {
 			font: "24Outline",
 			text: "Player " + (num+1) + ":",
 		});
 
-		this.playerName = new BitmapText(120, 4, {
+		this.playerNameText = new BitmapText(160, 4, {
 			font: "24Outline",
 			text: name !== "" ? name : "waiting...",
 		});
 
-		this.addChild(this.playerNum);
-		this.addChild(this.playerName);		
+		this.sprite = new PlayerEntity(0, 0, true);
+		this.sprite.tint = PLAYER_COLORS[num];
+		
+		this.addChild(this.playerNumText);
+		this.addChild(this.playerNameText);	
+		this.addChild(this.sprite);	
 	}
 
 	updateName(name) {
-		this.playerName.setText(name);
+		this.playerNameText.setText(name);
 	}
 }
 
