@@ -1,5 +1,5 @@
 import { Stage, game, event, state, level, pool } from "melonjs";
-import MultiplayerManager from "../../util/multiplayer";
+import MultiplayerManager, { MultiplayerMessageType } from "../../util/multiplayer";
 import CatEnemy from "../../renderables/cat-enemy.js";
 import { SpiderEnemy } from "../../renderables/spider-enemy.js";
 import GolemEnemySprite from "../../renderables/golem-enemy";
@@ -44,7 +44,7 @@ export default class MultiplayerPlayScreen extends Stage {
 		this.enemyEmitter.isActive = false;
         this.remotePlayers = [];
 
-        this.players = this.playersFromGame(MultiplayerManager.getInstance().multiplayerGame);        
+        this.players = this.playersFromGame(MultiplayerManager.get().multiplayerGame);        
 		for( let x = 0; x < this.players.length; x++) {
 			let p = this.players[x];
 			if( p !== null ) {
@@ -65,29 +65,43 @@ export default class MultiplayerPlayScreen extends Stage {
                 this.cleanupWorld();
                 
                 // send player left message to others
-                MultiplayerManager.getInstance().closeActiveGame();
+                MultiplayerManager.get().sendPlayerGiveUp()
+                    .then( () => {
+                        MultiplayerManager.get().closeActiveGame();
+                    })
+                    .then( () => {
+                        state.change(my_state.MULTIPLAYER_GAME_OVER);
+                    });                
 			}
 		});
 
-		MultiplayerManager.getInstance().setOnGameOverCallback( (message) => {
-			this.isActive = false;
+		MultiplayerManager.get().addEventListener(MultiplayerMessageType.GAME_OVER, (evt) => {			
             this.cleanupWorld();
 			state.change(my_state.MULTIPLAYER_GAME_OVER);
 		}, this);
 
-        MultiplayerManager.getInstance().setOnLeaveCallback( (message, data) => {
-            // check to see which player we have to remove now
+        MultiplayerManager.get().addEventListener([MultiplayerMessageType.PLAYER_REMOVED, MultiplayerMessageType.PLAYER_GAVE_UP], (event) => {
+            // check to see which player we have to remove now            
+            let message = event.message;
+            let theGame = event.game;
             for( let i = 0; i < this.remotePlayers.length; i++ ) {
                 let rp = this.remotePlayers[i];
-                if( rp.player.id === message.playerId) {
+                if( rp !== null && rp.player.id === message.playerId) {                    
                     game.world.removeChild(rp);
-                    this.remotePlayers[i] = null;
+                    console.log(message.type + ": Player " + (i + 1) + " (" + rp.player.name + ") was successfully removed");
+                    this.remotePlayers[i] = null;                    
+                    break;
                 }
             }
-        }, this)
+
+        }, this);
+
 		this.isActive = true;
 	}
 
+    /**
+     * cleans up the game world
+     */
     cleanupWorld() {
         this.isActive = false;
         if (this.player !== null) game.world.removeChild(this.player);
@@ -108,7 +122,11 @@ export default class MultiplayerPlayScreen extends Stage {
         this.enemies = [];
     }
 
-
+    /**
+     * Returns an array of players for this game
+     * @param {*} theGame 
+     * @returns 
+     */
 	playersFromGame(theGame) {
 		let players = [];
 		players[0] = theGame.player1 !== undefined ? theGame.player1 : null;
@@ -138,8 +156,8 @@ export default class MultiplayerPlayScreen extends Stage {
 	}
 
 	setupLevel() {
-		this.multiplayerGame = MultiplayerManager.getInstance().multiplayerGame;
-		this.currentLevel = MultiplayerManager.getInstance().allLevels()[this.multiplayerGame.level];
+		this.multiplayerGame = MultiplayerManager.get().multiplayerGame;
+		this.currentLevel = MultiplayerManager.get().allLevels()[this.multiplayerGame.level];
 		this.currentLevel.loadIntoMelon();
 		level.load(this.currentLevel.id);
 
@@ -161,7 +179,7 @@ export default class MultiplayerPlayScreen extends Stage {
                                         let color = PLAYER_COLORS[playerNum];
                                         let playerObject = this.players[playerNum];
 
-                                        if( playerObject.id === MultiplayerManager.getInstance().multiplayerPlayer.id ) {
+                                        if( playerObject.id === MultiplayerManager.get().multiplayerPlayer.id ) {
                                             // this player will be controlled by us
                                             this.player = new MPLocalPlayerSprite(x,y, playerObject, color);
                                             game.world.addChild(this.player, this.spriteLayer);
@@ -233,11 +251,6 @@ export default class MultiplayerPlayScreen extends Stage {
         game.world.reset();
 
 		// make sure dead components won't get notified on changes
-		MultiplayerManager.getInstance().setOnJoinCallback(null);
-		MultiplayerManager.getInstance().setOnLeaveCallback(null);
-		MultiplayerManager.getInstance().setOnGameCloseCallback(null);
-		MultiplayerManager.getInstance().setOnBroadcastCallback(null);
-		MultiplayerManager.getInstance().setOnGameStartedCallback(null);
-        MultiplayerManager.getInstance().addOnMessageCallback(null);
+		MultiplayerManager.get().clearAllEventListeners();
 	}
 }

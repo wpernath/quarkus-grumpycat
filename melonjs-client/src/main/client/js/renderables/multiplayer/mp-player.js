@@ -18,7 +18,7 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 		this.body.collisionType = my_collision_types.REMOTE_PLAYER;
 		this.body.setCollisionMask(collision.types.ENEMY_OBJECT | my_collision_types.REMOTE_BOMB | collision.types.PROJECTILE_OBJECT);
 
-		MultiplayerManager.getInstance().addOnMessageCallback(async (event) => {
+		MultiplayerManager.get().addOnMessageCallback(async (event) => {
 			let message = event.message;
 
 			// make sure we only interpret movements for THIS sprite
@@ -26,7 +26,8 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 				// only ours
 				if (message.gutterThrown) {
 					this.placeBorderTile(message.x + message.dx, message.y + message.dy, false);
-				} else if (message.bombPlaced) {
+				} 
+				else if (message.bombPlaced) {
 					this.pos.x = message.x * 32 + 16;
 					this.pos.y = message.y * 32 + 16;
 
@@ -36,7 +37,8 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 					bomb.tint = color;
 					bomb.thrownByPlayer = this.player;
 					game.world.addChild(bomb);
-				} else {
+				} 
+				else {
 					//console.log(" updating pos of " + this.name + " to " + this.pos );
 					// just movement
 					this.pos.x = message.x * 32 + 16;

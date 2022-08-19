@@ -49,12 +49,15 @@ public class MultiplayerSocket {
 
         if( !playersInGame.containsKey(gameId)) { // host is opening the game
             Log.info("New multiplayer session with game " + gameId + " hosted by " + playerId);
+
+            // initialize a map gameId --> set<Player>
             players = new HashSet<>();
             players.add(playerId);
             playersInGame.put(gameId, players);
+
+            // initialize a game
             game = new MultiPlayerGame();
-            game.id = gameId;
-            //game = MultiPlayerGame.findById(gameId);
+            game.id = gameId;            
             gameIdGames.put(gameId, game);
             game.player1Id = playerId;
         }
@@ -89,33 +92,36 @@ public class MultiplayerSocket {
         if( game != null ) {
             MultiplayerMessage mm = MultiplayerMessage.playerRemoved(playerId, gameId);
             Log.info("Player " + playerId + " is leaving game " + gameId);
-            
+
+            // remove player from set
+            players.remove(playerId);
+
+            // Check to see if host is leaving game --> Game CLOSE
             if( game.player1Id == playerId) {
                 mm.message = "Host has left the game. Game will be closed.";
                 broadcastOthersInGame(gameId, mm);
 
                 // game closed
                 Log.info("Closing Multiplayer Game " + game.id );
-                playersInGame.remove(gameId);
-                gameIdGames.remove(gameId);                
                 broadcastOthersInGame(gameId, MultiplayerMessage.gameClosing(gameId));
+
+                // delete this game entirely from the list
+                playersInGame.remove(gameId);
+                gameIdGames.remove(gameId);
                 return;
             }
             else {
                 if( game.player2Id == playerId) {
                     game.player2 = null;
                     mm.message = "Player 2 removed";
-                    players.remove(playerId);
                 }
                 else if( game.player3Id == playerId) {
                     game.player3 = null;
                     mm.message = "Player 3 removed";                    
-                    players.remove(playerId);
                 }
                 else if( game.player4Id == playerId) {
                     game.player4 = null;
                     mm.message = "Player 4 removed";                    
-                    players.remove(playerId);
                 }
                 else {
                     Log.error("Player " + playerId + " did not belong to game " + gameId);
@@ -149,9 +155,6 @@ public class MultiplayerSocket {
         if (players != null) {
             players.forEach(pid -> {
                 if (pid != playerId) { // broadcast only to others in this game!
-                    if( message.type == MultiplayerMessage.MessageType.GAME_STARTED ) {
-                        Log.info("Notifying player " + pid + " to start the game");
-                    }
                     playerSessions.get(pid).getAsyncRemote().sendObject(message, res -> {
                         if (res.getException() != null) {
                             Log.error("Updating message to " + pid + " in game " + gameId + " failed!",

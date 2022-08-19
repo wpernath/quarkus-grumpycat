@@ -71,7 +71,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 					action.dx = dx;
 					action.dy = dy;
 					action.gutterThrown = true;
-					MultiplayerManager.getInstance().sendAction(action);
+					MultiplayerManager.get().sendAction(action);
 				}
 			}
 		} else {
@@ -87,7 +87,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 					action.bombPlaced = true;
 					action.dx = dx;
 					action.dy = dy;
-					MultiplayerManager.getInstance().sendAction(action);
+					MultiplayerManager.get().sendAction(action);
 					return super.update(dt);
 				}
 			}
@@ -127,8 +127,8 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 					// level done, check to see if there are more levels
 					action.levelOver = true;
 					this.levelOver = true;
-					MultiplayerManager.getInstance().sendAction(action);
-					MultiplayerManager.getInstance().sendAction(MultiplayerMessage.gameOver());
+					MultiplayerManager.get().sendAction(action);
+					MultiplayerManager.get().sendAction(MultiplayerMessage.gameOver());
 				}
 
 				mapX = Math.floor(this.pos.x / 32);
@@ -139,7 +139,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 					action.y = mapY;
 					this.lastMapX = mapX;
 					this.lastMapY = mapY;
-					MultiplayerManager.getInstance().sendAction(action);
+					MultiplayerManager.get().sendAction(action);
 				}
 			}
 		}
@@ -152,7 +152,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 			// TODO: implement
 			action.levelOver = true;
 			action.hasChanged = true;
-			MultiplayerManager.getInstance().sendAction(MultiplayerMessage.gameOver());
+			MultiplayerManager.get().sendAction(MultiplayerMessage.gameOver());
 		}
 
 		// call the parent method

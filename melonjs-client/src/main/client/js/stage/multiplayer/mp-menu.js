@@ -68,7 +68,7 @@ class MenuComponent extends Container {
 		this.addChild(new BitmapText(game.viewport.width-75, 170, {
 			font: "24Outline",
 			textAlign: "right",
-			text: MultiplayerManager.getInstance().multiplayerPlayer.name 
+			text: MultiplayerManager.get().multiplayerPlayer.name 
 		}));
         this.addChild(new StartGameButton((game.viewport.width - 250)/2, 300));
         this.addChild(new JoinGameButton((game.viewport.width - 250) / 2, 360));
@@ -78,7 +78,7 @@ class MenuComponent extends Container {
 
 export default class MultiplayerMenuScreen extends Stage {
 	onResetEvent() {
-		this.multiplayerManager = MultiplayerManager.getInstance();
+		this.multiplayerManager = MultiplayerManager.get();
 		this.menu = null;
 		this.multiplayerManager.createPlayerFromMe().then((player) => {			
 			console.log("  Got new MultiPlayer: " + player.id);			

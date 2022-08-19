@@ -15,7 +15,7 @@ class BackButton extends BaseTextButton {
 	}
 
 	onClick() {
-		MultiplayerManager.getInstance().closeActiveGame();
+		MultiplayerManager.get().closeActiveGame();
 		state.change(my_state.MULTIPLAYER_MENU);
 	}
 }
@@ -29,7 +29,7 @@ class StartGameButton extends BaseTextButton {
 	}
 
 	onClick() {
-		MultiplayerManager.getInstance().createGame(0).then( (game) => {
+		MultiplayerManager.get().createGame(0).then( (game) => {
 			state.change(my_state.MULTIPLAYER_LOBBY);
 		});		
 	}
@@ -50,14 +50,14 @@ class MenuComponent extends Container {
 		// give a name
 		this.name = "TitleBack";
 
-		this.levelChooser = new ChooserComponent(MultiplayerManager.getInstance().allLevels());
+		this.levelChooser = new ChooserComponent(MultiplayerManager.get().allLevels());
         this.addChild(new StateBackground("HOST GAME", false, false));
 
 		this.addChild(
 			new BitmapText(game.viewport.width - 75, 170, {
 				font: "24Outline",
 				textAlign: "right",
-				text: MultiplayerManager.getInstance().multiplayerPlayer.name,
+				text: MultiplayerManager.get().multiplayerPlayer.name,
 			})
 		);
 
@@ -77,7 +77,7 @@ export default class HostGameScreen extends Stage {
 		this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
 			if (!state.isCurrent(my_state.MULTIPLAYER_START_GAME)) return;
 			if (action === "exit") {
-				MultiplayerManager.getInstance().closeActiveGame();
+				MultiplayerManager.get().closeActiveGame();
 				state.change(my_state.MULTIPLAYER_MENU);
 			}
 		});

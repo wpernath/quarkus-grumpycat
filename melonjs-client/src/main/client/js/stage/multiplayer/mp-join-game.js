@@ -49,14 +49,14 @@ class MenuComponent extends Container {
 			new BitmapText(game.viewport.width - 75, 170, {
 				font: "24Outline",
 				textAlign: "right",
-				text: MultiplayerManager.getInstance().multiplayerPlayer.name,
+				text: MultiplayerManager.get().multiplayerPlayer.name,
 			})
 		);
 
 		this.addChild(new BackButton(5, game.viewport.height - 60));
 
 
-		MultiplayerManager.getInstance()
+		MultiplayerManager.get()
 			.listOpenGames()
 			.then((games) => {
 				this.gameChooser = new GameChooserComponent(games);

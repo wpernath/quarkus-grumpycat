@@ -49,7 +49,7 @@ device.onReady(() => {
         parent: "screen", 
         scaleMethod: "fit", 
         renderer: video.AUTO, 
-        subPixel: false, 
+        //subPixel: false, 
         doubleBuffering: true 
     })) {
 		alert("Your browser does not support HTML5 canvas.");
@@ -66,6 +66,12 @@ device.onReady(() => {
 
     // Initialize the audio.
     audio.init("mp3,ogg");
+
+    //////// DEBUG //////////
+    let string = "hallo";
+    let array  = ["a", "b"];
+    console.log( (typeof string) + ": " + (string instanceof String));
+    console.log( (typeof array) + ": " + (array instanceof Array));
 
     // allow cross-origin for image/texture loading
     let environment = CONFIG.environment;

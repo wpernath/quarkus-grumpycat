@@ -72,7 +72,7 @@ class ListEntry extends BaseClickableComponent {
         this.floating = false;
         
 		this.game  = g;		
-		this.level = MultiplayerManager.getInstance().allLevels()[g.level];
+		this.level = MultiplayerManager.get().allLevels()[g.level];
 		
         this.name = this.level.longName;
         this.description = this.level.description;
@@ -212,8 +212,8 @@ export class GameChooserComponent extends Container {
         if( !this.levelChosen ) {
 			this.levelChosen = true;
             console.log("  selected game = " + game );
-			MultiplayerManager.getInstance().setGameToJoin(game);                        
-			MultiplayerManager.getInstance().joinGame()
+			MultiplayerManager.get().setGameToJoin(game);                        
+			MultiplayerManager.get().joinGame()
 				.then( () => {
 					console.log("Game joined");
 					state.change(my_state.MULTIPLAYER_LOBBY);

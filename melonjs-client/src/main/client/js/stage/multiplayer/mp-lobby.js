@@ -14,7 +14,7 @@ class BackButton extends BaseTextButton {
 	}
 
 	onClick() {
-		MultiplayerManager.getInstance().closeActiveGame();
+		MultiplayerManager.get().closeActiveGame();
 		state.change(my_state.MULTIPLAYER_MENU);
 	}
 }
@@ -29,7 +29,7 @@ class StartGameButton extends BaseTextButton {
 
 	onClick() {
 		console.log("**** onClick() ****")
-		MultiplayerManager.getInstance().startGame()
+		MultiplayerManager.get().startGame()
 			.then(() => {
 				state.change(my_state.MULTIPLAYER_PLAY);
 			});	
@@ -65,7 +65,7 @@ class PlayerEntry extends Container {
 		this.player = player;
 		if( player !== null ) {
 			this.playerNameText.setText(player.name);
-			if(MultiplayerManager.getInstance().multiplayerPlayer.id == player.id ){
+			if(MultiplayerManager.get().multiplayerPlayer.id == player.id ){
 				this.playerNameText.fillStyle = "#00ffa0";
 				this.playerNameText.setText(player.name + " (you)");
 			}
@@ -78,6 +78,9 @@ class PlayerEntry extends Container {
 			this.playerNameText.fillStyle = "#ffffff";
 			this.playerNameText.setText("waiting...");
 		}
+	}
+
+	destroy() {
 	}
 }
 
@@ -119,25 +122,27 @@ class MenuComponent extends Container {
 			new BitmapText(game.viewport.width - 75, 170, {
 				font: "24Outline",
 				textAlign: "right",
-				text: MultiplayerManager.getInstance().multiplayerPlayer.name,
+				text: MultiplayerManager.get().multiplayerPlayer.name,
 			})
 		);
 
 		this.addChild(new BackButton(5, game.viewport.height - 60));
 
-		MultiplayerManager.getInstance().setOnJoinCallback(this.playerJoined.bind(this));
-		MultiplayerManager.getInstance().setOnLeaveCallback(this.playerLeft.bind(this));
-		MultiplayerManager.getInstance().setOnGameCloseCallback(this.gameClosed.bind(this));
-		MultiplayerManager.getInstance().setOnBroadcastCallback(this.broadcasted.bind(this));
-		MultiplayerManager.getInstance().setOnGameStartedCallback(this.gameStarted.bind(this));
+		MultiplayerManager.get().setOnJoinCallback(this.playerJoined.bind(this));
+		MultiplayerManager.get().setOnLeaveCallback(this.playerLeft.bind(this));
+		MultiplayerManager.get().setOnGameCloseCallback(this.gameClosed.bind(this));
+		MultiplayerManager.get().setOnBroadcastCallback(this.broadcasted.bind(this));
+		MultiplayerManager.get().setOnGameStartedCallback(this.gameStarted.bind(this));
 		
-		this.players = this.playersFromGame(MultiplayerManager.getInstance().multiplayerGame);
+		this.players = this.playersFromGame(MultiplayerManager.get().multiplayerGame);
 		for( let i = 0; i < 4; i++ ) {
 			let pe = new PlayerEntry(130, 330 + i * 42, this.players[i], i);
 			this.playerComponents.push(pe);
 			this.addChild(pe);
 		}
 	}
+
+	destroy() {}
 
 	playersFromGame(theGame) {
 		let players = [];
@@ -149,7 +154,7 @@ class MenuComponent extends Container {
 	}
 
 	updatePlayers(theGame) {
-		this.players = this.playersFromGame(MultiplayerManager.getInstance().multiplayerGame);
+		this.players = this.playersFromGame(MultiplayerManager.get().multiplayerGame);
 		for (let i = 0; i < 4; i++) {
 			let pe = this.playerComponents[i];
 			pe.updatePlayer(this.players[i]);
@@ -168,7 +173,7 @@ class MenuComponent extends Container {
 		let message = event.message;
 		let theGame = event.game;
 		this.statusMessage.setText(message.message);
-		if( MultiplayerManager.getInstance().weAreHost ) {
+		if( MultiplayerManager.get().weAreHost ) {
 			if( this.startButton === null ) {
 				this.startButton = new StartGameButton(game.viewport.width - 105, game.viewport.height - 60);			
 				this.addChild(this.startButton);
@@ -182,7 +187,7 @@ class MenuComponent extends Container {
 		let theGame = event.game;
 
 		this.statusMessage.setText(message.message);
-		if( MultiplayerManager.getInstance().weAreHost ) {
+		if( MultiplayerManager.get().weAreHost ) {
 			if ((this.startButton !== null && theGame.player1 !== undefined) || theGame.player2 === undefined || theGame.player3 === undefined || theGame.player4 === undefined) {
 				this.removeChild(this.startButton);				
 				this.startButton = null;
@@ -192,7 +197,7 @@ class MenuComponent extends Container {
 	}
 
 	gameClosed(event) {
-		MultiplayerManager.getInstance().closeActiveGame()
+		MultiplayerManager.get().closeActiveGame()
 			then( () => {
 				state.change(my_state.MULTIPLAYER_MENU);
 			});
@@ -212,7 +217,7 @@ export default class MultiplayerLobbyScreen extends Stage {
 		this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
 			if (!state.isCurrent(my_state.MULTIPLAYER_LOBBY)) return;
 			if (action === "exit") {
-				MultiplayerManager.getInstance().closeActiveGame();
+				MultiplayerManager.get().closeActiveGame();
 				state.change(my_state.MULTIPLAYER_MENU);
 			}
 		});
@@ -223,11 +228,11 @@ export default class MultiplayerLobbyScreen extends Stage {
 		game.world.removeChild(this.menu);
 
 		// make sure dead components won't get notified on changes
-		MultiplayerManager.getInstance().setOnJoinCallback(null);
-		MultiplayerManager.getInstance().setOnLeaveCallback(null);
-		MultiplayerManager.getInstance().setOnGameCloseCallback(null);
-		MultiplayerManager.getInstance().setOnBroadcastCallback(null);
-		MultiplayerManager.getInstance().setOnGameStartedCallback(null);
+		MultiplayerManager.get().setOnJoinCallback(null);
+		MultiplayerManager.get().setOnLeaveCallback(null);
+		MultiplayerManager.get().setOnGameCloseCallback(null);
+		MultiplayerManager.get().setOnBroadcastCallback(null);
+		MultiplayerManager.get().setOnGameStartedCallback(null);
 
 	}
 }

@@ -11,6 +11,7 @@ public class MultiplayerMessage {
         GAME_STARTED,
         BROADCAST_CHAT,
         GAME_OVER,
+        PLAYER_GAVE_UP,
     }
 
     // message type
