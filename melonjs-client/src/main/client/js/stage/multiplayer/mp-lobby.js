@@ -37,10 +37,11 @@ class StartGameButton extends BaseTextButton {
 }
 
 class PlayerEntry extends Container {
-	constructor(x, y, name, num) {
+	constructor(x, y, player, num) {
 		super(x,y);
-		
-		this.playerNum = num;
+		this.player = player;
+		this.playerNum = num;		
+
 
 		this.playerNumText = new BitmapText(40, 4, {
 			font: "24Outline",
@@ -48,20 +49,35 @@ class PlayerEntry extends Container {
 		});
 
 		this.playerNameText = new BitmapText(160, 4, {
-			font: "24Outline",
-			text: name !== "" ? name : "waiting...",
+			font: "24Outline",			
 		});
 
 		this.sprite = new PlayerEntity(0, 0, true);
 		this.sprite.tint = PLAYER_COLORS[num];
-		
+
+		this.updatePlayer(player);
 		this.addChild(this.playerNumText);
 		this.addChild(this.playerNameText);	
 		this.addChild(this.sprite);	
 	}
 
-	updateName(name) {
-		this.playerNameText.setText(name);
+	updatePlayer(player) {
+		this.player = player;
+		if( player !== null ) {
+			this.playerNameText.setText(player.name);
+			if(MultiplayerManager.getInstance().multiplayerPlayer.id == player.id ){
+				this.playerNameText.fillStyle = "#00ffa0";
+				this.playerNameText.setText(player.name + " (you)");
+			}
+			else {
+				this.playerNameText.fillStyle = "#ffffff";
+				this.playerNameText.setText(player.name);
+			}
+		}
+		else {
+			this.playerNameText.fillStyle = "#ffffff";
+			this.playerNameText.setText("waiting...");
+		}
 	}
 }
 
@@ -117,7 +133,7 @@ class MenuComponent extends Container {
 		
 		this.players = this.playersFromGame(MultiplayerManager.getInstance().multiplayerGame);
 		for( let i = 0; i < 4; i++ ) {
-			let pe = new PlayerEntry(70, 330 + i * 42, this.players[i] !== null ? this.players[i].name : "", i);
+			let pe = new PlayerEntry(130, 330 + i * 42, this.players[i], i);
 			this.playerComponents.push(pe);
 			this.addChild(pe);
 		}
@@ -136,7 +152,7 @@ class MenuComponent extends Container {
 		this.players = this.playersFromGame(MultiplayerManager.getInstance().multiplayerGame);
 		for (let i = 0; i < 4; i++) {
 			let pe = this.playerComponents[i];
-			pe.updateName(this.players[i] !== null ? this.players[i].name : "");
+			pe.updatePlayer(this.players[i]);
 		}
 	}
 
