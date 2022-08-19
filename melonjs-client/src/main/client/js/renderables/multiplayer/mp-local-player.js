@@ -169,12 +169,10 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 			if (other.enemyType === ENEMY_TYPES.cat) {
 				GlobalGameState.catchedByCats++;
 				GlobalGameState.energy -= GlobalGameState.energyLostByCat;
-			} 
-            else if (other.enemyType === ENEMY_TYPES.spider) {
+			} else if (other.enemyType === ENEMY_TYPES.spider) {
 				GlobalGameState.bittenBySpiders++;
 				GlobalGameState.energy -= GlobalGameState.energyLostBySpider;
-			} 
-            else if (other.enemyType === ENEMY_TYPES.golem) {
+			} else if (other.enemyType === ENEMY_TYPES.golem) {
 				GlobalGameState.catchedByGolems++;
 				GlobalGameState.energy -= GlobalGameState.energyLostByGolem;
 			}
@@ -183,19 +181,22 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 			this.flicker(GlobalGameState.playerInvincibleTime, () => {
 				GlobalGameState.invincible = false;
 			});
+		} else if (other.body.collisionType === my_collision_types.REMOTE_BOMB) {
+			if (other.isExploding) {
+				// we got hit by an exploding bomb thrown by a remote player
+				GlobalGameState.energy -= GlobalGameState.energyLostByRemoteBomb;
+				GlobalGameState.hitByRemotePlayerBomb++;
+				GlobalGameState.invincible = true;
+				this.flicker(GlobalGameState.playerInvincibleTime, () => {
+					GlobalGameState.invincible = false;
+				});
+			}
 		}
-
-        else if( other.body.collisionType === my_collision_types.REMOTE_BOMB ) {
-            if( other.isExploding ) {
-                // we got hit by an exploding bomb thrown by a remote player
-                GlobalGameState.energy -= GlobalGameState.energyLostByRemoteBomb;
-                GlobalGameState.hitByRemotePlayerBomb++;
-                GlobalGameState.invincible = true;
-    			this.flicker(GlobalGameState.playerInvincibleTime, () => {
-	    			GlobalGameState.invincible = false;
-		    	});
-            }
-        }
 		return false;
+	}
+
+	destroy() {
+		this.tint = undefined;
+		super.destroy();
 	}
 }

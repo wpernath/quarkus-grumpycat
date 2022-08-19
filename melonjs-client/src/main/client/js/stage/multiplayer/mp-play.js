@@ -59,7 +59,7 @@ export default class MultiplayerPlayScreen extends Stage {
 		game.world.addChild(this.virtualJoypad, Infinity);
 
 
-		this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
+		this.handler = event.on(event.KEYUP, (action, keyCode, edge) => {
 			if (!state.isCurrent(my_state.MULTIPLAYER_PLAY)) return;
 			if (action === "exit") {
                 this.cleanupWorld();

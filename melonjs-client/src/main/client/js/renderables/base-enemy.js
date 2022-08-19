@@ -266,4 +266,5 @@ export class BaseEnemySprite extends Sprite {
 	getEnemyAction() {
 		return this.nextPosition;
 	}
+
 }

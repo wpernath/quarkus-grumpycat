@@ -108,9 +108,10 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 				if (this.nextPosition.dy < 0) this.setCurrentAnimation("stand-up");
 				else if (this.nextPosition.dy > 0) this.setCurrentAnimation("stand-down");
 
+				let otherIsProjectile = other.body.collisionType === collision.types.PROJECTILE_OBJECT;
 				this.flicker(GlobalGameState.enemyStunnedTime, () => {
 					this.isStunned = false;
-					if( other.body.collisionType === collision.types.PROJECTILE_OBJECT ) {
+					if( otherIsProjectile ) {
 						GlobalGameState.stunnedGolems++;
 						GlobalGameState.score += GlobalGameState.scoreForStunningGolem;
 					}
