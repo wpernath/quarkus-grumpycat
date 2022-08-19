@@ -181,7 +181,8 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 			this.flicker(GlobalGameState.playerInvincibleTime, () => {
 				GlobalGameState.invincible = false;
 			});
-		} else if (other.body.collisionType === my_collision_types.REMOTE_BOMB) {
+		} 
+		else if (other.body.collisionType === my_collision_types.REMOTE_BOMB) {
 			if (other.isExploding) {
 				// we got hit by an exploding bomb thrown by a remote player
 				GlobalGameState.energy -= GlobalGameState.energyLostByRemoteBomb;

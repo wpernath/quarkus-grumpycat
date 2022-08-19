@@ -46,6 +46,7 @@ public class MapResource {
             "FireAndDragons.tmj", 
 
             // multiplayer maps
+            "mp_arena.tmj",
             "mp_golems.tmj",
         };
 
@@ -77,7 +78,7 @@ public class MapResource {
                         }
                     }
                 });
-            
+              
                 
                 // Make filename the name of the level without extension
                 map.name = level.substring(0, level.lastIndexOf('.'));

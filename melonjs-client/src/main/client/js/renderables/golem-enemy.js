@@ -8,7 +8,7 @@ import { my_collision_types } from "../util/constants";
 export default class GolemEnemySprite extends BaseEnemySprite {
 	posUpdatedCount = 0;
 	VELOCITY = 0.08;
-
+	
 	constructor(x, y, storeEnemyMovements = true) {
 		super(x, y, {
 			width: 64,

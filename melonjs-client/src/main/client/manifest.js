@@ -91,11 +91,6 @@ const DataManifest = [
 	},
 
 	{
-		name: "bombs",
-		type: "image",
-		src: "./data/img/BombExploding.png",
-	},
-	{
 		name: "explosion",
 		type: "image",
 		src: "./data/img/explosion4.png",
@@ -162,6 +157,15 @@ const DataManifest = [
 		src: "./data/img/cat_right.png",
 	},
 
+	// magic & effects
+	{ name: "magic-bolt", type: "image", src: "./data/img/effects/1_magicspell_spritesheet.png" },
+	{ name: "magic-hit", type: "image", src: "./data/img/effects/5_magickahit_spritesheet.png" },
+	{ name: "magic-nebula", type: "image", src: "./data/img/effects/12_nebula_spritesheet.png" },
+	{ name: "magic-firespin", type: "image", src: "./data/img/effects/7_firespin_spritesheet.png" },
+	{ name: "protection-circle", type: "image", src: "./data/img/effects/8_protectioncircle_spritesheet.png" },
+	{ name: "magic-vortex", type: "image", src: "./data/img/effects/13_vortex_spritesheet.png" },
+
+	// level previews
 	{ name: "Level1", type: "image", src: "./data/map/Level1.png" },
 	{ name: "Level2", type: "image", src: "./data/map/Level2.png" },
 	{ name: "Level3", type: "image", src: "./data/map/Level3.png" },
@@ -170,7 +174,8 @@ const DataManifest = [
 	{ name: "Level6", type: "image", src: "./data/map/Level6.png" },
 
 	// multiplayer
-	{ name: "mp1", type: "image", src: "./data/map/mp_golems.png" },
+	{ name: "mp1", type: "image", src: "./data/map/mp_arena.png" },
+	{ name: "mp2", type: "image", src: "./data/map/mp_golems.png" },
 ];
 
 export default DataManifest;

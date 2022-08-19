@@ -122,7 +122,7 @@ device.onReady(() => {
             state.transition("fade", "#000000", 500);
 
             // bind keys
-            input.bindKey(input.KEY.ALT, "accel");
+            input.bindKey(input.KEY.ALT, "magic");
             input.bindKey(input.KEY.SHIFT, "barrier");
             input.bindKey(input.KEY.LEFT, "left",);
             input.bindKey(input.KEY.A, "left");

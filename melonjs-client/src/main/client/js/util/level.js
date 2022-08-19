@@ -110,6 +110,7 @@ const LEVEL_NAMES = [
 const MULTIPLAYER_LEVELS = [
 	// multiplayer levels
 	{ id: "mp1", path: "maps/mp/0.json", loaded: false, error: false, multiplayer: true, preview: "mp1" },
+	{ id: "mp2", path: "maps/mp/1.json", loaded: false, error: false, multiplayer: true, preview: "mp2" },
 ];
 
 export class LevelManager {

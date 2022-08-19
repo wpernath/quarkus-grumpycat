@@ -3,6 +3,7 @@ import BombEntity from "./bomb";
 import ExplosionEntity from "./explosion";
 import GlobalGameState from "../util/global-game-state";
 import { ENEMY_TYPES } from "./base-enemy";
+import MagicBolt from "./magic-bolt";
 
 export const BARRIER_TILE = {
 	light: 182,
@@ -12,6 +13,7 @@ export const BARRIER_TILE = {
 
 export const BONUS_TILE = {
 	bomb: 961,
+	star: 962,
 	cactus: 963,
 	meat: 966,
 	cheese: 967,
@@ -53,6 +55,7 @@ export class BasePlayerSprite extends Sprite {
 		this.yInMap = y;
 		this.lastMapX = x;
 		this.lastMapY = y;
+		this.spell = null; // only one spell at a time
 
 		if( !this.justImage ) {
 			this.body = new Body(this);
@@ -140,6 +143,11 @@ export class BasePlayerSprite extends Sprite {
 					GlobalGameState.bombs += GlobalGameState.bombsForBombBonus;
 					GlobalGameState.score += GlobalGameState.scoreForBombs;
 				}
+				else if( bonus === BONUS_TILE.star) { // super power
+					GlobalGameState.score += GlobalGameState.scoreForStars;
+					GlobalGameState.hasSuperPower = true;
+					GlobalGameState.numberOfSuperPowers += GlobalGameState.superPowersForStarBonus;
+				}
 				else if( bonus === BONUS_TILE.cactus) { // cactus
 					GlobalGameState.score += GlobalGameState.scoreForPills;
 				}
@@ -156,6 +164,15 @@ export class BasePlayerSprite extends Sprite {
 		return bonus;
 	}
 
+	throwMagicSpell(bX, bY, dx, dy, update = true) {
+		if( this.spell !== null ) return false;
+		if( this.borderLayer.cellAt(bX, bY) == null ) {
+			this.spell = new MagicBolt(this, bX, bY, dx, dy);
+			game.world.addChild(this.spell);
+			return true;
+		}
+		return false;
+	}
 	placeBorderTile(bX, bY, update = true) {
 		if( this.borderLayer.cellAt(bX, bY) == null ) {
 			let newBorderId = 184;

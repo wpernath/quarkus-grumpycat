@@ -26,6 +26,7 @@ const GlobalGameState = {
 	scoreForStunningGolem: 150,
 	scoreForKillingSpider: 100,
 	scoreForBombingRemotePlayers: 150,
+	scoreForStars: 50,
 
 	// Amount of energy to get back 
 	energyForMeat: 25,
@@ -33,6 +34,7 @@ const GlobalGameState = {
 
 	// bombs for picking up a bomb bonus
 	bombsForBombBonus: 5,
+	superPowersForStarBonus: 5,
 
 	// how much energy do you loose if
 	energyLostBySpider: 25,
@@ -49,6 +51,8 @@ const GlobalGameState = {
 	bombs: 0,
 	invincible: false,
 	isGameOver: false,
+	hasSuperPower: false,
+	numberOfSuperPowers: 0,
 
   // statistics
 	placedBarriers: 0,
