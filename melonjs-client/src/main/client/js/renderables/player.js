@@ -97,7 +97,8 @@ class PlayerEntity extends BasePlayerSprite {
 				let bX = mapX + dx;
 				let bY = mapY + dy;
                 
-				if ( this.spell == null && this.throwMagicSpell(bX, bY, dx, dy)) {
+                if( this.spell == null && this.throwMagicFireSpin(mapX, mapY)) {
+				//if ( this.spell == null && this.throwMagicSpell(bX, bY, dx, dy)) {
                     console.log("MAGIC!!!!!");
                     /*
 					action.dx = dx;

@@ -4,6 +4,7 @@ import ExplosionEntity from "./explosion";
 import GlobalGameState from "../util/global-game-state";
 import { ENEMY_TYPES } from "./base-enemy";
 import MagicBolt from "./magic-bolt";
+import MagicFirespin from "./magic-firespin";
 
 export const BARRIER_TILE = {
 	light: 182,
@@ -173,6 +174,14 @@ export class BasePlayerSprite extends Sprite {
 		}
 		return false;
 	}
+
+	throwMagicFireSpin(x, y, update = true) {
+		if (this.spell !== null) return false;
+		this.spell = new MagicFirespin(this, x, y);
+		game.world.addChild(this.spell);
+		return true;
+	}
+
 	placeBorderTile(bX, bY, update = true) {
 		if( this.borderLayer.cellAt(bX, bY) == null ) {
 			let newBorderId = 184;
