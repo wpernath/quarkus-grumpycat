@@ -2,7 +2,6 @@ import { Renderable, BitmapText, game, event, Container, Text, Vector2d, Rendere
 
 import GlobalGameState from "../../util/global-game-state";
 
-const FONT_SIZE = 1;
 
 class ScoreItem extends BitmapText {
 	/**
@@ -151,7 +150,7 @@ class BombItem extends BitmapText {
 
 export default class HUDContainer extends Container {
 	constructor() {
-		super();
+		super(0, 0, game.viewport.width, game.viewport.height);
 
 		// persistent across level change
 		this.isPersistent = true;
@@ -162,31 +161,34 @@ export default class HUDContainer extends Container {
 		// always on toppest
 		this.z = 100;
 
-		this.setOpacity(0.8);
+		this.setOpacity(1.0);
 
 		// give a name
 		this.name = "HUD";
 
 		// create a global PAUSE
 		this.pauseText = new BitmapText(5, (game.viewport.height - 40) / 2, {
-			font: "Shadow",
-			textAlign: "center",
-			text: "",
+			font: "Shadow",			
+			textAlign: "left",
+			text: "*** P A U S E ***",
 		});
 
 		// add our child score object at the top left corner
 		this.addChild(new ScoreItem(-5, 5));
 		this.addChild(new EnergyItem(5, 5));
 		this.addChild(new BombItem(0,5));
-		this.addChild(this.pauseText, 1000);
+		this.addChild(this.pauseText);
+		this.pauseText.setText("");
 	}
 
 	setPaused(paused, text = "") {
-		if( !paused ) {
+		if( !paused ) {			
 			this.pauseText.setText("");
 		}
 		else {
 			this.pauseText.setText(text);
+			let width = this.pauseText.measureText(text).width;			
+			this.pauseText.pos.x = (game.viewport.width - width ) / 2;
 		}
 	}
 

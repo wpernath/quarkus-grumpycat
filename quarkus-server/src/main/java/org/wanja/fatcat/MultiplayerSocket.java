@@ -155,6 +155,7 @@ public class MultiplayerSocket {
         if (players != null) {
             players.forEach(pid -> {
                 if (pid != playerId) { // broadcast only to others in this game!
+                    Log.debug("Broadcasting message to " + pid);
                     playerSessions.get(pid).getAsyncRemote().sendObject(message, res -> {
                         if (res.getException() != null) {
                             Log.error("Updating message to " + pid + " in game " + gameId + " failed!",

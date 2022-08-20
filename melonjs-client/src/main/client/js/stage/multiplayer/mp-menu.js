@@ -12,7 +12,7 @@ class StartGameButton extends BaseTextButton {
         super(x,y, {
             text: "Host Game",
             borderWidth: 250,
-            fillStyle: pool.pull("Color", 255,100,100),
+            fillStyle: "#ff1000",
         });   
     }
 

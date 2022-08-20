@@ -13,11 +13,12 @@ import { MPLocalPlayerSprite } from "../../renderables/multiplayer/mp-local-play
 
 
 export default class MultiplayerPlayScreen extends Stage {
-	player = null;
-	players = [];
+	player = null; // local player, sending its state over network
+	players = [];  // list of MultiplayerPlayer entries, who is part of this game
 
-    remotePlayers = [];
-	enemies = [];
+    remotePlayers = []; // remove player sprites 
+	enemies = [];       // enemy sprites
+
 	hudContainer = null;
 	virtualJoypad = null;
 	isActive = false;
@@ -37,6 +38,7 @@ export default class MultiplayerPlayScreen extends Stage {
 
 	onResetEvent() {
         console.log("mp-play.OnEnter()");
+        this.isExiting = false;
 		this.isActive = false;
 		this.players = [];
         this.player = null;
@@ -48,7 +50,7 @@ export default class MultiplayerPlayScreen extends Stage {
 		for( let x = 0; x < this.players.length; x++) {
 			let p = this.players[x];
 			if( p !== null ) {
-            	console.log("Player " + x + ": " + p.name);
+            	console.log("  Player " + x + ": " + p.name);
 			}
 		}
 		this.setupLevel();
@@ -59,35 +61,11 @@ export default class MultiplayerPlayScreen extends Stage {
 		game.world.addChild(this.virtualJoypad, Infinity);
 
 
-		this.handler = event.on(event.KEYUP, (action, keyCode, edge) => {
-			if (!state.isCurrent(my_state.MULTIPLAYER_PLAY)) return;
-			if (action === "exit") {
-                this.cleanupWorld();
-                
-                // send player left message to others
-                MultiplayerManager.get().sendPlayerGiveUp()
-                    .then( () => {
-                        MultiplayerManager.get().closeActiveGame();
-                    })
-                    .then( () => {
-                        state.change(my_state.MULTIPLAYER_GAME_OVER);
-                    });                
-			}
-            else if( action === "pause") {
-                if( !state.isPaused()) {
-                    this.hudContainer.setPaused(true, "*** PAUSE ***");
-                    state.pause();
-                }
-                else{
-                    state.resume();                    
-                    this.hudContainer.setPaused(false);
-                }
-                MultiplayerManager.get().sendPlayerPaused(state.isPaused());
-            }
-		}, this);
+		this.handler = event.on(event.KEYUP, this.actionHandler, this);
 
         MultiplayerManager.get().addEventListener(MultiplayerMessageType.GAME_PAUSED, (evt) => {
             let message = evt.message;
+            console.log(" WAAAAH: Got an pause MESSAGE from server" );
             if(message.isPaused ) {
                 this.hudContainer.setPaused(true, "*** " + message.message + " *** ");
                 state.pause();                
@@ -123,6 +101,46 @@ export default class MultiplayerPlayScreen extends Stage {
 
 		this.isActive = true;
 	}
+
+    /**
+     * 
+     * @param {*} action 
+     * @param {*} keyCode 
+     * @param {*} edge 
+     */
+    actionHandler(action, keyCode, edge) {
+        if (!state.isCurrent(my_state.MULTIPLAYER_PLAY)) return;
+        if (action === "exit") {
+            if (!this.isExiting && !state.isPaused()) {
+                this.isExiting = true;
+                this.cleanupWorld();
+
+                // send player left message to others
+                MultiplayerManager.get()
+                    .sendPlayerGiveUp()
+                    .then(() => {
+                        MultiplayerManager.get().closeActiveGame();
+                    })
+                    .then(() => {
+                        state.change(my_state.MULTIPLAYER_GAME_OVER);
+                    });
+            }
+        } 
+        else if (action === "pause") {            
+            if (!state.isPaused()) {
+                console.log("switching to pause");
+                this.hudContainer.setPaused(true, "*** PAUSE ***");
+                state.pause();
+            } 
+            else {
+                console.log("switching to resume");
+                state.resume();
+                this.hudContainer.setPaused(false);
+            }
+            MultiplayerManager.get().sendPlayerPaused(state.isPaused());
+        }
+    }
+
 
     /**
      * cleans up the game world
@@ -269,8 +287,8 @@ export default class MultiplayerPlayScreen extends Stage {
 		this.isActive = false;
 		game.world.removeChild(this.hudContainer);
 		game.world.removeChild(this.virtualJoypad);
-		event.off(event.KEYUP, this.handler);
-		
+		let paul = event.off(event.KEYUP, this.actionHandler);
+		console.log("PAUL: " +paul);
         // make sure everything is removed!
         this.cleanupWorld();
         game.world.reset();

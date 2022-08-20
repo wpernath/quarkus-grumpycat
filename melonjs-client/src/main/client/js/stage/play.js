@@ -35,14 +35,16 @@ class PlayScreen extends Stage {
 	 */
 	onResetEvent() {
 		this.isActive = false;
+		this.exiting  = false;
 		this.player = null;
 		this.enemies = [];
 		this.enemyEmitter.isActive = false;
 
 		/*
-		this.whiteLight = new Light2d(0, 0, 96);
+		this.whiteLight = new Light2d(0, 0, 96, 96, "#ffffff", 0.2);
 		this.lights.set("whiteLight", this.whiteLight);
-		this.ambientLight.parseCSS("#1212a0");
+		this.ambientLight.parseCSS("#101010");
+		this.ambientLight.alpha = 0.8
 		*/
 		this.setupLevel();
 
@@ -51,17 +53,23 @@ class PlayScreen extends Stage {
 		game.world.addChild(this.hudContainer);
 		game.world.addChild(this.virtualJoypad, Infinity);
 
-		this.handler = event.on(event.KEYUP,  (action, keyCode, edge) => {
+		this.handler = event.on(event.KEYUP,  (action) => {
 			if (!state.isCurrent(state.PLAY)) return;
 			if (action === "pause") {
 				if (!state.isPaused()) {
+					this.hudContainer.setPaused(true, "*** P A U S E ***");
 					state.pause();
-				} else {
+				} 
+				else {
 					state.resume();
+					this.hudContainer.setPaused(false);
 				}
 			}
 			if (action === "exit") {
-				state.change(state.GAMEOVER);
+				if( !this.exiting && !state.isPaused()) {
+					state.change(state.GAMEOVER);
+					this.exiting = true;
+				}
 			}
 			if (action === "fullscreen") {
 				console.log("requesting full screen");
@@ -83,7 +91,7 @@ class PlayScreen extends Stage {
 		this.isActive = false;
 	}
 
-	update(dt) {
+	update(dt) {		
 		if (!this.isActive) return super.update(dt);
 		if (this.enemyEmitter.isActive && this.enemyEmitter.emitEvery <= 0 && this.enemyEmitter.emitCount > 0) {
 			// emit a new spider
@@ -98,10 +106,10 @@ class PlayScreen extends Stage {
 
 		this.enemyEmitter.emitEvery -= dt;
 		//this.whiteLight.centerOn(this.player.pos.x, this.player.pos.y);
+		
 		let dirty = super.update(dt);
 		return dirty;
 	}
-
 
 	setupLevel() {
 		LevelManager.getInstance().prepareCurrentLevel();

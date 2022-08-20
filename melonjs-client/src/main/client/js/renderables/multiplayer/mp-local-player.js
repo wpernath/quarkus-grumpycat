@@ -78,7 +78,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 			if (input.isKeyPressed("bomb")) {
 				if (GlobalGameState.bombs > 0) {
 					let bomb = new BombEntity(this.pos.x, this.pos.y);
-					bomb.tint = this.color;
+					bomb.tint.copy(this.color);
 					bomb.body.setCollisionMask(collision.types.ENEMY_OBJECT | my_collision_types.REMOTE_PLAYER);
 					bomb.thrownByPlayer = this.player;
 					game.world.addChild(bomb);

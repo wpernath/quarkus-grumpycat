@@ -34,7 +34,7 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 					let bomb = new BombEntity(this.pos.x, this.pos.y);
 					bomb.body.collisionType = my_collision_types.REMOTE_BOMB;
 					bomb.body.setCollisionMask(collision.types.PLAYER_OBJECT | collision.types.ENEMY_OBJECT);
-					bomb.tint = color;
+					bomb.tint.copy(this.color);
 					bomb.thrownByPlayer = this.player;
 					game.world.addChild(bomb);
 				} 
