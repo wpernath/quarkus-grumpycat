@@ -18,57 +18,68 @@ export const MultiplayerMessageType = {
 	BROADCAST_CHAT  : "BROADCAST_CHAT",
     ERROR           : "ERROR",
     PLAYER_GAVE_UP  : "PLAYER_GAVE_UP",
+    GAME_PAUSED     : "PLAYER_PAUSED_GAME",
 };
 export class MultiplayerMessage {
-    
-    static gameUpdate() {
-        let mm = new MultiplayerMessage(MultiplayerMessageType.GAME_UPDATE);
-        mm.playerId = multiplayerManager.multiplayerPlayer.id;
-        mm.gameId   = multiplayerManager.multiplayerGame.id;
-        return mm;
-    }    
+	static gameUpdate() {
+		let mm = new MultiplayerMessage(MultiplayerMessageType.GAME_UPDATE);
+		mm.playerId = multiplayerManager.multiplayerPlayer.id;
+		mm.gameId = multiplayerManager.multiplayerGame.id;
+		return mm;
+	}
 
-    static gameStarted() {
-        let mm = new MultiplayerMessage(MultiplayerMessageType.GAME_STARTED);
-        mm.gameId = multiplayerManager.multiplayerGame.id;
-        mm.playerId = multiplayerManager.multiplayerPlayer.id;
-        return mm;
-    }
+	static gameStarted() {
+		let mm = new MultiplayerMessage(MultiplayerMessageType.GAME_STARTED);
+		mm.gameId = multiplayerManager.multiplayerGame.id;
+		mm.playerId = multiplayerManager.multiplayerPlayer.id;
+		return mm;
+	}
 
-    static gameOver() {
-        let mm = new MultiplayerMessage(MultiplayerMessageType.GAME_OVER);
-        mm.gameId = multiplayerManager.multiplayerGame.id;
-        mm.playerId = multiplayerManager.multiplayerPlayer.id;
-        return mm;
-    }
+	static gameOver() {
+		let mm = new MultiplayerMessage(MultiplayerMessageType.GAME_OVER);
+		mm.gameId = multiplayerManager.multiplayerGame.id;
+		mm.playerId = multiplayerManager.multiplayerPlayer.id;
+		return mm;
+	}
 
-    static giveUp() {
-        let mm = new MultiplayerMessage(MultiplayerMessageType.PLAYER_GAVE_UP);
-        mm.gameId = multiplayerManager.multiplayerGame.id;
-        mm.playerId = multiplayerManager.multiplayerPlayer.id;
-        mm.message  = multiplayerManager.multiplayerPlayer.name + " gave up!";
-        return mm;
-    }
+	static giveUp() {
+		let mm = new MultiplayerMessage(MultiplayerMessageType.PLAYER_GAVE_UP);
+		mm.gameId = multiplayerManager.multiplayerGame.id;
+		mm.playerId = multiplayerManager.multiplayerPlayer.id;
+		mm.message = multiplayerManager.multiplayerPlayer.name + " gave up!";
+		return mm;
+	}
 
-    constructor(type) {
-        this.type = type;
-        this.message = null;
+	static pauseGame(isPaused) {
+		let mm = new MultiplayerMessage(MultiplayerMessageType.GAME_PAUSED);
+		mm.gameId = multiplayerManager.multiplayerGame.id;
+		mm.playerId = multiplayerManager.multiplayerPlayer.id;
+		mm.message = multiplayerManager.multiplayerPlayer.name + " PAUSED Game";
+        mm.isPaused = isPaused;
+		return mm;
+	}
 
-        this.playerId = null;
-        this.gameId = null;
+	constructor(type) {
+		this.type = type;
+		this.message = null;
 
-        this.x = 0;
-        this.y = 0;
-        this.dx = 0;
-        this.dy = 0;
-        this.bombPlaced = false;
-        this.gutterThrown = false;
-        this.score = 0;
-        this.energy = 0;
+		this.playerId = null;
+		this.gameId = null;
 
-        this.levelOver = false;
-        this.hasChanged = false;
-    }    
+		this.x = 0;
+		this.y = 0;
+		this.dx = 0;
+		this.dy = 0;
+		this.bombPlaced = false;
+		this.gutterThrown = false;
+		this.score = 0;
+		this.energy = 0;
+        
+		this.levelOver = false;
+		this.hasChanged = false;
+
+        this.isPaused = false;
+	}
 }
 
  export default class MultiplayerManager {
@@ -229,6 +240,12 @@ export class MultiplayerMessage {
 			let mm = MultiplayerMessage.giveUp();
 			this.sendAction(mm);
 		}
+
+        async sendPlayerPaused(isPaused) {
+            let mm = MultiplayerMessage.pauseGame(isPaused);
+            this.sendAction(mm);
+        }
+
 		/**
 		 * Update server to indicate that this game does not accept any more
 		 * players. Notify other players that we are starting NOW

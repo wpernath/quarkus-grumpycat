@@ -12,15 +12,11 @@ class ScoreItem extends BitmapText {
 	 */
 	constructor(x, y) {
 		super(game.viewport.width + x, y, {
-			font: "Shadow",
-			size: FONT_SIZE,
-			fillStyle: "white",
-			strokeStyle: "black",
+			font: "24Outline",
 			textAlign: "left",
 			lineWidth: 2,
 			textBaseline: "top",
 			text: "Score: 999999",
-			offScreenCanvas: false		 // this has impact on positioning
 		});
 
 		
@@ -70,15 +66,11 @@ class EnergyItem extends BitmapText {
 	 */
 	constructor(x, y) {
 		super(x, y, {
-			font: "Shadow",
-			size: FONT_SIZE,
-			fillStyle: "white",
-			strokeStyle: "black",
+			font: "24Outline",
 			textAlign: "left",
 			lineWidth: 2,
 			textBaseline: "top",
 			text: "Energy: 999",
-			offScreenCanvas: false, // this has impact on positioning
 		});
 
 		
@@ -115,15 +107,11 @@ class BombItem extends BitmapText {
 	 */
 	constructor(x, y) {
 		super(game.viewport.width / 2 + x, y, {
-			font: "Shadow",
-			size: FONT_SIZE,
-			fillStyle: "white",
-			strokeStyle: "black",
+			font: "24Outline",
 			textAlign: "left",
 			lineWidth: 2,
 			textBaseline: "top",
 			text: "Bombs: 999",
-			offScreenCanvas: false, // this has impact on positioning
 		});
 		
 		this.relative = new Vector2d(x, y);
@@ -179,9 +167,28 @@ export default class HUDContainer extends Container {
 		// give a name
 		this.name = "HUD";
 
+		// create a global PAUSE
+		this.pauseText = new BitmapText(5, (game.viewport.height - 40) / 2, {
+			font: "Shadow",
+			textAlign: "center",
+			text: "",
+		});
+
 		// add our child score object at the top left corner
 		this.addChild(new ScoreItem(-5, 5));
 		this.addChild(new EnergyItem(5, 5));
 		this.addChild(new BombItem(0,5));
+		this.addChild(this.pauseText, 1000);
 	}
+
+	setPaused(paused, text = "") {
+		if( !paused ) {
+			this.pauseText.setText("");
+		}
+		else {
+			this.pauseText.setText(text);
+		}
+	}
+
+	
 }

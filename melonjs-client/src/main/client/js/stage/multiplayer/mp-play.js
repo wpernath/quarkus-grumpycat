@@ -1,4 +1,4 @@
-import { Stage, game, event, state, level, pool } from "melonjs";
+import { Stage, game, event, state, level, pool, BitmapText } from "melonjs";
 import MultiplayerManager, { MultiplayerMessageType } from "../../util/multiplayer";
 import CatEnemy from "../../renderables/cat-enemy.js";
 import { SpiderEnemy } from "../../renderables/spider-enemy.js";
@@ -73,11 +73,36 @@ export default class MultiplayerPlayScreen extends Stage {
                         state.change(my_state.MULTIPLAYER_GAME_OVER);
                     });                
 			}
-		});
+            else if( action === "pause") {
+                if( !state.isPaused()) {
+                    this.hudContainer.setPaused(true, "*** PAUSE ***");
+                    state.pause();
+                }
+                else{
+                    state.resume();                    
+                    this.hudContainer.setPaused(false);
+                }
+                MultiplayerManager.get().sendPlayerPaused(state.isPaused());
+            }
+		}, this);
 
-		MultiplayerManager.get().addEventListener(MultiplayerMessageType.GAME_OVER, (evt) => {			
+        MultiplayerManager.get().addEventListener(MultiplayerMessageType.GAME_PAUSED, (evt) => {
+            let message = evt.message;
+            if(message.isPaused ) {
+                this.hudContainer.setPaused(true, "*** " + message.message + " *** ");
+                state.pause();                
+            }
+            else {
+                state.resume();
+                this.hudContainer.setPaused(false);
+            }
+        }, this);
+
+		MultiplayerManager.get().addEventListener(MultiplayerMessageType.GAME_OVER, (evt) => {	
+            state.pause();		
             this.cleanupWorld();
 			state.change(my_state.MULTIPLAYER_GAME_OVER);
+            state.resume();
 		}, this);
 
         MultiplayerManager.get().addEventListener([MultiplayerMessageType.PLAYER_REMOVED, MultiplayerMessageType.PLAYER_GAVE_UP], (event) => {

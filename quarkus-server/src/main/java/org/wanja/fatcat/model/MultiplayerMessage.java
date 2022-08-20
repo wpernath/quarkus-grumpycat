@@ -12,6 +12,7 @@ public class MultiplayerMessage {
         BROADCAST_CHAT,
         GAME_OVER,
         PLAYER_GAVE_UP,
+        PLAYER_PAUSED_GAME,
     }
 
     // message type
@@ -34,6 +35,7 @@ public class MultiplayerMessage {
     public int energy;
     public boolean hasChanged;
     public boolean levelOver;
+    public boolean isPaused;
 
     public static MultiplayerMessage playerJoined(Long playerId, Long gameId) {
         MultiplayerMessage mm = new MultiplayerMessage(MessageType.PLAYER_JOINED);

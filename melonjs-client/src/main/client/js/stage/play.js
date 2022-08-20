@@ -1,4 +1,4 @@
-import { Stage, game, level, event, state,device } from 'melonjs/dist/melonjs.module.js';
+import { Stage, game, level, event, state,device, Light2d } from 'melonjs/dist/melonjs.module.js';
 import CatEnemy from '../renderables/cat-enemy.js';
 import { SpiderEnemy } from '../renderables/spider-enemy.js';
 import GolemEnemySprite from '../renderables/golem-enemy';
@@ -39,6 +39,11 @@ class PlayScreen extends Stage {
 		this.enemies = [];
 		this.enemyEmitter.isActive = false;
 
+		/*
+		this.whiteLight = new Light2d(0, 0, 96);
+		this.lights.set("whiteLight", this.whiteLight);
+		this.ambientLight.parseCSS("#1212a0");
+		*/
 		this.setupLevel();
 
 		this.hudContainer = new HUDContainer(0, 0);
@@ -92,7 +97,7 @@ class PlayScreen extends Stage {
 		}
 
 		this.enemyEmitter.emitEvery -= dt;
-		
+		//this.whiteLight.centerOn(this.player.pos.x, this.player.pos.y);
 		let dirty = super.update(dt);
 		return dirty;
 	}
