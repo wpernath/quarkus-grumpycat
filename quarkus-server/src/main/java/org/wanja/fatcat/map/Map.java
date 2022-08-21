@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Map {
     public String longName;
     public String description;
+    public boolean forMultiplayer;
+    public int numPlayers;
     public String name;
     public String type;
     public String orientation;

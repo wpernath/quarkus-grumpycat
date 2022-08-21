@@ -5,9 +5,9 @@
   <parent>
     <groupId>org.wanja.grumpycat</groupId>
     <artifactId>umbrella</artifactId>
-    <version>${grumpycat.umbrella.version}</version>
+    <version>0.6.0</version>
     <relativePath>../</relativePath>
-  </parent>
+  </parent> 
 
   <artifactId>cat-server</artifactId>
 
@@ -17,6 +17,7 @@
       <artifactId>javafaker</artifactId>
       <version>1.0.2</version>
     </dependency>
+
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-arc</artifactId>
@@ -26,13 +27,20 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-hibernate-orm-panache</artifactId>
     </dependency>
+
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-jdbc-postgresql</artifactId>
     </dependency>
+
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-reactive-messaging-kafka</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-websockets</artifactId>
     </dependency>
 
     <dependency>
@@ -47,12 +55,14 @@
       <artifactId>quarkus-junit5</artifactId>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <plugin>

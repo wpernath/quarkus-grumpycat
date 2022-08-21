@@ -1,5 +1,5 @@
 const CONFIG = {
-	environment: "prod", // change this TO PROD on deployment
+	environment: "local", // change this TO PROD on deployment
 
 	appName: "{{applicationName}}",
 	appVersion: "{{applicationVersion}}",
@@ -7,7 +7,9 @@ const CONFIG = {
 	baseURL: "",
 
 	local: {
-		baseURL: "http://localhost:8080/",
+		//baseURL: "http://localhost:8080/",
+		//baseURL: "http://192.168.2.171:8080/",
+		baseURL: "http://192.168.2.198:8080/",
 	},
 
 	dev: {

@@ -50,26 +50,25 @@ export class Level {
 
                         //console.log("  Read point: " + JSON.stringify(point));
 					}
-                    else if( obj.name === 'WayPath' && obj.polygon !== null ) {
-                        let path = new WayPath(Math.floor(obj.x / 32), Math.floor(obj.y / 32));                        
-                        let startX = obj.x;
-                        let startY = obj.y;
+                    else if( obj.name === 'WayPath' && obj.polyline !== null ) {
+                        let path = new WayPath(Math.floor(Math.round(obj.x) / 32), Math.floor(Math.round(obj.y) / 32));                        
+                        let startX = Math.round(obj.x);
+                        let startY = Math.round(obj.y);
 
                         this.applyProperties(obj, path);
-                        path.addWayPoint(new WayPoint(Math.floor(startX / 32), Math.floor(startY / 32)));
                         this.wayPaths[path.forEnemy] = path;
 
-                        obj.polygon.forEach( (point) => {
-                            startX += point.x;
-                            startY += point.y;
-                            let wayPoint = new WayPoint(Math.floor(startX / 32), Math.floor(startY / 32));
-                            path.addWayPoint(wayPoint);
+                        obj.polyline.forEach( (point) => {                
+                            let x = Math.round(startX + point.x);
+                            let y = Math.round(startY + point.y);
+                            let wayPoint = new WayPoint(Math.floor(x / 32), Math.floor(y / 32));
+    						path.addWayPoint(wayPoint);
                         });
-
-                        //console.log("  Read path: " + JSON.stringify(path));
                     }
 
 				});
+
+                // we are deleting the objects from the source to be able load it into melonjs
                 l.objects = null;
 			}
 		});
@@ -90,7 +89,7 @@ export class Level {
 	}
 
     getPathForEnemy(name) {
-        if( this.wayPoints !== null && this.wayPaths[name] !== undefined ) {
+        if( this.wayPaths[name] !== undefined ) {
             return this.wayPaths[name];
         }
     }
@@ -100,16 +99,23 @@ var levelManager = null;
 
 const LEVEL_NAMES = [
 	// GUIDs from manifest.js
-	{ id: "level1", path: "maps/0.json", loaded: false, error: false, preview: "Level1" },
-	{ id: "level2", path: "maps/1.json", loaded: false, error: false, preview: "Level2" },
-	{ id: "level3", path: "maps/2.json", loaded: false, error: false, preview: "Level3" },
-	{ id: "level4", path: "maps/3.json", loaded: false, error: false, preview: "Level4" },
-	{ id: "level5", path: "maps/4.json", loaded: false, error: false, preview: "Level5" },
-	{ id: "level6", path: "maps/5.json", loaded: false, error: false, preview: "Level6" },
+	{ id: "level1", path: "maps/0.json", loaded: false, error: false, multiplayer: false, preview: "Level1" },
+	{ id: "level2", path: "maps/1.json", loaded: false, error: false, multiplayer: false, preview: "Level2" },
+	{ id: "level3", path: "maps/2.json", loaded: false, error: false, multiplayer: false, preview: "Level3" },
+	{ id: "level4", path: "maps/3.json", loaded: false, error: false, multiplayer: false, preview: "Level4" },
+	{ id: "level5", path: "maps/4.json", loaded: false, error: false, multiplayer: false, preview: "Level5" },
+	{ id: "level6", path: "maps/5.json", loaded: false, error: false, multiplayer: false, preview: "Level6" },
+];
+
+const MULTIPLAYER_LEVELS = [
+	// multiplayer levels
+	{ id: "mp1", path: "maps/mp/0.json", loaded: false, error: false, multiplayer: true, preview: "mp1" },
+	{ id: "mp2", path: "maps/mp/1.json", loaded: false, error: false, multiplayer: true, preview: "mp2" },
 ];
 
 export class LevelManager {
     allLevels = [];
+    mpLevels = [];
     currentLevel = 0;
     levelChangeListeners = [];
 
@@ -137,7 +143,12 @@ export class LevelManager {
         let data = await res.json();
         let level = new Level(info, data.name, data.longName, data);
         console.log("  Loaded: " + info.id + " = " + level.name);
-        this.allLevels[info.id] = level;
+        if( info.multiplayer ) {
+            this.mpLevels[info.id] = level;
+        }
+        else {
+            this.allLevels[info.id] = level;
+        }        
         return level;
     }
 
@@ -150,7 +161,12 @@ export class LevelManager {
         const promises = [];
         for (let i = 0; i < LEVEL_NAMES.length; i++) {
             let info = LEVEL_NAMES[i];
-            promises.push(this._loadLevelData(LEVEL_NAMES[i]));
+            promises.push(this._loadLevelData(info));
+        }
+
+        for( let i = 0; i < MULTIPLAYER_LEVELS.length; i++ ) {
+            let info = MULTIPLAYER_LEVELS[i];
+			promises.push(this._loadLevelData(info));
         }
 
         Promise.all(promises).then((res) => {
@@ -259,4 +275,11 @@ export class LevelManager {
     }
 
 
+    allMultiplayerLevels() {
+        let levels = [];
+        MULTIPLAYER_LEVELS.forEach( (l) => {
+            levels.push(this.mpLevels[l.id]);
+        });
+        return levels;
+    }
 }

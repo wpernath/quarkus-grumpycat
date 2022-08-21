@@ -3,9 +3,10 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Golems.tmx",
+    "activeFile": "multiplayer/mp_golems.tmx",
     "expandedProjectPaths": [
-        "."
+        ".",
+        "multiplayer"
     ],
     "exportAsImage.useCurrentScale": true,
     "file.lastUsedOpenFilter": "Alle Dateien (*)",
@@ -56,11 +57,11 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 2.1805,
+            "scale": 1.2696,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 49.07131391882595,
-                "y": 51.36436597110756
+                "x": 486.37366099558915,
+                "y": 743.9350976685571
             }
         },
         "Level-Template.tmx": {
@@ -122,7 +123,7 @@
         },
         "Terrain.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 1.2645,
+            "scaleInDock": 1.1911,
             "scaleInEditor": 1.3389
         },
         "Utumno.tsx": {
@@ -162,25 +163,47 @@
                 "y": 224.90768714333666
             }
         },
+        "multiplayer/Terrain.tsx": {
+            "scaleInDock": 1
+        },
+        "multiplayer/mp_golems.tmx": {
+            "scale": 1.1533,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 1007.1100320818523,
+                "y": 642.0705800745686
+            }
+        },
+        "multiplayer/mp_level-template.tmx": {
+            "scale": 1.1164299242424243,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1056.4926417574961,
+                "y": 672.232070910556
+            }
+        },
         "spiders.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
         }
     },
     "frame.defaultDuration": 250,
-    "last.exportedFilePath": "/Users/wpernath/Devel/grumpycat/quarkus-grumpycat/quarkus-server/src/main/resources/maps",
+    "last.exportedFilePath": "/Users/wanja/Devel/grumpycat/quarkus-grumpycat/quarkus-server/src/main/resources/maps",
+    "last.externalTilesetPath": "/Users/wanja/Devel/grumpycat/quarkus-grumpycat/tiled",
     "last.imagePath": "/Users/wanja/Devel/grumpycat/quarkus-grumpycat/tiled/images/tilesets",
     "lastUsedTilesetExportFilter": "JSON-Kachelsatz-Dateien (*.tsj *.json)",
     "map.height": 36,
-    "map.lastUsedExportFilter": "JSON-Kartendateien (*.tmj *.json)",
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
     "map.width": 32,
     "openFiles": [
-        "Golems.tmx"
+        "multiplayer/mp_golems.tmx"
     ],
     "project": "grumpycat.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "multiplayer/mp_level-template.tmx",
+        "multiplayer/mp_golems.tmx",
         "Golems.tmx",
         "Level1.tmx",
         "Level2.tmx",
@@ -190,9 +213,7 @@
         "/Users/wpernath/Devel/examples/platformer/data/map/map1.tmx",
         "Terrain.tsx",
         "/Users/wanja/Devel/melonjs/examples/platformer/data/map/map1.tmx",
-        "Level-Template.tmx",
-        "spiders.tsx",
-        "explosion.tsx"
+        "Level-Template.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

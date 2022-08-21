@@ -32,7 +32,14 @@ import ReplayChooserScreen from './js/stage/replay-chooser';
 import {WayPoint, WayPath} from './js/util/walk-path';
 import { GameStateAction, EnemyAction } from "./js/util/game-updates";
 import {ChooseLevelScreen} from "./js/stage/choose-level";
-
+import MultiplayerMenuScreen from './js/stage/multiplayer/mp-menu';
+import SingleplayerMenuScreen from './js/stage/sp-menu';
+import HostGameScreen from './js/stage/multiplayer/mp-host-game';
+import JoinGameScreen from './js/stage/multiplayer/mp-join-game';
+import MultiplayerLobbyScreen from './js/stage/multiplayer/mp-lobby';
+import MultiplayerPlayScreen from './js/stage/multiplayer/mp-play';
+import MultiplayerGameOverScreen from './js/stage/multiplayer/mp-game-over';
+import { MultiplayerMessage } from './js/util/multiplayer';
 
 device.onReady(() => {
 
@@ -42,7 +49,7 @@ device.onReady(() => {
         parent: "screen", 
         scaleMethod: "fit", 
         renderer: video.AUTO, 
-        subPixel: false, 
+        //subPixel: false, 
         doubleBuffering: true 
     })) {
 		alert("Your browser does not support HTML5 canvas.");
@@ -60,6 +67,12 @@ device.onReady(() => {
     // Initialize the audio.
     audio.init("mp3,ogg");
 
+    //////// DEBUG //////////
+    let string = "hallo";
+    let array  = ["a", "b"];
+    console.log( (typeof string) + ": " + (string instanceof String));
+    console.log( (typeof array) + ": " + (array instanceof Array));
+
     // allow cross-origin for image/texture loading
     let environment = CONFIG.environment;
     let baseURL;
@@ -72,6 +85,7 @@ device.onReady(() => {
     CONFIG.baseURL = baseURL;
 
     loader.crossOrigin = "anonymous";
+
 
     // initialize NetworkManager
     NetworkManager.getInstance();
@@ -86,6 +100,7 @@ device.onReady(() => {
             pool.register("WayPath", WayPath, true);
             pool.register("GameStateAction", GameStateAction, true);
             pool.register("EnemyAction", EnemyAction, true);
+            //pool.register("MultiplayerMessage", MultiplayerMessage, )
 
             GlobalGameState.screenControlsTexture = new TextureAtlas(loader.getJSON("screen-controls"), loader.getImage("screen-controls"));
 
@@ -99,14 +114,23 @@ device.onReady(() => {
             state.set(state.GAMEOVER, new GameOverScreen(true));
             state.set(state.GAME_END, new GameOverScreen(false));
             state.set(state.SCORE, new HighscoreScreen());
+            state.set(my_state.SINGLE_PLAYER_MENU, new SingleplayerMenuScreen());
+            
+            // multiplayer states
+            state.set(my_state.MULTIPLAYER_MENU, new MultiplayerMenuScreen());
+            state.set(my_state.MULTIPLAYER_START_GAME, new HostGameScreen());
+            state.set(my_state.MULTIPLAYER_JOIN_GAME, new JoinGameScreen());
+            state.set(my_state.MULTIPLAYER_LOBBY, new MultiplayerLobbyScreen());
+            state.set(my_state.MULTIPLAYER_PLAY, new MultiplayerPlayScreen());
+            state.set(my_state.MULTIPLAYER_GAME_OVER, new MultiplayerGameOverScreen());
 
             // set the fade transition effect
             state.transition("fade", "#000000", 500);
 
             // bind keys
-            input.bindKey(input.KEY.ALT, "accel");
+            input.bindKey(input.KEY.ALT, "magic");
             input.bindKey(input.KEY.SHIFT, "barrier");
-            input.bindKey(input.KEY.LEFT, "left");
+            input.bindKey(input.KEY.LEFT, "left",);
             input.bindKey(input.KEY.A, "left");
             input.bindKey(input.KEY.RIGHT, "right");
             input.bindKey(input.KEY.D, "right");

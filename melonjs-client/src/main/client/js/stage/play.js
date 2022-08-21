@@ -1,10 +1,9 @@
-import { Stage, game, level, event, state,device } from 'melonjs/dist/melonjs.module.js';
+import { Stage, game, level, event, state,device, Light2d } from 'melonjs/dist/melonjs.module.js';
 import CatEnemy from '../renderables/cat-enemy.js';
 import { SpiderEnemy } from '../renderables/spider-enemy.js';
 import GolemEnemySprite from '../renderables/golem-enemy';
 
 import PlayerEntity from "../renderables/player.js";
-import GlobalGameState from '../util/global-game-state';
 import HUDContainer from './hud/hud-container.js';
 import VirtualJoypad from './hud/virtual-joypad.js';
 import { LevelManager } from '../util/level.js';
@@ -36,10 +35,17 @@ class PlayScreen extends Stage {
 	 */
 	onResetEvent() {
 		this.isActive = false;
+		this.exiting  = false;
 		this.player = null;
 		this.enemies = [];
 		this.enemyEmitter.isActive = false;
 
+		/*
+		this.whiteLight = new Light2d(0, 0, 96, 96, "#ffffff", 0.2);
+		this.lights.set("whiteLight", this.whiteLight);
+		this.ambientLight.parseCSS("#101010");
+		this.ambientLight.alpha = 0.8
+		*/
 		this.setupLevel();
 
 		this.hudContainer = new HUDContainer(0, 0);
@@ -47,17 +53,23 @@ class PlayScreen extends Stage {
 		game.world.addChild(this.hudContainer);
 		game.world.addChild(this.virtualJoypad, Infinity);
 
-		this.handler = event.on(event.KEYDOWN,  (action, keyCode, edge) => {
+		this.handler = event.on(event.KEYUP,  (action) => {
 			if (!state.isCurrent(state.PLAY)) return;
 			if (action === "pause") {
 				if (!state.isPaused()) {
+					this.hudContainer.setPaused(true, "*** P A U S E ***");
 					state.pause();
-				} else {
+				} 
+				else {
 					state.resume();
+					this.hudContainer.setPaused(false);
 				}
 			}
 			if (action === "exit") {
-				state.change(state.GAMEOVER);
+				if( !this.exiting && !state.isPaused()) {
+					state.change(state.GAMEOVER);
+					this.exiting = true;
+				}
 			}
 			if (action === "fullscreen") {
 				console.log("requesting full screen");
@@ -75,11 +87,11 @@ class PlayScreen extends Stage {
 		console.log("Play.OnExit()");
 		game.world.removeChild(this.hudContainer);
 		game.world.removeChild(this.virtualJoypad);
-		event.off(event.KEYDOWN, this.handler);
+		event.off(event.KEYUP, this.handler);
 		this.isActive = false;
 	}
 
-	update(dt) {
+	update(dt) {		
 		if (!this.isActive) return super.update(dt);
 		if (this.enemyEmitter.isActive && this.enemyEmitter.emitEvery <= 0 && this.enemyEmitter.emitCount > 0) {
 			// emit a new spider
@@ -93,11 +105,11 @@ class PlayScreen extends Stage {
 		}
 
 		this.enemyEmitter.emitEvery -= dt;
+		//this.whiteLight.centerOn(this.player.pos.x, this.player.pos.y);
 		
 		let dirty = super.update(dt);
 		return dirty;
 	}
-
 
 	setupLevel() {
 		LevelManager.getInstance().prepareCurrentLevel();

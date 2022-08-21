@@ -16,7 +16,9 @@ export default class BaseTextButton extends BaseClickableComponent {
 		settings.anchorPoint = settings.anchorPoint || new Vector2d(0, 0);
 
 		let font = new BitmapText(x, y, settings);
+		font.fillStyle = settings.fillStyle;
 		let dimensions = font.measureText();
+
 		settings.borderWidth = settings.borderWidth || dimensions.width + 16;
 		settings.borderHeight = settings.borderHeight || dimensions.height + 16;
 
@@ -49,6 +51,8 @@ export default class BaseTextButton extends BaseClickableComponent {
 		renderer.setGlobalAlpha(1);
 		renderer.setColor(this.settings.borderStrokeColor);
 		renderer.stroke(this.border);
+		renderer.setTint(this.font.tint, this.font.getOpacity());
 		this.font.draw(renderer, this.settings.text, this.font.pos.x, this.font.pos.y);
+		super.draw(renderer);
 	}
 }

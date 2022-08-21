@@ -99,6 +99,7 @@ export class BaseEnemySprite extends Sprite {
 		settings.anchorPoint = settings.anchorPoint || new Vector2d(0.5, 0.5);
 
 		super(x * 32, y * 32, settings);
+		this.settings = settings;
 		this.mapX = x;
 		this.mapY = y;
 
@@ -235,9 +236,11 @@ export class BaseEnemySprite extends Sprite {
 	 * Send enemy action to server
 	 */
 	sendEnemyMovement() {
-		NetworkManager.getInstance()
-			.writeEnemyUpdate(this.nextPosition)
-			.catch((err) => console.err("Error writing enemy action: " + err));
+		if( this.storeEnemyMovements ) {
+			NetworkManager.getInstance()
+				.writeEnemyUpdate(this.nextPosition)
+				.catch((err) => console.err("Error writing enemy action: " + err));
+		}
 	}
 
 	setPlayer(player) {
@@ -263,4 +266,5 @@ export class BaseEnemySprite extends Sprite {
 	getEnemyAction() {
 		return this.nextPosition;
 	}
+
 }

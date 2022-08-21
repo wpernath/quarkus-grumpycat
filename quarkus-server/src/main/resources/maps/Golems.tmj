@@ -344,9 +344,45 @@
                 {
                  "class":"",
                  "height":0,
-                 "id":33,
-                 "name":"golem 1 stop",
-                 "point":true,
+                 "id":57,
+                 "name":"golem 1 path",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-0.887508,
+                         "y":98.0697
+                        }, 
+                        {
+                         "x":-95.8509,
+                         "y":95.8509
+                        }, 
+                        {
+                         "x":-97.1822,
+                         "y":-104.282
+                        }, 
+                        {
+                         "x":95.4071,
+                         "y":-101.62
+                        }, 
+                        {
+                         "x":290.52,
+                         "y":-99.8851
+                        }, 
+                        {
+                         "x":288.057,
+                         "y":94.6962
+                        }, 
+                        {
+                         "x":191.012,
+                         "y":93.2183
+                        }, 
+                        {
+                         "x":189.535,
+                         "y":-3.82601
+                        }],
                  "properties":[
                         {
                          "name":"forEnemy",
@@ -356,33 +392,55 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":241.362,
-                 "y":151.761
+                 "x":240.515,
+                 "y":144.22
                 }, 
                 {
                  "class":"",
                  "height":0,
-                 "id":34,
-                 "name":"golem 1 start",
-                 "point":true,
-                 "properties":[
+                 "id":58,
+                 "name":"golem 2 path",
+                 "polyline":[
                         {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.1"
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":0.458610410456345,
+                         "y":94.4737445540014
+                        }, 
+                        {
+                         "x":98.6012382481082,
+                         "y":90.8048612703508
+                        }, 
+                        {
+                         "x":99.0598486585646,
+                         "y":-98.6012382481082
+                        }, 
+                        {
+                         "x":291.676221050218,
+                         "y":-96.766796606283
+                        }, 
+                        {
+                         "x":290.300389818849,
+                         "y":99.9770694794772
+                        }, 
+                        {
+                         "x":452.189864709929,
+                         "y":96.3081861958266
+                        }, 
+                        {
+                         "x":450.81403347856,
+                         "y":-4.58610410456319
+                        }, 
+                        {
+                         "x":385.691355193763,
+                         "y":-2.29305205228158
+                        }, 
+                        {
+                         "x":382.022471910112,
+                         "y":-96.3081861958267
                         }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":439.302560120576,
-                 "y":149.76811845484
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":35,
-                 "name":"golem 2 start",
-                 "point":true,
                  "properties":[
                         {
                          "name":"forEnemy",
@@ -392,33 +450,51 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":431.203,
-                 "y":148.961
+                 "x":431.093785828938,
+                 "y":142.627837651915
                 }, 
                 {
                  "class":"",
                  "height":0,
-                 "id":37,
-                 "name":"golem 2 stop",
-                 "point":true,
-                 "properties":[
+                 "id":59,
+                 "name":"Golem 3 path",
+                 "polyline":[
                         {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.2"
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":481.082320568677,
+                         "y":0.917220820912632
+                        }, 
+                        {
+                         "x":484.751203852328,
+                         "y":225.636321944508
+                        }, 
+                        {
+                         "x":380.188030268287,
+                         "y":226.094932354964
+                        }, 
+                        {
+                         "x":379.729419857831,
+                         "y":96.3081861958266
+                        }, 
+                        {
+                         "x":380.188030268287,
+                         "y":226.553542765421
+                        }, 
+                        {
+                         "x":484.292593441871,
+                         "y":225.636321944508
+                        }, 
+                        {
+                         "x":482.458151800046,
+                         "y":0.917220820912632
+                        }, 
+                        {
+                         "x":960.330199495529,
+                         "y":-1.37583123136898
                         }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":882.007,
-                 "y":237.442
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":38,
-                 "name":"golem 3 start",
-                 "point":true,
                  "properties":[
                         {
                          "name":"forEnemy",
@@ -428,33 +504,23 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":54.8804,
-                 "y":345.523
+                 "x":47.695482687457,
+                 "y":335.702820454024
                 }, 
                 {
                  "class":"",
                  "height":0,
-                 "id":40,
-                 "name":"golem 3 stpp",
-                 "point":true,
-                 "properties":[
+                 "id":60,
+                 "name":"Golem 4 path",
+                 "polyline":[
                         {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.3"
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-964.916303600092,
+                         "y":-1.83444164182526
                         }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":1008.01,
-                 "y":334.883
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":41,
-                 "name":"golem 4 start",
-                 "point":true,
                  "properties":[
                         {
                          "name":"forEnemy",
@@ -464,33 +530,23 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":1009.13,
-                 "y":652.965
+                 "x":1010.77734464572,
+                 "y":657.188718183903
                 }, 
                 {
                  "class":"",
                  "height":0,
-                 "id":42,
-                 "name":"golem 4 stop",
-                 "point":true,
-                 "properties":[
+                 "id":61,
+                 "name":"Golem 5 path",
+                 "polyline":[
                         {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.4"
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":386.608576014676,
+                         "y":-0.917220820912576
                         }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":40.8803,
-                 "y":662.485
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":43,
-                 "name":"golem 5 start",
-                 "point":true,
                  "properties":[
                         {
                          "name":"forEnemy",
@@ -500,51 +556,43 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":145.601,
-                 "y":753.766
+                 "x":144.46227929374,
+                 "y":753.496904379729
                 }, 
                 {
                  "class":"",
                  "height":0,
-                 "id":44,
-                 "name":"golem 5 stop",
-                 "point":true,
-                 "properties":[
+                 "id":62,
+                 "name":"Golem 6 path",
+                 "polyline":[
                         {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.5"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":528.644,
-                 "y":755.446
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":45,
-                 "name":"golem 6 start",
-                 "point":true,
-                 "properties":[
+                         "x":0,
+                         "y":0
+                        }, 
                         {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.6"
+                         "x":286.172896124742,
+                         "y":0
+                        }, 
+                        {
+                         "x":287.090116945655,
+                         "y":94.0151341435451
+                        }, 
+                        {
+                         "x":-5.96193533593214,
+                         "y":94.0151341435451
+                        }, 
+                        {
+                         "x":-3.66888328365053,
+                         "y":128.410914927769
+                        }, 
+                        {
+                         "x":287.548727356111,
+                         "y":127.0350836964
+                        }, 
+                        {
+                         "x":288.007337766567,
+                         "y":545.287778032561
                         }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":717.366,
-                 "y":751.526
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":46,
-                 "name":"golem 6 mid",
-                 "point":true,
                  "properties":[
                         {
                          "name":"forEnemy",
@@ -554,33 +602,23 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":720.166,
-                 "y":850.087
+                 "x":722.770006879156,
+                 "y":752.121073148361
                 }, 
                 {
                  "class":"",
                  "height":0,
-                 "id":47,
-                 "name":"golem 6 end",
-                 "point":true,
-                 "properties":[
+                 "id":63,
+                 "name":"Golem 7 path",
+                 "polyline":[
                         {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.6"
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-387.984407246044,
+                         "y":2.29305205228161
                         }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":1010.25,
-                 "y":1298.09
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":48,
-                 "name":"golem 7 start",
-                 "point":true,
                  "properties":[
                         {
                          "name":"forEnemy",
@@ -590,87 +628,23 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":533.124,
-                 "y":879.767
+                 "x":531.529465718872,
+                 "y":879.614767255217
                 }, 
                 {
                  "class":"",
                  "height":0,
-                 "id":49,
-                 "name":"golem 7 end",
-                 "point":true,
-                 "properties":[
+                 "id":64,
+                 "name":"Golem 8 path",
+                 "polyline":[
                         {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.7"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":144.481,
-                 "y":884.247
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":50,
-                 "name":"golem 10 start",
-                 "point":true,
-                 "properties":[
+                         "x":0,
+                         "y":0
+                        }, 
                         {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.10"
+                         "x":-544.829167622105,
+                         "y":0.458610410456345
                         }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":135.521,
-                 "y":1296.97
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":51,
-                 "name":"golem 10 mid",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.10"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":241.362,
-                 "y":1204.57
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":52,
-                 "name":"golem 10 end",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.10"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":433.443,
-                 "y":1204.01
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":53,
-                 "name":"golem 8 start",
-                 "point":true,
                  "properties":[
                         {
                          "name":"forEnemy",
@@ -680,33 +654,23 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":593.24380451336,
-                 "y":982.278831510453
+                 "x":592.983260720018,
+                 "y":976.840174271956
                 }, 
                 {
                  "class":"",
                  "height":0,
-                 "id":54,
-                 "name":"golem 8 end",
-                 "point":true,
-                 "properties":[
+                 "id":65,
+                 "name":"Golem 9 path",
+                 "polyline":[
                         {
-                         "name":"forEnemy",
-                         "type":"string",
-                         "value":"Golem.8"
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-0.458610410456316,
+                         "y":-1024.99426736987
                         }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":50.5330195209747,
-                 "y":977.433199501592
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":55,
-                 "name":"golem 9 start",
-                 "point":true,
                  "properties":[
                         {
                          "name":"forEnemy",
@@ -716,26 +680,58 @@
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":48.4563200886058,
-                 "y":1072.96137339056
+                 "x":48.1540930979133,
+                 "y":1071.77252923641
                 }, 
                 {
                  "class":"",
                  "height":0,
-                 "id":56,
-                 "name":"golem 9 start",
-                 "point":true,
+                 "id":66,
+                 "name":"Golem 10 path",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-0.458610410456316,
+                         "y":-100.435679889934
+                        }, 
+                        {
+                         "x":-103.187342352671,
+                         "y":-99.9770694794772
+                        }, 
+                        {
+                         "x":-99.5184590690209,
+                         "y":93.5565237330886
+                        }, 
+                        {
+                         "x":286.172896124742,
+                         "y":90.8048612703508
+                        }, 
+                        {
+                         "x":282.504012841091,
+                         "y":-98.6012382481083
+                        }, 
+                        {
+                         "x":188.947489108003,
+                         "y":-99.0598486585645
+                        }, 
+                        {
+                         "x":190.323320339372,
+                         "y":-0.458610410456458
+                        }],
                  "properties":[
                         {
                          "name":"forEnemy",
                          "type":"string",
-                         "value":"Golem.9"
+                         "value":"Golem.10"
                         }],
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":48.6127035083697,
-                 "y":51.3643659711075
+                 "x":241.229075900023,
+                 "y":1202.47649621646
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -744,7 +740,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":57,
+ "nextobjectid":67,
  "orientation":"orthogonal",
  "properties":[
         {

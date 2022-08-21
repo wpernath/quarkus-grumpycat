@@ -3,20 +3,22 @@ import { BaseEnemySprite } from "./base-enemy";
 import { ENEMY_TYPES } from "./base-enemy";
 import GlobalGameState from "../util/global-game-state";
 import NetworkManager from "../util/network";
+import { my_collision_types } from "../util/constants";
 
 export default class GolemEnemySprite extends BaseEnemySprite {
 	posUpdatedCount = 0;
 	VELOCITY = 0.08;
-
-	constructor(x, y) {
+	
+	constructor(x, y, storeEnemyMovements = true) {
 		super(x, y, {
 			width: 64,
 			height: 64,
 			framewidth: 64,
 			frameheight: 64,
-			image: "golem-walk",				
+			image: "golem-walk",			
 		});
 		this.enemyType = ENEMY_TYPES.golem;
+		this.storeEnemyMovements = storeEnemyMovements;
 
 		this.addAnimation("stand-up", [0]);
 		this.addAnimation("walk-up", [0, 1, 2, 3, 4, 5, 6], 48);
@@ -39,7 +41,7 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 
 	setWayPath(p) {
 		this.wayPath = p;
-		console.log(this.name + " path = " + JSON.stringify(p));
+		//console.log(this.name + " path = " + JSON.stringify(p));
 	}
 
 	/**
@@ -97,7 +99,7 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 	}
 
 	onCollision(response, other) {
-		if (other.body.collisionType === collision.types.PROJECTILE_OBJECT) {
+		if (other.body.collisionType === collision.types.PROJECTILE_OBJECT || other.body.collisionType === my_collision_types.REMOTE_BOMB) {
 			if (other.isExploding) {
 				this.isStunned = true;
 				if (this.nextPosition.dx < 0) this.setCurrentAnimation("stand-left");
@@ -106,10 +108,13 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 				if (this.nextPosition.dy < 0) this.setCurrentAnimation("stand-up");
 				else if (this.nextPosition.dy > 0) this.setCurrentAnimation("stand-down");
 
+				let otherIsProjectile = other.body.collisionType === collision.types.PROJECTILE_OBJECT;
 				this.flicker(GlobalGameState.enemyStunnedTime, () => {
 					this.isStunned = false;
-					GlobalGameState.stunnedGolems++;
-					GlobalGameState.score += GlobalGameState.scoreForStunningGolem;
+					if( otherIsProjectile ) {
+						GlobalGameState.stunnedGolems++;
+						GlobalGameState.score += GlobalGameState.scoreForStunningGolem;
+					}
 				});
 			}
 		} 

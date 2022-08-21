@@ -9,14 +9,16 @@ export class CatEnemy extends BaseEnemySprite {
 	/**
 	 * constructor
 	 */
-	constructor(x, y) {
+	constructor(x, y, storeEnemyMovements = true) {
 		// call the parent constructor
 		super(x, y, {
-			width: 32, 
-			height: 32, 
-			image: "cat_left"
+			width: 32,
+			height: 32,
+			image: "cat_left",
+			storeEnemyMovements: storeEnemyMovements,
 		});
 		this.enemyType = ENEMY_TYPES.cat;
+		this.storeEnemyMovements = storeEnemyMovements;
 	}
 
 	/**

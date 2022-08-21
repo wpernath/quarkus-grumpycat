@@ -2,6 +2,7 @@ import { Stage, game, input, Sprite, Color, loader, event, state, Container,Vect
 import { LevelManager } from "../util/level";
 import GlobalGameState from "../util/global-game-state";
 import NetworkManager from "../util/network";
+import { StateBackground } from "./state_background";
 class LevelStatistics extends Container {
 	constructor(x, y, width, height, isGameOver=true) {
 		super(x, y, width, height);
@@ -82,44 +83,7 @@ class GameOverBack extends Container {
 		// give a name
 		this.name = "TitleBack";
 
-		// a tween to animate the text
-		// new sprite for the title screen, position at the center of the game viewport
-		this.backgroundImage = new Sprite(game.viewport.width / 2, game.viewport.height / 2, {
-			image: loader.getImage("sensa_grass"),
-		});
-
-		// scale to fit with the viewport size
-		this.backgroundImage.scale(game.viewport.width / this.backgroundImage.width, game.viewport.height / this.backgroundImage.height);
-		this.backgroundImage.setOpacity(0.3);
-
-		this.catLeftImage = new Sprite(5, game.viewport.height - 300, {
-			image: loader.getImage("grumpy_cat_right"),
-			anchorPoint: new Vector2d(0, 0),
-		});
-		this.catRightImage = new Sprite(game.viewport.width - 180, game.viewport.height - 300, {
-			image: loader.getImage("grumpy_cat_left"),
-			anchorPoint: new Vector2d(0, 0),
-		});
-
-		this.titleText = new Sprite(86, 0, {
-			image: loader.getImage("title"),
-			anchorPoint: new Vector2d(0, 0),
-		});
-
-		this.subTitleText = new BitmapText(126, 170, {
-			font: "Shadow",
-			size: "1",
-			fillStyle: "white",
-			textAlign: "left",
-			text: isGameOver ? "GAME OVER!" : "CONGRATS! You won!",			
-		});
-
-		// add to the world container
-		this.addChild(this.backgroundImage, 0);
-		this.addChild(this.catLeftImage, 5);
-		//this.addChild(this.catRightImage, 7);
-		this.addChild(this.titleText, 100);
-		this.addChild(this.subTitleText, 100);
+		this.addChild(new StateBackground(isGameOver ? "GAME OVER!" : "CONGRATS! You won!", false));
 		this.addChild(
 			new LevelStatistics(
 				190, 
@@ -168,7 +132,7 @@ export default class GameOverScreen extends Stage {
 			input.bindKey(input.KEY.ENTER, "enter", true);
 			input.bindPointer(input.pointer.LEFT, input.KEY.ENTER);
 
-			this.handler = event.on(event.KEYDOWN, function (action, keyCode, edge) {
+			this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
 				if (!state.isCurrent(state.GAMEOVER)) return;
 				console.log("GameOver.EventHandler()");
 				if (action === "enter" || action === "bomb") {
@@ -188,7 +152,7 @@ export default class GameOverScreen extends Stage {
 		console.log("GameOver.OnExit()");
 		input.unbindKey(input.KEY.ENTER);
 		input.unbindPointer(input.pointer.LEFT);
-		event.off(event.KEYDOWN, this.handler);
+		event.off(event.KEYUP, this.handler);
 		game.world.removeChild(this.back);
 		game.world.removeChild(this.emitter);
 	}

@@ -5,44 +5,30 @@ import GlobalGameState from "../util/global-game-state";
 
 
 
-class PlayButton extends BaseTextButton {
-	constructor(x, y, ) {
-		super(x, y, {
-			text: 'Play',			
-			borderWidth: 250
-		});		
-	}
-
-	onClick(event) {
-		state.change(state.READY);
-	}
-}
-
-class LevelChooserButton extends BaseTextButton {
-	constructor(x,y) {
-		super(x,y, {
-			text: "Choose Level",
-			borderWidth: 250,
-		});
-	}
-
-	onClick(event) {
-		state.change(my_state.CHOOSE_LEVEL)
-	}
-}
-class ReplayButton extends BaseTextButton {
+class SinglePlayerButton extends BaseTextButton {
 	constructor(x, y) {
 		super(x, y, {
-			text: "Replay",
+			text: "Single Player",
 			borderWidth: 250,
 		});
 	}
 
 	onClick(event) {
-		state.change(my_state.REPLAY_GAME_CHOOSER);
+		state.change(my_state.SINGLE_PLAYER_MENU);
 	}
 }
+class MultiplayerButton extends BaseTextButton {
+	constructor(x,y) {
+		super(x,y, {
+			text: "Multi Player",
+			borderWidth: 250
+		});
+	}
 
+	onClick(event) {
+		state.change(my_state.MULTIPLAYER_MENU);
+	}
+}
 class HighscoreButton extends BaseTextButton {
 	constructor(x, y) {
 		super(x, y, {
@@ -72,9 +58,8 @@ export default class TitleMenu extends Container {
 		this.name = "TitleMenu";
 
 		let center = Math.round((game.viewport.width - 250) / 2);
-		this.addChild(new PlayButton(center, 300));
-		this.addChild(new LevelChooserButton(center, 360));
-		this.addChild(new ReplayButton(center, 420));		
-		this.addChild(new HighscoreButton(center, 480));
+		this.addChild(new SinglePlayerButton(center, 300));
+		this.addChild(new MultiplayerButton(center, 360));
+		this.addChild(new HighscoreButton(center, 420));
 	}
 }

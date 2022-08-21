@@ -363,7 +363,13 @@ EOF
 
 
 command.build-all() {
+  info "Starting build-all pipeline..."
+  tkn pipeline start build-all -s pipeline-bot -p registry-password=$IMAGE_PASSWORD -p git-revision=$GIT_REVISION
+}
 
+command.stage-all() {
+  info "Starting stage-all pipeline..."
+  tkn pipeline start stage-all -s pipeline-bot -p release-name=$GIT_REVISION
 }
 
 main() {

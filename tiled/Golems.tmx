@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.0" orientation="orthogonal" renderorder="right-down" width="33" height="42" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="57">
+<map version="1.9" tiledversion="1.9.0" orientation="orthogonal" renderorder="right-down" width="33" height="42" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="67">
  <editorsettings>
   <export target="../quarkus-server/src/main/resources/maps/Golems.tmj" format="json"/>
  </editorsettings>
@@ -294,137 +294,65 @@ Be careful not to get too close to them. </property>
 </data>
  </layer>
  <objectgroup id="7" name="Paths">
-  <object id="33" name="golem 1 stop" x="241.362" y="151.761">
+  <object id="57" name="golem 1 path" x="240.515" y="144.22">
    <properties>
     <property name="forEnemy" value="Golem.1"/>
    </properties>
-   <point/>
+   <polyline points="0,0 -0.887508,98.0697 -95.8509,95.8509 -97.1822,-104.282 95.4071,-101.62 290.52,-99.8851 288.057,94.6962 191.012,93.2183 189.535,-3.82601"/>
   </object>
-  <object id="34" name="golem 1 start" x="439.303" y="149.768">
-   <properties>
-    <property name="forEnemy" value="Golem.1"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="35" name="golem 2 start" x="431.203" y="148.961">
+  <object id="58" name="golem 2 path" x="431.094" y="142.628">
    <properties>
     <property name="forEnemy" value="Golem.2"/>
    </properties>
-   <point/>
+   <polyline points="0,0 0.45861,94.4737 98.6012,90.8049 99.0598,-98.6012 291.676,-96.7668 290.3,99.9771 452.19,96.3082 450.814,-4.5861 385.691,-2.29305 382.022,-96.3082"/>
   </object>
-  <object id="37" name="golem 2 stop" x="882.007" y="237.442">
-   <properties>
-    <property name="forEnemy" value="Golem.2"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="38" name="golem 3 start" x="54.8804" y="345.523">
+  <object id="59" name="Golem 3 path" x="47.6955" y="335.703">
    <properties>
     <property name="forEnemy" value="Golem.3"/>
    </properties>
-   <point/>
+   <polyline points="0,0 481.082,0.917221 484.751,225.636 380.188,226.095 379.729,96.3082 380.188,226.554 484.293,225.636 482.458,0.917221 960.33,-1.37583"/>
   </object>
-  <object id="40" name="golem 3 stpp" x="1008.01" y="334.883">
-   <properties>
-    <property name="forEnemy" value="Golem.3"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="41" name="golem 4 start" x="1009.13" y="652.965">
+  <object id="60" name="Golem 4 path" x="1010.78" y="657.189">
    <properties>
     <property name="forEnemy" value="Golem.4"/>
    </properties>
-   <point/>
+   <polyline points="0,0 -964.916,-1.83444"/>
   </object>
-  <object id="42" name="golem 4 stop" x="40.8803" y="662.485">
-   <properties>
-    <property name="forEnemy" value="Golem.4"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="43" name="golem 5 start" x="145.601" y="753.766">
+  <object id="61" name="Golem 5 path" x="144.462" y="753.497">
    <properties>
     <property name="forEnemy" value="Golem.5"/>
    </properties>
-   <point/>
+   <polyline points="0,0 386.609,-0.917221"/>
   </object>
-  <object id="44" name="golem 5 stop" x="528.644" y="755.446">
-   <properties>
-    <property name="forEnemy" value="Golem.5"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="45" name="golem 6 start" x="717.366" y="751.526">
+  <object id="62" name="Golem 6 path" x="722.77" y="752.121">
    <properties>
     <property name="forEnemy" value="Golem.6"/>
    </properties>
-   <point/>
+   <polyline points="0,0 286.173,0 287.09,94.0151 -5.96194,94.0151 -3.66888,128.411 287.549,127.035 288.007,545.288"/>
   </object>
-  <object id="46" name="golem 6 mid" x="720.166" y="850.087">
-   <properties>
-    <property name="forEnemy" value="Golem.6"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="47" name="golem 6 end" x="1010.25" y="1298.09">
-   <properties>
-    <property name="forEnemy" value="Golem.6"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="48" name="golem 7 start" x="533.124" y="879.767">
+  <object id="63" name="Golem 7 path" x="531.529" y="879.615">
    <properties>
     <property name="forEnemy" value="Golem.7"/>
    </properties>
-   <point/>
+   <polyline points="0,0 -387.984,2.29305"/>
   </object>
-  <object id="49" name="golem 7 end" x="144.481" y="884.247">
-   <properties>
-    <property name="forEnemy" value="Golem.7"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="50" name="golem 10 start" x="135.521" y="1296.97">
-   <properties>
-    <property name="forEnemy" value="Golem.10"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="51" name="golem 10 mid" x="241.362" y="1204.57">
-   <properties>
-    <property name="forEnemy" value="Golem.10"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="52" name="golem 10 end" x="433.443" y="1204.01">
-   <properties>
-    <property name="forEnemy" value="Golem.10"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="53" name="golem 8 start" x="593.244" y="982.279">
+  <object id="64" name="Golem 8 path" x="592.983" y="976.84">
    <properties>
     <property name="forEnemy" value="Golem.8"/>
    </properties>
-   <point/>
+   <polyline points="0,0 -544.829,0.45861"/>
   </object>
-  <object id="54" name="golem 8 end" x="50.533" y="977.433">
-   <properties>
-    <property name="forEnemy" value="Golem.8"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="55" name="golem 9 start" x="48.4563" y="1072.96">
+  <object id="65" name="Golem 9 path" x="48.1541" y="1071.77">
    <properties>
     <property name="forEnemy" value="Golem.9"/>
    </properties>
-   <point/>
+   <polyline points="0,0 -0.45861,-1024.99"/>
   </object>
-  <object id="56" name="golem 9 start" x="48.6127" y="51.3644">
+  <object id="66" name="Golem 10 path" x="241.229" y="1202.48">
    <properties>
-    <property name="forEnemy" value="Golem.9"/>
+    <property name="forEnemy" value="Golem.10"/>
    </properties>
-   <point/>
+   <polyline points="0,0 -0.45861,-100.436 -103.187,-99.9771 -99.5185,93.5565 286.173,90.8049 282.504,-98.6012 188.947,-99.0598 190.323,-0.45861"/>
   </object>
  </objectgroup>
 </map>

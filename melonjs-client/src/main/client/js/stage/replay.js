@@ -63,7 +63,7 @@ export default class ReplayGameScreen extends Stage {
 		game.world.addChild(this.hudContainer);
 		game.world.addChild(this.virtualJoypad, Infinity);
 
-		this.handler = event.on(event.KEYDOWN, function (action, keyCode, edge) {
+		this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
 			if (!state.isCurrent(my_state.REPLAY_GAME)) return;
 			if (action === "pause") {
 				if (!state.isPaused()) {
@@ -92,7 +92,7 @@ export default class ReplayGameScreen extends Stage {
 		console.log("RePlay.OnExit()");
 		game.world.removeChild(this.hudContainer);
 		game.world.removeChild(this.virtualJoypad);		
-		event.off(event.KEYDOWN, this.handler);
+		event.off(event.KEYUP, this.handler);
 	}
 
 	update(dt) {

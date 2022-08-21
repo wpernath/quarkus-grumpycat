@@ -2,6 +2,8 @@ import { LevelManager } from "./level";
 
 
 const GlobalGameState = {
+	isMultiplayerMatch: false,
+
 	// global server state
 	globalServerGame: null,
 	globalServerVersion: null,
@@ -25,18 +27,22 @@ const GlobalGameState = {
 	scoreForStunningCat: 50,
 	scoreForStunningGolem: 150,
 	scoreForKillingSpider: 100,
+	scoreForBombingRemotePlayers: 150,
+	scoreForStars: 50,
 
 	// Amount of energy to get back 
-	energyForMeat: 10,
-	energyForCheese: 5,
+	energyForMeat: 25,
+	energyForCheese: 20,
 
 	// bombs for picking up a bomb bonus
 	bombsForBombBonus: 5,
+	superPowersForStarBonus: 5,
 
 	// how much energy do you loose if
 	energyLostBySpider: 25,
 	energyLostByCat: 10,
 	energyLostByGolem: 50,
+	energyLostByRemoteBomb: 50,
 
 	// energy on start of the game
 	energyOnBegin: 100, 
@@ -47,6 +53,8 @@ const GlobalGameState = {
 	bombs: 0,
 	invincible: false,
 	isGameOver: false,
+	hasSuperPower: false,
+	numberOfSuperPowers: 0,
 
   // statistics
 	placedBarriers: 0,
@@ -58,6 +66,7 @@ const GlobalGameState = {
 	stunnedCats: 0,
 	stunnedGolems: 0,
 	bonusCollected: 0,
+	hitByRemotePlayerBomb: 0,	
 
 	// reset statistics and player state
 	reset: function() {
@@ -76,6 +85,8 @@ const GlobalGameState = {
 		this.stunnedGolems = 0;
 		this.catchedByGolems=0;
 		this.bonusCollected = 0;
+		this.hitByRemotePlayerBomb = 0;
+		this.isMultiplayerMatch = false;
 	}
 };
 

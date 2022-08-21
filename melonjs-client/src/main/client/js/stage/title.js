@@ -21,7 +21,7 @@ export default class TitleScreen extends Stage {
 		game.world.addChild(this.menu);
 
 
-        this.handler = event.on(event.KEYDOWN, (action, keyCode, edge) => {
+        this.handler = event.on(event.KEYUP, (action, keyCode, edge) => {
 			if (!state.isCurrent(state.MENU)) return;
 			if (action === "pause") {
 				if (!state.isPaused()) {
@@ -51,7 +51,7 @@ export default class TitleScreen extends Stage {
 		console.log("Title.OnExit()");
 		game.world.removeChild(this.background);
 		game.world.removeChild(this.menu);
-		event.off(event.KEYDOWN, this.handler);
+		event.off(event.KEYUP, this.handler);
 		
 	}
 }

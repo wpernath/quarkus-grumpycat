@@ -4,7 +4,7 @@ import { LevelManager } from "./level";
 //import { GameStateAction,EnemyAction } from "./game-updates";
 
 
-var networkManager = null;
+export var networkManager = null;
 export default class NetworkManager {
 	static getInstance() {
 		if (networkManager == null) {

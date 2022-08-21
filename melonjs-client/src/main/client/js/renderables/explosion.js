@@ -59,7 +59,9 @@ class ExplosionEntity extends Sprite {
             rad.forEach((pos) => {
                 let x = Math.floor((this.pos.x + pos.x * 32) / 32);
                 let y = Math.floor((this.pos.y + pos.y * 32) / 32);
-                this.borderLayer.clearTile(x, y);
+				if( x >-1 && x < this.borderLayer.width && y > -1 && y < borderLayer.height ) {
+                	this.borderLayer.clearTile(x, y);
+				}
             });			
 		});
 
