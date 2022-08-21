@@ -49,6 +49,7 @@ const GlobalGameState = {
 
 	// player state
 	energy: 100,
+	maxEnergy: 100, 	// default
 	score: 0,
 	bombs: 0,
 	invincible: false,
@@ -67,10 +68,12 @@ const GlobalGameState = {
 	stunnedGolems: 0,
 	bonusCollected: 0,
 	hitByRemotePlayerBomb: 0,	
+	hitByRemotePlayerMagic: 0,
 
 	// reset statistics and player state
 	reset: function() {
-		this.energy = this.energyOnBegin;		
+		this.energy    = this.energyOnBegin;		
+		this.maxEnergy = this.energyOnBegin;
 		LevelManager.getInstance().reset();		
 		this.score = 0;
 		this.bombs = 0;
@@ -86,6 +89,7 @@ const GlobalGameState = {
 		this.catchedByGolems=0;
 		this.bonusCollected = 0;
 		this.hitByRemotePlayerBomb = 0;
+		this.hitByRemotePlayerMagic= 0;
 		this.isMultiplayerMatch = false;
 	}
 };

@@ -67,8 +67,7 @@ export default class MultiplayerPlayScreen extends Stage {
 
         MultiplayerManager.get().addEventListener(MultiplayerMessageType.GAME_PAUSED, (evt) => {
             let message = evt.message;
-            if( message.playerId !== MultiplayerManager.get().multiplayerPlayer.id ) {
-                console.log("someone else hits pause!");
+            if( message.playerId !== MultiplayerManager.get().multiplayerPlayer.id ) {                
                 if(message.isPaused ) {
                     this.hudContainer.setPaused(true, "*** " + message.message + " *** ");
                     state.pause();                

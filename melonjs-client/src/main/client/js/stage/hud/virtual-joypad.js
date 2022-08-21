@@ -12,7 +12,7 @@ class ActionButton extends GUI_Object {
 			image: GlobalGameState.screenControlsTexture,
 			region: "shadedDark38",
 		});
-		this.setOpacity(0.25);
+		this.setOpacity(0.5);
 		this.anchorPoint.set(0, 0);
 	}
 
@@ -20,7 +20,7 @@ class ActionButton extends GUI_Object {
 	 * function called when the object is clicked on
 	 */
 	onClick(event) {
-		this.setOpacity(0.5);
+		this.setOpacity(0.25);
 		input.triggerKeyEvent(input.KEY.SPACE, true);
 		return false;
 	}
@@ -29,7 +29,7 @@ class ActionButton extends GUI_Object {
 	 * function called when the object is clicked on
 	 */
 	onRelease(event) {
-		this.setOpacity(0.25);
+		this.setOpacity(0.5);
 		input.triggerKeyEvent(input.KEY.SPACE, false);
 		return false;
 	}
@@ -44,7 +44,7 @@ class FullScreenButton extends GUI_Object {
 			image: GlobalGameState.screenControlsTexture,
 			region: "shadedDark30",
 		});
-		this.setOpacity(0.25);
+		this.setOpacity(0.5);
 		this.anchorPoint.set(0, 0);
 	}
 
@@ -52,7 +52,7 @@ class FullScreenButton extends GUI_Object {
 	 * function called when the object is clicked on
 	 */
 	onClick(event) {
-		this.setOpacity(0.5);
+		this.setOpacity(0.25);
 		input.triggerKeyEvent(input.KEY.F, true);
 		input.triggerKeyEvent(input.KEY.F, false);
 		return false;
@@ -62,7 +62,7 @@ class FullScreenButton extends GUI_Object {
 	 * function called when the object is clicked on
 	 */
 	onRelease(event) {
-		this.setOpacity(0.25);
+		this.setOpacity(0.5);
 		input.triggerKeyEvent(input.KEY.F, false);
 		return false;
 	}
@@ -77,7 +77,7 @@ class PauseButton extends GUI_Object {
 			image: GlobalGameState.screenControlsTexture,
 			region: "shadedDark14", // pause // shadedDark16: play
 		});
-		this.setOpacity(0.25);
+		this.setOpacity(0.5);
 		this.anchorPoint.set(0, 0);
 		this.isPaused = false;
 	}
@@ -86,7 +86,7 @@ class PauseButton extends GUI_Object {
 	 * function called when the object is clicked on
 	 */
 	onClick(event) {
-		this.setOpacity(0.5);
+		this.setOpacity(0.25);
 		if( !this.isPaused ) {
 			this.isPaused = true;
 			this.tint.setColor(50,50,0);
@@ -104,7 +104,7 @@ class PauseButton extends GUI_Object {
 	 * function called when the object is clicked on
 	 */
 	onRelease(event) {
-		this.setOpacity(0.25);
+		this.setOpacity(0.5);
 		input.triggerKeyEvent(input.KEY.P, false);
 		return false;
 	}
@@ -119,7 +119,7 @@ class ExitButton extends GUI_Object {
 			image: GlobalGameState.screenControlsTexture,
 			region: "shadedDark35",
 		});
-		this.setOpacity(0.25);
+		this.setOpacity(0.5);
 		this.anchorPoint.set(0, 0);
 	}
 
@@ -127,7 +127,7 @@ class ExitButton extends GUI_Object {
 	 * function called when the object is clicked on
 	 */
 	onClick(event) {
-		this.setOpacity(0.5);
+		this.setOpacity(0.25);
 		input.triggerKeyEvent(input.KEY.ESC, true);		
 		return false;
 	}
@@ -136,7 +136,7 @@ class ExitButton extends GUI_Object {
 	 * function called when the object is clicked on
 	 */
 	onRelease(event) {
-		this.setOpacity(0.25);
+		this.setOpacity(0.5);
 		input.triggerKeyEvent(input.KEY.ESC, false);
 		return false;
 	}
@@ -152,7 +152,7 @@ class OtherButton extends GUI_Object {
 			image: GlobalGameState.screenControlsTexture,
 			region: "shadedDark36",
 		});
-		this.setOpacity(0.25);
+		this.setOpacity(0.5);
 		this.anchorPoint.set(0, 0);
 	}
 
@@ -160,7 +160,7 @@ class OtherButton extends GUI_Object {
 	 * function called when the object is clicked on
 	 */
 	onClick(event) {
-		this.setOpacity(0.5);
+		this.setOpacity(0.25);
 		input.triggerKeyEvent(input.KEY.SHIFT, true);
 		return false;
 	}
@@ -169,7 +169,7 @@ class OtherButton extends GUI_Object {
 	 * function called when the object is clicked on
 	 */
 	onRelease(event) {
-		this.setOpacity(0.25);
+		this.setOpacity(0.5);
 		input.triggerKeyEvent(input.KEY.SHIFT, false);
 		return false;
 	}
@@ -204,7 +204,7 @@ class Joypad extends GUI_Object {
 		this.joypad_offset = new Vector2d();
 
 		// default opacity
-		this.setOpacity(0.25);
+		this.setOpacity(0.5);
 
 		// cursors status
 		// TODO make it configurable
@@ -317,7 +317,7 @@ class Joypad extends GUI_Object {
 	onClick(event) {
 		let x = event.gameScreenX + event.width / 2;
 		let y = event.gameScreenY + event.height / 2;
-		this.setOpacity(0.5);
+		this.setOpacity(0.25);
 		this.checkDirection.call(this, x, y);
 		//console.log(JSON.stringify(this.cursors));
 		return false;
@@ -327,7 +327,7 @@ class Joypad extends GUI_Object {
 	 * function called when the object is release or cancelled
 	 */
 	onRelease(event) {
-		this.setOpacity(0.25);
+		this.setOpacity(0.5);
 		if (this.cursors.left === true) {
 			input.triggerKeyEvent(input.KEY.LEFT, false);
 			this.cursors.left = false;
@@ -381,9 +381,11 @@ class VirtualJoypad extends Container {
 		// give a name
 		this.name = "VirtualJoypad";
 
+		let yPos = GlobalGameState.isMultiplayerMatch ? 98 : 38;
+
 		// instance of the buttons
-		this.pauseButton = new PauseButton(20, 24);
-		this.exitButton = new ExitButton(game.viewport.width - 48 - 20, 24);
+		this.pauseButton = new PauseButton(20, yPos);
+		this.exitButton = new ExitButton(game.viewport.width - 48 - 20, yPos);
 
 		// instance of the virtual joypad
 		if( device.isMobile) {
@@ -395,7 +397,7 @@ class VirtualJoypad extends Container {
 			this.addChild(this.otherButton);
 		}
 		if( !device.isMobile) {
-			this.fullScreenButton = new FullScreenButton(90, 24);
+			this.fullScreenButton = new FullScreenButton(90, yPos);
 			this.addChild(this.fullScreenButton);
 		}
 
@@ -410,7 +412,7 @@ class VirtualJoypad extends Container {
 				self.actionButton.pos.set(width - 200, height - 150, self.button.pos.z);
 				self.otherButton.pos.set(width - 120, height - 200, self.button.pos.z);
 			}
-			self.exitButton.pos.set(width - 48 - 20, 24, self.button.pos.z);
+			self.exitButton.pos.set(width - 48 - 20, yPos, self.button.pos.z);
 		});
 	}
 }

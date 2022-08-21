@@ -1,4 +1,4 @@
-import { Renderable, BitmapText, game, event, Container, Text, Vector2d, Renderer, Color, Rect} from "melonjs/dist/melonjs.module.js";
+import { Renderable, BitmapText, game, event, Container, Text, Vector2d, Renderer, Color, Rect, RoundRect} from "melonjs/dist/melonjs.module.js";
 
 import GlobalGameState from "../../util/global-game-state";
 
@@ -18,12 +18,11 @@ class ScoreItem extends BitmapText {
 			text: "Score: 999999",
 		});
 
-		
-	
 		this.relative = new Vector2d(x, y);
 		this.score = -1;
 		this.width = -1;
 
+		
 		event.on(
 			event.CANVAS_ONRESIZE,
 			function (w, h) {
@@ -34,7 +33,6 @@ class ScoreItem extends BitmapText {
 
 	draw(renderer) {
 		if( this.width === -1) {
-			console.log("draw(renderer) called");
 			this.width = this.measureText(renderer).width;
 			this.pos.x = game.viewport.width - this.width + this.relative.x;
 		}
@@ -57,30 +55,35 @@ class ScoreItem extends BitmapText {
 
 }
 
-class EnergyItem extends BitmapText {
+class EnergyItem extends Container {
 	/**
 	 *
 	 * @param x
 	 * @param y
 	 */
 	constructor(x, y) {
-		super(x, y, {
-			font: "24Outline",
-			textAlign: "left",
-			lineWidth: 2,
-			textBaseline: "top",
-			text: "Energy: 999",
-		});
+		super(x, y, 200, 32);
 
-		
-		this.relative = new Vector2d(x, y);
-		this.energy = -1;
-		event.on(
-			event.CANVAS_ONRESIZE,
-			function (w, h) {
-				this.pos.set(w, h, 0).add(this.relative);
-			}.bind(this)
-		);
+		this.energyText = new BitmapText(this.pos.x + 20, this.pos.y + 20, {
+			font: "12Outline",
+			textAlign: "left",
+			textBaseline: "top",
+			text: "Energy:",
+		});
+				
+		this.energy                 = 0;
+		this.maxEnergy              = 0;
+		this.energyBarWidth         = 180;
+		this.energyBarMaxFillWidth  = this.energyBarWidth - 8;
+		this.energyBarHeight        = 16;
+		this.energyBarFillColor     = new Color(0, 255, 0);
+		this.energyBarBoxColor      = new Color(10,10,10);
+		this.energyBarBoxBorder     = new RoundRect(this.pos.x + 4, this.pos.y , this.energyBarWidth, this.energyBarHeight);
+		this.energyBarBoxBackFill   = new Color(50,50,50);
+		this.energyBarFillBox		= new Rect(this.pos.x + 8, this.pos.y + 2, this.energyBarMaxFillWidth, this.energyBarHeight - 4);
+
+		this.lowEnergyColor			= new Color(255,255,0);
+		this.criticalEnergyColor	= new Color(255, 0,0);
 	}
 
 	/**
@@ -88,13 +91,39 @@ class EnergyItem extends BitmapText {
 	 * @returns {boolean}
 	 */
 	update(dt) {
-		if (this.energy != GlobalGameState.energy) {
+		if (this.energy != GlobalGameState.energy || this.energy != GlobalGameState.maxEnergy) {
 			this.energy = GlobalGameState.energy;
+			this.maxEnergy = GlobalGameState.maxEnergy;
 			this.isDirty = true;
-			this.setText("Energy: " + this.energy);
 			return true;
 		}
 		return false;
+	}
+
+	draw(renderer) {
+		// draw energy bar background
+		renderer.setGlobalAlpha(0.5);
+		renderer.setColor(this.energyBarBoxBackFill);
+		renderer.fill(this.energyBarBoxBorder);
+
+		renderer.setGlobalAlpha(1);
+		renderer.setColor(this.energyBarBoxColor);
+		renderer.stroke(this.energyBarBoxBorder);
+		
+		// draw energy bar foreground
+		let fillPercent = this.energy / this.maxEnergy;
+		let fillColor = this.energyBarFillColor;
+		if( fillPercent < 0.15) fillColor = this.criticalEnergyColor;
+		else if( fillPercent >0.15 && fillPercent < 0.51) fillColor = this.lowEnergyColor;
+		renderer.setColor(fillColor);
+		this.energyBarFillBox.width = Math.round(this.energyBarMaxFillWidth * fillPercent);
+		renderer.fill(this.energyBarFillBox);
+
+		// draw energy bar text
+		renderer.setTint(this.energyText.tint, this.energyText.getOpacity());
+		this.energyText.draw(renderer, this.energyText.text, this.energyText.pos.x, this.energyText.pos.y);
+		super.draw(renderer);
+
 	}
 }
 
@@ -191,9 +220,22 @@ class MultiplayerMessageCenter extends Container {
 }
 
 
+/**
+ * The HUDContainer contains information about the player:
+ * - Energy
+ * - Number of Bombs
+ * - SCORE
+ * - Different magic items (shield, fireball, bolt etc.)
+ * - Pause message
+ * - Message box (on multi player only)
+ */
 export default class HUDContainer extends Container {
-	constructor() {
-		super(0, 0, game.viewport.width, game.viewport.height);
+	constructor(options) {
+		super(0, 0, game.viewport.width, GlobalGameState.isMultiplayerMatch ? 96 : 36);
+
+		this.backColor = new Color(50, 50, 50);
+		this.boxColor = new Color(10, 10, 10);
+		this.backBox = new Rect(this.pos.x + 1, this.pos.y, game.viewport.width - 2, this.height);
 
 		// persistent across level change
 		this.isPersistent = true;
@@ -202,7 +244,7 @@ export default class HUDContainer extends Container {
 		this.floating = true;
 
 		// make sure this container will be rendererd on pause
-		this.updateWhenPaused = true;
+		this.updateWhenPaused = false;
 
 		// always on toppest
 		this.z = 100;
@@ -214,7 +256,7 @@ export default class HUDContainer extends Container {
 
 		// create a global PAUSE
 		this.pauseText = new BitmapText(5, (game.viewport.height - 40) / 2, {
-			font: "Shadow",			
+			font: "Shadow",
 			textAlign: "left",
 			text: "*** P A U S E ***",
 		});
@@ -222,27 +264,37 @@ export default class HUDContainer extends Container {
 
 		// add our child score object at the top left corner
 		this.addChild(new ScoreItem(-5, 5));
-		this.addChild(new EnergyItem(5, 5));
-		this.addChild(new BombItem(0,5));
+		this.addChild(new EnergyItem(5, 20));
+		this.addChild(new BombItem(0, 5));
 
 		//if( GlobalGameState.isMultiplayerMatch ) {
-			//this.addChild(new MultiplayerMessageCenter(0,50, game.viewport.width, 26));
+		//this.addChild(new MultiplayerMessageCenter(0,50, game.viewport.width, 26));
 		//}
 
 		this.addChild(this.pauseText);
 		this.pauseText.setText("");
 	}
 
-	setPaused(paused, text = "") {
-		if( !paused ) {			
-			this.pauseText.setText("");
-		}
-		else {
-			this.pauseText.setText(text);
-			let width = this.pauseText.measureText(text).width;			
-			this.pauseText.pos.x = (game.viewport.width - width ) / 2;
-		}
+	draw(renderer) {
+		renderer.setGlobalAlpha(0.3);
+		renderer.setColor(this.backColor);
+		renderer.fill(this.backBox);
+
+		renderer.setGlobalAlpha(1.0);
+		renderer.setColor(this.boxColor);
+		renderer.stroke(this.backBox);
+		//renderer.setTint(this.textBox.tint, this.textBox.getOpacity());
+		//this.textBox.draw(renderer, this.currentMessage, this.textBox.pos.x, this.textBox.pos.y);
+		super.draw(renderer);
 	}
 
-	
+	setPaused(paused, text = "") {
+		if (!paused) {
+			this.pauseText.setText("");
+		} else {
+			this.pauseText.setText(text);
+			let width = this.pauseText.measureText(text).width;
+			this.pauseText.pos.x = (game.viewport.width - width) / 2;
+		}
+	}
 }
