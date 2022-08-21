@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.8" tiledversion="1.8.6" name="Terrain" tilewidth="32" tileheight="32" tilecount="1024" columns="32">
+<tileset version="1.9" tiledversion="1.9.0" name="Terrain" tilewidth="32" tileheight="32" tilecount="1024" columns="32">
  <editorsettings>
   <export target="../src/main/resources/maps/Terrain.tsj" format="json"/>
  </editorsettings>
@@ -9,11 +9,13 @@
    <object id="1" x="0" y="0" width="32" height="32"/>
   </objectgroup>
   <animation>
-   <frame tileid="187" duration="250"/>
-   <frame tileid="188" duration="250"/>
-   <frame tileid="189" duration="250"/>
-   <frame tileid="188" duration="250"/>
-   <frame tileid="187" duration="250"/>
+   <frame tileid="124" duration="300"/>
+   <frame tileid="187" duration="300"/>
+   <frame tileid="188" duration="300"/>
+   <frame tileid="189" duration="300"/>
+   <frame tileid="188" duration="300"/>
+   <frame tileid="187" duration="300"/>
+   <frame tileid="188" duration="300"/>
   </animation>
  </tile>
  <tile id="175">

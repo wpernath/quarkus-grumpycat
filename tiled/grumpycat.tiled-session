@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "multiplayer/mp_golems.tmx",
+    "activeFile": "Terrain.tsx",
     "expandedProjectPaths": [
         ".",
         "multiplayer"
@@ -166,6 +166,14 @@
         "multiplayer/Terrain.tsx": {
             "scaleInDock": 1
         },
+        "multiplayer/mp_arena.tmx": {
+            "scale": 1.08,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 1071.7592592592591,
+                "y": 632.8703703703703
+            }
+        },
         "multiplayer/mp_golems.tmx": {
             "scale": 1.1533,
             "selectedLayer": 4,
@@ -187,21 +195,24 @@
             "scaleInEditor": 1
         }
     },
-    "frame.defaultDuration": 250,
+    "frame.defaultDuration": 300,
     "last.exportedFilePath": "/Users/wanja/Devel/grumpycat/quarkus-grumpycat/quarkus-server/src/main/resources/maps",
     "last.externalTilesetPath": "/Users/wanja/Devel/grumpycat/quarkus-grumpycat/tiled",
     "last.imagePath": "/Users/wanja/Devel/grumpycat/quarkus-grumpycat/tiled/images/tilesets",
-    "lastUsedTilesetExportFilter": "JSON-Kachelsatz-Dateien (*.tsj *.json)",
+    "lastUsedTilesetExportFilter": "All Files (*)",
     "map.height": 36,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
     "map.width": 32,
     "openFiles": [
-        "multiplayer/mp_golems.tmx"
+        "multiplayer/mp_arena.tmx",
+        "Terrain.tsx"
     ],
     "project": "grumpycat.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "multiplayer/mp_arena.tmx",
+        "Terrain.tsx",
         "multiplayer/mp_level-template.tmx",
         "multiplayer/mp_golems.tmx",
         "Golems.tmx",
@@ -211,9 +222,7 @@
         "Level4.tmx",
         "Level3.tmx",
         "/Users/wpernath/Devel/examples/platformer/data/map/map1.tmx",
-        "Terrain.tsx",
-        "/Users/wanja/Devel/melonjs/examples/platformer/data/map/map1.tmx",
-        "Level-Template.tmx"
+        "/Users/wanja/Devel/melonjs/examples/platformer/data/map/map1.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

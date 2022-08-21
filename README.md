@@ -4,6 +4,8 @@ This Game uses Quarkus, the Supersonic Subatomic Java Framework and HTML 5 / Jav
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
+All client game logic is currently coded with JavaScript and [MelonJS](https://github.com/melonjs/melonjs).
+
 ## The Game
 
 This game was inspired by the old Fat-Cat game and by PacMan. You're controlling a dog in a maze which needs to eat all food without being caught by a grumpy cat or other enemies. 
@@ -17,12 +19,34 @@ Right now you can control the dog with arrow keys UP, DOWN, LEFT & RIGHT and wit
 If the cat gets into an exploding bomb, it stops for 3sec. A bomb can destroy barriers. The level ends if you got all food.
   
 
-All client game logic is currently coded with JavaScript and [MelonJS](https://github.com/melonjs/melonjs).
 
 ![the game](docs/game-title.png)
 ![cats](docs/the-game1.png)
 ![spiders](docs/the-game2.png)
 ![game over](docs/game-over.png)
+
+
+## What's NEW?
+Starting with v0.6.0, there is a multi player mode where up to 4 players can play against each other via network on specialized multi player maps (right now just 2 of them). 
+
+The game is over if:
+- All bonus items have been collected
+- All other players left the game (intentionally or unintentionally)
+
+The winner of the match is the player who has a higher score than all others or who has survived all others. 
+
+- Players can drop bombs to other players to hit them (-50 Energy, plus 100 score). 
+- Players can lock other players by throwing a barrier into the way (those can be destroyed with a bomb)
+
+And do not forget: There are still other enemies who can hit you!
+
+### Future of multi player
+I am currently working on specialied multi player features for the player
+- A magic bolt (flying into the direction where they were fired, killing or stunning enemies and players)
+- A magic protection shield around yourself (15 seconds). Enemies or other players can't hurt you
+- A magic fire circle around yourself (15 seconds or hitting up to 5 enemies / players). 
+- A magic invisible nebula around yourself (enemies can see and thus can't attack you, enemies might find another player to attack them in this time)
+
 
 ## Running the applications in dev mode
 
