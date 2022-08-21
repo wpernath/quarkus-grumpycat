@@ -25,19 +25,6 @@ class PlayerEntity extends BasePlayerSprite {
 	}
 
 	
-/*
-	destroy() {
-		//this.tint = undefined;
-		console.log("*** DEBUG: Destroy Player with name: " + this.name);		
-		try {
-			super.destroy();
-		}
-		catch(err) {
-			console.log("*** DEBUG: Can't destroy Player with name: " + this.name);
-		}
-	}
-*/
-
 	/**
 	 * update the entity
 	 */

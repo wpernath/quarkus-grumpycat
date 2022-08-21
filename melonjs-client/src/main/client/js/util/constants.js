@@ -65,14 +65,8 @@ export const my_collision_types = {
  * 
  */
 export const PLAYER_COLORS = [
-	new Color(255, 255, 255, 1.0),
-	new Color(255, 255, 55, 1.0),
-	new Color(55, 255, 255, 1.0),
-	new Color(255, 55, 55, 1.0),
-	/*
-	pool.pull("Color", 255, 255, 255), 
-	pool.pull("Color", 255, 255, 55), 
-	pool.pull("Color", 55, 255, 55), 
-	pool.pull("Color", 255, 55, 55)
-	*/
+	"#ffffff",	
+	"#ffff32",
+	"#32ffff",
+	"#ff3232"
 ];

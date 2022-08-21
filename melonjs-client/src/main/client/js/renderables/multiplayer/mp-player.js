@@ -76,9 +76,4 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 		}
 		return false;
 	}
-
-	destroy() {
-		this.tint = undefined;
-		super.destroy();
-	}
 }

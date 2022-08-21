@@ -201,6 +201,9 @@ export default class HUDContainer extends Container {
 		// make sure we use screen coordinates
 		this.floating = true;
 
+		// make sure this container will be rendererd on pause
+		this.updateWhenPaused = true;
+
 		// always on toppest
 		this.z = 100;
 
@@ -215,6 +218,7 @@ export default class HUDContainer extends Container {
 			textAlign: "left",
 			text: "*** P A U S E ***",
 		});
+		this.pauseText.updateWhenPaused = true;
 
 		// add our child score object at the top left corner
 		this.addChild(new ScoreItem(-5, 5));
