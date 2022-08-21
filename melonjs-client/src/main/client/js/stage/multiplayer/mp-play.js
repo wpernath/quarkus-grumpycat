@@ -10,6 +10,7 @@ import VirtualJoypad from "../hud/virtual-joypad.js";
 import { my_state, PLAYER_COLORS } from "../../util/constants";
 import { MPRemotePlayerSprite } from "../../renderables/multiplayer/mp-player";
 import { MPLocalPlayerSprite } from "../../renderables/multiplayer/mp-local-player";
+import GlobalGameState from "../../util/global-game-state";
 
 
 export default class MultiplayerPlayScreen extends Stage {
@@ -55,6 +56,7 @@ export default class MultiplayerPlayScreen extends Stage {
 		}
 		this.setupLevel();
 
+        GlobalGameState.isMultiplayerMatch = true;
 		this.hudContainer = new HUDContainer(0, 0);
 		this.virtualJoypad = new VirtualJoypad();
 		game.world.addChild(this.hudContainer);

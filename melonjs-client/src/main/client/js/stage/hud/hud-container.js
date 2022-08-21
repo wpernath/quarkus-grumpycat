@@ -1,4 +1,4 @@
-import { Renderable, BitmapText, game, event, Container, Text, Vector2d, Renderer} from "melonjs/dist/melonjs.module.js";
+import { Renderable, BitmapText, game, event, Container, Text, Vector2d, Renderer, Color, Rect} from "melonjs/dist/melonjs.module.js";
 
 import GlobalGameState from "../../util/global-game-state";
 
@@ -148,6 +148,49 @@ class BombItem extends BitmapText {
 	}
 }
 
+class MultiplayerMessageCenter extends Container {
+	constructor(x,y,w,h) {
+		super(x,y,w,h);
+
+		this.currentMessage = "Test message: Hallo, echo!";
+		this.backColor = new Color(50,50,50);
+		this.boxColor  = new Color(10,10,10);
+		this.backBox   = new Rect(this.pos.x + 2, this.pos.y, w-4, h);
+
+		this.textBox   = new BitmapText(this.pos.x + 4, this.pos.y + 4, {
+			font: "12Outline",
+			textBaseline: "bottom"
+		});
+
+		this.gradient = null;
+	}
+
+	draw(renderer) {
+		/*
+		if( this.gradient == null ) {
+			this.ctx = renderer.getContext("2d");
+			this.gradient = this.ctx.createLinearGradient(0,0, 240,0);
+			this.gradient.addColorStop(0, 'red');
+			this.gradient.addColorStop(.5, "yellow");
+			this.gradient.addColorStop(1, "green");
+		}
+		renderer.fillStyle = this.gradient;
+		*/
+
+		renderer.setGlobalAlpha(0.3);
+		renderer.setColor(this.backColor);
+		renderer.fill(this.backBox);
+
+		renderer.setGlobalAlpha(1.0);
+		renderer.setColor(this.boxColor);
+		renderer.stroke(this.backBox);
+		renderer.setTint(this.textBox.tint, this.textBox.getOpacity());
+		this.textBox.draw(renderer, this.currentMessage, this.textBox.pos.x, this.textBox.pos.y);
+		super.draw(renderer);
+	}
+}
+
+
 export default class HUDContainer extends Container {
 	constructor() {
 		super(0, 0, game.viewport.width, game.viewport.height);
@@ -177,6 +220,11 @@ export default class HUDContainer extends Container {
 		this.addChild(new ScoreItem(-5, 5));
 		this.addChild(new EnergyItem(5, 5));
 		this.addChild(new BombItem(0,5));
+
+		//if( GlobalGameState.isMultiplayerMatch ) {
+			//this.addChild(new MultiplayerMessageCenter(0,50, game.viewport.width, 26));
+		//}
+
 		this.addChild(this.pauseText);
 		this.pauseText.setText("");
 	}

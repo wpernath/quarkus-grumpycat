@@ -2,6 +2,8 @@ import { LevelManager } from "./level";
 
 
 const GlobalGameState = {
+	isMultiplayerMatch: false,
+
 	// global server state
 	globalServerGame: null,
 	globalServerVersion: null,
@@ -84,6 +86,7 @@ const GlobalGameState = {
 		this.catchedByGolems=0;
 		this.bonusCollected = 0;
 		this.hitByRemotePlayerBomb = 0;
+		this.isMultiplayerMatch = false;
 	}
 };
 

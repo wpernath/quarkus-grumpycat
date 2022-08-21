@@ -545,8 +545,7 @@ export class MultiplayerMessage {
 		 *
 		 * @returns array of all multiplayerLevels
 		 */
-		allLevels() {
-			console.log("MultiplayerManager.allLevels() => " + this.multiplayerLevels.length);
+		allLevels() {			
 			return this.multiplayerLevels;
 		}
 
