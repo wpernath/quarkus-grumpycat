@@ -70,7 +70,14 @@ class EnergyItem extends Container {
 			textBaseline: "top",
 			text: "Energy:",
 		});
-				
+			
+		this.energyPercent = new BitmapText(0, 0, {
+			font: "12Outline",
+			textAlign: "left",
+			textBaseline: "top",
+			text: "100%",
+		});
+
 		this.energy                 = 0;
 		this.maxEnergy              = 0;
 		this.energyBarWidth         = 180;
@@ -78,9 +85,9 @@ class EnergyItem extends Container {
 		this.energyBarHeight        = 16;
 		this.energyBarFillColor     = new Color(0, 255, 0);
 		this.energyBarBoxColor      = new Color(10,10,10);
-		this.energyBarBoxBorder     = new RoundRect(this.pos.x + 4, this.pos.y , this.energyBarWidth, this.energyBarHeight);
+		this.energyBarBoxBorder     = new RoundRect(4, 18 , this.energyBarWidth, this.energyBarHeight);
 		this.energyBarBoxBackFill   = new Color(50,50,50);
-		this.energyBarFillBox		= new Rect(this.pos.x + 8, this.pos.y + 2, this.energyBarMaxFillWidth, this.energyBarHeight - 4);
+		this.energyBarFillBox		= new Rect(8, 20, this.energyBarMaxFillWidth, this.energyBarHeight - 4);
 
 		this.lowEnergyColor			= new Color(255,255,0);
 		this.criticalEnergyColor	= new Color(255, 0,0);
@@ -119,9 +126,13 @@ class EnergyItem extends Container {
 		this.energyBarFillBox.width = Math.round(this.energyBarMaxFillWidth * fillPercent);
 		renderer.fill(this.energyBarFillBox);
 
+		// draw percent
+		renderer.setTint(this.energyPercent.tint, this.energyPercent.getOpacity());
+		this.energyPercent.draw(renderer, (Math.round(fillPercent * 100)) + "%", 90, 20);
+
 		// draw energy bar text
 		renderer.setTint(this.energyText.tint, this.energyText.getOpacity());
-		this.energyText.draw(renderer, this.energyText.text, this.energyText.pos.x, this.energyText.pos.y);
+		this.energyText.draw(renderer, "Energy:", 6, 2);
 		super.draw(renderer);
 
 	}
