@@ -1,4 +1,4 @@
-import { Renderable, BitmapText, game, event, Container, Text, Vector2d, Renderer, Color, Rect, RoundRect} from "melonjs/dist/melonjs.module.js";
+import { Renderable, BitmapText, game, event, Container, Vector2d, Color, Rect, RoundRect} from "melonjs/dist/melonjs.module.js";
 
 import GlobalGameState from "../../util/global-game-state";
 
@@ -83,12 +83,14 @@ class EnergyItem extends Container {
 		this.energyBarWidth         = 180;
 		this.energyBarMaxFillWidth  = this.energyBarWidth - 8;
 		this.energyBarHeight        = 16;
-		this.energyBarFillColor     = new Color(0, 255, 0);
 		this.energyBarBoxColor      = new Color(10,10,10);
 		this.energyBarBoxBorder     = new RoundRect(4, 18 , this.energyBarWidth, this.energyBarHeight);
 		this.energyBarBoxBackFill   = new Color(50,50,50);
 		this.energyBarFillBox		= new Rect(8, 20, this.energyBarMaxFillWidth, this.energyBarHeight - 4);
 
+		// energy bar colors
+		this.energyBarFillColor 	= new Color(0, 255, 0);
+		this.threeQuadEnergyColor	= new Color(100,255, 0);
 		this.lowEnergyColor			= new Color(255,255,0);
 		this.criticalEnergyColor	= new Color(255, 0,0);
 	}
@@ -119,20 +121,23 @@ class EnergyItem extends Container {
 		
 		// draw energy bar foreground
 		let fillPercent = this.energy / this.maxEnergy;
-		let fillColor = this.energyBarFillColor;
-		if( fillPercent < 0.15) fillColor = this.criticalEnergyColor;
-		else if( fillPercent >0.15 && fillPercent < 0.51) fillColor = this.lowEnergyColor;
+		let fillColor = this.energyBarFillColor;		
+		if( fillPercent <= 0.3) fillColor = this.criticalEnergyColor;
+		else if( fillPercent > 0.3 && fillPercent < 0.51) fillColor = this.lowEnergyColor;
+		else if( fillPercent > 0.50 && fillPercent <= 0.75) fillColor = this.threeQuadEnergyColor;
+		else fillColor = this.energyBarFillColor;
+
 		renderer.setColor(fillColor);
 		this.energyBarFillBox.width = Math.round(this.energyBarMaxFillWidth * fillPercent);
 		renderer.fill(this.energyBarFillBox);
 
 		// draw percent
 		renderer.setTint(this.energyPercent.tint, this.energyPercent.getOpacity());
-		this.energyPercent.draw(renderer, (Math.round(fillPercent * 100)) + "%", 90, 20);
+		this.energyPercent.draw(renderer, (Math.round(fillPercent * 100)) + " %", 90, 20);
 
 		// draw energy bar text
 		renderer.setTint(this.energyText.tint, this.energyText.getOpacity());
-		this.energyText.draw(renderer, "Energy:", 6, 2);
+		this.energyText.draw(renderer, "Energy:", 6, 3);
 		super.draw(renderer);
 
 	}
@@ -242,7 +247,7 @@ class MultiplayerMessageCenter extends Container {
  */
 export default class HUDContainer extends Container {
 	constructor(options) {
-		super(0, 0, game.viewport.width, GlobalGameState.isMultiplayerMatch ? 96 : 36);
+		super(0, 0, game.viewport.width, GlobalGameState.isMultiplayerMatch ? 72 : 36);
 
 		this.backColor = new Color(50, 50, 50);
 		this.boxColor = new Color(10, 10, 10);
@@ -293,7 +298,7 @@ export default class HUDContainer extends Container {
 
 		renderer.setGlobalAlpha(1.0);
 		renderer.setColor(this.boxColor);
-		renderer.stroke(this.backBox);
+		//renderer.stroke(this.backBox);
 		//renderer.setTint(this.textBox.tint, this.textBox.getOpacity());
 		//this.textBox.draw(renderer, this.currentMessage, this.textBox.pos.x, this.textBox.pos.y);
 		super.draw(renderer);

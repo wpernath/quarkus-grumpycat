@@ -93,8 +93,7 @@ class PlayerEntity extends BasePlayerSprite {
 				let bX = mapX + dx;
 				let bY = mapY + dy;
                 
-                if( this.spell == null && this.throwMagicFireSpin(mapX, mapY)) {
-				//if ( this.spell == null && this.throwMagicSpell(bX, bY, dx, dy)) {
+				if ( this.spell == null && this.throwMagicSpell(bX, bY, dx, dy)) {
                     console.log("MAGIC!!!!!");
                     /*
 					action.dx = dx;
@@ -120,10 +119,19 @@ class PlayerEntity extends BasePlayerSprite {
 					return super.update(dt);
 				}
 			}
-			if (input.isKeyPressed("explode")) {
-				game.world.addChild(new ExplosionEntity(this.pos.x, this.pos.y));
+
+			if( input.isKeyPressed("damage")) {
+				this.throwMagicFireSpin(mapX, mapY);
 			}
 
+			if( input.isKeyPressed("magic-barrier")) {
+				this.throwMagicProtectionCircle(mapX, mapY);
+			}
+
+			if( input.isKeyPressed("magic-nebula")) {
+				this.throwMagicNebula(mapX, mapY);
+			}
+			
 			if (input.isKeyPressed("left")) {
 				this.flipX(true);
 				dx = -(dt * this.VELOCITY);

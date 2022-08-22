@@ -176,6 +176,7 @@ const DataManifest = [
 	// multiplayer
 	{ name: "mp1", type: "image", src: "./data/map/mp_arena.png" },
 	{ name: "mp2", type: "image", src: "./data/map/mp_golems.png" },
+	
 ];
 
 export default DataManifest;

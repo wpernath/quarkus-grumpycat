@@ -98,7 +98,8 @@ class MenuComponent extends Container {
 		
 		this.players = [];
 		this.playerComponents = [];
-		this.startButton = null;
+		this.startButton = new StartGameButton(game.viewport.width - 105, game.viewport.height - 60);
+		this.addChild(this.startButton);
 
 
 		this.addChild(new BitmapText(126, 250, {
@@ -140,9 +141,7 @@ class MenuComponent extends Container {
 			this.playerComponents.push(pe);
 			this.addChild(pe);
 		}
-	}
-
-	destroy() {}
+	}	
 
 	playersFromGame(theGame) {
 		let players = [];
@@ -189,8 +188,8 @@ class MenuComponent extends Container {
 		this.statusMessage.setText(message.message);
 		if( MultiplayerManager.get().weAreHost ) {
 			if ((this.startButton !== null && theGame.player1 !== undefined) || theGame.player2 === undefined || theGame.player3 === undefined || theGame.player4 === undefined) {
-				this.removeChild(this.startButton);				
-				this.startButton = null;
+				//this.removeChild(this.startButton);				
+				//this.startButton = null;
 			}
 		}
 		this.updatePlayers(theGame);

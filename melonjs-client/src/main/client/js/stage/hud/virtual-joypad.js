@@ -381,7 +381,7 @@ class VirtualJoypad extends Container {
 		// give a name
 		this.name = "VirtualJoypad";
 
-		let yPos = GlobalGameState.isMultiplayerMatch ? 98 : 38;
+		let yPos = GlobalGameState.isMultiplayerMatch ? 74 : 38;
 
 		// instance of the buttons
 		this.pauseButton = new PauseButton(20, yPos);

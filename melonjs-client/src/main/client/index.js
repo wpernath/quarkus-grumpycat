@@ -129,6 +129,9 @@ device.onReady(() => {
 
             // bind keys
             input.bindKey(input.KEY.ALT, "magic");
+            input.bindKey(input.KEY.Q, "damage");
+            input.bindKey(input.KEY.E, "magic-barrier");
+            input.bindKey(input.KEY.R, "magic-nebula");
             input.bindKey(input.KEY.SHIFT, "barrier");
             input.bindKey(input.KEY.LEFT, "left",);
             input.bindKey(input.KEY.A, "left");

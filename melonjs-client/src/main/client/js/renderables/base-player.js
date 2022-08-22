@@ -1,10 +1,11 @@
 import { game, input, Sprite, Body, collision, level, Tile, Rect, state } from "melonjs/dist/melonjs.module.js";
 import BombEntity from "./bomb";
-import ExplosionEntity from "./explosion";
 import GlobalGameState from "../util/global-game-state";
 import { ENEMY_TYPES } from "./base-enemy";
 import MagicBolt from "./magic-bolt";
 import MagicFirespin from "./magic-firespin";
+import MagicProtectionCircle from "./magic-protection";
+import MagicNebula from "./magic-nebula";
 
 export const BARRIER_TILE = {
 	light: 182,
@@ -12,18 +13,27 @@ export const BARRIER_TILE = {
 	dark: 184,
 };
 
+// special bonus type numbers
 export const BONUS_TILE = {
 	bomb: 961,
 	star: 962,
 	cactus: 963,
 	meat: 966,
 	cheese: 967,
+	closedChest: 970,
+	openedChest: 971,
+	maxEnergyAdder20: 972,
+	maxEnergyAdder50: 973,
+	magicBolt: 974,
+	magicFirespin: 975,
+	magicProtectionCircle: 976,
+	magicNebula: 977,
+
 };
 
 export class BasePlayerSprite extends Sprite {
-
 	VELOCITY = 0.3;
-	
+
 	borderLayer;
 	bonusLayer;
 	groundLayer;
@@ -41,6 +51,7 @@ export class BasePlayerSprite extends Sprite {
 	lastMapY = 0;
 
 	justImage = false;
+	hasPlacedNebula = false;
 
 	constructor(x, y, justImage = false) {
 		let settings = {
@@ -58,13 +69,13 @@ export class BasePlayerSprite extends Sprite {
 		this.lastMapY = y;
 		this.spell = null; // only one spell at a time
 
-		if( !this.justImage ) {
+		if (!this.justImage) {
 			this.body = new Body(this);
 			this.body.ignoreGravity = true;
 			this.body.addShape(new Rect(0, 0, this.width, this.height));
 			this.body.collisionType = collision.types.PLAYER_OBJECT;
 			this.body.setCollisionMask(collision.types.ENEMY_OBJECT);
-	
+
 			// ensure the player is updated even when outside of the viewport
 			this.alwaysUpdate = true;
 			this.mapHeight = level.getCurrentLevel().rows;
@@ -90,17 +101,17 @@ export class BasePlayerSprite extends Sprite {
 		let realX = Math.floor(x / 32);
 		let realY = Math.floor(y / 32);
 
-		if( realX < 0 || realY < 0 || realX > this.mapWidth || realY > this.mapHeight ){
+		if (realX < 0 || realY < 0 || realX > this.mapWidth || realY > this.mapHeight) {
 			return false;
 		}
 		let tile = this.borderLayer.cellAt(realX, realY);
-		if (tile !== null && tile != undefined ) return false;
+		if (tile !== null && tile != undefined) return false;
 		else return true;
 	}
 
-	updateWalkable(action, dx,dy) {
+	updateWalkable(action, dx, dy) {
 		let pos = this.pos;
-		if( this.isWalkable(pos.x + dx, pos.y + dy)) {
+		if (this.isWalkable(pos.x + dx, pos.y + dy)) {
 			this.pos.x += dx;
 			this.pos.y += dy;
 
@@ -108,13 +119,13 @@ export class BasePlayerSprite extends Sprite {
 			action.dy = dy;
 			return true;
 		}
-		if( this.isWalkable(pos.x + dx, pos.y)) {
-			this.pos.x += dx;			
+		if (this.isWalkable(pos.x + dx, pos.y)) {
+			this.pos.x += dx;
 			action.dx = dx;
 			action.dy = 0;
 			return true;
 		}
-		if( this.isWalkable(pos.x, pos.y + dy)) {
+		if (this.isWalkable(pos.x, pos.y + dy)) {
 			this.pos.y += dy;
 			action.dx = 0;
 			action.dy = dy;
@@ -134,31 +145,45 @@ export class BasePlayerSprite extends Sprite {
 		return 0;
 	}
 
-	checkBonusTile(x,y, update = true) {
-		let bonus = this._collectBonusTile(this.pos.x, this.pos.y);
-		if( bonus !== 0 ) {
+	/*
+	_clearBonusTile(x,y) {
+		let realX = Math.floor(x / 32);
+		let realY = Math.floor(y / 32);
+		this.bonusLayer.clearTile(realX, realY);
+	}	
+	*/
+
+	checkBonusTile(x, y, update = true) {
+		let bonus = this._collectBonusTile(this.pos.x, this.pos.y, update);
+		if (bonus !== 0) {
 			this.collectedBonusTiles++;
-			if( update ) {
+			if (update) {
 				GlobalGameState.bonusCollected++;
-				if( bonus === BONUS_TILE.bomb ) { // bomb                        
+				if (bonus === BONUS_TILE.bomb) {
+					// bomb
 					GlobalGameState.bombs += GlobalGameState.bombsForBombBonus;
 					GlobalGameState.score += GlobalGameState.scoreForBombs;
-				}
-				else if( bonus === BONUS_TILE.star) { // super power
+				} else if (bonus === BONUS_TILE.star) {
+					// super power
 					GlobalGameState.score += GlobalGameState.scoreForStars;
-					GlobalGameState.hasSuperPower = true;
-					GlobalGameState.numberOfSuperPowers += GlobalGameState.superPowersForStarBonus;
-				}
-				else if( bonus === BONUS_TILE.cactus) { // cactus
+					GlobalGameState.maxEnergy += GlobalGameState.maxEnergyForStar;
+				} else if (bonus === BONUS_TILE.cactus) {
+					// cactus
 					GlobalGameState.score += GlobalGameState.scoreForPills;
-				}
-				else if( bonus === BONUS_TILE.meat) { // meat
-					GlobalGameState.energy+= GlobalGameState.energyForMeat;
+				} else if (bonus === BONUS_TILE.meat) {
+					// meat
 					GlobalGameState.score += GlobalGameState.scoreForMeat;
-				}
-				else if( bonus === BONUS_TILE.cheese) { // cheese
-					GlobalGameState.energy+= GlobalGameState.energyForCheese;
+					if (GlobalGameState.energy < GlobalGameState.maxEnergy) {
+						GlobalGameState.energy += GlobalGameState.energyForMeat;
+						if (GlobalGameState.energy > GlobalGameState.maxEnergy) GlobalGameState.energy = GlobalGameState.maxEnergy;
+					}
+				} else if (bonus === BONUS_TILE.cheese) {
+					// cheese
 					GlobalGameState.score += GlobalGameState.scoreForCheese;
+					if (GlobalGameState.energy < GlobalGameState.maxEnergy) {
+						GlobalGameState.energy += GlobalGameState.energyForCheese;
+						if (GlobalGameState.energy > GlobalGameState.maxEnergy) GlobalGameState.energy = GlobalGameState.maxEnergy;
+					}
 				}
 			}
 		}
@@ -166,8 +191,8 @@ export class BasePlayerSprite extends Sprite {
 	}
 
 	throwMagicSpell(bX, bY, dx, dy, update = true) {
-		if( this.spell !== null ) return false;
-		if( this.borderLayer.cellAt(bX, bY) == null ) {
+		if (this.spell !== null) return false;
+		if (this.borderLayer.cellAt(bX, bY) == null) {
 			this.spell = new MagicBolt(this, bX, bY, dx, dy);
 			game.world.addChild(this.spell);
 			return true;
@@ -182,19 +207,31 @@ export class BasePlayerSprite extends Sprite {
 		return true;
 	}
 
+	throwMagicProtectionCircle(x, y, update = true) {
+		if (this.spell !== null) return false;
+		this.spell = new MagicProtectionCircle(this, x, y);
+		game.world.addChild(this.spell);
+	}
+
+	throwMagicNebula(x, y, update = true) {
+		if (this.spell !== null) return false;
+		this.spell = new MagicNebula(this, x, y);
+		game.world.addChild(this.spell);
+	}
+
 	placeBorderTile(bX, bY, update = true) {
-		if( this.borderLayer.cellAt(bX, bY) == null ) {
-			let newBorderId = 184;
-			let ground = this.groundLayer.cellAt(bX,bY);
-			if( ground !== null ) {
+		if (this.borderLayer.cellAt(bX, bY) == null) {
+			let newBorderId = BARRIER_TILE.dark;
+			let ground = this.groundLayer.cellAt(bX, bY);
+			if (ground !== null) {
 				let gId = ground.tileId;
-	//                        switch(gId) {
-	//                            case: 
-	//                        }
+				//                        switch(gId) {
+				//                            case:
+				//                        }
 			}
 			let tile = this.borderLayer.getTileById(newBorderId, bX, bY);
 			this.borderLayer.setTile(tile, bX, bY);
-			if( update ) GlobalGameState.placedBarriers++;
+			if (update) GlobalGameState.placedBarriers++;
 			return true;
 		}
 		return false;
@@ -225,5 +262,4 @@ export class BasePlayerSprite extends Sprite {
 		}
 		return false;
 	}
-
 }
