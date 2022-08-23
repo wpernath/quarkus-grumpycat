@@ -93,6 +93,7 @@ export const BONUS_TILE = {
 	magicFirespin: 975,
 	magicProtectionCircle: 976,
 	magicNebula: 977,
+	bomb0: 979,
 };
 
 

@@ -53,9 +53,6 @@ class ScoreItem extends Container {
 			framewidth: 40,
 			frameheight: 39,
 		});
-		//this.dogLeft.setTint(PLAYER_COLORS[2]);
-		this.addChild(this.dogLeft);
-		this.addChild(this.catRight);
 	}
 
 	draw(renderer) {		
@@ -68,6 +65,7 @@ class ScoreItem extends Container {
 
 		renderer.setTint(this.catRight.tint, this.catRight.getOpacity());
 		this.catRight.draw(renderer);
+		super.draw(renderer);
 	}
 
 	/**
@@ -198,11 +196,11 @@ class WeaponsItem extends Container {
 		this.magicNebulas = -1;
 		this.magicProtections = -1;
 	
-		this.bombImg = new BaseTerrainSprite(this.pos.x + 2, this.pos.y + 2, [BONUS_TILE.bomb-1], true );
-		this.boltImg = new BaseTerrainSprite(this.pos.x + 2, this.pos.y + 2, [BONUS_TILE.magicBolt - 1], true);
-		this.fireImg = new BaseTerrainSprite(this.pos.x + 2, this.pos.y + 2, [BONUS_TILE.magicFirespin - 1], true);
-		this.nebuImg = new BaseTerrainSprite(this.pos.x + 2, this.pos.y + 2, [BONUS_TILE.magicNebula - 1], true);
-		this.protImg = new BaseTerrainSprite(this.pos.x + 2, this.pos.y + 2, [BONUS_TILE.magicProtectionCircle - 1], true);
+		this.bombImg = new BaseTerrainSprite(this.pos.x + 2, this.pos.y + 2, [BONUS_TILE.bomb0-1], true );
+		this.boltImg = new BaseTerrainSprite(this.pos.x + 2 + 32, this.pos.y + 2, [BONUS_TILE.magicBolt - 1], true);
+		this.fireImg = new BaseTerrainSprite(this.pos.x + 2 + 64, this.pos.y + 2, [BONUS_TILE.magicFirespin - 1], true);
+		this.nebuImg = new BaseTerrainSprite(this.pos.x + 2 + 96, this.pos.y + 2, [BONUS_TILE.magicNebula - 1], true);
+		this.protImg = new BaseTerrainSprite(this.pos.x + 2 + 128, this.pos.y + 2, [BONUS_TILE.magicProtectionCircle - 1], true);
 
 		this.images = [];
 		this.images.push(this.bombImg);
@@ -224,6 +222,7 @@ class WeaponsItem extends Container {
 		let x = this.pos.x + 2;
 		let y = this.pos.y + 2;
 		for( let i = 0; i < this.images.length; i++ ) {
+			this.images[i].draw(renderer)
 			renderer.drawImage(this.images[i].image, 
 				this.images[i].offset.x + this.images[i].current.offset.x,
 				this.images[i].offset.y + this.images[i].current.offset.y,

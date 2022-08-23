@@ -166,8 +166,7 @@ export class BaseEnemySprite extends Sprite {
 		}
 		else {
 			playerX = this.player.spell.mapX;
-			playerY = this.player.spell.mapY;
-			console.log("NEW POS FOR ENEMY: " + playerX + " / " + playerY );
+			playerY = this.player.spell.mapY;			
 		}
 		return this.calculateNextPositionToTarget(playerX, playerY);
 	}
