@@ -58,6 +58,8 @@ const GlobalGameState = {
 	bombs: 0,
 	invincible: false,
 	isGameOver: false,
+	isSlowed: false,
+	isHasted: false,
 
 	magicBolts: 0,
 	magicNebulas: 0,
@@ -100,7 +102,9 @@ const GlobalGameState = {
 		this.hitByRemotePlayerMagic = 0;
 		this.isMultiplayerMatch = false;
 		this.collectedChests =0;
-
+		this.isSlowed = false;
+		this.isHasted = false;
+		
 		this.magicBolts = 0;
 		this.magicNebulas = 0;
 		this.magicProtections=0;

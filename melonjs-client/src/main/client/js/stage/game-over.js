@@ -19,6 +19,7 @@ class LevelStatistics extends Container {
 			"Score: \n" +
 			"Level: "  + "\n" +
 			"Bonus collected: "  + "\n" +
+			"Chests opened: " + "\n" +
 			"Bombs left: " +  "\n" +
 			"Used bombs: " +  "\n" +
 			"Placed barriers: " + "\n"+
@@ -34,6 +35,7 @@ class LevelStatistics extends Container {
 			GlobalGameState.score + "\n" +
 			(LevelManager.getInstance().getCurrentLevelIndex() + 1) + "\n" +
 			GlobalGameState.bonusCollected + "\n" +
+			GlobalGameState.collectedChests + "\n" + 
 			GlobalGameState.bombs + "\n" +
 			GlobalGameState.usedBombs + "\n" +
 			GlobalGameState.placedBarriers + "\n"+
