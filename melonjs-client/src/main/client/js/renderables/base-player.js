@@ -219,10 +219,10 @@ export class BasePlayerSprite extends Sprite {
 	 * (called when colliding with other objects)
 	 */
 	onCollision(response, other) {
-		if( other.body.collisionType === collision.types.COLLECTABLE_OBJECT) {
+		if( other.body.collisionType === collision.types.COLLECTABLE_OBJECT && !other.isCollected ) {
 			console.log("other.type: " + other.type);
 			console.log("other.isCollected: " + other.isCollected);
-			if( other.type === BONUS_TILE.closedChest && this.body.collisionType === collision.types.PLAYER_OBJECT && !other.isCollected ) {
+			if( other.type === BONUS_TILE.closedChest && this.body.collisionType === collision.types.PLAYER_OBJECT ) {
 				GlobalGameState.score += GlobalGameState.scoreForChest;
 				GlobalGameState.collectedChests +=1;
 			}

@@ -1,42 +1,73 @@
-import { Renderable, BitmapText, game, event, Container, Vector2d, Color, Rect, RoundRect} from "melonjs/dist/melonjs.module.js";
+import { Renderable, BitmapText, game, event, Container, Vector2d, Color, Rect, RoundRect, Sprite} from "melonjs/dist/melonjs.module.js";
+import BaseTerrainSprite from "../../renderables/terrain/terrain-sprite";
 
 import GlobalGameState from "../../util/global-game-state";
+import { BONUS_TILE, PLAYER_COLORS } from "../../util/constants";
+import MultiplayerManager from "../../util/multiplayer";
 
 
-class ScoreItem extends BitmapText {
+class ScoreItem extends Container {
 	/**
 	 *
 	 * @param x
 	 * @param y
 	 */
 	constructor(x, y) {
-		super(game.viewport.width + x, y, {
+		super(x, y, 160, 34);
+
+		this.text = new BitmapText(0,0, {
 			font: "24Outline",
-			textAlign: "left",
-			lineWidth: 2,
 			textBaseline: "top",
-			text: "Score: 999999",
+			text: "9999999",
 		});
 
-		this.relative = new Vector2d(x, y);
-		this.score = -1;
-		this.width = -1;
+		// persistent across level change
+		this.isPersistent = true;
 
-		
+		// make sure we use screen coordinates
+		this.floating = true;
+
+		this.z = 100;
+
+		this.score = -1;
+		this.scoretext = "";
+
 		event.on(
 			event.CANVAS_ONRESIZE,
 			function (w, h) {
-				this.pos.set(w, h, 0).add(this.relative);
+				this.pos.set(w, h, 0);
 			}.bind(this)
 		);
+
+		this.dogLeft = new Sprite(this.pos.x - 40, this.pos.y + 2, {
+			image: "player",
+			framewidth: 34,
+			frameheight: 39,
+			tint: PLAYER_COLORS[MultiplayerManager.get().getMultiplayerPlayerNumber()],
+		});
+
+		this.catRight = new Sprite(this.pos.x + 150, this.pos.y + 2, {
+			image: "cat_left",
+			width: 32,
+			height: 32,
+			framewidth: 40,
+			frameheight: 39,
+		});
+		//this.dogLeft.setTint(PLAYER_COLORS[2]);
+		this.addChild(this.dogLeft);
+		this.addChild(this.catRight);
 	}
 
-	draw(renderer) {
-		if( this.width === -1) {
-			this.width = this.measureText(renderer).width;
-			this.pos.x = game.viewport.width - this.width + this.relative.x;
-		}
-		super.draw(renderer);
+	draw(renderer) {		
+		let width = this.text.measureText(renderer).width;		
+		renderer.setTint(this.text.tint, this.text.getOpacity());
+		this.text.draw(renderer, this.scoretext, 24 + (game.viewport.width - width) / 2, this.pos.y + 12);
+
+		renderer.setTint(this.dogLeft.tint, this.dogLeft.getOpacity());
+		this.dogLeft.draw(renderer);
+
+		renderer.setTint(this.catRight.tint, this.catRight.getOpacity());
+		this.catRight.draw(renderer);
 	}
 
 	/**
@@ -44,10 +75,11 @@ class ScoreItem extends BitmapText {
 	 * @returns {boolean}
 	 */
 	update(dt) {
+		this.isDirty = false;
 		if (this.score != GlobalGameState.score) {
 			this.score = GlobalGameState.score;
 			this.isDirty = true;
-			this.setText("Score: " + this.score.toString().padStart(6, "0"));
+			this.scoretext = this.score.toString().padStart(7, "0");
 			return true;
 		}
 		return false;
@@ -64,7 +96,7 @@ class EnergyItem extends Container {
 	constructor(x, y) {
 		super(x, y, 200, 32);
 
-		this.energyText = new BitmapText(this.pos.x + 20, this.pos.y + 20, {
+		this.energyText = new BitmapText(0,0, {
 			font: "12Outline",
 			textAlign: "left",
 			textBaseline: "top",
@@ -81,12 +113,12 @@ class EnergyItem extends Container {
 		this.energy                 = 0;
 		this.maxEnergy              = 0;
 		this.energyBarWidth         = 180;
-		this.energyBarMaxFillWidth  = this.energyBarWidth - 8;
-		this.energyBarHeight        = 16;
+		this.energyBarMaxFillWidth  = this.energyBarWidth - 10;
+		this.energyBarHeight        = 17;
 		this.energyBarBoxColor      = new Color(10,10,10);
-		this.energyBarBoxBorder     = new RoundRect(4, 18 , this.energyBarWidth, this.energyBarHeight);
+		this.energyBarBoxBorder     = new RoundRect(4, 23 , this.energyBarWidth, this.energyBarHeight);
 		this.energyBarBoxBackFill   = new Color(50,50,50);
-		this.energyBarFillBox		= new Rect(8, 20, this.energyBarMaxFillWidth, this.energyBarHeight - 4);
+		this.energyBarFillBox		= new Rect(10, 24, this.energyBarMaxFillWidth, this.energyBarHeight - 4);
 
 		// energy bar colors
 		this.energyBarFillColor 	= new Color(0, 255, 0);
@@ -100,7 +132,7 @@ class EnergyItem extends Container {
 	 * @returns {boolean}
 	 */
 	update(dt) {
-		if (this.energy != GlobalGameState.energy || this.energy != GlobalGameState.maxEnergy) {
+		if (this.energy != GlobalGameState.energy || this.maxEnergy != GlobalGameState.maxEnergy) {
 			this.energy = GlobalGameState.energy;
 			this.maxEnergy = GlobalGameState.maxEnergy;
 			this.isDirty = true;
@@ -133,34 +165,51 @@ class EnergyItem extends Container {
 
 		// draw percent
 		renderer.setTint(this.energyPercent.tint, this.energyPercent.getOpacity());
-		this.energyPercent.draw(renderer, (Math.round(fillPercent * 100)) + " %", 90, 20);
+		this.energyPercent.draw(renderer, (Math.round(fillPercent * 100)) + " %", 90, 25);
 
 		// draw energy bar text
 		renderer.setTint(this.energyText.tint, this.energyText.getOpacity());
-		this.energyText.draw(renderer, "Energy:", 6, 3);
+		this.energyText.draw(renderer, "Energy:", 6, 8);
 		super.draw(renderer);
 
 	}
 }
 
-class BombItem extends BitmapText {
+class WeaponsItem extends Container {
 	/**
 	 *
 	 * @param x
 	 * @param y
 	 */
-	constructor(x, y) {
-		super(game.viewport.width / 2 + x, y, {
-			font: "24Outline",
+	constructor(x, y, w, h) {
+		super(x,y, w, h);
+			
+		this.textField = new BitmapText(0,0, {						
+			font: "12Outline",
 			textAlign: "left",
-			lineWidth: 2,
 			textBaseline: "top",
-			text: "Bombs: 999",
+			text: "99",
 		});
 		
 		this.relative = new Vector2d(x, y);
 		this.bombs = -1;
-		this.width = -1;
+		this.magicBolts = -1;
+		this.magicFirespins = -1;
+		this.magicNebulas = -1;
+		this.magicProtections = -1;
+	
+		this.bombImg = new BaseTerrainSprite(this.pos.x + 2, this.pos.y + 2, [BONUS_TILE.bomb-1], true );
+		this.boltImg = new BaseTerrainSprite(this.pos.x + 2, this.pos.y + 2, [BONUS_TILE.magicBolt - 1], true);
+		this.fireImg = new BaseTerrainSprite(this.pos.x + 2, this.pos.y + 2, [BONUS_TILE.magicFirespin - 1], true);
+		this.nebuImg = new BaseTerrainSprite(this.pos.x + 2, this.pos.y + 2, [BONUS_TILE.magicNebula - 1], true);
+		this.protImg = new BaseTerrainSprite(this.pos.x + 2, this.pos.y + 2, [BONUS_TILE.magicProtectionCircle - 1], true);
+
+		this.images = [];
+		this.images.push(this.bombImg);
+		this.images.push(this.boltImg);
+		this.images.push(this.fireImg);
+		this.images.push(this.nebuImg);
+		this.images.push(this.protImg);
 
 		event.on(
 			event.CANVAS_ONRESIZE,
@@ -171,10 +220,26 @@ class BombItem extends BitmapText {
 	}
 
 	draw(renderer) {
-		if (this.width === -1) {
-			this.width = this.measureText(renderer).width;
-			this.pos.x = ((game.viewport.width - this.width)/2) + this.relative.x;
+		// draw those images
+		let x = this.pos.x + 2;
+		let y = this.pos.y + 2;
+		for( let i = 0; i < this.images.length; i++ ) {
+			renderer.drawImage(this.images[i].image, 
+				this.images[i].offset.x + this.images[i].current.offset.x,
+				this.images[i].offset.y + this.images[i].current.offset.y,
+				32, 32,
+				this.pos.x + 2 + (i * 32), 
+				this.pos.y + 2,
+				32, 32
+			);
 		}
+		// draw texts
+		renderer.setTint(this.textField.tint, this.textField.getOpacity());
+		this.textField.draw(renderer, this.bombs.toString().padStart(2, '0'), this.pos.x + 10, this.pos.y + 30);
+		this.textField.draw(renderer, this.magicBolts.toString().padStart(2, "0"), this.pos.x + 42, this.pos.y + 30);
+		this.textField.draw(renderer, this.magicFirespins.toString().padStart(2, "0"), this.pos.x + 74, this.pos.y + 30);
+		this.textField.draw(renderer, this.magicNebulas.toString().padStart(2, "0"), this.pos.x + 106, this.pos.y + 30);
+		this.textField.draw(renderer, this.magicProtections.toString().padStart(2, "0"), this.pos.x + 138, this.pos.y + 30);
 		super.draw(renderer);
 	}
 
@@ -183,13 +248,33 @@ class BombItem extends BitmapText {
 	 * @returns {boolean}
 	 */
 	update(dt) {
+		this.isDirty = false;
 		if (this.bombs != GlobalGameState.bombs) {
 			this.bombs = GlobalGameState.bombs;
-			this.isDirty = true;
-			this.setText("Bombs: " + this.bombs.toString().padStart(3, "0"));
-			return true;
+			this.isDirty = true;				
 		}
-		return false;
+
+		if( this.magicBolts != GlobalGameState.magicBolts) {
+			this.magicBolts = GlobalGameState.magicBolts;
+			this.isDirty = true;				
+		}
+
+		if( this.magicFirespins != GlobalGameState.magicFirespins ) {
+			this.magicFirespins = GlobalGameState.magicFirespins;
+			this.isDirty = true;				
+		}
+
+		if( this.magicNebulas != GlobalGameState.magicNebulas ) {
+			this.magicNebulas = GlobalGameState.magicNebulas;
+			this.isDirty = true;				
+		}
+
+		if (this.magicProtections != GlobalGameState.magicProtections) {
+			this.magicProtections = GlobalGameState.magicProtections;;
+			this.isDirty = true;
+		}
+
+		return this.isDirty;
 	}
 }
 
@@ -211,17 +296,6 @@ class MultiplayerMessageCenter extends Container {
 	}
 
 	draw(renderer) {
-		/*
-		if( this.gradient == null ) {
-			this.ctx = renderer.getContext("2d");
-			this.gradient = this.ctx.createLinearGradient(0,0, 240,0);
-			this.gradient.addColorStop(0, 'red');
-			this.gradient.addColorStop(.5, "yellow");
-			this.gradient.addColorStop(1, "green");
-		}
-		renderer.fillStyle = this.gradient;
-		*/
-
 		renderer.setGlobalAlpha(0.3);
 		renderer.setColor(this.backColor);
 		renderer.fill(this.backBox);
@@ -247,7 +321,7 @@ class MultiplayerMessageCenter extends Container {
  */
 export default class HUDContainer extends Container {
 	constructor(options) {
-		super(0, 0, game.viewport.width, GlobalGameState.isMultiplayerMatch ? 72 : 36);
+		super(0, 0, game.viewport.width, GlobalGameState.isMultiplayerMatch ? 62 : 48);
 
 		this.backColor = new Color(50, 50, 50);
 		this.boxColor = new Color(10, 10, 10);
@@ -260,7 +334,7 @@ export default class HUDContainer extends Container {
 		this.floating = true;
 
 		// make sure this container will be rendererd on pause
-		this.updateWhenPaused = false;
+		this.updateWhenPaused = true;
 
 		// always on toppest
 		this.z = 100;
@@ -279,9 +353,9 @@ export default class HUDContainer extends Container {
 		this.pauseText.updateWhenPaused = true;
 
 		// add our child score object at the top left corner
-		this.addChild(new ScoreItem(-5, 5));
-		this.addChild(new EnergyItem(5, 20));
-		this.addChild(new BombItem(0, 5));
+		this.addChild(new ScoreItem((game.viewport.width - 160 ) /2, this.pos.y +1));
+		this.addChild(new EnergyItem(5, this.pos.y + 1));
+		this.addChild(new WeaponsItem(game.viewport.width - 170, this.pos.y + 1, 168, 34));
 
 		//if( GlobalGameState.isMultiplayerMatch ) {
 		//this.addChild(new MultiplayerMessageCenter(0,50, game.viewport.width, 26));
@@ -292,15 +366,12 @@ export default class HUDContainer extends Container {
 	}
 
 	draw(renderer) {
-		renderer.setGlobalAlpha(0.3);
+		renderer.setGlobalAlpha(0.5);
 		renderer.setColor(this.backColor);
 		renderer.fill(this.backBox);
 
 		renderer.setGlobalAlpha(1.0);
 		renderer.setColor(this.boxColor);
-		//renderer.stroke(this.backBox);
-		//renderer.setTint(this.textBox.tint, this.textBox.getOpacity());
-		//this.textBox.draw(renderer, this.currentMessage, this.textBox.pos.x, this.textBox.pos.y);
 		super.draw(renderer);
 	}
 

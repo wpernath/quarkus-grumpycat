@@ -7,8 +7,12 @@ import { my_collision_types } from "../../util/constants";
  */
 export default class BaseTerrainSprite extends Sprite {	
 
-	constructor(x, y, animFrame) {
-		super(x * 32 + 16, y * 32 + 16, {
+	constructor(x, y, animFrame, imageOnly=false) {
+        if( !imageOnly ) {
+            x = x*32+16;
+            y = y*32+16;
+        }
+		super(x,y, {
 			width: 32,
 			height: 32,
 			image: "terrain",
@@ -18,14 +22,17 @@ export default class BaseTerrainSprite extends Sprite {
 		});
 
         this.animFrame = animFrame;
-		this.body = new Body(this);
-		this.body.addShape(new Rect(0,0, this.width, this.height));
-		this.body.ignoreGravity = true;
-		this.body.collisionType = collision.types.COLLECTABLE_OBJECT;
-		this.body.setCollisionMask(collision.types.PLAYER_OBJECT | my_collision_types.REMOTE_PLAYER);
-        this.body.setStatic(true);
-        this.addAnimation("start", animFrame, 60);
 
+        if( !imageOnly) {
+            this.body = new Body(this);
+            this.body.addShape(new Rect(0,0, this.width, this.height));
+            this.body.ignoreGravity = true;
+            this.body.collisionType = collision.types.COLLECTABLE_OBJECT;
+            this.body.setCollisionMask(collision.types.PLAYER_OBJECT | my_collision_types.REMOTE_PLAYER);
+            this.body.setStatic(true);
+        }
+
+        this.addAnimation("start", animFrame, 60);
 		let layers = level.getCurrentLevel().getLayers();
 		this.mapWidth = level.getCurrentLevel().cols;
 		this.mapHeight = level.getCurrentLevel().rows;
@@ -36,7 +43,7 @@ export default class BaseTerrainSprite extends Sprite {
 
         this.setCurrentAnimation("start");
 
-        this.type = animFrame[0];
+        this.type = animFrame[0]+1;
         this.isCollected = false;
 	}
 
@@ -45,6 +52,7 @@ export default class BaseTerrainSprite extends Sprite {
 	}
 
 	onCollision(response, other) {
+        if( this.isCollected ) return false;
 		if (other.body.collisionType === collision.types.PLAYER_OBJECT) {
 			game.world.removeChild(this);
             this.isCollected = true;

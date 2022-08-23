@@ -132,6 +132,9 @@ class PlayScreen extends Stage {
 								l.clearTile(x,y);
 								game.world.addChild(new ChestBonusSprite(x,y), layerNum);
 							}
+							else if( tile.tileId === BONUS_TILE.meat) {
+								
+							}
 						}
 					}
 				}

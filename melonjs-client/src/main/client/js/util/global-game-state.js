@@ -58,8 +58,11 @@ const GlobalGameState = {
 	bombs: 0,
 	invincible: false,
 	isGameOver: false,
-	hasSuperPower: false,
-	numberOfSuperPowers: 0,
+
+	magicBolts: 0,
+	magicNebulas: 0,
+	magicProtections: 0,
+	magicFirespins: 0,
 
 	// statistics
 	placedBarriers: 0,
@@ -97,6 +100,11 @@ const GlobalGameState = {
 		this.hitByRemotePlayerMagic = 0;
 		this.isMultiplayerMatch = false;
 		this.collectedChests =0;
+
+		this.magicBolts = 0;
+		this.magicNebulas = 0;
+		this.magicProtections=0;
+		this.magicFirespins=0;
 	},
 };
 

@@ -552,4 +552,22 @@ export class MultiplayerMessage {
 		setGameToJoin(game) {
 			this.multiplayerGameToJoin = game;
 		}
+
+		getMultiplayerPlayerNumber() {
+			let playerNum = 0;
+			if( this.multiplayerGame !== null ) {
+				let game = this.multiplayerGame;
+				let playerId = this.multiplayerPlayer.id;
+				if( playerId === game.player2.id) {
+					playerNum = 1;
+				}
+				else if( playerId === game.player3.id) {
+					playerNum = 2;
+				}
+				else if( playerId === game.player4.id) {
+					playerNum = 3;
+				}
+			}
+			return playerNum;
+		}
  }
