@@ -70,3 +70,29 @@ export const PLAYER_COLORS = [
 	"#32ffff",
 	"#ff3232"
 ];
+
+export const BARRIER_TILE = {
+	light: 182,
+	mid: 183,
+	dark: 184,
+};
+
+// special bonus type numbers
+// NOTE: those here are 1 based as Tiled counts tileIds from 1
+export const BONUS_TILE = {
+	bomb: 961,
+	star: 962,
+	cactus: 963,
+	meat: 966,
+	cheese: 967,
+	closedChest: 970,
+	openedChest: 971,
+	maxEnergyAdder20: 972,
+	maxEnergyAdder50: 973,
+	magicBolt: 974,
+	magicFirespin: 975,
+	magicProtectionCircle: 976,
+	magicNebula: 977,
+};
+
+

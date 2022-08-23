@@ -2,6 +2,9 @@ import { Sprite, Body, Rect, collision, game, level, Vector2d } from "melonjs";
 import { my_collision_types } from "../util/constants";
 import ExplosionEntity from "./explosion";
 
+/**
+ * A fire bolt: Throwing a firebolt
+ */
 export default class MagicBolt extends Sprite {
 	VELOCITY = 0.5;
     isStopped = true;
@@ -26,6 +29,7 @@ export default class MagicBolt extends Sprite {
 		this.body.ignoreGravity = true;
 		this.body.collisionType = collision.types.PROJECTILE_OBJECT;
 		this.body.setCollisionMask(collision.types.ENEMY_OBJECT | my_collision_types.REMOTE_PLAYER);
+        this.body.isStatic = true;
 		this.alwaysUpdate = true;
 
 		this.addAnimation("start", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], 6);

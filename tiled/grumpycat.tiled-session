@@ -210,8 +210,9 @@
     "project": "grumpycat.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "multiplayer/mp_arena.tmx",
         "Terrain.tsx",
+        "spiders.tsx",
+        "multiplayer/mp_arena.tmx",
         "multiplayer/mp_level-template.tmx",
         "multiplayer/mp_golems.tmx",
         "Golems.tmx",
@@ -220,8 +221,7 @@
         "Level5.tmx",
         "Level4.tmx",
         "Level3.tmx",
-        "/Users/wpernath/Devel/examples/platformer/data/map/map1.tmx",
-        "/Users/wanja/Devel/melonjs/examples/platformer/data/map/map1.tmx"
+        "/Users/wpernath/Devel/examples/platformer/data/map/map1.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

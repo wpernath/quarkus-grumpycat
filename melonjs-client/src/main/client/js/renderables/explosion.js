@@ -1,5 +1,5 @@
 import { collision, level, game, Sprite, Body, Rect } from "melonjs/dist/melonjs.module.js";
-import { BARRIER_TILE } from "./base-player";
+import { BARRIER_TILE } from "../util/constants";
 
 class ExplosionEntity extends Sprite {
 	borderLayer;

@@ -28,6 +28,7 @@ export default class MagicProtectionCircle extends Sprite {
 		this.body = new Body(this);
 		this.body.addShape(new Rect(28, 32, 34, 30));
 		this.body.ignoreGravity = true;
+		this.body.isStatic = true;
 		this.body.collisionType = collision.types.PROJECTILE_OBJECT;
 		this.body.setCollisionMask(collision.types.NO_OBJECT);
 		this.alwaysUpdate = true;

@@ -6,30 +6,7 @@ import MagicBolt from "./magic-bolt";
 import MagicFirespin from "./magic-firespin";
 import MagicProtectionCircle from "./magic-protection";
 import MagicNebula from "./magic-nebula";
-
-export const BARRIER_TILE = {
-	light: 182,
-	mid: 183,
-	dark: 184,
-};
-
-// special bonus type numbers
-export const BONUS_TILE = {
-	bomb: 961,
-	star: 962,
-	cactus: 963,
-	meat: 966,
-	cheese: 967,
-	closedChest: 970,
-	openedChest: 971,
-	maxEnergyAdder20: 972,
-	maxEnergyAdder50: 973,
-	magicBolt: 974,
-	magicFirespin: 975,
-	magicProtectionCircle: 976,
-	magicNebula: 977,
-
-};
+import { BONUS_TILE, BARRIER_TILE } from "../util/constants";
 
 export class BasePlayerSprite extends Sprite {
 	VELOCITY = 0.3;
@@ -74,7 +51,7 @@ export class BasePlayerSprite extends Sprite {
 			this.body.ignoreGravity = true;
 			this.body.addShape(new Rect(0, 0, this.width, this.height));
 			this.body.collisionType = collision.types.PLAYER_OBJECT;
-			this.body.setCollisionMask(collision.types.ENEMY_OBJECT);
+			this.body.setCollisionMask(collision.types.ENEMY_OBJECT | collision.types.COLLECTABLE_OBJECT);
 
 			// ensure the player is updated even when outside of the viewport
 			this.alwaysUpdate = true;
@@ -242,6 +219,15 @@ export class BasePlayerSprite extends Sprite {
 	 * (called when colliding with other objects)
 	 */
 	onCollision(response, other) {
+		if( other.body.collisionType === collision.types.COLLECTABLE_OBJECT) {
+			console.log("other.type: " + other.type);
+			console.log("other.isCollected: " + other.isCollected);
+			if( other.type === BONUS_TILE.closedChest && this.body.collisionType === collision.types.PLAYER_OBJECT && !other.isCollected ) {
+				GlobalGameState.score += GlobalGameState.scoreForChest;
+				GlobalGameState.collectedChests +=1;
+			}
+		}
+
 		if (GlobalGameState.invincible) return false;
 		if (other.body.collisionType === collision.types.ENEMY_OBJECT && !other.isStunned && !other.isDead && !GlobalGameState.isGameOver) {
 			if (other.enemyType === ENEMY_TYPES.cat) {

@@ -9,6 +9,8 @@ import VirtualJoypad from './hud/virtual-joypad.js';
 import { LevelManager } from '../util/level.js';
 
 import NetworkManager from "../util/network";
+import { BONUS_TILE } from '../util/constants.js';
+import ChestBonusSprite from '../renderables/terrain/chest-sprite.js';
 
 
 class PlayScreen extends Stage {
@@ -119,7 +121,22 @@ class PlayScreen extends Stage {
 		let layerNum = 0;
 		layers.forEach((l) => {
 			console.log(l.name);
-			if (l.name === "Persons") {
+			if( l.name === "Bonus") {
+				// convert some bonus tiles to sprites
+				for (let y = 0; y < l.height; y++) {
+					for (let x = 0; x < l.width; x++) {
+						let tile = l.cellAt(x, y);
+						if (tile !== null && tile !== undefined) {
+							if( tile.tileId === BONUS_TILE.closedChest ) {
+								console.log("  Chest at (" + x + "/" + y + ")");
+								l.clearTile(x,y);
+								game.world.addChild(new ChestBonusSprite(x,y), layerNum);
+							}
+						}
+					}
+				}
+			}
+ 			else if (l.name === "Persons") {
 				let enemynum = 0;
 				this.spriteLayer = layerNum;
 				for (let y = 0; y < l.height; y++) {

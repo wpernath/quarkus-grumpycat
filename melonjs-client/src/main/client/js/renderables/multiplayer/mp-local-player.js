@@ -25,7 +25,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 		this.tint = color;
 
 		// overwrite what type of collisions we want to see
-		this.body.setCollisionMask(my_collision_types.REMOTE_BOMB | my_collision_types.REMOTE_PLAYER | collision.types.ENEMY_OBJECT);
+		this.body.setCollisionMask(my_collision_types.REMOTE_BOMB | my_collision_types.REMOTE_PLAYER | collision.types.ENEMY_OBJECT | collision.types.COLLECTABLE_OBJECT);
 
 		// set the display to follow our position on both axis
 		game.viewport.follow(this.pos, game.viewport.AXIS.BOTH, 0.1);

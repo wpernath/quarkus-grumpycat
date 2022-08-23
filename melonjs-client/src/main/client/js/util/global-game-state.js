@@ -29,6 +29,7 @@ const GlobalGameState = {
 	scoreForKillingSpider: 100,
 	scoreForBombingRemotePlayers: 150,
 	scoreForStars: 50,
+	scoreForChest: 250,
 
 	// Amount of energy to get back
 	energyForMeat: 25,
@@ -72,6 +73,7 @@ const GlobalGameState = {
 	bonusCollected: 0,
 	hitByRemotePlayerBomb: 0,
 	hitByRemotePlayerMagic: 0,
+	collectedChests:0,
 
 	// reset statistics and player state
 	reset: function () {
@@ -94,6 +96,7 @@ const GlobalGameState = {
 		this.hitByRemotePlayerBomb = 0;
 		this.hitByRemotePlayerMagic = 0;
 		this.isMultiplayerMatch = false;
+		this.collectedChests =0;
 	},
 };
 
