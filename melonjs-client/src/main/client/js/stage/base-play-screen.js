@@ -33,7 +33,7 @@ export class BasePlayScreen extends Stage {
 		emitCount: 10,
 	};
 
-	update(dt) {
+	updateasdfadf(dt) {
 		if (!this.isActive) return super.update(dt);
 		if (this.enemyEmitter.isActive && this.enemyEmitter.emitEvery <= 0 && this.enemyEmitter.emitCount > 0) {
 			// emit a new spider

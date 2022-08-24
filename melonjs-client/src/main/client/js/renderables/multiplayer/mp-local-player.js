@@ -3,11 +3,11 @@ import BombEntity from "../bomb";
 import GlobalGameState from "../../util/global-game-state";
 
 import { GameStateAction } from "../../util/game-updates";
-import { BONUS_TILE, BasePlayerSprite, BARRIER_TILE } from "../base-player";
+import { BasePlayerSprite} from "../base-player";
 
 import MultiplayerManager from "../../util/multiplayer";
 import { MultiplayerMessage } from "../../util/multiplayer";
-import { my_collision_types } from "../../util/constants";
+import { my_collision_types, BARRIER_TILE, BONUS_TILE } from "../../util/constants";
 import { ENEMY_TYPES } from "../base-enemy";
 
 
@@ -50,13 +50,15 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 		if (input.isKeyPressed("barrier")) {
 			if (input.isKeyPressed("left")) {
 				dx = -1;
-			} else if (input.isKeyPressed("right")) {
+			} 
+			else if (input.isKeyPressed("right")) {
 				dx = +1;
 			}
 
 			if (input.isKeyPressed("up")) {
 				dy = -1;
-			} else if (input.isKeyPressed("down")) {
+			} 
+			else if (input.isKeyPressed("down")) {
 				dy = +1;
 			}
 
@@ -102,8 +104,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 					GlobalGameState.magicBolts--;
 					action.dx = dx;
 					action.dy = dy;
-					action.gutterThrown = true;
-					action.hasChanged = true;
+					action.magicBolt = true;					
 					MultiplayerManager.get().sendAction(action);					
 				}
 			}
@@ -130,13 +131,17 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 				if( GlobalGameState.magicFirespins > 0 ) {
 					this.throwMagicFireSpin(mapX, mapY);
 					GlobalGameState.magicFirespins--;
+					action.magicFirespin = true;
+					MultiplayerManager.get().sendAction(action);
 				}
 			}
 
 			if (input.isKeyPressed("magic-barrier")) {
 				if( GlobalGameState.magicProtections > 0 ) {
 					this.throwMagicProtectionCircle(mapX, mapY);
-					GlobalGameState.magicProtections--
+					GlobalGameState.magicProtections--;
+					action.magicProtectionCircle = true;
+					MultiplayerManager.get().sendAction(action);
 				}
 			}
 
@@ -144,6 +149,8 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 				if( GlobalGameState.magicNebulas > 0 ) {
 					this.throwMagicNebula(mapX, mapY);
 					GlobalGameState.magicNebulas--;
+					action.magicNebula = true;
+					MultiplayerManager.get().sendAction(action);
 				}
 			}
 
@@ -182,6 +189,9 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 					// level done, check to see if there are more levels
 					action.levelOver = true;
 					this.levelOver = true;
+					GlobalGameState.isGameOver = true;
+
+					console.log("No more bonus tiles: GAME OVER");
 					MultiplayerManager.get().sendAction(action);
 					MultiplayerManager.get().sendAction(MultiplayerMessage.gameOver());
 				}
@@ -200,7 +210,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 		}
 
 		if (GlobalGameState.energy <= 0) {
-			console.log("GAME OVER!");
+			console.log("Out of Energy: GAME OVER!");
 			GlobalGameState.isGameOver = true;
 			this.levelOver = true;
 
@@ -219,6 +229,25 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 	 * (called when colliding with other objects)
 	 */
 	onCollision(response, other) {
+		if (other.body.collisionType === collision.types.COLLECTABLE_OBJECT && !other.isCollected) {
+			let mapX = Math.floor(this.pos.x / 32);
+			let mapY = Math.floor(this.pos.y / 32);
+
+			console.log("other.type: " + other.type);
+			console.log("other.isCollected: " + other.isCollected);
+			if (other.type === BONUS_TILE.closedChest ) {
+				GlobalGameState.score += GlobalGameState.scoreForChest;
+				GlobalGameState.collectedChests += 1;
+
+				let mm = MultiplayerMessage.gameUpdate();
+				mm.message = this.player.name + " has opened a CHEST!";
+				mm.chestCollected = true;
+				mm.x = mapX;
+				mm.y = mapY;
+				MultiplayerManager.get().sendAction(mm);
+			}
+		}
+
 		if (GlobalGameState.invincible) return false;
 		if (other.body.collisionType === collision.types.ENEMY_OBJECT && !other.isStunned && !other.isDead && !GlobalGameState.isGameOver) {
 			if (other.enemyType === ENEMY_TYPES.cat) {

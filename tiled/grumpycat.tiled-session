@@ -3,10 +3,10 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "multiplayer/mp_arena.tmx",
+    "activeFile": "Golems.tmx",
     "expandedProjectPaths": [
-        ".",
-        "multiplayer"
+        "multiplayer",
+        "."
     ],
     "exportAsImage.useCurrentScale": true,
     "file.lastUsedOpenFilter": "Alle Dateien (*)",
@@ -57,11 +57,11 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 1.2696,
-            "selectedLayer": 6,
+            "scale": 1.035,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 486.37366099558915,
-                "y": 743.9350976685571
+                "x": 543.9613526570049,
+                "y": 746.8599033816425
             }
         },
         "Level-Template.tmx": {
@@ -205,17 +205,18 @@
     "map.lastUsedFormat": "tmx",
     "map.width": 32,
     "openFiles": [
-        "multiplayer/mp_arena.tmx"
+        "multiplayer/mp_arena.tmx",
+        "Golems.tmx"
     ],
     "project": "grumpycat.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "multiplayer/mp_arena.tmx",
+        "Golems.tmx",
         "Terrain.tsx",
         "spiders.tsx",
-        "multiplayer/mp_arena.tmx",
         "multiplayer/mp_level-template.tmx",
         "multiplayer/mp_golems.tmx",
-        "Golems.tmx",
         "Level1.tmx",
         "Level2.tmx",
         "Level5.tmx",

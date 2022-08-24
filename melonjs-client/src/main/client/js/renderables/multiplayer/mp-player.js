@@ -27,6 +27,24 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 				if (message.gutterThrown) {
 					this.placeBorderTile(message.x + message.dx, message.y + message.dy, false);
 				} 
+				else if( message.magicBolt ) {
+					this.throwMagicSpell(message.x, message.y, message.dx, message.dy, false);
+				}
+				else if (message.magicNebula) {
+					this.pos.x = message.x * 32 + 16;
+					this.pos.y = message.y * 32 + 16;
+					this.throwMagicNebula(message.x, message.y, false);
+				} 
+				else if (message.magicProtectionCircle) {
+					this.pos.x = message.x * 32 + 16;
+					this.pos.y = message.y * 32 + 16;
+					this.throwMagicProtectionCircle(message.x, message.y, false);
+				} 
+				else if (message.magicFirespin) {
+					this.pos.x = message.x * 32 + 16;
+					this.pos.y = message.y * 32 + 16;
+					this.throwMagicFireSpin(message.x, message.y, false);
+				} 
 				else if (message.bombPlaced) {
 					this.pos.x = message.x * 32 + 16;
 					this.pos.y = message.y * 32 + 16;
@@ -37,8 +55,7 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 					bomb.tint.copy(this.color);
 					bomb.thrownByPlayer = this.player;
 					game.world.addChild(bomb);
-				} 
-				else {
+				} else {
 					//console.log(" updating pos of " + this.name + " to " + this.pos );
 					// just movement
 					this.pos.x = message.x * 32 + 16;

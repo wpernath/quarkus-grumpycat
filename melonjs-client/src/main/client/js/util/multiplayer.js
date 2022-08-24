@@ -18,7 +18,7 @@ export const MultiplayerMessageType = {
 	BROADCAST_CHAT  : "BROADCAST_CHAT",
     ERROR           : "ERROR",
     PLAYER_GAVE_UP  : "PLAYER_GAVE_UP",
-    GAME_PAUSED     : "PLAYER_PAUSED_GAME",
+    GAME_PAUSED     : "PLAYER_PAUSED_GAME",	
 };
 export class MultiplayerMessage {
 	static gameUpdate() {
@@ -72,6 +72,11 @@ export class MultiplayerMessage {
 		this.dy = 0;
 		this.bombPlaced = false;
 		this.gutterThrown = false;
+		this.magicBolt = false;
+		this.magicNebula = false;
+		this.magicProtectionCircle = false;
+		this.magicFirespin = false;
+		this.chestCollected = false;
 		this.score = 0;
 		this.energy = 0;
         

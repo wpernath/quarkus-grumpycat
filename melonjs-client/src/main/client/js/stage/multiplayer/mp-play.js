@@ -18,6 +18,7 @@ import ChestBonusSprite from "../../renderables/terrain/chest-sprite.js";
 export default class MultiplayerPlayScreen extends BasePlayScreen {
 	players = [];  // list of MultiplayerPlayer entries, who is part of this game
     remotePlayers = []; // remove player sprites 
+    chests = [];
 
 	onResetEvent() {
         console.log("mp-play.OnEnter()");
@@ -28,6 +29,7 @@ export default class MultiplayerPlayScreen extends BasePlayScreen {
 		this.enemies = [];
 		this.enemyEmitter.isActive = false;
         this.remotePlayers = [];
+        this.chests = [];
 
         this.players = this.playersFromGame(MultiplayerManager.get().multiplayerGame);        
 		for( let x = 0; x < this.players.length; x++) {
@@ -47,6 +49,7 @@ export default class MultiplayerPlayScreen extends BasePlayScreen {
 
 		this.handler = event.on(event.KEYUP, this.actionHandler, this);
 
+        // Add a game paused event listener
         MultiplayerManager.get().addEventListener(MultiplayerMessageType.GAME_PAUSED, (evt) => {
             let message = evt.message;
             if( message.playerId !== MultiplayerManager.get().multiplayerPlayer.id ) {                
@@ -61,6 +64,7 @@ export default class MultiplayerPlayScreen extends BasePlayScreen {
             }
         }, this);
 
+        // Add a game over event listener
 		MultiplayerManager.get().addEventListener(MultiplayerMessageType.GAME_OVER, (evt) => {	
             state.pause();		
             this.cleanupWorld();
@@ -68,6 +72,7 @@ export default class MultiplayerPlayScreen extends BasePlayScreen {
             state.resume();
 		}, this);
 
+        // add a player removed event listener
         MultiplayerManager.get().addEventListener([MultiplayerMessageType.PLAYER_REMOVED, MultiplayerMessageType.PLAYER_GAVE_UP], (event) => {
             // check to see which player we have to remove now            
             let message = event.message;
@@ -88,7 +93,7 @@ export default class MultiplayerPlayScreen extends BasePlayScreen {
 	}
 
     /**
-     * 
+     * Global keyup action handler for the MP game
      * @param {*} action 
      * @param {*} keyCode 
      * @param {*} edge 
@@ -148,6 +153,7 @@ export default class MultiplayerPlayScreen extends BasePlayScreen {
         this.player = null;
         this.remotePlayers = [];
         this.enemies = [];
+        this.chests = [];
     }
 
     /**
@@ -165,22 +171,31 @@ export default class MultiplayerPlayScreen extends BasePlayScreen {
 	}
 
 	update(dt) {
-		if (!this.isActive) return super.update(dt);
-		if (this.enemyEmitter.isActive && this.enemyEmitter.emitEvery <= 0 && this.enemyEmitter.emitCount > 0) {
-			// emit a new spider
-			this.enemyEmitter.emitCount--;
-			this.enemyEmitter.emitEvery = this.enemyEmitter.emitTime;
-			let spider = new SpiderEnemy(this.enemyEmitter.emitAt.x, this.enemyEmitter.emitAt.y, false);
-			spider.setEnemyName("SpiderEnemy." + (this.enemyEmitter.emitCount + 1));
-			this.enemies.push(spider);
-			game.world.addChild(spider, this.spriteLayer);
-			spider.setPlayer(this.player);
-		}
-
-		this.enemyEmitter.emitEvery -= dt;
-
-		let dirty = super.update(dt);
-		return dirty;
+        let isDirty = false;
+        if( !GlobalGameState.isGameOver ) {
+            if (!this.isActive) return super.update(dt);
+            if (this.enemyEmitter.isActive && this.enemyEmitter.emitEvery <= 0 && this.enemyEmitter.emitCount > 0) {
+                // emit a new spider
+                this.enemyEmitter.emitCount--;
+                this.enemyEmitter.emitEvery = this.enemyEmitter.emitTime;
+                let spider = new SpiderEnemy(this.enemyEmitter.emitAt.x, this.enemyEmitter.emitAt.y, false);
+                spider.setEnemyName("SpiderEnemy." + (this.enemyEmitter.emitCount + 1));
+                this.enemies.push(spider);
+                game.world.addChild(spider, this.spriteLayer);
+                spider.setPlayer(this.player);
+                isDirty = true;                
+            }
+            this.enemyEmitter.emitEvery -= dt;
+        }
+        else {
+            this.isActive = false;
+            if( !this.isExiting ) {
+                this.isExiting = true;
+                this.cleanupWorld();
+                state.change(my_state.MULTIPLAYER_GAME_OVER);
+            }
+        }
+		return super.update(dt) || isDirty;		
 	}
 
 	setupLevel() {
@@ -204,8 +219,11 @@ export default class MultiplayerPlayScreen extends BasePlayScreen {
 							if (tile.tileId === BONUS_TILE.closedChest) {
 								console.log("  Chest at (" + x + "/" + y + ")");
 								l.clearTile(x, y);
-								game.world.addChild(new ChestBonusSprite(x, y), layerNum);
-							} else if (tile.tileId === BONUS_TILE.meat) {
+                                let chest = new ChestBonusSprite(x, y);
+                                this.chests.push(chest);
+								game.world.addChild(chest, layerNum);
+							} 
+                            else if (tile.tileId === BONUS_TILE.meat) {
 							}
 						}
 					}
@@ -254,7 +272,7 @@ export default class MultiplayerPlayScreen extends BasePlayScreen {
 							} 
                             else if (tile.tileId === 995) {
 								// create a spider emitter, which emits up to X spiders every
-								// 10 seconds
+								// y seconds
 								this.enemyEmitter.isActive = true;
 								this.enemyEmitter.emitAt.x = x;
 								this.enemyEmitter.emitAt.y = y;
@@ -290,7 +308,7 @@ export default class MultiplayerPlayScreen extends BasePlayScreen {
 		game.world.removeChild(this.hudContainer);
 		game.world.removeChild(this.virtualJoypad);
 		let paul = event.off(event.KEYUP, this.actionHandler);
-		console.log("PAUL: " +paul);
+		//console.log("PAUL: " +paul);
         // make sure everything is removed!
         this.cleanupWorld();
         game.world.reset();
