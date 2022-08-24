@@ -74,7 +74,41 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 					MultiplayerManager.get().sendAction(action);
 				}
 			}
-		} else {
+		} 
+        else if(input.isKeyPressed("magic") && GlobalGameState.magicBolts > 0 ) {      
+
+			if (input.isKeyPressed("left")) {
+				dx = -1;
+			} 
+            else if (input.isKeyPressed("right")) {
+				dx = +1;
+			}
+			if (input.isKeyPressed("up")) {
+				dy = -1;
+			} 
+            else if (input.isKeyPressed("down")) {
+				dy = +1;
+			}
+
+			this.oldDx = dx;
+			this.oldDy = dy;
+			if (dx != 0 || dy != 0) {
+				// place a new barrier tile in borderLayer
+				// only if there is no border tile at that pos
+				let bX = mapX + dx;
+				let bY = mapY + dy;
+                
+				if ( this.spell == null && this.throwMagicSpell(bX, bY, dx, dy)) {
+					GlobalGameState.magicBolts--;
+					action.dx = dx;
+					action.dy = dy;
+					action.gutterThrown = true;
+					action.hasChanged = true;
+					MultiplayerManager.get().sendAction(action);					
+				}
+			}
+        }
+		else {
 			if (input.isKeyPressed("bomb")) {
 				if (GlobalGameState.bombs > 0) {
 					let bomb = new BombEntity(this.pos.x, this.pos.y);
@@ -89,6 +123,27 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 					action.dy = dy;
 					MultiplayerManager.get().sendAction(action);
 					return super.update(dt);
+				}
+			}
+
+			if (input.isKeyPressed("damage")) {
+				if( GlobalGameState.magicFirespins > 0 ) {
+					this.throwMagicFireSpin(mapX, mapY);
+					GlobalGameState.magicFirespins--;
+				}
+			}
+
+			if (input.isKeyPressed("magic-barrier")) {
+				if( GlobalGameState.magicProtections > 0 ) {
+					this.throwMagicProtectionCircle(mapX, mapY);
+					GlobalGameState.magicProtections--
+				}
+			}
+
+			if (input.isKeyPressed("magic-nebula")) {
+				if( GlobalGameState.magicNebulas > 0 ) {
+					this.throwMagicNebula(mapX, mapY);
+					GlobalGameState.magicNebulas--;
 				}
 			}
 
@@ -169,10 +224,12 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 			if (other.enemyType === ENEMY_TYPES.cat) {
 				GlobalGameState.catchedByCats++;
 				GlobalGameState.energy -= GlobalGameState.energyLostByCat;
-			} else if (other.enemyType === ENEMY_TYPES.spider) {
+			} 
+			else if (other.enemyType === ENEMY_TYPES.spider) {
 				GlobalGameState.bittenBySpiders++;
 				GlobalGameState.energy -= GlobalGameState.energyLostBySpider;
-			} else if (other.enemyType === ENEMY_TYPES.golem) {
+			} 
+			else if (other.enemyType === ENEMY_TYPES.golem) {
 				GlobalGameState.catchedByGolems++;
 				GlobalGameState.energy -= GlobalGameState.energyLostByGolem;
 			}

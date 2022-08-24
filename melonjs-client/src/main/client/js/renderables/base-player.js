@@ -140,21 +140,25 @@ export class BasePlayerSprite extends Sprite {
 					// bomb
 					GlobalGameState.bombs += GlobalGameState.bombsForBombBonus;
 					GlobalGameState.score += GlobalGameState.scoreForBombs;
-				} else if (bonus === BONUS_TILE.star) {
+				} 
+				else if (bonus === BONUS_TILE.star) {
 					// super power
 					GlobalGameState.score += GlobalGameState.scoreForStars;
 					GlobalGameState.maxEnergy += GlobalGameState.maxEnergyForStar;
-				} else if (bonus === BONUS_TILE.cactus) {
+				} 
+				else if (bonus === BONUS_TILE.cactus) {
 					// cactus
 					GlobalGameState.score += GlobalGameState.scoreForPills;
-				} else if (bonus === BONUS_TILE.meat) {
+				} 
+				else if (bonus === BONUS_TILE.meat) {
 					// meat
 					GlobalGameState.score += GlobalGameState.scoreForMeat;
 					if (GlobalGameState.energy < GlobalGameState.maxEnergy) {
 						GlobalGameState.energy += GlobalGameState.energyForMeat;
 						if (GlobalGameState.energy > GlobalGameState.maxEnergy) GlobalGameState.energy = GlobalGameState.maxEnergy;
 					}
-				} else if (bonus === BONUS_TILE.cheese) {
+				}
+				else if (bonus === BONUS_TILE.cheese) {
 					// cheese
 					GlobalGameState.score += GlobalGameState.scoreForCheese;
 					if (GlobalGameState.energy < GlobalGameState.maxEnergy) {
@@ -162,6 +166,24 @@ export class BasePlayerSprite extends Sprite {
 						if (GlobalGameState.energy > GlobalGameState.maxEnergy) GlobalGameState.energy = GlobalGameState.maxEnergy;
 					}
 				}
+				else if( bonus === BONUS_TILE.magicBolt) {
+					GlobalGameState.score += GlobalGameState.scoreForPotion;
+					GlobalGameState.magicBolts += GlobalGameState.magicForPotion;
+				}
+				else if( bonus === BONUS_TILE.magicFirespin) {
+					GlobalGameState.score += GlobalGameState.scoreForPotion;
+					GlobalGameState.magicFirespins += GlobalGameState.magicForPotion;
+				}
+				else if( bonus === BONUS_TILE.magicNebula) {
+					GlobalGameState.score += GlobalGameState.scoreForPotion;
+					GlobalGameState.magicNebulas += GlobalGameState.magicForPotion;
+				}
+				else if( bonus === BONUS_TILE.magicProtectionCircle) {
+					GlobalGameState.score += GlobalGameState.scoreForPotion;
+					GlobalGameState.magicProtections += GlobalGameState.magicForPotion;
+				}
+
+				
 			}
 		}
 		return bonus;

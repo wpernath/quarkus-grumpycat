@@ -30,6 +30,7 @@ const GlobalGameState = {
 	scoreForBombingRemotePlayers: 150,
 	scoreForStars: 50,
 	scoreForChest: 250,
+	scoreForPotion: 50,
 
 	// Amount of energy to get back
 	energyForMeat: 25,
@@ -38,6 +39,7 @@ const GlobalGameState = {
 	// bombs for picking up a bomb bonus
 	bombsForBombBonus: 5,
 	superPowersForStarBonus: 5,
+	magicForPotion: 3,
 
 	// how much energy do you loose if
 	energyLostBySpider: 25,

@@ -7,35 +7,17 @@ import GolemEnemySprite from "../../renderables/golem-enemy";
 import HUDContainer from "../hud/hud-container.js";
 import VirtualJoypad from "../hud/virtual-joypad.js";
 
-import { my_state, PLAYER_COLORS } from "../../util/constants";
+import { my_state, PLAYER_COLORS, BONUS_TILE } from "../../util/constants";
 import { MPRemotePlayerSprite } from "../../renderables/multiplayer/mp-player";
 import { MPLocalPlayerSprite } from "../../renderables/multiplayer/mp-local-player";
 import GlobalGameState from "../../util/global-game-state";
+import { BasePlayScreen } from "../base-play-screen";
+import ChestBonusSprite from "../../renderables/terrain/chest-sprite.js";
 
 
-export default class MultiplayerPlayScreen extends Stage {
-	player = null; // local player, sending its state over network
+export default class MultiplayerPlayScreen extends BasePlayScreen {
 	players = [];  // list of MultiplayerPlayer entries, who is part of this game
-
     remotePlayers = []; // remove player sprites 
-	enemies = [];       // enemy sprites
-
-	hudContainer = null;
-	virtualJoypad = null;
-	isActive = false;
-	spriteLayer = 6;
-	currentLevel = null;
-
-	enemyEmitter = {
-		isActive: false,
-		emitAt: {
-			x: 0,
-			y: 0,
-		},
-		emitEvery: 5000, // ms
-		emitTime: 5000,
-		emitCount: 10,
-	};
 
 	onResetEvent() {
         console.log("mp-play.OnEnter()");
@@ -212,7 +194,24 @@ export default class MultiplayerPlayScreen extends Stage {
         let playerNum = 0;
 		layers.forEach((l) => {
 			console.log(l.name);
-			if (l.name === "Persons") {
+
+			if (l.name === "Bonus") {
+				// convert some bonus tiles to sprites
+				for (let y = 0; y < l.height; y++) {
+					for (let x = 0; x < l.width; x++) {
+						let tile = l.cellAt(x, y);
+						if (tile !== null && tile !== undefined) {
+							if (tile.tileId === BONUS_TILE.closedChest) {
+								console.log("  Chest at (" + x + "/" + y + ")");
+								l.clearTile(x, y);
+								game.world.addChild(new ChestBonusSprite(x, y), layerNum);
+							} else if (tile.tileId === BONUS_TILE.meat) {
+							}
+						}
+					}
+				}
+			} 
+			else if (l.name === "Persons") {
 				let enemynum = 0;
 				this.spriteLayer = layerNum;
 				for (let y = 0; y < l.height; y++) {
