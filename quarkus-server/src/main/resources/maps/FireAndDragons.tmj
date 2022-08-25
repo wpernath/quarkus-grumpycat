@@ -343,8 +343,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":1345.60492601053,
-                 "y":193.77336378985
+                 "x":1345.6,
+                 "y":193.773
                 }, 
                 {
                  "class":"GolemEnemy",
@@ -361,8 +361,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":1378.37878637402,
-                 "y":448.019068427848
+                 "x":1378.38,
+                 "y":448.019
                 }, 
                 {
                  "class":"",
@@ -375,18 +375,18 @@
                          "y":0
                         }, 
                         {
-                         "x":449.895719535207,
-                         "y":-3.97258913496876
+                         "x":449.896,
+                         "y":-3.97259
                         }, 
                         {
-                         "x":447.909424967723,
-                         "y":-293.971595987685
+                         "x":447.909,
+                         "y":-293.972
                         }],
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":1394.37878637402,
-                 "y":437.977952130301
+                 "x":1394.38,
+                 "y":437.978
                 }, 
                 {
                  "class":"",
@@ -399,18 +399,18 @@
                          "y":0
                         }, 
                         {
-                         "x":-3.97258913496876,
-                         "y":183.732247492303
+                         "x":-3.97259,
+                         "y":183.732
                         }, 
                         {
-                         "x":-199.622604032178,
-                         "y":184.725394776045
+                         "x":-199.623,
+                         "y":184.725
                         }],
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":1363.59122057801,
-                 "y":178.766511073592
+                 "x":1363.59,
+                 "y":178.767
                 }, 
                 {
                  "class":"EnemyEmitter",
@@ -442,8 +442,51 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":926.496772271328,
-                 "y":606.922633826597
+                 "x":926.497,
+                 "y":606.923
+                }, 
+                {
+                 "class":"Chest",
+                 "gid":970,
+                 "height":32,
+                 "id":9,
+                 "name":"Treasure.1",
+                 "properties":[
+                        {
+                         "name":"numBombs",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"numMagicBolts",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"numMagicFirespin",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"numMagicNebula",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"numMagicProtectionCircle",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"score",
+                         "type":"int",
+                         "value":500
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":1952.1609972216,
+                 "y":223.253886010363
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -452,7 +495,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":8,
+ "nextobjectid":11,
  "orientation":"orthogonal",
  "properties":[
         {

@@ -3,9 +3,10 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Golems.tmx",
+    "activeFile": "FireAndDragons.tmx",
     "expandedProjectPaths": [
         ".",
+        "templates",
         "multiplayer"
     ],
     "exportAsImage.useCurrentScale": true,
@@ -54,11 +55,11 @@
             "scaleInEditor": 1.9537
         },
         "FireAndDragons.tmx": {
-            "scale": 1.0373,
+            "scale": 1.1862,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 2020.6304829846715,
-                "y": 331.6301937722934
+                "x": 1967.627718765807,
+                "y": 239.41999662788743
             }
         },
         "Golems.tmx": {
@@ -131,7 +132,7 @@
         },
         "Terrain.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 2.4032,
+            "scaleInDock": 2.03,
             "scaleInEditor": 0.9167
         },
         "Utumno.tsx": {
@@ -210,6 +211,7 @@
     "last.exportedFilePath": "/Users/wpernath/Devel/grumpycat/quarkus-grumpycat/quarkus-server/src/main/resources/maps",
     "last.externalTilesetPath": "/Users/wanja/Devel/grumpycat/quarkus-grumpycat/tiled",
     "last.imagePath": "/Users/wanja/Devel/grumpycat/quarkus-grumpycat/tiled/images/tilesets",
+    "last.objectTemplatePath": "/Users/wpernath/Devel/grumpycat/quarkus-grumpycat/tiled/templates",
     "lastUsedTilesetExportFilter": "All Files (*)",
     "map.height": 36,
     "map.lastUsedExportFilter": "Alle Dateien (*)",
@@ -217,14 +219,15 @@
     "map.width": 32,
     "openFiles": [
         "multiplayer/mp_arena.tmx",
-        "Golems.tmx"
+        "Golems.tmx",
+        "FireAndDragons.tmx"
     ],
     "project": "grumpycat.tiled-project",
     "property.type": "int",
     "recentFiles": [
-        "FireAndDragons.tmx",
         "multiplayer/mp_arena.tmx",
         "Golems.tmx",
+        "FireAndDragons.tmx",
         "Terrain.tsx",
         "spiders.tsx",
         "multiplayer/mp_level-template.tmx",

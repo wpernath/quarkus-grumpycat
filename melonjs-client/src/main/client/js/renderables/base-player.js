@@ -244,8 +244,14 @@ export class BasePlayerSprite extends Sprite {
 		if( other.body.collisionType === collision.types.COLLECTABLE_OBJECT && !other.isCollected ) {
 			console.log("other.type: " + other.type);
 			console.log("other.isCollected: " + other.isCollected);
-			if( other.type === BONUS_TILE.closedChest && this.body.collisionType === collision.types.PLAYER_OBJECT ) {
-				GlobalGameState.score += GlobalGameState.scoreForChest;
+			other.isCollected = true;
+			if( other.type === BONUS_TILE.closedChest ) {
+				GlobalGameState.score += other.score;
+				GlobalGameState.bombs += other.numBombs;
+				GlobalGameState.magicBolts += other.numMagicBolts;
+				GlobalGameState.magicFirespins += other.numMagicFirespins;
+				GlobalGameState.magicNebulas += other.numMagicNebulas;
+				GlobalGameState.magicProtections += other.numMagicProtectionCircles;
 				GlobalGameState.collectedChests +=1;
 			}
 		}

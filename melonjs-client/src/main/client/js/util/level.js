@@ -3,7 +3,7 @@ import CONFIG from "../../config";
 import { WayPath, WayPoint } from "./walk-path";
 
 export class LevelObject {
-    types = {
+    static types = {
         ENEMY: 1,
         CHEST: 2,
         ENEMY_EMITTER: 3,
@@ -23,14 +23,14 @@ export class LevelObject {
         this.pathId = -1;
 
         if( this.clazz === 'GolemEnemy') {
-            this.type = this.types.ENEMY;
+            this.type = LevelObject.types.ENEMY;
             
             // get path id from properties object
             this.pathId = this._propertyValue("path");
-            this.path = null;
+            this.path = null;            
         }
         else if( this.clazz === 'EnemyEmitter') {
-            this.type = this.types.ENEMY_EMITTER;
+            this.type = LevelObject.types.ENEMY_EMITTER;
 
             // EnemyEmitter has the following properties
             // - enemyType (String); SpiderEnemy
@@ -42,6 +42,15 @@ export class LevelObject {
             this.numEnemies = this._propertyValue("numEnemies") || 5;
             this.emitEvery = this._propertyValue("emitEvery") || 5000;
         }
+        else if( this.clazz === 'Chest') {
+            this.type = LevelObject.types.CHEST;
+            this.numBombs = this._propertyValue("numBombs") || 0;
+            this.score = this._propertyValue("score") || 250
+            this.numMagicBolts = this._propertyValue("numMagicBolts") || 0;
+            this.numMagicFirespins = this._propertyValue("numMagicFirespin") || 0;
+            this.numMagicNebulas  = this._propertyValue("numMagicNebula") || 0;
+            this.numMagicProtectionCircles = this._propertyValue("numMagicProtectionCircle") || 0;
+        }
     }
 
     /**
@@ -52,14 +61,16 @@ export class LevelObject {
      * @returns value of the property
      */
     _propertyValue(name) {
-        if( this.properties !== null && this.properties !== undefined) {
-            this.properties.forEach((p) => {
-                if( p.name === name) {
-                    return p.value;
+        let value = null;
+        if( this.obj.properties !== null && this.obj.properties !== undefined) {
+            this.obj.properties.forEach((p) => {
+                
+                if( p.name === name) {                    
+                    value = p.value;
                 }
             });
         }
-        return null;
+        return value;
     }
 
     getPathObject(wayPaths) {
@@ -100,6 +111,7 @@ export class Level {
 	onLoaded() {}
 
 	applyProperties(obj, point) {
+        point.forEnemy = undefined;
         if( obj.properties !== null ) {
             obj.properties.forEach( (p) => {
                 if( p.name === 'forEnemy' ) {
@@ -132,7 +144,8 @@ export class Level {
                             this.wayPaths[path.forEnemy] = path;
                         }
                         else {
-                            this.wayPaths[obj.id] = path;
+                            console.log("DEBUG!!!!! ***** Stored new wayPath as Path." + obj.id);
+                            this.wayPaths["Path." + obj.id] = path;
                         }
 
                         obj.polyline.forEach( (point) => {                

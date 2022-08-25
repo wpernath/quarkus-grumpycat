@@ -1,6 +1,7 @@
 import { BONUS_TILE } from "../../util/constants";
 import { collision, Sprite, Vector2d, Body, level, Rect } from "melonjs";
 import { my_collision_types } from "../../util/constants";
+import GlobalGameState from "../../util/global-game-state";
 
 export default class ChestBonusSprite extends Sprite {
 	/**
@@ -44,6 +45,14 @@ export default class ChestBonusSprite extends Sprite {
         this.isCollected = false;
 		this.mapX = x;
 		this.mapY = y;
+
+		// define what is IN this chest
+		this.score = GlobalGameState.scoreForChest;
+		this.numBombs = 0;
+		this.numMagicProtectionCircle = 0;
+		this.numMagicBolts = 0;
+		this.numMagicNebula = 0;
+		this.numMagicFirespin = 0;
 	}
 
 	onCollision(response, other) {

@@ -68,21 +68,19 @@ public class MapResource {
                     else if( l.type.equalsIgnoreCase("objectgroup")) {
                         // make sure any objectgroup layer is not shown && no LayerObject neither
                         l.visible = false;
-                        Log.info("New layer object in map " + map.name);
 
                         for( LayerObject lo : l.objects ) {
-                            Log.info("  - " + lo.name + " / " + lo.clazz);
                             lo.visible = false;
                             if( lo.point ) {
                                 //lo.clazz = "me.Vector2d";
-                                lo.name = "WayPoint";
+                                lo.name = "WayPoint"; 
                             }
                             else {
                                 // rename simple polyline objects to WayPath
                                 if( lo.polyline != null && !lo.polyline.isEmpty()) {
                                     lo.name = "WayPath";   
                                 }
-                            } 
+                            }
                         }
                     }
                 });

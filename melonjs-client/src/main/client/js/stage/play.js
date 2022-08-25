@@ -6,7 +6,7 @@ import GolemEnemySprite from '../renderables/golem-enemy';
 import PlayerEntity from "../renderables/player.js";
 import HUDContainer from './hud/hud-container.js';
 import VirtualJoypad from './hud/virtual-joypad.js';
-import { LevelManager } from '../util/level.js';
+import { LevelManager, LevelObject, Level } from '../util/level.js';
 
 import NetworkManager from "../util/network";
 import { BONUS_TILE } from '../util/constants.js';
@@ -166,6 +166,38 @@ class PlayScreen extends BasePlayScreen {
 			}
 			layerNum++;
 		});
+
+		// now go through the list of objects in the currentLevel structure and create them
+		if( this.currentLevel.objects !== null && this.currentLevel.objects !== undefined ) {
+			this.currentLevel.objects.forEach((obj) => {
+				//console.log("  Level Object: " + obj.name);
+				if( obj.type == LevelObject.types.ENEMY) {
+					if( obj.clazz === 'GolemEnemy' ) {
+						let enemy = new GolemEnemySprite(obj.mapX, obj.mapY, false);
+						enemy.setEnemyName(obj.name);
+						let path = this.currentLevel.getPathForEnemy("Path." + obj.pathId);
+						console.log(  "    Golem requires path " + obj.pathId + ": " +path);
+						if( path !== null ) {
+							enemy.setWayPath(path);
+							game.world.addChild(enemy, this.spriteLayer);
+							this.enemies.push(enemy);
+							console.log("  enemy at (" + obj.mapX + "/" + obj.mapY + "): " + enemy.name);
+						}
+					}
+				}
+				else if( obj.type === LevelObject.types.CHEST) {
+					let chest = new ChestBonusSprite(obj.mapX, obj.mapY);
+					chest.score = obj.score;
+					chest.numBombs = obj.numBombs;
+					chest.numMagicBolts = obj.numMagicBolts;
+					chest.numMagicFirespins = obj.numMagicFirespins;
+					chest.numMagicNebulas = obj.numMagicNebulas;
+					chest.numMagicProtectionCircles = obj.numMagicProtectionCircles;
+
+					game.world.addChild(chest, this.spriteLayer-1);
+				}
+			});
+		}
 		// make sure, all enemies know the player
 		this.enemies.forEach((e) => e.setPlayer(this.player));
 	}
