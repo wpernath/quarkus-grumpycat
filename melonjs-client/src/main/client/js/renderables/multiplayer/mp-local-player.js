@@ -77,35 +77,36 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 				}
 			}
 		} 
-        else if(input.isKeyPressed("magic") && GlobalGameState.magicBolts > 0 ) {      
+        else if(input.isKeyPressed("magic") ) {      
+			if (GlobalGameState.magicBolts > 0) {
+				if (input.isKeyPressed("left")) {
+					dx = -1;
+				} 
+				else if (input.isKeyPressed("right")) {
+					dx = +1;
+				}
+				if (input.isKeyPressed("up")) {
+					dy = -1;
+				} 
+				else if (input.isKeyPressed("down")) {
+					dy = +1;
+				}
 
-			if (input.isKeyPressed("left")) {
-				dx = -1;
-			} 
-            else if (input.isKeyPressed("right")) {
-				dx = +1;
-			}
-			if (input.isKeyPressed("up")) {
-				dy = -1;
-			} 
-            else if (input.isKeyPressed("down")) {
-				dy = +1;
-			}
-
-			this.oldDx = dx;
-			this.oldDy = dy;
-			if (dx != 0 || dy != 0) {
-				// place a new barrier tile in borderLayer
-				// only if there is no border tile at that pos
-				let bX = mapX + dx;
-				let bY = mapY + dy;
-                
-				if ( this.spell == null && this.throwMagicSpell(bX, bY, dx, dy)) {
-					GlobalGameState.magicBolts--;
-					action.dx = dx;
-					action.dy = dy;
-					action.magicBolt = true;					
-					MultiplayerManager.get().sendAction(action);					
+				this.oldDx = dx;
+				this.oldDy = dy;
+				if (dx != 0 || dy != 0) {
+					// place a new barrier tile in borderLayer
+					// only if there is no border tile at that pos
+					let bX = mapX + dx;
+					let bY = mapY + dy;
+					
+					if ( this.spell == null && this.throwMagicSpell(bX, bY, dx, dy)) {
+						GlobalGameState.magicBolts--;
+						action.dx = dx;
+						action.dy = dy;
+						action.magicBolt = true;					
+						MultiplayerManager.get().sendAction(action);					
+					}
 				}
 			}
         }

@@ -56,6 +56,9 @@ public class MapResource {
                         getClass().getResourceAsStream("/maps/" + level ), 
                         Map.class);
                   
+                // Make filename the name of the level without extension
+                map.name = level.substring(0, level.lastIndexOf('.'));
+
                 // make sure person layer is not visible
                 List<Layer> layers = map.layers;
                 layers.forEach(l -> {
@@ -65,24 +68,25 @@ public class MapResource {
                     else if( l.type.equalsIgnoreCase("objectgroup")) {
                         // make sure any objectgroup layer is not shown && no LayerObject neither
                         l.visible = false;
+                        Log.info("New layer object in map " + map.name);
 
                         for( LayerObject lo : l.objects ) {
+                            Log.info("  - " + lo.name + " / " + lo.clazz);
                             lo.visible = false;
                             if( lo.point ) {
                                 //lo.clazz = "me.Vector2d";
                                 lo.name = "WayPoint";
                             }
                             else {
-                                lo.name = "WayPath";
+                                // rename simple polyline objects to WayPath
+                                if( lo.polyline != null && !lo.polyline.isEmpty()) {
+                                    lo.name = "WayPath";   
+                                }
                             } 
                         }
                     }
                 });
               
-                
-                // Make filename the name of the level without extension
-                map.name = level.substring(0, level.lastIndexOf('.'));
-
                 // look for a map property named 'name' and make it 'longName'
                 if( map.properties != null && map.properties.size() > 0 ) {
                     for( LayerProperty p : map.properties ) {

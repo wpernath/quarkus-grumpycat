@@ -13,9 +13,10 @@ Maps can be of any size. The only important thing you need to keep in mind are t
 - **Frame:** This layer is the border of the map. Anything placed here will be used as barrier for player and enemies. Anything placed here can be destroyed with a bomb. 
 - **Dekor:** Use this layer to place decorative tiles on. For example flowers on water or stones on sand. 
 - **Bonus:** Use this layer to place your bonus items on. Any tile placed here can be a bonus which adds a score of 10 points. Once the player walks over it, the bonus item gets removed. Special bonus tile is the bomb, which provides 5 more bombs to the player to be used to destroy frames. Also the meat and the cheese are bonus items, which gives your player more energy. Have a look at the `Terrain.tsx` tileset. The bonus items are all placed on the lower left corner of the tileset image.
-- **Persons:** This layer will be used to place the player and enemies on. Use the corresponding tiles as player and enemies. Note, you MUST not place more than one player, but you CAN place more than one enemy. If you want to use the spider enemy, you also have to provide the Persons layer's properties:
+- **Persons:** This layer will be used to place the player and enemies on. Use the corresponding tiles as player and enemies. Note, you MUST not place more than one player (except for a dedicated multiplayer level), but you CAN place more than one enemy. If you want to use the spider enemy, you also have to provide the Persons layer's properties:
   - enemyEmitterActive: Must be true
   - enemyNumEmitting: how many spiders should be emitted at all
   - enemyTimeEmitting: how long to wait until the enemies are being emitted in milliseconds
+If you want to use Golem enemies, please make sure to create a new Object layer in Tiled called `Paths` and use the `Insert polygon` function of Tiled to create a walking path for that Golem. Please also make sure that each path needs to have a custom string property called `forEnemy` with the name of the Golem this path is meant for. Golems are numbered from top left to bottom right: `Golem.n`, where `n=1..`. Have a look at the level `Golems.tmx` as example.
 
 You might add more layers to your map. Any layer placed on top of **Persons** will be drawn last, which means it will draw over enemies and player sprites.

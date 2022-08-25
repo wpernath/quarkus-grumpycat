@@ -10,15 +10,44 @@ All client game logic is currently coded with JavaScript and [MelonJS](https://g
 
 This game was inspired by the old Fat-Cat game and by PacMan. You're controlling a dog in a maze which needs to eat all food without being caught by a grumpy cat or other enemies. 
 
+### How to play (single player)
 Right now you can control the dog with arrow keys UP, DOWN, LEFT & RIGHT and with W, A, S, D. More keys are:
 
 - *P* PAUSE
 - *SPACE* place bomb
 - *Shift* + UP/DOWN/LEFT/RIGHT: place barrier in the direction
+- *ALT | option* + UP/DOWN/LEFT/RIGHT: throw a magic bolt into the direction, killing spiders or stunning other enemies (cats, golems).
+- *Q* start a magic firespin around your player. Any other player / enemy coming too close to you will be stunned / killed (depending on the enemy). Spell is up for 15sec
+- *E* start a magic protection circle around your player. No other players / enemies could harm you for 15sec.
+- *R* place a magic nebula at the place you are right now. Path finding enemies (cats, spiders) will walk to this place and get damaged / stunned. Spell is up for 15sec.
 
-If the cat gets into an exploding bomb, it stops for 3sec. A bomb can destroy barriers. The level ends if you got all food.
+If the cat gets into an exploding bomb, it stops for 3sec. A bomb can destroy barriers. The level ends if you got all food or if you don't have any energy left.
+
+In order to use those weapons, you have to collect them in form of a magic potion or in form of a bomb first. 
   
+### How to play (multi player)
+You can start the game in multi player modus. Up to 4 players are able to play against each other. 
+You can place bombs, throw magic bolts and cast the magic firespin to harm other players. If you're hurting others, you also get points.
 
+In multi player mode a level ends if either all bonus is collected or if you are the last player standing. The winner is that player with the highest score. 
+
+
+### Bonus tiles
+There are different bonus tiles to be collected. 
+- Pill (looks like a cactus): 10 Pts
+- Bomb: 50 Pts, add 5 bombs to your inventory
+- Meat: 25 Pts, add 25 points more energy
+- Cheese: 15 Pts, add 20 points more energy
+- Chest: 250 Pts, add a random weapon to your inventory (does NOT count for level end!)
+- Potion: 50 Pts
+  - Small red: maxEnergy + 25
+  - Big red: maxEnergy + 50
+  - Blue: +3 magic bolts 
+  - brown: +3 magic firespins
+  - green: +3 magic protection circles
+  - violet: +3 magic nebula
+
+### Game Graphics
 
 ![the game](docs/game-title.png)
 ![cats](docs/the-game1.png)

@@ -14,9 +14,11 @@ public class LayerObject {
     public boolean point;
     public int width;
     public int height;
+    public long gid;
     public boolean visible;
     public double x;
     public double y;
+    public int rotation;
 
     public List<LayerObjectPoint> polyline;
     public Set<LayerProperty> properties;
