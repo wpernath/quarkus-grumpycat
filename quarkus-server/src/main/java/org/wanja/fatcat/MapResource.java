@@ -69,11 +69,11 @@ public class MapResource {
                         // make sure any objectgroup layer is not shown && no LayerObject neither
                         l.visible = false;
  
+
                         for( LayerObject lo : l.objects ) {
                             lo.visible = false;
                             if( lo.point ) {
-                                //lo.clazz = "me.Vector2d";
-                                lo.name = "WayPoint"; 
+                                lo.name = "WayPoint";
                             }
                             else {
                                 // rename simple polyline objects to WayPath

@@ -16,13 +16,13 @@ class ScoreItem extends Container {
 		super(x, y, 160, 34);
 
 		this.text = new BitmapText(0,0, {
-			font: "24Outline",
+			font: "Shadow",
 			textBaseline: "top",
 			text: "9999999",
 		});
 
 		// persistent across level change
-		this.isPersistent = true;
+		//this.isPersistent = true;
 
 		// make sure we use screen coordinates
 		this.floating = true;
@@ -66,7 +66,7 @@ class ScoreItem extends Container {
 	}
 
 	draw(renderer) {	
-	
+//		console.log("ScoreItem.draw()")	;
 		let width = this.text.measureText(renderer).width;		
 		renderer.setTint(this.text.tint, this.text.getOpacity());
 		this.text.draw(renderer, this.scoretext, 24 + (game.viewport.width - width) / 2, this.pos.y + 12);
@@ -86,13 +86,13 @@ class ScoreItem extends Container {
 	 */
 	update(dt) {
 		this.isDirty = false;
+		super.update(dt);
 		if (this.score != GlobalGameState.score) {
 			this.score = GlobalGameState.score;
 			this.isDirty = true;
 			this.scoretext = this.score.toString().padStart(7, "0");
-			return true;
 		}
-		return false;
+		return this.isDirty;
 	}
 
 }
@@ -142,16 +142,18 @@ class EnergyItem extends Container {
 	 * @returns {boolean}
 	 */
 	update(dt) {
+		this.isDirty = false;
+		super.update(dt);
 		if (this.energy != GlobalGameState.energy || this.maxEnergy != GlobalGameState.maxEnergy) {
 			this.energy = GlobalGameState.energy;
 			this.maxEnergy = GlobalGameState.maxEnergy;
-			this.isDirty = true;
-			return true;
+			this.isDirty = true;			
 		}
-		return false;
+		return this.isDirty;
 	}
 
 	draw(renderer) {
+//		console.log("EnergyBar.draw()");
 		// draw energy bar background
 		renderer.setGlobalAlpha(0.5);
 		renderer.setColor(this.energyBarBoxBackFill);
@@ -231,6 +233,7 @@ class WeaponsItem extends Container {
 
 	draw(renderer) {
 		// draw those images
+//		console.log("WeaponsItem.draw()");
 		let x = this.pos.x + 2;
 		let y = this.pos.y + 2;
 		for( let i = 0; i < this.images.length; i++ ) {
@@ -260,6 +263,7 @@ class WeaponsItem extends Container {
 	 */
 	update(dt) {
 		this.isDirty = false;
+		super.update(dt);
 		if (this.bombs != GlobalGameState.bombs) {
 			this.bombs = GlobalGameState.bombs;
 			this.isDirty = true;				
@@ -339,7 +343,8 @@ export default class HUDContainer extends Container {
 		this.backBox = new Rect(this.pos.x + 1, this.pos.y, game.viewport.width - 2, this.height);
 
 		// persistent across level change
-		this.isPersistent = true;
+		//this.isPersistent = true;
+		this.clipping = true;
 
 		// make sure we use screen coordinates
 		this.floating = true;
@@ -377,6 +382,7 @@ export default class HUDContainer extends Container {
 	}
 
 	draw(renderer) {
+		//console.log("HUD.draw()");
 		renderer.setGlobalAlpha(0.5);
 		renderer.setColor(this.backColor);
 		renderer.fill(this.backBox);
@@ -389,10 +395,13 @@ export default class HUDContainer extends Container {
 	setPaused(paused, text = "") {
 		if (!paused) {
 			this.pauseText.setText("");
-		} else {
+			this.isDirty = true;
+		} 
+		else {
 			this.pauseText.setText(text);
 			let width = this.pauseText.measureText(text).width;
 			this.pauseText.pos.x = (game.viewport.width - width) / 2;
+			this.isDirty = true;
 		}
 	}
 }

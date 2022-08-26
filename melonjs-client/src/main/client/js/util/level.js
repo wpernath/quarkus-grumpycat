@@ -1,5 +1,6 @@
 import { level, loader } from "melonjs/dist/melonjs.module.js";
 import CONFIG from "../../config";
+import GlobalGameState from "./global-game-state";
 import { WayPath, WayPoint } from "./walk-path";
 
 export class LevelObject {
@@ -46,12 +47,13 @@ export class LevelObject {
         else if( this.clazz === 'Chest') {
             this.type = LevelObject.types.CHEST;
             this.numBombs = this._propertyValue("numBombs") || 0;
-            this.score = this._propertyValue("score") || 250;
+            this.score = this._propertyValue("score") || GlobalGameState.scoreForChest;
             this.numMagicBolts = this._propertyValue("numMagicBolts") || 0;
             this.numMagicFirespins = this._propertyValue("numMagicFirespin") || 0;
             this.numMagicNebulas  = this._propertyValue("numMagicNebula") || 0;
             this.numMagicProtectionCircles = this._propertyValue("numMagicProtectionCircle") || 0;
 
+            this.score = Math.round(this.score);
             console.log("  Chest " + this.name + ": " + this.score + ", " + this.numBombs + ", " + this.numMagicBolts + ", " + this.numMagicFirespins + ", " + this.numMagicProtectionCircles);
         }
     }

@@ -253,7 +253,9 @@ export class BasePlayerSprite extends Sprite {
 				GlobalGameState.magicFirespins += other.numMagicFirespins;
 				GlobalGameState.magicNebulas += other.numMagicNebulas;
 				GlobalGameState.magicProtections += other.numMagicProtectionCircles;
-				GlobalGameState.collectedChests +=1;				
+				GlobalGameState.collectedChests +=1;	
+				
+				console.log("  New score: " + GlobalGameState.score);
 			}
 			//this.pos.sub(response.overlapV);
 			return false;
