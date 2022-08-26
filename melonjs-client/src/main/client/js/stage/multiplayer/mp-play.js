@@ -137,7 +137,9 @@ export default class MultiplayerPlayScreen extends BasePlayScreen {
      */
     cleanupWorld() {
         this.isActive = false;
-        if (this.player !== null) game.world.removeChild(this.player);
+        if (this.player !== null) {
+            game.world.removeChild(this.player);
+        }
         for (let i = 0; i < this.remotePlayers.length; i++) {
             if( this.remotePlayers[i] !== null ) {
                 game.world.removeChild(this.remotePlayers[i]);

@@ -68,7 +68,7 @@ public class MapResource {
                     else if( l.type.equalsIgnoreCase("objectgroup")) {
                         // make sure any objectgroup layer is not shown && no LayerObject neither
                         l.visible = false;
-
+ 
                         for( LayerObject lo : l.objects ) {
                             lo.visible = false;
                             if( lo.point ) {

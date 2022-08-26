@@ -46,16 +46,27 @@ class ScoreItem extends Container {
 			tint: PLAYER_COLORS[MultiplayerManager.get().getMultiplayerPlayerNumber()],
 		});
 
+		
 		this.catRight = new Sprite(this.pos.x + 150, this.pos.y + 2, {
 			image: "cat_left",
-			width: 32,
-			height: 32,
 			framewidth: 40,
 			frameheight: 39,
+			flipX: true,
 		});
+		/*
+		this.catRight = new Sprite(this.pos.x + 150, this.pos.y + 2, {
+			image: "player",
+			framewidth: 34,
+			frameheight: 39,
+			tint: PLAYER_COLORS[MultiplayerManager.get().getMultiplayerPlayerNumber()],
+			flipX: true,
+		});
+		*/
+
 	}
 
-	draw(renderer) {		
+	draw(renderer) {	
+	
 		let width = this.text.measureText(renderer).width;		
 		renderer.setTint(this.text.tint, this.text.getOpacity());
 		this.text.draw(renderer, this.scoretext, 24 + (game.viewport.width - width) / 2, this.pos.y + 12);
@@ -64,6 +75,7 @@ class ScoreItem extends Container {
 		this.dogLeft.draw(renderer);
 
 		renderer.setTint(this.catRight.tint, this.catRight.getOpacity());
+
 		this.catRight.draw(renderer);
 		super.draw(renderer);
 	}

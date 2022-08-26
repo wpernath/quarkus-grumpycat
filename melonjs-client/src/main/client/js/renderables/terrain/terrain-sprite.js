@@ -20,7 +20,7 @@ export default class BaseTerrainSprite extends Sprite {
 			frameheight: 32,
 			anchorPoint: new Vector2d(0.5, 0.5),
 		});
-
+		
         this.animFrame = animFrame;
 
         if( !imageOnly) {

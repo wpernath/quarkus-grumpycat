@@ -56,7 +56,7 @@ export default class MagicNebula extends Sprite {
 
 		this.owner.hasPlacedNebula = true;
 		this.setCurrentAnimation("spin");
-		timer.setTimeout(
+		this.timerId = timer.setTimeout(
 			() => {
 				this.isStopped = true;
 				game.world.removeChild(this);
@@ -90,5 +90,12 @@ export default class MagicNebula extends Sprite {
 				this.owner.hasPlacedNebula = false;				
 			}
 		}
+	}
+
+	destroy() {
+		if( this.timerId !== undefined && this.timerId !== 0 ) {
+			timer.clearTimeout(this.timerId);
+		}
+		super.destroy();
 	}
 }

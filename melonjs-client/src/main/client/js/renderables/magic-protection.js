@@ -22,7 +22,6 @@ export default class MagicProtectionCircle extends Sprite {
 			anchorPoint: new Vector2d(0.5, 0.5),
 		});
 
-        
 		this.owner = owner;
 
 		this.body = new Body(this);
@@ -49,11 +48,10 @@ export default class MagicProtectionCircle extends Sprite {
 		layers.forEach((l) => {
 			if (l.name === "Frame") this.borderLayer = l;
 		});
-		
 
 		this.setCurrentAnimation("spin");
 		GlobalGameState.invincible = true;
-		timer.setTimeout(
+		this.timerId = timer.setTimeout(
 			() => {
 				this.isStopped = true;
 				game.world.removeChild(this);
@@ -102,5 +100,12 @@ export default class MagicProtectionCircle extends Sprite {
 				this.owner.spell = null;
 			}
 		}
+	}
+
+	destroy() {
+		if (this.timerId !== undefined && this.timerId !== 0) {
+			timer.clearTimeout(this.timerId);
+		}
+		super.destroy();
 	}
 }

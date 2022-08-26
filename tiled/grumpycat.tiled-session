@@ -5,9 +5,9 @@
     },
     "activeFile": "FireAndDragons.tmx",
     "expandedProjectPaths": [
-        ".",
+        "multiplayer",
         "templates",
-        "multiplayer"
+        "."
     ],
     "exportAsImage.useCurrentScale": true,
     "file.lastUsedOpenFilter": "Alle Dateien (*)",
@@ -58,8 +58,8 @@
             "scale": 1.1862,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 1967.627718765807,
-                "y": 239.41999662788743
+                "x": 940.8194233687406,
+                "y": 621.3117518125107
             }
         },
         "Golems.tmx": {
@@ -69,8 +69,8 @@
             "scale": 1.035,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 543.9613526570049,
-                "y": 746.8599033816425
+                "x": 527.536231884058,
+                "y": 671.4975845410629
             }
         },
         "Level-Template.tmx": {
@@ -132,7 +132,7 @@
         },
         "Terrain.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 2.03,
+            "scaleInDock": 1.7374,
             "scaleInEditor": 0.9167
         },
         "Utumno.tsx": {
@@ -182,8 +182,8 @@
             "scale": 0.6356,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 2067.337948395217,
-                "y": 1297.9861548143485
+                "x": 1055.69540591567,
+                "y": 663.9395846444304
             }
         },
         "multiplayer/mp_golems.tmx": {
@@ -220,15 +220,16 @@
     "openFiles": [
         "multiplayer/mp_arena.tmx",
         "Golems.tmx",
-        "FireAndDragons.tmx"
+        "FireAndDragons.tmx",
+        "Terrain.tsx"
     ],
     "project": "grumpycat.tiled-project",
     "property.type": "int",
     "recentFiles": [
         "multiplayer/mp_arena.tmx",
         "Golems.tmx",
-        "FireAndDragons.tmx",
         "Terrain.tsx",
+        "FireAndDragons.tmx",
         "spiders.tsx",
         "multiplayer/mp_level-template.tmx",
         "multiplayer/mp_golems.tmx",

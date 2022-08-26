@@ -24,7 +24,9 @@ export default class ChestBonusSprite extends Sprite {
 		this.body.ignoreGravity = true;
 		this.body.collisionType = collision.types.COLLECTABLE_OBJECT;
 		this.body.setCollisionMask(collision.types.PLAYER_OBJECT | my_collision_types.REMOTE_PLAYER);
-		this.body.setStatic(true);
+		this.body.setMaxVelocity(0,0);
+		this.body.setFriction(0,0);
+		//this.body.setStatic(true);
 
 		this.addAnimation("closed", [0,1,2,1], 100);
 		this.addAnimation("opening", [0,1,2,3,4,5,6,7], 24);
@@ -57,12 +59,14 @@ export default class ChestBonusSprite extends Sprite {
 
 	onCollision(response, other) {
 		if( !this.isCollected ) {
-			//if (other.body.collisionType === collision.types.PLAYER_OBJECT) {        
+			if (other.body.collisionType === collision.types.PLAYER_OBJECT) {        
+				console.log("Chest: collided");
 				this.setCurrentAnimation("opening", () => {
 					this.isCollected = true;
 					this.setCurrentAnimation("opened");
 				});
-			//}
+			}
 		}
+		return false;
 	}
 }

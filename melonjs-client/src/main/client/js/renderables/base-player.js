@@ -246,14 +246,17 @@ export class BasePlayerSprite extends Sprite {
 			console.log("other.isCollected: " + other.isCollected);
 			other.isCollected = true;
 			if( other.type === BONUS_TILE.closedChest ) {
+				console.log("  Collected Chest: " + other.score + ", " + other.numBombs + ", " + other.numMagicBolts + ", " + other.numMagicFirespins + ", " + other.numMagicProtectionCircles);
 				GlobalGameState.score += other.score;
 				GlobalGameState.bombs += other.numBombs;
 				GlobalGameState.magicBolts += other.numMagicBolts;
 				GlobalGameState.magicFirespins += other.numMagicFirespins;
 				GlobalGameState.magicNebulas += other.numMagicNebulas;
 				GlobalGameState.magicProtections += other.numMagicProtectionCircles;
-				GlobalGameState.collectedChests +=1;
+				GlobalGameState.collectedChests +=1;				
 			}
+			//this.pos.sub(response.overlapV);
+			return false;
 		}
 
 		if (GlobalGameState.invincible) return false;

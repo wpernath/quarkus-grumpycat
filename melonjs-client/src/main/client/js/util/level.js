@@ -18,8 +18,8 @@ export class LevelObject {
 
         this.x = Math.round(obj.x);
         this.y = Math.round(obj.y);
-        this.mapX = this.x / 32;
-        this.mapY = this.y / 32;
+        this.mapX = Math.floor(this.x / 32);
+        this.mapY = Math.floor(this.y / 32);
         this.pathId = -1;
 
         if( this.clazz === 'GolemEnemy') {
@@ -41,15 +41,18 @@ export class LevelObject {
             this.enemyType = this._propertyValue("enemyType") || "SpiderEnemy";
             this.numEnemies = this._propertyValue("numEnemies") || 5;
             this.emitEvery = this._propertyValue("emitEvery") || 5000;
+            console.log("  EnemyEmitter(" + this.enemyType + "): " + this.mapX + ", " + this.mapY);
         }
         else if( this.clazz === 'Chest') {
             this.type = LevelObject.types.CHEST;
             this.numBombs = this._propertyValue("numBombs") || 0;
-            this.score = this._propertyValue("score") || 250
+            this.score = this._propertyValue("score") || 250;
             this.numMagicBolts = this._propertyValue("numMagicBolts") || 0;
             this.numMagicFirespins = this._propertyValue("numMagicFirespin") || 0;
             this.numMagicNebulas  = this._propertyValue("numMagicNebula") || 0;
             this.numMagicProtectionCircles = this._propertyValue("numMagicProtectionCircle") || 0;
+
+            console.log("  Chest " + this.name + ": " + this.score + ", " + this.numBombs + ", " + this.numMagicBolts + ", " + this.numMagicFirespins + ", " + this.numMagicProtectionCircles);
         }
     }
 
@@ -61,10 +64,9 @@ export class LevelObject {
      * @returns value of the property
      */
     _propertyValue(name) {
-        let value = null;
+        let value = undefined;
         if( this.obj.properties !== null && this.obj.properties !== undefined) {
-            this.obj.properties.forEach((p) => {
-                
+            this.obj.properties.forEach((p) => {                
                 if( p.name === name) {                    
                     value = p.value;
                 }
@@ -123,7 +125,7 @@ export class Level {
 
     /**
      * Parse all layer objects on our own as long as melonjs still has issues with 
-     * them. 
+     * them. After parsing, delete them!
      */
 	parseObjects() {
 		this.data.layers.forEach((l) => {
@@ -144,7 +146,7 @@ export class Level {
                             this.wayPaths[path.forEnemy] = path;
                         }
                         else {
-                            console.log("DEBUG!!!!! ***** Stored new wayPath as Path." + obj.id);
+                            //console.log("DEBUG!!!!! ***** Stored new wayPath as Path." + obj.id);
                             this.wayPaths["Path." + obj.id] = path;
                         }
 

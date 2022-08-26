@@ -12,6 +12,7 @@ import NetworkManager from "../util/network";
 import { BONUS_TILE } from '../util/constants.js';
 import ChestBonusSprite from '../renderables/terrain/chest-sprite.js';
 import { BasePlayScreen } from './base-play-screen.js';
+import { EnemyEmitter } from '../renderables/terrain/enemy-emitter.js';
 
 
 class PlayScreen extends BasePlayScreen {
@@ -184,6 +185,11 @@ class PlayScreen extends BasePlayScreen {
 							console.log("  enemy at (" + obj.mapX + "/" + obj.mapY + "): " + enemy.name);
 						}
 					}
+				}
+				else if( obj.type === LevelObject.types.ENEMY_EMITTER) {
+					console.log("  Placing an enemy emitter at " + obj.mapX + ", " + obj.mapY);
+					let emitter = new EnemyEmitter(obj.mapX, obj.mapY, obj, this.player);
+					game.world.addChild(emitter, this.spriteLayer);
 				}
 				else if( obj.type === LevelObject.types.CHEST) {
 					let chest = new ChestBonusSprite(obj.mapX, obj.mapY);

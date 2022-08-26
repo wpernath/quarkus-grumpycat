@@ -94,6 +94,8 @@ export const BONUS_TILE = {
 	magicProtectionCircle: 976,
 	magicNebula: 977,
 	bomb0: 979,
+
+	enemyEmitter: 115,
 };
 
 
