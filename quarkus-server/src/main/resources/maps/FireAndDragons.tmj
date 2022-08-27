@@ -414,7 +414,7 @@
                 }, 
                 {
                  "class":"EnemyEmitter",
-                 "gid":116,
+                 "gid":176,
                  "height":32,
                  "id":5,
                  "name":"EnemyEmitter.1",
@@ -442,8 +442,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":939.951,
-                 "y":598.9
+                 "x":926.462549485753,
+                 "y":606.487253414264
                 }, 
                 {
                  "class":"Chest",
@@ -528,8 +528,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":355.385769684707,
-                 "y":147.175349856685
+                 "x":354.386,
+                 "y":160.175
                 }, 
                 {
                  "class":"Chest",
@@ -571,8 +571,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":2050.3629355535,
-                 "y":686.260252852297
+                 "x":2050.36,
+                 "y":686.26
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -595,7 +595,7 @@
          "value":"Fire and Dragon..."
         }],
  "renderorder":"right-down",
- "tiledversion":"1.9.1",
+ "tiledversion":"1.9.0",
  "tileheight":32,
  "tilesets":[
         {

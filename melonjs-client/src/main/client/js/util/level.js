@@ -19,10 +19,11 @@ export class LevelObject {
 
         this.x = Math.round(obj.x);
         this.y = Math.round(obj.y);
-        this.mapX = Math.floor(this.x / 32);
-        this.mapY = Math.floor(this.y / 32);
+        this.mapX = Math.floor((((this.x - 16) / 32 ) * 32) / 32);
+        this.mapY = Math.floor((((this.y - 16) / 32 ) * 32) / 32);
         this.pathId = -1;
 
+        console.log("  New Object (" + this.clazz + ") at " + this.mapX + ", " + this.mapY);
         if( this.clazz === 'GolemEnemy') {
             this.type = LevelObject.types.ENEMY;
             
@@ -51,9 +52,7 @@ export class LevelObject {
             this.numMagicBolts = this._propertyValue("numMagicBolts") || 0;
             this.numMagicFirespins = this._propertyValue("numMagicFirespin") || 0;
             this.numMagicNebulas  = this._propertyValue("numMagicNebula") || 0;
-            this.numMagicProtectionCircles = this._propertyValue("numMagicProtectionCircle") || 0;
-
-            this.score = Math.round(this.score);
+            this.numMagicProtectionCircles = this._propertyValue("numMagicProtectionCircle") || 0;            
             console.log("  Chest " + this.name + ": " + this.score + ", " + this.numBombs + ", " + this.numMagicBolts + ", " + this.numMagicFirespins + ", " + this.numMagicProtectionCircles);
         }
     }
