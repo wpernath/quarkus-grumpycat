@@ -114,6 +114,12 @@ export default class GolemEnemySprite extends BaseEnemySprite {
 					if( otherIsProjectile ) {
 						GlobalGameState.stunnedGolems++;
 						GlobalGameState.score += GlobalGameState.scoreForStunningGolem;
+
+						if (this.nextPosition.dx < 0) this.setCurrentAnimation("walk-left");
+						else if (this.nextPosition.dx > 0) this.setCurrentAnimation("walk-right");
+
+						if (this.nextPosition.dy < 0) this.setCurrentAnimation("walk-up");
+						else if (this.nextPosition.dy > 0) this.setCurrentAnimation("walk-down");
 					}
 				});
 			}

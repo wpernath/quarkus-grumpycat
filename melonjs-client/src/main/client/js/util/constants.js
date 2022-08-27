@@ -65,14 +65,37 @@ export const my_collision_types = {
  * 
  */
 export const PLAYER_COLORS = [
-	new Color(255, 255, 255, 1.0),
-	new Color(255, 255, 55, 1.0),
-	new Color(55, 255, 255, 1.0),
-	new Color(255, 55, 55, 1.0),
-	/*
-	pool.pull("Color", 255, 255, 255), 
-	pool.pull("Color", 255, 255, 55), 
-	pool.pull("Color", 55, 255, 55), 
-	pool.pull("Color", 255, 55, 55)
-	*/
+	"#ffffff",	
+	"#ffff32",
+	"#32ffff",
+	"#ff3232"
 ];
+
+export const BARRIER_TILE = {
+	light: 182,
+	mid: 183,
+	dark: 184,
+};
+
+// special bonus type numbers
+// NOTE: those here are 1 based as Tiled counts tileIds from 1
+export const BONUS_TILE = {
+	bomb: 961,
+	star: 962,
+	cactus: 963,
+	meat: 966,
+	cheese: 967,
+	closedChest: 970,
+	openedChest: 971,
+	maxEnergyAdder20: 972,
+	maxEnergyAdder50: 973,
+	magicBolt: 974,
+	magicFirespin: 975,
+	magicProtectionCircle: 976,
+	magicNebula: 977,
+	bomb0: 979,
+
+	enemyEmitter: 115,
+};
+
+

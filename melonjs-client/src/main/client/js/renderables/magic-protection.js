@@ -1,12 +1,13 @@
 import { Sprite, Body, Rect, collision, game, level, Vector2d, timer } from "melonjs";
 import { my_collision_types } from "../util/constants";
-import ExplosionEntity from "./explosion";
+import GlobalGameState from "../util/global-game-state";
+
 
 /**
- * Magic FireSpin: A firespin around your player's body. Anybody who is coming
- * too close to you will get burned.
+ * Magic Protection Circle: This is a spell which circles around the player and
+ * protects him 15sec long from being injured
  */
-export default class MagicFirespin extends Sprite {
+export default class MagicProtectionCircle extends Sprite {
 	VELOCITY = 0.5;
 	isStopped = false;
 	isExploding = true;
@@ -15,7 +16,7 @@ export default class MagicFirespin extends Sprite {
 		super(x * 32 + 16, y * 32 + 16, {
 			width: 100,
 			height: 100,
-			image: "magic-firespin",
+			image: "protection-circle",
 			framewidth: 100,
 			frameheight: 100,
 			anchorPoint: new Vector2d(0.5, 0.5),
@@ -26,9 +27,9 @@ export default class MagicFirespin extends Sprite {
 		this.body = new Body(this);
 		this.body.addShape(new Rect(28, 32, 34, 30));
 		this.body.ignoreGravity = true;
-		this.body.collisionType = collision.types.PROJECTILE_OBJECT;
-		this.body.setCollisionMask(collision.types.ENEMY_OBJECT | my_collision_types.REMOTE_PLAYER);
 		this.body.isStatic = true;
+		this.body.collisionType = collision.types.PROJECTILE_OBJECT;
+		this.body.setCollisionMask(collision.types.NO_OBJECT);
 		this.alwaysUpdate = true;
 
 		this.addAnimation(
@@ -49,13 +50,15 @@ export default class MagicFirespin extends Sprite {
 		});
 
 		this.setCurrentAnimation("spin");
+		GlobalGameState.invincible = true;
 		this.timerId = timer.setTimeout(
 			() => {
 				this.isStopped = true;
 				game.world.removeChild(this);
 				this.owner.spell = null;
+				GlobalGameState.invincible = false;
 			},
-			10000,
+			15000,
 			true
 		);
 

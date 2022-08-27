@@ -1,4 +1,5 @@
 import { collision, level, game, Sprite, Body, Rect } from "melonjs/dist/melonjs.module.js";
+import { BARRIER_TILE } from "../util/constants";
 
 class ExplosionEntity extends Sprite {
 	borderLayer;
@@ -42,7 +43,7 @@ class ExplosionEntity extends Sprite {
         ], 16);
         this.isExploding = true;
 		        
-		this.setCurrentAnimation("boom", function () {
+		this.setCurrentAnimation("boom", () => {
 			
             game.world.removeChild(this);
             // remove all frames in a 3/3 radius
@@ -59,8 +60,11 @@ class ExplosionEntity extends Sprite {
             rad.forEach((pos) => {
                 let x = Math.floor((this.pos.x + pos.x * 32) / 32);
                 let y = Math.floor((this.pos.y + pos.y * 32) / 32);
-				if( x >-1 && x < this.borderLayer.width && y > -1 && y < borderLayer.height ) {
-                	this.borderLayer.clearTile(x, y);
+				if( x >-1 && x < this.borderLayer.width && y > -1 && y < this.borderLayer.height ) {
+					let tile = this.borderLayer.cellAt(x,y);
+					if( tile !== null && tile !== undefined && tile.tileId === BARRIER_TILE.dark) {
+                		this.borderLayer.clearTile(x, y);
+					}
 				}
             });			
 		});

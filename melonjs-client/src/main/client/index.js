@@ -49,8 +49,8 @@ device.onReady(() => {
         parent: "screen", 
         scaleMethod: "fit", 
         renderer: video.AUTO, 
-        //subPixel: false, 
-        doubleBuffering: true 
+        subPixel: false, 
+        //doubleBuffering: true 
     })) {
 		alert("Your browser does not support HTML5 canvas.");
 		return;
@@ -66,12 +66,6 @@ device.onReady(() => {
 
     // Initialize the audio.
     audio.init("mp3,ogg");
-
-    //////// DEBUG //////////
-    let string = "hallo";
-    let array  = ["a", "b"];
-    console.log( (typeof string) + ": " + (string instanceof String));
-    console.log( (typeof array) + ": " + (array instanceof Array));
 
     // allow cross-origin for image/texture loading
     let environment = CONFIG.environment;
@@ -91,8 +85,7 @@ device.onReady(() => {
     NetworkManager.getInstance();
 
     // Initialize LevelManager and read all levels
-    LevelManager.getInstance().initialize(function() {
-        console.log("  Levels are all loaded and initialized! ");
+    LevelManager.getInstance().initialize(function() {        
 
         // set and load all resources.
         loader.preload(DataManifest, function() {
@@ -129,6 +122,9 @@ device.onReady(() => {
 
             // bind keys
             input.bindKey(input.KEY.ALT, "magic");
+            input.bindKey(input.KEY.Q, "damage");
+            input.bindKey(input.KEY.E, "magic-barrier");
+            input.bindKey(input.KEY.R, "magic-nebula");
             input.bindKey(input.KEY.SHIFT, "barrier");
             input.bindKey(input.KEY.LEFT, "left",);
             input.bindKey(input.KEY.A, "left");

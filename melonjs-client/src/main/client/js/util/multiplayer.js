@@ -18,7 +18,7 @@ export const MultiplayerMessageType = {
 	BROADCAST_CHAT  : "BROADCAST_CHAT",
     ERROR           : "ERROR",
     PLAYER_GAVE_UP  : "PLAYER_GAVE_UP",
-    GAME_PAUSED     : "PLAYER_PAUSED_GAME",
+    GAME_PAUSED     : "PLAYER_PAUSED_GAME",	
 };
 export class MultiplayerMessage {
 	static gameUpdate() {
@@ -72,6 +72,11 @@ export class MultiplayerMessage {
 		this.dy = 0;
 		this.bombPlaced = false;
 		this.gutterThrown = false;
+		this.magicBolt = false;
+		this.magicNebula = false;
+		this.magicProtectionCircle = false;
+		this.magicFirespin = false;
+		this.chestCollected = false;
 		this.score = 0;
 		this.energy = 0;
         
@@ -551,5 +556,23 @@ export class MultiplayerMessage {
 
 		setGameToJoin(game) {
 			this.multiplayerGameToJoin = game;
+		}
+
+		getMultiplayerPlayerNumber() {
+			let playerNum = 0;
+			if( this.multiplayerGame !== null ) {
+				let game = this.multiplayerGame;
+				let playerId = this.multiplayerPlayer.id;
+				if( game.player2 !== null && playerId === game.player2.id) {
+					playerNum = 1;
+				}
+				else if (game.player3 !== null && playerId === game.player3.id) {
+					playerNum = 2;
+				} 
+				else if (game.player4 !== null && playerId === game.player4.id) {
+					playerNum = 3;
+				}
+			}
+			return playerNum;
 		}
  }

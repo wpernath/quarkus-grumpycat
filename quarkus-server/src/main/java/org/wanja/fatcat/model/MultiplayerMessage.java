@@ -31,6 +31,13 @@ public class MultiplayerMessage {
 
     public boolean bombPlaced = false;
     public boolean gutterThrown = false;
+    public boolean magicBolt = false;
+    public boolean magicFirespin = false;
+    public boolean magicNebula = false;
+    public boolean magicProtectionCircle = false;
+    
+    public boolean chestCollected = false;
+    
     public long score = 0L;
     public int energy;
     public boolean hasChanged;

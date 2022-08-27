@@ -1,34 +1,39 @@
 import { Sprite, Body, Rect, collision, game, level, Vector2d, timer } from "melonjs";
 import { my_collision_types } from "../util/constants";
-import ExplosionEntity from "./explosion";
+
 
 /**
- * Magic FireSpin: A firespin around your player's body. Anybody who is coming
- * too close to you will get burned.
+ * Magic Nebula:
+ * Throws a nebula to the ground and 15sec long enemies with path finding 
+ * think this would be the player and are trying to reach it. 
+ * If they reached it, they get injured (spiders) or stunned (cat, golem)
  */
-export default class MagicFirespin extends Sprite {
-	VELOCITY = 0.5;
-	isStopped = false;
+export default class MagicNebula extends Sprite {
 	isExploding = true;
+	mapX;
+	mapY;
 
 	constructor(owner, x, y) {
 		super(x * 32 + 16, y * 32 + 16, {
 			width: 100,
 			height: 100,
-			image: "magic-firespin",
+			image: "magic-vortex",
 			framewidth: 100,
 			frameheight: 100,
 			anchorPoint: new Vector2d(0.5, 0.5),
 		});
 
+		this.mapX  = x;
+		this.mapY  = y;
 		this.owner = owner;
 
 		this.body = new Body(this);
 		this.body.addShape(new Rect(28, 32, 34, 30));
 		this.body.ignoreGravity = true;
+		this.body.isStatic = true;
+				
 		this.body.collisionType = collision.types.PROJECTILE_OBJECT;
 		this.body.setCollisionMask(collision.types.ENEMY_OBJECT | my_collision_types.REMOTE_PLAYER);
-		this.body.isStatic = true;
 		this.alwaysUpdate = true;
 
 		this.addAnimation(
@@ -43,39 +48,27 @@ export default class MagicFirespin extends Sprite {
 		let layers = level.getCurrentLevel().getLayers();
 		this.mapWidth = level.getCurrentLevel().cols;
 		this.mapHeight = level.getCurrentLevel().rows;
+		this.maxHits = 5;
 
 		layers.forEach((l) => {
 			if (l.name === "Frame") this.borderLayer = l;
 		});
 
+		this.owner.hasPlacedNebula = true;
 		this.setCurrentAnimation("spin");
 		this.timerId = timer.setTimeout(
 			() => {
 				this.isStopped = true;
 				game.world.removeChild(this);
 				this.owner.spell = null;
+				this.owner.hasPlacedNebula = false;
 			},
-			10000,
+			15000,
 			true
 		);
-
-		this.currentStep = 0;
-		this.maxSteps = 45;
-		this.radius = 48;
-		this.maxHits = 5;
-		this.scale(2, 2);
 	}
 
 	update(dt) {
-		if (!this.isStopped) {
-			let x = 0; //this.radius * Math.cos(2 * Math.PI * this.currentStep / this.maxSteps);
-			let y = 0; //this.radius * Math.sin(2 * Math.PI * this.currentStep / this.maxSteps);
-
-			this.pos.x = this.owner.pos.x + x;
-			this.pos.y = this.owner.pos.y + y;
-			this.currentStep++;
-			if (this.currentStep >= this.maxSteps) this.currentStep = 0;
-		}
 		return super.update(dt);
 	}
 
@@ -92,15 +85,15 @@ export default class MagicFirespin extends Sprite {
 		if (other.body.collisionType === collision.types.ENEMY_OBJECT && !other.isStunned && !other.isDead) {
 			this.maxHits--;
 			if (this.maxHits <= 0) {
-				this.isStopped = true;
 				game.world.removeChild(this);
 				this.owner.spell = null;
+				this.owner.hasPlacedNebula = false;				
 			}
 		}
 	}
 
 	destroy() {
-		if (this.timerId !== undefined && this.timerId !== 0) {
+		if( this.timerId !== undefined && this.timerId !== 0 ) {
 			timer.clearTimeout(this.timerId);
 		}
 		super.destroy();

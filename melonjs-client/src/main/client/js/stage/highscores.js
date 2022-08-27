@@ -66,7 +66,7 @@ class HighscoreEntry extends Container {
         this.setTime(this.scoreEntry.time);
         this.setScore(this.scoreEntry.score);
 		this.posText = pos.toString().padStart(2, "0") + ".";
-        console.log("(" + x + ", " + y + ", " + w + ", " + (this.fontSize.height + 16) + ")");
+        //console.log("(" + x + ", " + y + ", " + w + ", " + (this.fontSize.height + 16) + ")");
     }
 
 

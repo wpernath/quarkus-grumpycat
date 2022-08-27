@@ -25,7 +25,8 @@ export class WayPoint {
 
 
 export class WayPath {
-	constructor(x, y) {
+	constructor(x, y, id=-1) {
+        this.id = id;
 		this.x = x;
 		this.y = y;
 		this.pos = new Vector2d(x, y);

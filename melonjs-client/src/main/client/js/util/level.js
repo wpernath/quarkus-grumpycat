@@ -1,6 +1,95 @@
 import { level, loader } from "melonjs/dist/melonjs.module.js";
 import CONFIG from "../../config";
+import GlobalGameState from "./global-game-state";
 import { WayPath, WayPoint } from "./walk-path";
+
+export class LevelObject {
+    static types = {
+        ENEMY: 1,
+        CHEST: 2,
+        ENEMY_EMITTER: 3,
+        OTHER_OBJECT: 100,
+    };
+
+    constructor(obj) {
+        this.obj = obj; // tiled level object data
+        this.id  = obj.id;
+        this.name = obj.name; // name of the object 
+        this.clazz = obj.class; // class type of the object (EnemyEmitter, GolemEnemy...)
+
+        this.x = Math.round(obj.x);
+        this.y = Math.round(obj.y);
+        this.mapX = Math.floor((((this.x - 16) / 32 ) * 32) / 32);
+        this.mapY = Math.floor((((this.y - 16) / 32 ) * 32) / 32);
+        this.pathId = -1;
+
+        console.log("  New Object (" + this.clazz + ") at " + this.mapX + ", " + this.mapY);
+        if( this.clazz === 'GolemEnemy') {
+            this.type = LevelObject.types.ENEMY;
+            
+            // get path id from properties object
+            this.pathId = this._propertyValue("path");
+            this.path = null;            
+        }
+        else if( this.clazz === 'EnemyEmitter') {
+            this.type = LevelObject.types.ENEMY_EMITTER;
+
+            // EnemyEmitter has the following properties
+            // - enemyType (String); SpiderEnemy
+            // - numEnemies (int): number of enemies to emit
+            // - initialDelay (int): ms of initial delay until first enemy gets emitted
+            // - emitEvery (int): ms of time until next enemy will be emitted
+            this.initialDelay = this._propertyValue("initialDelay") || 5000;
+            this.enemyType = this._propertyValue("enemyType") || "SpiderEnemy";
+            this.numEnemies = this._propertyValue("numEnemies") || 5;
+            this.emitEvery = this._propertyValue("emitEvery") || 5000;
+            console.log("  EnemyEmitter(" + this.enemyType + "): " + this.mapX + ", " + this.mapY);
+        }
+        else if( this.clazz === 'Chest') {
+            this.type = LevelObject.types.CHEST;
+            this.numBombs = this._propertyValue("numBombs") || 0;
+            this.score = this._propertyValue("score") || GlobalGameState.scoreForChest;
+            this.numMagicBolts = this._propertyValue("numMagicBolts") || 0;
+            this.numMagicFirespins = this._propertyValue("numMagicFirespin") || 0;
+            this.numMagicNebulas  = this._propertyValue("numMagicNebula") || 0;
+            this.numMagicProtectionCircles = this._propertyValue("numMagicProtectionCircle") || 0;            
+            console.log("  Chest " + this.name + ": " + this.score + ", " + this.numBombs + ", " + this.numMagicBolts + ", " + this.numMagicFirespins + ", " + this.numMagicProtectionCircles);
+        }
+    }
+
+    /**
+     * loops through the list of object properties and returns the value
+     * of the given name
+     * 
+     * @param {string} name name of the property to read 
+     * @returns value of the property
+     */
+    _propertyValue(name) {
+        let value = undefined;
+        if( this.obj.properties !== null && this.obj.properties !== undefined) {
+            this.obj.properties.forEach((p) => {                
+                if( p.name === name) {      
+                    switch(p.type) {
+                        case 'int':
+                            value = Math.round(p.value);
+                            break;
+                        default:
+                            value = p.value;
+                    }                    
+                }
+            });
+        }
+        return value;
+    }
+
+    getPathObject(wayPaths) {
+        if( this.pathId !== null && this.pathId !== undefined ) {
+            if( wayPaths[this.pathId] !== undefined && wayPaths[this.pathId] !== null) {
+                return wayPaths[this.pathId];
+            }
+        }
+    }
+}
 
 export class Level {
 	constructor(info, name, longName, data) {
@@ -16,6 +105,7 @@ export class Level {
         this.mapHeight = data.height;
 		this.wayPoints = [];
 		this.wayPaths = [];
+        this.objects = [];
 		this.parseObjects();
 	}
 
@@ -30,6 +120,7 @@ export class Level {
 	onLoaded() {}
 
 	applyProperties(obj, point) {
+        point.forEnemy = undefined;
         if( obj.properties !== null ) {
             obj.properties.forEach( (p) => {
                 if( p.name === 'forEnemy' ) {
@@ -39,6 +130,10 @@ export class Level {
         }
     }
 
+    /**
+     * Parse all layer objects on our own as long as melonjs still has issues with 
+     * them. After parsing, delete them!
+     */
 	parseObjects() {
 		this.data.layers.forEach((l) => {
 			if (l.type === "objectgroup" && l.objects !== null) {
@@ -47,16 +142,20 @@ export class Level {
 						let point = new WayPoint(Math.floor(obj.x / 32), Math.floor(obj.y / 32));
 						this.applyProperties(obj, point);
 						this.wayPoints.push(point);
-
-                        //console.log("  Read point: " + JSON.stringify(point));
 					}
                     else if( obj.name === 'WayPath' && obj.polyline !== null ) {
-                        let path = new WayPath(Math.floor(Math.round(obj.x) / 32), Math.floor(Math.round(obj.y) / 32));                        
+                        let path = new WayPath(Math.floor(Math.round(obj.x) / 32), Math.floor(Math.round(obj.y) / 32), obj.id);                        
                         let startX = Math.round(obj.x);
                         let startY = Math.round(obj.y);
 
                         this.applyProperties(obj, path);
-                        this.wayPaths[path.forEnemy] = path;
+                        if( path.forEnemy !== null && path.forEnemy !== undefined) {
+                            this.wayPaths[path.forEnemy] = path;
+                        }
+                        else {
+                            //console.log("DEBUG!!!!! ***** Stored new wayPath as Path." + obj.id);
+                            this.wayPaths["Path." + obj.id] = path;
+                        }
 
                         obj.polyline.forEach( (point) => {                
                             let x = Math.round(startX + point.x);
@@ -64,6 +163,12 @@ export class Level {
                             let wayPoint = new WayPoint(Math.floor(x / 32), Math.floor(y / 32));
     						path.addWayPoint(wayPoint);
                         });
+                    }
+
+                    else {
+                        console.log("  parsing new object structure: " + obj.name);
+                        let levelObj = new LevelObject(obj);
+                        this.objects.push(levelObj);
                     }
 
 				});

@@ -62,18 +62,18 @@ class GetReadyBack extends Container {
 		this.addChild(player1);
 
 		let player2 = new PlayerEntity(17, 9, true);
-		player2.tint.copy(PLAYER_COLORS[1]);
+		player2.tint=PLAYER_COLORS[1];
 		player2.name = "Player 2";
 		player2.flipX(true);		
 		this.addChild(player2);
 
 		let player3 = new PlayerEntity(15, 7, true);
-		player3.tint.copy(PLAYER_COLORS[2]);
+		player3.tint = PLAYER_COLORS[2];
 		player3.name = "Player 3";
 		this.addChild(player3);
 
 		let player4 = new PlayerEntity(15, 11, true);
-		player4.tint.copy(PLAYER_COLORS[3]);
+		player4.tint= PLAYER_COLORS[3];
 		player4.name = "Player 4";
 		this.addChild(player4);
 

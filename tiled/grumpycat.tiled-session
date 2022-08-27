@@ -3,10 +3,11 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "multiplayer/mp_golems.tmx",
+    "activeFile": "FireAndDragons.tmx",
     "expandedProjectPaths": [
-        ".",
-        "multiplayer"
+        "multiplayer",
+        "templates",
+        "."
     ],
     "exportAsImage.useCurrentScale": true,
     "file.lastUsedOpenFilter": "Alle Dateien (*)",
@@ -53,15 +54,23 @@
             "scaleInDock": 1,
             "scaleInEditor": 1.9537
         },
+        "FireAndDragons.tmx": {
+            "scale": 1.1862,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 940.8194233687406,
+                "y": 621.3117518125107
+            }
+        },
         "Golems.tmx": {
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 1.2696,
-            "selectedLayer": 6,
+            "scale": 1.035,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 486.37366099558915,
-                "y": 743.9350976685571
+                "x": 528.5024154589371,
+                "y": 672.463768115942
             }
         },
         "Level-Template.tmx": {
@@ -123,8 +132,8 @@
         },
         "Terrain.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 1.1911,
-            "scaleInEditor": 1.3389
+            "scaleInDock": 1.7374,
+            "scaleInEditor": 0.9167
         },
         "Utumno.tsx": {
             "dynamicWrapping": true,
@@ -166,6 +175,17 @@
         "multiplayer/Terrain.tsx": {
             "scaleInDock": 1
         },
+        "multiplayer/mp_arena.tmx": {
+            "expandedObjectLayers": [
+                8
+            ],
+            "scale": 0.6356,
+            "selectedLayer": 6,
+            "viewCenter": {
+                "x": 1057.2687224669603,
+                "y": 663.9395846444304
+            }
+        },
         "multiplayer/mp_golems.tmx": {
             "scale": 1.1533,
             "selectedLayer": 4,
@@ -187,33 +207,37 @@
             "scaleInEditor": 1
         }
     },
-    "frame.defaultDuration": 250,
-    "last.exportedFilePath": "/Users/wanja/Devel/grumpycat/quarkus-grumpycat/quarkus-server/src/main/resources/maps",
+    "frame.defaultDuration": 300,
+    "last.exportedFilePath": "/Users/wpernath/Devel/grumpycat/quarkus-grumpycat/quarkus-server/src/main/resources/maps",
     "last.externalTilesetPath": "/Users/wanja/Devel/grumpycat/quarkus-grumpycat/tiled",
     "last.imagePath": "/Users/wanja/Devel/grumpycat/quarkus-grumpycat/tiled/images/tilesets",
-    "lastUsedTilesetExportFilter": "JSON-Kachelsatz-Dateien (*.tsj *.json)",
+    "last.objectTemplatePath": "/Users/wpernath/Devel/grumpycat/quarkus-grumpycat/tiled/templates",
+    "lastUsedTilesetExportFilter": "All Files (*)",
     "map.height": 36,
-    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedExportFilter": "Alle Dateien (*)",
     "map.lastUsedFormat": "tmx",
     "map.width": 32,
     "openFiles": [
-        "multiplayer/mp_golems.tmx"
+        "multiplayer/mp_arena.tmx",
+        "Golems.tmx",
+        "FireAndDragons.tmx",
+        "Terrain.tsx"
     ],
     "project": "grumpycat.tiled-project",
-    "property.type": "string",
+    "property.type": "int",
     "recentFiles": [
+        "multiplayer/mp_arena.tmx",
+        "Golems.tmx",
+        "Terrain.tsx",
+        "FireAndDragons.tmx",
+        "spiders.tsx",
         "multiplayer/mp_level-template.tmx",
         "multiplayer/mp_golems.tmx",
-        "Golems.tmx",
         "Level1.tmx",
         "Level2.tmx",
         "Level5.tmx",
         "Level4.tmx",
-        "Level3.tmx",
-        "/Users/wpernath/Devel/examples/platformer/data/map/map1.tmx",
-        "Terrain.tsx",
-        "/Users/wanja/Devel/melonjs/examples/platformer/data/map/map1.tmx",
-        "Level-Template.tmx"
+        "Level3.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

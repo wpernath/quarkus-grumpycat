@@ -165,6 +165,9 @@ const DataManifest = [
 	{ name: "protection-circle", type: "image", src: "./data/img/effects/8_protectioncircle_spritesheet.png" },
 	{ name: "magic-vortex", type: "image", src: "./data/img/effects/13_vortex_spritesheet.png" },
 
+	// open a chest anim
+	{ name: "open-chest", type: "image", src: "./data/img/chest-sheet.png" },
+
 	// level previews
 	{ name: "Level1", type: "image", src: "./data/map/Level1.png" },
 	{ name: "Level2", type: "image", src: "./data/map/Level2.png" },

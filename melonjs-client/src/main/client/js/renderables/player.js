@@ -25,19 +25,6 @@ class PlayerEntity extends BasePlayerSprite {
 	}
 
 	
-/*
-	destroy() {
-		//this.tint = undefined;
-		console.log("*** DEBUG: Destroy Player with name: " + this.name);		
-		try {
-			super.destroy();
-		}
-		catch(err) {
-			console.log("*** DEBUG: Can't destroy Player with name: " + this.name);
-		}
-	}
-*/
-
 	/**
 	 * update the entity
 	 */
@@ -106,8 +93,9 @@ class PlayerEntity extends BasePlayerSprite {
 				let bX = mapX + dx;
 				let bY = mapY + dy;
                 
-                if( this.spell == null && this.throwMagicFireSpin(mapX, mapY)) {
-				//if ( this.spell == null && this.throwMagicSpell(bX, bY, dx, dy)) {
+				if ( this.spell == null && GlobalGameState.magicBolts > 0 ) {
+					this.throwMagicSpell(bX, bY, dx, dy);
+					GlobalGameState.magicBolts--;
                     console.log("MAGIC!!!!!");
                     /*
 					action.dx = dx;
@@ -133,10 +121,28 @@ class PlayerEntity extends BasePlayerSprite {
 					return super.update(dt);
 				}
 			}
-			if (input.isKeyPressed("explode")) {
-				game.world.addChild(new ExplosionEntity(this.pos.x, this.pos.y));
+
+			if( input.isKeyPressed("damage")) {
+				if( GlobalGameState.magicFirespins > 0 ) {
+					this.throwMagicFireSpin(mapX, mapY);
+					GlobalGameState.magicFirespins--;
+				}
 			}
 
+			if( input.isKeyPressed("magic-barrier")) {
+				if( GlobalGameState.magicProtections > 0) {
+					this.throwMagicProtectionCircle(mapX, mapY);
+					GlobalGameState.magicProtections--;
+				}
+			}
+
+			if( input.isKeyPressed("magic-nebula")) {
+				if( GlobalGameState.magicNebulas > 0) {
+					this.throwMagicNebula(mapX, mapY);
+					GlobalGameState.magicNebulas--;
+				}
+			}
+			
 			if (input.isKeyPressed("left")) {
 				this.flipX(true);
 				dx = -(dt * this.VELOCITY);

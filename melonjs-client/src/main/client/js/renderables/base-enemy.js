@@ -156,10 +156,18 @@ export class BaseEnemySprite extends Sprite {
 	 * Calculate the path from where WE are to target position
 	 */
 	calculateNextPosition() {
-		let playerPos = this.transformPosition(this.player.pos.x, this.player.pos.y);
-		let playerX = playerPos.x;
-		let playerY = playerPos.y;
+		let playerX = 0;
+		let playerY = 0;
 
+		if( !this.player.hasPlacedNebula ) {
+			let playerPos = this.transformPosition(this.player.pos.x, this.player.pos.y);
+			playerX = playerPos.x;
+			playerY = playerPos.y;
+		}
+		else {
+			playerX = this.player.spell.mapX;
+			playerY = this.player.spell.mapY;			
+		}
 		return this.calculateNextPositionToTarget(playerX, playerY);
 	}
 

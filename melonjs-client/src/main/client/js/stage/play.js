@@ -6,30 +6,16 @@ import GolemEnemySprite from '../renderables/golem-enemy';
 import PlayerEntity from "../renderables/player.js";
 import HUDContainer from './hud/hud-container.js';
 import VirtualJoypad from './hud/virtual-joypad.js';
-import { LevelManager } from '../util/level.js';
+import { LevelManager, LevelObject, Level } from '../util/level.js';
 
 import NetworkManager from "../util/network";
+import { BONUS_TILE } from '../util/constants.js';
+import ChestBonusSprite from '../renderables/terrain/chest-sprite.js';
+import { BasePlayScreen } from './base-play-screen.js';
+import { EnemyEmitter } from '../renderables/terrain/enemy-emitter.js';
 
 
-class PlayScreen extends Stage {
-	player;
-	enemies = [];
-	hudContainer = null;
-	virtualJoypad = null;
-	isActive = false;
-	spriteLayer = 6;
-	currentLevel = null;
-
-	enemyEmitter = {
-		isActive: false,
-		emitAt: {
-			x: 0,
-			y: 0,
-		},
-		emitEvery: 5000, // ms
-		emitTime: 5000,
-		emitCount: 10,
-	};
+class PlayScreen extends BasePlayScreen {
 	/**
 	 *  action to perform on state change
 	 */
@@ -40,12 +26,6 @@ class PlayScreen extends Stage {
 		this.enemies = [];
 		this.enemyEmitter.isActive = false;
 
-		/*
-		this.whiteLight = new Light2d(0, 0, 96, 96, "#ffffff", 0.2);
-		this.lights.set("whiteLight", this.whiteLight);
-		this.ambientLight.parseCSS("#101010");
-		this.ambientLight.alpha = 0.8
-		*/
 		this.setupLevel();
 
 		this.hudContainer = new HUDContainer(0, 0);
@@ -119,7 +99,25 @@ class PlayScreen extends Stage {
 		let layerNum = 0;
 		layers.forEach((l) => {
 			console.log(l.name);
-			if (l.name === "Persons") {
+			if( l.name === "Bonus") {
+				// convert some bonus tiles to sprites
+				for (let y = 0; y < l.height; y++) {
+					for (let x = 0; x < l.width; x++) {
+						let tile = l.cellAt(x, y);
+						if (tile !== null && tile !== undefined) {
+							if( tile.tileId === BONUS_TILE.closedChest ) {
+								console.log("  Chest at (" + x + "/" + y + ")");
+								l.clearTile(x,y);
+								game.world.addChild(new ChestBonusSprite(x,y), layerNum);
+							}
+							else if( tile.tileId === BONUS_TILE.meat) {
+								
+							}
+						}
+					}
+				}
+			}
+ 			else if (l.name === "Persons") {
 				let enemynum = 0;
 				this.spriteLayer = layerNum;
 				for (let y = 0; y < l.height; y++) {
@@ -169,6 +167,43 @@ class PlayScreen extends Stage {
 			}
 			layerNum++;
 		});
+
+		// now go through the list of objects in the currentLevel structure and create them
+		if( this.currentLevel.objects !== null && this.currentLevel.objects !== undefined ) {
+			this.currentLevel.objects.forEach((obj) => {
+				//console.log("  Level Object: " + obj.name);
+				if( obj.type == LevelObject.types.ENEMY) {
+					if( obj.clazz === 'GolemEnemy' ) {
+						let enemy = new GolemEnemySprite(obj.mapX, obj.mapY, false);
+						enemy.setEnemyName(obj.name);
+						let path = this.currentLevel.getPathForEnemy("Path." + obj.pathId);
+						console.log(  "    Golem requires path " + obj.pathId + ": " +path);
+						if( path !== null ) {
+							enemy.setWayPath(path);
+							game.world.addChild(enemy, this.spriteLayer);
+							this.enemies.push(enemy);
+							console.log("  enemy at (" + obj.mapX + "/" + obj.mapY + "): " + enemy.name);
+						}
+					}
+				}
+				else if( obj.type === LevelObject.types.ENEMY_EMITTER) {
+					console.log("  Placing an enemy emitter at " + obj.mapX + ", " + obj.mapY);
+					let emitter = new EnemyEmitter(obj.mapX, obj.mapY, obj, this.player);
+					game.world.addChild(emitter, this.spriteLayer);
+				}
+				else if( obj.type === LevelObject.types.CHEST) {
+					let chest = new ChestBonusSprite(obj.mapX, obj.mapY);
+					chest.score = obj.score;
+					chest.numBombs = obj.numBombs;
+					chest.numMagicBolts = obj.numMagicBolts;
+					chest.numMagicFirespins = obj.numMagicFirespins;
+					chest.numMagicNebulas = obj.numMagicNebulas;
+					chest.numMagicProtectionCircles = obj.numMagicProtectionCircles;
+
+					game.world.addChild(chest, this.spriteLayer-1);
+				}
+			});
+		}
 		// make sure, all enemies know the player
 		this.enemies.forEach((e) => e.setPlayer(this.player));
 	}
