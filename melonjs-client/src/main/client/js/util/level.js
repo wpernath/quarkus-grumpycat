@@ -69,8 +69,14 @@ export class LevelObject {
         let value = undefined;
         if( this.obj.properties !== null && this.obj.properties !== undefined) {
             this.obj.properties.forEach((p) => {                
-                if( p.name === name) {                    
-                    value = p.value;
+                if( p.name === name) {      
+                    switch(p.type) {
+                        case 'int':
+                            value = Math.round(p.value);
+                            break;
+                        default:
+                            value = p.value;
+                    }                    
                 }
             });
         }

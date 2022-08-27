@@ -93,7 +93,9 @@ class PlayerEntity extends BasePlayerSprite {
 				let bX = mapX + dx;
 				let bY = mapY + dy;
                 
-				if ( this.spell == null && this.throwMagicSpell(bX, bY, dx, dy)) {
+				if ( this.spell == null && GlobalGameState.magicBolts > 0 ) {
+					this.throwMagicSpell(bX, bY, dx, dy);
+					GlobalGameState.magicBolts--;
                     console.log("MAGIC!!!!!");
                     /*
 					action.dx = dx;
@@ -121,15 +123,24 @@ class PlayerEntity extends BasePlayerSprite {
 			}
 
 			if( input.isKeyPressed("damage")) {
-				this.throwMagicFireSpin(mapX, mapY);
+				if( GlobalGameState.magicFirespins > 0 ) {
+					this.throwMagicFireSpin(mapX, mapY);
+					GlobalGameState.magicFirespins--;
+				}
 			}
 
 			if( input.isKeyPressed("magic-barrier")) {
-				this.throwMagicProtectionCircle(mapX, mapY);
+				if( GlobalGameState.magicProtections > 0) {
+					this.throwMagicProtectionCircle(mapX, mapY);
+					GlobalGameState.magicProtections--;
+				}
 			}
 
 			if( input.isKeyPressed("magic-nebula")) {
-				this.throwMagicNebula(mapX, mapY);
+				if( GlobalGameState.magicNebulas > 0) {
+					this.throwMagicNebula(mapX, mapY);
+					GlobalGameState.magicNebulas--;
+				}
 			}
 			
 			if (input.isKeyPressed("left")) {
