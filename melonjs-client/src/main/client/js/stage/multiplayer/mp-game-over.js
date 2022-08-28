@@ -9,7 +9,7 @@ class LevelStatistics extends Container {
 		super(x, y, width, height);
 		this.setOpacity(1);
 		this.levelName = new BitmapText(14, 8, {
-			font: "24Outline",
+			font: "18Outline",
 			size: "1",
 			textAlign: "left",
 			text: GlobalGameState.globalServerGame.player.name + " - Statistics",
@@ -69,13 +69,13 @@ class LevelStatistics extends Container {
 			"";
 
 		this.levelDescr = new BitmapText(14, 40, {
-			font: "18Outline",
+			font: "12Outline",
 			textAlign: "left",
 			text: textL,
 		});
 
 		this.levelDescr2 = new BitmapText(324, 40, {
-			font: "18Outline",
+			font: "12Outline",
 			textAlign: "right",
 			text: textR,
 		});
@@ -106,7 +106,7 @@ class GameOverBack extends Container {
 		// give a name
 		this.name = "TitleBack";
 
-		this.addChild(new StateBackground(isGameOver ? "GAME OVER!" : "CONGRATS! You won!", false));
+		this.addChild(new StateBackground(isGameOver ? "YOU LOST" : "CONGRATS! You won!", false));
 		this.addChild(new LevelStatistics(190, game.viewport.height - 400, game.viewport.width - 400, game.viewport.height - 400, isGameOver), 6);
 	}
 }

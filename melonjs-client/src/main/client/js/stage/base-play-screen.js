@@ -75,14 +75,12 @@ export class BasePlayScreen extends Stage {
 								console.log("  Chest at (" + x + "/" + y + ")");
 								l.clearTile(x, y);
 								game.world.addChild(new ChestBonusSprite(x, y), layerNum);
-							} 
-                            else if (tile.tileId === BONUS_TILE.meat) {
+							} else if (tile.tileId === BONUS_TILE.meat) {
 							}
 						}
 					}
 				}
-			} 
-            else if (l.name === "Persons") {
+			} else if (l.name === "Persons") {
 				let enemynum = 0;
 				this.spriteLayer = layerNum;
 				for (let y = 0; y < l.height; y++) {
@@ -95,16 +93,14 @@ export class BasePlayScreen extends Stage {
 								this.player.name = "Player";
 								console.log("  player at (" + x + "/" + y + "): " + this.player);
 								game.world.addChild(this.player, this.spriteLayer);
-							} 
-                            else if (tile.tileId === 994) {
+							} else if (tile.tileId === 994) {
 								let enemy = new CatEnemy(x, y);
 								let name = "CatEnemy." + enemynum++;
 								enemy.setEnemyName(name);
 								game.world.addChild(enemy, this.spriteLayer);
 								this.enemies.push(enemy);
 								console.log("  enemy at (" + x + "/" + y + "): " + enemy);
-							} 
-                            else if (tile.tileId === 995) {
+							} else if (tile.tileId === 995) {
 								// create a spider emitter, which emits up to X spiders every
 								// 10 seconds
 								this.enemyEmitter.isActive = true;
@@ -113,8 +109,7 @@ export class BasePlayScreen extends Stage {
 								this.enemyEmitter.emitCount = l.enemyNumEmitting;
 								this.enemyEmitter.emitEvery = l.enemyTimeEmitting;
 								console.log("  enemyEmitter at (" + x + "/" + y + "): ");
-							} 
-                            else if (tile.tileId === 996) {
+							} else if (tile.tileId === 996) {
 								let enemy = new GolemEnemySprite(x, y);
 								let name = "Golem." + (enemynum + 1);
 								enemynum++;
@@ -131,7 +126,47 @@ export class BasePlayScreen extends Stage {
 			}
 			layerNum++;
 		});
+
+		this.parseLevelObjects();
+		
 		// make sure, all enemies know the player
 		this.enemies.forEach((e) => e.setPlayer(this.player));
+	}
+
+	parseLevelObjects() {
+		// now go through the list of objects in the currentLevel structure and create them
+		if (this.currentLevel.objects !== null && this.currentLevel.objects !== undefined) {
+			this.currentLevel.objects.forEach((obj) => {
+				//console.log("  Level Object: " + obj.name);
+				if (obj.type == LevelObject.types.ENEMY) {
+					if (obj.clazz === "GolemEnemy") {
+						let enemy = new GolemEnemySprite(obj.mapX, obj.mapY, false);
+						enemy.setEnemyName(obj.name);
+						let path = this.currentLevel.getPathForEnemy("Path." + obj.pathId);
+						console.log("    Golem requires path " + obj.pathId + ": " + path);
+						if (path !== null) {
+							enemy.setWayPath(path);
+							game.world.addChild(enemy, this.spriteLayer);
+							this.enemies.push(enemy);
+							console.log("  enemy at (" + obj.mapX + "/" + obj.mapY + "): " + enemy.name);
+						}
+					}
+				} else if (obj.type === LevelObject.types.ENEMY_EMITTER) {
+					console.log("  Placing an enemy emitter at " + obj.mapX + ", " + obj.mapY);
+					let emitter = new EnemyEmitter(obj.mapX, obj.mapY, obj, this.player);
+					game.world.addChild(emitter, this.spriteLayer);
+				} else if (obj.type === LevelObject.types.CHEST) {
+					let chest = new ChestBonusSprite(obj.mapX, obj.mapY);
+					chest.score = obj.score;
+					chest.numBombs = obj.numBombs;
+					chest.numMagicBolts = obj.numMagicBolts;
+					chest.numMagicFirespins = obj.numMagicFirespins;
+					chest.numMagicNebulas = obj.numMagicNebulas;
+					chest.numMagicProtectionCircles = obj.numMagicProtectionCircles;
+
+					game.world.addChild(chest, this.spriteLayer - 1);
+				}
+			});
+		}
 	}
 }

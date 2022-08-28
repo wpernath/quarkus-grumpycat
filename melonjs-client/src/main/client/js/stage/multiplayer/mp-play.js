@@ -68,8 +68,12 @@ export default class MultiplayerPlayScreen extends BasePlayScreen {
 		MultiplayerManager.get().addEventListener(MultiplayerMessageType.GAME_OVER, (evt) => {	
             state.pause();		
             this.cleanupWorld();
-			state.change(my_state.MULTIPLAYER_GAME_OVER);
             state.resume();
+            this.updatePlayerData();
+            MultiplayerManager.get().updatePlayerData().then( () => {
+                state.change(my_state.MULTIPLAYER_GAME_OVER);            
+            });
+			
 		}, this);
 
         // add a player removed event listener
@@ -91,6 +95,28 @@ export default class MultiplayerPlayScreen extends BasePlayScreen {
 
 		this.isActive = true;
 	}
+
+    /**
+     * Updates the player data of the current active player and stores it back to the server
+     */
+    updatePlayerData() {
+        let player = MultiplayerManager.get().multiplayerPlayer;
+        player.energyLeft = GlobalGameState.energy;
+        player.score = GlobalGameState.score;
+        player.potionsLeft = GlobalGameState.magicBolts + GlobalGameState.magicFirespins + GlobalGameState.magicNebulas + GlobalGameState.magicProtections;
+        player.chestsOpened = GlobalGameState.chestsOpened;
+        player.placedBarriers = GlobalGameState.placedBarriers;
+        player.usedBombs = GlobalGameState.usedBombs;
+        player.bittenBySpiders = GlobalGameState.bittenBySpiders;
+        player.catchedByGolems = GlobalGameState.catchedByGolems;
+        player.catchedByCats = GlobalGameState.catchedByCats;
+        player.killedSpiders = GlobalGameState.killedSpiders;
+        player.stunnedCats = GlobalGameState.stunnedCats;
+        player.stunnedGolems = GlobalGameState.stunnedGolems;
+        player.bonusCollected = GlobalGameState.bonusCollected;
+        player.catchedByRemotePlayers = 0;
+        player.otherPlayersHurt = 0;        
+    }
 
     /**
      * Global keyup action handler for the MP game
@@ -194,8 +220,13 @@ export default class MultiplayerPlayScreen extends BasePlayScreen {
             if( !this.isExiting ) {
                 this.isExiting = true;
                 this.cleanupWorld();
-                state.change(my_state.MULTIPLAYER_GAME_OVER);
-            }
+                this.updatePlayerData();
+                MultiplayerManager.get()
+                    .updatePlayerData()
+                    .then(() => {
+                        state.change(my_state.MULTIPLAYER_GAME_OVER);
+                    });
+    }
         }
 		return super.update(dt) || isDirty;		
 	}
@@ -205,6 +236,7 @@ export default class MultiplayerPlayScreen extends BasePlayScreen {
 		this.currentLevel = MultiplayerManager.get().allLevels()[this.multiplayerGame.level];
 		this.currentLevel.loadIntoMelon();
 		level.load(this.currentLevel.id);
+
 
 		let layers = level.getCurrentLevel().getLayers();
 		let layerNum = 0;
@@ -300,6 +332,8 @@ export default class MultiplayerPlayScreen extends BasePlayScreen {
 			layerNum++;
 		});
 
+        this.parseLevelObjects();
+        
 		// make sure, all enemies know the player
 		this.enemies.forEach((e) => e.setPlayer(this.player));
 	}

@@ -2,6 +2,7 @@ package org.wanja.fatcat;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import javax.transaction.Transactional;
 import javax.ws.rs.GET;
@@ -135,6 +136,31 @@ public class MultiPlayerResource {
         MultiPlayer mp = new MultiPlayer(p);
         mp.persist();
         Log.info("New Multiplayer Player created with id " + mp.id);
+        return mp;
+    }
+
+    @PUT
+    @Path("/player/{playerId}")
+    @Transactional
+    public MultiPlayer updatePlayerData(Long playerId, MultiPlayer player) {
+        MultiPlayer mp = MultiPlayer.findById(playerId);
+        mp.bittenBySpiders = player.bittenBySpiders;
+        mp.bonusCollected = player.bonusCollected;
+        mp.catchedByCats = player.catchedByCats;
+        mp.catchedByGolems = player.catchedByGolems;
+        mp.catchedByRemotePlayers = player.catchedByRemotePlayers;
+        mp.chestsOpened = player.chestsOpened;
+        mp.energyLeft = player.energyLeft;
+        mp.killedSpiders = player.killedSpiders;
+        mp.otherPlayerHurt = player.otherPlayerHurt;
+        mp.placedBarriers = player.placedBarriers;
+        mp.potionsLeft = player.potionsLeft;
+        mp.score = player.score;
+        mp.stunnedCats = player.stunnedCats;
+        mp.stunnedGolems = player.stunnedGolems;
+        mp.usedBombs = player.usedBombs;
+    
+        mp.persist();
         return mp;
     }
 

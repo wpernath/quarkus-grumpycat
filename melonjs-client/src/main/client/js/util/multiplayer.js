@@ -103,6 +103,7 @@ export class MultiplayerMessage {
 
 			// define URLs for the REST services
 			this.createPlayerURL = baseURL + "mp-game/player";
+			this.updatePlayerURL = baseURL + "mp-game/player/"; // PUT, append playerId
 			this.createGameURL = baseURL + "mp-game/new";
 			this.joinGameURL = baseURL + "mp-game/join/"; // append gameId
 			this.listGamesURL = baseURL + "mp-game/open";
@@ -392,6 +393,23 @@ export class MultiplayerMessage {
 		async listOpenGames() {
 			let res = await fetch(this.listGamesURL);
 			return res.json();
+		}
+
+		/**
+		 * Sends an update request to the server to write player data
+		 * @returns the player data
+		 */
+		async updatePlayerData() {
+			let res = await fetch(this.updatePlayerURL + this.multiplayerPlayer.id, {
+				method: "PUT",
+				mode: "cors",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(this.multiplayerPlayer),
+			});
+			this.multiplayerPlayer = await res.json();
+			return this.multiplayerPlayer;
 		}
 
 		/**
