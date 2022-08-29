@@ -2,7 +2,6 @@ package org.wanja.fatcat;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 import javax.transaction.Transactional;
 import javax.ws.rs.GET;
