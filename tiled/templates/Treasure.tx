@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+ <tileset firstgid="1" source="../Terrain.tsx"/>
+ <object name="Treasure.1" class="Chest" gid="970" width="32" height="32">
+  <properties>
+   <property name="numBombs" type="int" value="1"/>
+   <property name="numMagicBolts" type="int" value="5"/>
+   <property name="numMagicFirespin" type="int" value="5"/>
+   <property name="numMagicNebula" type="int" value="5"/>
+   <property name="numMagicProtectionCircle" type="int" value="0"/>
+   <property name="score" type="int" value="500"/>
+  </properties>
+ </object>
+</template>
