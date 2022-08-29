@@ -5,9 +5,9 @@
     },
     "activeFile": "FireAndDragons.tmx",
     "expandedProjectPaths": [
-        "multiplayer",
+        ".",
         "templates",
-        "."
+        "multiplayer"
     ],
     "exportAsImage.useCurrentScale": true,
     "file.lastUsedOpenFilter": "Alle Dateien (*)",
@@ -55,11 +55,11 @@
             "scaleInEditor": 1.9537
         },
         "FireAndDragons.tmx": {
-            "scale": 1.1862,
+            "scale": 0.918,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 940.8194233687406,
-                "y": 621.3117518125107
+                "x": 942.8104575163399,
+                "y": 622.5490196078431
             }
         },
         "Golems.tmx": {

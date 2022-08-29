@@ -19,6 +19,21 @@ public class MultiPlayer extends PanacheEntity {
 
     public long score;    
 
+    @Column(name="energy_left")
+    public int energyLeft;
+
+    @Column(name = "potions_left")
+    public int potionsLeft;
+
+    @Column(name = "bombs_left")
+    public int bombsLeft;
+
+    @Column(name = "chests_opened")
+    public int chestsOpened; 
+
+    @Column(name = "other_player_hurt")
+    public int otherPlayerHurt;
+
     @Column(name = "placed_barriers")
     public int placedBarriers;
 
@@ -33,6 +48,9 @@ public class MultiPlayer extends PanacheEntity {
 
     @Column(name = "catched_by_golems")
     public int catchedByGolems;
+
+    @Column(name = "catched_by_remote_players")
+    public int catchedByRemotePlayers;
 
     @Column(name = "killed_spiders")
     public int killedSpiders;

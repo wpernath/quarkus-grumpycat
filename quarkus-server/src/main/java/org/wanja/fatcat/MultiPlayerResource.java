@@ -138,6 +138,32 @@ public class MultiPlayerResource {
         return mp;
     }
 
+    @PUT
+    @Path("/player/{playerId}")
+    @Transactional
+    public MultiPlayer updatePlayerData(Long playerId, MultiPlayer player) {
+        Log.info("Persisting MP player with id " + playerId);
+        MultiPlayer mp = MultiPlayer.findById(playerId);
+        mp.bittenBySpiders = player.bittenBySpiders;
+        mp.bonusCollected = player.bonusCollected;
+        mp.catchedByCats = player.catchedByCats;
+        mp.catchedByGolems = player.catchedByGolems;
+        mp.catchedByRemotePlayers = player.catchedByRemotePlayers;
+        mp.chestsOpened = player.chestsOpened;
+        mp.energyLeft = player.energyLeft;
+        mp.killedSpiders = player.killedSpiders;
+        mp.otherPlayerHurt = player.otherPlayerHurt;
+        mp.placedBarriers = player.placedBarriers;
+        mp.potionsLeft = player.potionsLeft;
+        mp.score = player.score;
+        mp.stunnedCats = player.stunnedCats;
+        mp.stunnedGolems = player.stunnedGolems;
+        mp.usedBombs = player.usedBombs;
+        mp.bombsLeft = player.bombsLeft;
+        mp.persist();
+        return mp;
+    }
+
     @GET
     @Path("/{gameId}")
     public MultiPlayerGame getOpenGames(Long gameId) {
