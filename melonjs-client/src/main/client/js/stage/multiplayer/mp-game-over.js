@@ -24,8 +24,8 @@ class PlayerStatistics extends Container {
 
 		let textL =
 			"Score: \n" +
-			"Level: " +
-			"\n" +
+			"Real Score: \n" +
+			"Energy left: \n" +
 			"Bonus collected: " +
 			"\n" +
 			"Bombs left: " +
@@ -51,11 +51,13 @@ class PlayerStatistics extends Container {
 		let textR =
 			player.score +
 			"\n" +
-			(LevelManager.getInstance().getCurrentLevelIndex() + 1) +
+			player.internalScore +
+			"\n" +
+			player.energyLeft + 
 			"\n" +
 			player.bonusCollected +
 			"\n" +
-			player.bombs +
+			player.bombsLeft +
 			"\n" +
 			player.usedBombs +
 			"\n" +
@@ -119,11 +121,21 @@ class GameOverBack extends Container {
 		// where to position each box of statistics
 		this.posArray   = [
 			new Vector2d(60, 215),
-			new Vector2d(270, 215),
-			new Vector2d(480, game.viewport.height - 400),
-			new Vector2d(690, game.viewport.height - 400)
+			new Vector2d(280, game.viewport.height - 400),
+			new Vector2d(500, 215),
+			new Vector2d(720, game.viewport.height - 400)
 		];
 
+		for( let i = 0; i < this.players.length; i++ ) {
+			if( this.players[i].hasWon ) {
+				if( MultiplayerManager.get().multiplayerPlayer.id === this.players[i].id ) {
+
+					// we are the winner
+					this.isGameOver = false;
+					break;
+				}
+			}
+		}
 		// make sure we use screen coordinates
 		this.floating = true;
 
@@ -138,9 +150,16 @@ class GameOverBack extends Container {
 		this.sensaSprite = new Sprite(790, game.viewport.height - 300, {
 			image: this.isGameOver ? "sensa_nee" : "sensa_jaa",
 		});
-		this.sensaSprite.setOpacity(0.8);
+		this.sensaSprite.setOpacity(0.6);
 		this.addChild(this.sensaSprite, 1);
-		this.addChild(new StateBackground(this.isGameOver ? "YOU LOST" : "CONGRATS! You won!", false), 0);
+		this.addChild(new StateBackground(this.isGameOver ? "LOOOOOOSER!" : "CONGRATS! WINNER!", false), 0);
+		this.addChild(
+			new BitmapText(game.viewport.width - 75, 170, {
+				font: "24Outline",
+				textAlign: "right",
+				text: MultiplayerManager.get().multiplayerPlayer.name,
+			}), 1
+		);
 
 
 		for( let i = 0; i < this.players.length; i++ ) {
@@ -160,9 +179,10 @@ class GameOverBack extends Container {
 	}
 
 	/**
-	 * Returns an array of players for this game
+	 * Returns an array of players for this game and calculates who has won
+	 * 
 	 * @param {*} theGame
-	 * @returns
+	 * @returns array of player
 	 */
 	playersFromGame(theGame) {
 		let players = [];
@@ -170,6 +190,36 @@ class GameOverBack extends Container {
 		players[1] = theGame.player2 !== undefined ? theGame.player2 : null;
 		players[2] = theGame.player3 !== undefined ? theGame.player3 : null;
 		players[3] = theGame.player4 !== undefined ? theGame.player4 : null;
+
+		for( let i=0; i < players.length; i++ ) {
+			if( players[i] !== null ) {
+				let p = players[i];
+				let score = p.score;
+				score += p.energyLeft > 0 ? (p.energyLeft * 5) : 0;
+				score += p.potionsLeft > 0 ? (p.potionsLeft * 5) : 0;
+				score += p.bombsLeft > 0 ? (p.bombsLeft * 5) : 0;
+
+				p.internalScore = score;
+				p.hasWon = false;				
+			}
+		}
+
+		let winner = null;
+		let score  = 0;
+		for( let i=0; i < players.length; i++ ) {
+			if( players[i] !== null ) {
+				if( players[i].energyLeft > 0 ) {
+					if( players[i].internalScore > score) {
+						score = players[i].internalScore;
+						winner = players[i];
+					}
+				}
+			}
+		}
+
+		if( winner !== null ) {
+			winner.hasWon = true;
+		}
 		return players;
 	}
 }

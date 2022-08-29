@@ -25,6 +25,9 @@ public class MultiPlayer extends PanacheEntity {
     @Column(name = "potions_left")
     public int potionsLeft;
 
+    @Column(name = "bombs_left")
+    public int bombsLeft;
+
     @Column(name = "chests_opened")
     public int chestsOpened; 
 

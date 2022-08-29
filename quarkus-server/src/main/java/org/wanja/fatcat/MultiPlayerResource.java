@@ -143,6 +143,7 @@ public class MultiPlayerResource {
     @Path("/player/{playerId}")
     @Transactional
     public MultiPlayer updatePlayerData(Long playerId, MultiPlayer player) {
+        Log.info("Persisting MP player with id " + playerId);
         MultiPlayer mp = MultiPlayer.findById(playerId);
         mp.bittenBySpiders = player.bittenBySpiders;
         mp.bonusCollected = player.bonusCollected;
@@ -159,7 +160,7 @@ public class MultiPlayerResource {
         mp.stunnedCats = player.stunnedCats;
         mp.stunnedGolems = player.stunnedGolems;
         mp.usedBombs = player.usedBombs;
-    
+        mp.bombsLeft = player.bombsLeft;
         mp.persist();
         return mp;
     }

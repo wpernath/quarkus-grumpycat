@@ -107,6 +107,7 @@ export default class MultiplayerPlayScreen extends BasePlayScreen {
         player.chestsOpened = GlobalGameState.chestsOpened;
         player.placedBarriers = GlobalGameState.placedBarriers;
         player.usedBombs = GlobalGameState.usedBombs;
+        player.bombsLeft = GlobalGameState.bombs;
         player.bittenBySpiders = GlobalGameState.bittenBySpiders;
         player.catchedByGolems = GlobalGameState.catchedByGolems;
         player.catchedByCats = GlobalGameState.catchedByCats;
