@@ -387,6 +387,17 @@ export class MultiplayerMessage {
 		}
 
 		/**
+		 * Refreshes the current game data with pupdated player infos / data.
+		 * 
+		 * @returns the refreshed game data
+		 */
+		async refreshGameData() {
+			let res = await fetch(this.getGameURL + this.multiplayerGame.id);
+			this.multiplayerGame = await res.json();
+			return this.multiplayerGame;
+		}
+
+		/**
 		 *
 		 * @returns a array of open games coming from server to join them
 		 */
