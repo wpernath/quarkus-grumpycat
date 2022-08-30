@@ -103,4 +103,10 @@ export const BONUS_TILE = {
 	enemyEmitter: 115,
 };
 
+export const ENEMY_TILE = {
+	cat: 994,
+	spider: 995,
+	golem: 996,
+};
+
 
