@@ -231,7 +231,7 @@ class WeaponsItem extends Container {
 		);
 	}
 
-	draw(renderer) {
+	draw(renderer, viewport) {
 		// draw those images
 //		console.log("WeaponsItem.draw()");
 		let x = this.pos.x + 2;
@@ -254,7 +254,7 @@ class WeaponsItem extends Container {
 		this.textField.draw(renderer, this.magicFirespins.toString().padStart(2, "0"), this.pos.x + 74, this.pos.y + 30);
 		this.textField.draw(renderer, this.magicNebulas.toString().padStart(2, "0"), this.pos.x + 106, this.pos.y + 30);
 		this.textField.draw(renderer, this.magicProtections.toString().padStart(2, "0"), this.pos.x + 138, this.pos.y + 30);
-		super.draw(renderer);
+		super.draw(renderer, viewport);
 	}
 
 	/**

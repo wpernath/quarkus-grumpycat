@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+ <tileset firstgid="1" source="../Terrain.tsx"/>
+ <object name="EnemyEmitter.1" class="EnemyEmitter" gid="116" width="32" height="32">
+  <properties>
+   <property name="emitEvery" type="int" value="5000"/>
+   <property name="enemyType" value="SpiderEnemy"/>
+   <property name="initialDelay" type="int" value="3000"/>
+   <property name="numEnemies" type="int" value="10"/>
+  </properties>
+ </object>
+</template>

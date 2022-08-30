@@ -13,6 +13,7 @@ import { BONUS_TILE } from '../util/constants.js';
 import ChestBonusSprite from '../renderables/terrain/chest-sprite.js';
 import { BasePlayScreen } from './base-play-screen.js';
 import { EnemyEmitter } from '../renderables/terrain/enemy-emitter.js';
+import GlobalGameState from '../util/global-game-state.js';
 
 
 class PlayScreen extends BasePlayScreen {
@@ -108,10 +109,15 @@ class PlayScreen extends BasePlayScreen {
 							if( tile.tileId === BONUS_TILE.closedChest ) {
 								console.log("  Chest at (" + x + "/" + y + ")");
 								l.clearTile(x,y);
-								game.world.addChild(new ChestBonusSprite(x,y), layerNum);
-							}
-							else if( tile.tileId === BONUS_TILE.meat) {
-								
+								let chest = new ChestBonusSprite(x, y);
+								chest.score = GlobalGameState.scoreForChest;
+								chest.numBombs = 0;
+								chest.numMagicBolts = 0;
+								chest.numMagicFirespins = 0;
+								chest.numMagicNebulas = 0;
+								chest.numMagicProtectionCircles = 0;
+
+								game.world.addChild(chest, layerNum);
 							}
 						}
 					}
