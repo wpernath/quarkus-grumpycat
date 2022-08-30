@@ -55,11 +55,11 @@
             "scaleInEditor": 1.9537
         },
         "FireAndDragons.tmx": {
-            "scale": 0.918,
+            "scale": 0.6648,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 942.8104575163399,
-                "y": 622.5490196078431
+                "x": 800.2406738868834,
+                "y": 634.777376654633
             }
         },
         "Golems.tmx": {
@@ -226,10 +226,10 @@
     "project": "grumpycat.tiled-project",
     "property.type": "int",
     "recentFiles": [
+        "FireAndDragons.tmx",
         "multiplayer/mp_arena.tmx",
         "Golems.tmx",
         "Terrain.tsx",
-        "FireAndDragons.tmx",
         "spiders.tsx",
         "multiplayer/mp_level-template.tmx",
         "multiplayer/mp_golems.tmx",
