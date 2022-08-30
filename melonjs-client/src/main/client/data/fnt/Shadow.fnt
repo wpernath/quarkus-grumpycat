@@ -1,6 +1,6 @@
 info face="sans-serif" size=32 bold=0 italic=0 charset="" unicode=1 stretchH=100 smooth=1 aa=1 padding=1,1,1,1 spacing=1,1
 common lineHeight=32 base=26 scaleW=345 scaleH=345 pages=1 packed=0
-page id=0 file="Unnamed.png"
+page id=0 file="Shadow.png"
 chars count=102
 char id=32 x=0 y=0 width=0 height=0 xoffset=0 yoffset=0 xadvance=9 page=0 chnl=15
 char id=33 x=70 y=243 width=18 height=37 xoffset=0 yoffset=0 xadvance=9 page=0 chnl=15

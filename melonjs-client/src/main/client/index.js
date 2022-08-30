@@ -41,6 +41,11 @@ import MultiplayerPlayScreen from './js/stage/multiplayer/mp-play';
 import MultiplayerGameOverScreen from './js/stage/multiplayer/mp-game-over';
 import { MultiplayerMessage } from './js/util/multiplayer';
 
+import HowToPlayScreen from './js/stage/how-to-play'
+
+
+
+
 device.onReady(() => {
 
     // initialize the display canvas once the device/browser is ready
@@ -108,6 +113,7 @@ device.onReady(() => {
             state.set(state.GAME_END, new GameOverScreen(false));
             state.set(state.SCORE, new HighscoreScreen());
             state.set(my_state.SINGLE_PLAYER_MENU, new SingleplayerMenuScreen());
+            state.set(my_state.HOW_TO_PLAY, new HowToPlayScreen());
             
             // multiplayer states
             state.set(my_state.MULTIPLAYER_MENU, new MultiplayerMenuScreen());

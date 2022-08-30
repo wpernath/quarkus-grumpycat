@@ -30,19 +30,21 @@ export default class BaseTerrainSprite extends Sprite {
             this.body.collisionType = collision.types.COLLECTABLE_OBJECT;
             this.body.setCollisionMask(collision.types.PLAYER_OBJECT | my_collision_types.REMOTE_PLAYER);
             this.body.setStatic(true);
+
+			let layers = level.getCurrentLevel().getLayers();
+			this.mapWidth = level.getCurrentLevel().cols;
+			this.mapHeight = level.getCurrentLevel().rows;
+
+			layers.forEach((l) => {
+				if (l.name === "Frame") this.borderLayer = l;
+			});
         }
+		else {
+			this.anchorPoint.set(0, 0);
+		}
 
         this.addAnimation("start", animFrame, 60);
-		let layers = level.getCurrentLevel().getLayers();
-		this.mapWidth = level.getCurrentLevel().cols;
-		this.mapHeight = level.getCurrentLevel().rows;
-
-		layers.forEach((l) => {
-			if (l.name === "Frame") this.borderLayer = l;
-		});
-
         this.setCurrentAnimation("start");
-
         this.type = animFrame[0]+1;
         this.isCollected = false;
 	}

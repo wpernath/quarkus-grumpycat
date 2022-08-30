@@ -42,6 +42,19 @@ class HighscoreButton extends BaseTextButton {
 	}
 }
 
+class HowToPlayButton extends BaseTextButton {
+	constructor(x, y) {
+		super(x, y, {
+			text: "How to play",
+			borderWidth: 250,
+		});
+	}
+
+	onClick(event) {
+		state.change(my_state.HOW_TO_PLAY);
+	}
+}
+
 export default class TitleMenu extends Container {
 	constructor() {
 		super(0, 0);
@@ -61,5 +74,6 @@ export default class TitleMenu extends Container {
 		this.addChild(new SinglePlayerButton(center, 300));
 		this.addChild(new MultiplayerButton(center, 360));
 		this.addChild(new HighscoreButton(center, 420));
+		this.addChild(new HowToPlayButton(center, 480));
 	}
 }

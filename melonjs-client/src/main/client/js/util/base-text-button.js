@@ -14,6 +14,7 @@ export default class BaseTextButton extends BaseClickableComponent {
 		settings.fillStyle = settings.fillStyle || "#ffffff";
 		settings.lineWidth = settings.lineWidth || 1;
 		settings.anchorPoint = settings.anchorPoint || new Vector2d(0, 0);
+		this.onClickCallback = settings.onClick || null;
 
 		let font = new BitmapText(x, y, settings);
 		font.fillStyle = settings.fillStyle;
@@ -39,7 +40,7 @@ export default class BaseTextButton extends BaseClickableComponent {
 		//console.log("Renderable: " + this.pos.x + " / " + this.pos.y);
 	}
 
-	draw(renderer) {
+	draw(renderer, viewport) {
 		renderer.setGlobalAlpha(0.5);
 		if (!this.hover) {
 			renderer.setColor(this.settings.backgroundColor);
@@ -53,6 +54,13 @@ export default class BaseTextButton extends BaseClickableComponent {
 		renderer.stroke(this.border);
 		renderer.setTint(this.font.tint, this.font.getOpacity());
 		this.font.draw(renderer, this.settings.text, this.font.pos.x, this.font.pos.y);
-		super.draw(renderer);
+		super.draw(renderer, viewport);
+	}
+
+	onClick(event) {
+		if( this.onClickCallback !== null ) {
+			this.onClickCallback(event);
+			return false;
+		}
 	}
 }

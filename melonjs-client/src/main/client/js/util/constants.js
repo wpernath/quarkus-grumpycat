@@ -46,6 +46,11 @@ export const my_state = {
 	 * Multiplyer game over
 	 */
 	MULTIPLAYER_GAME_OVER: state.USER + 15,
+
+	/** 
+	 * A text screen with infos on how to play this game
+	 */
+	HOW_TO_PLAY: state.USER + 16,
 };
 
 export const my_collision_types = {
