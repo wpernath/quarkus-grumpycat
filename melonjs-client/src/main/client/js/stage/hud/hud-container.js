@@ -231,10 +231,6 @@ class WeaponsItem extends Container {
 		this.addChild(this.protText);
 	}
 
-	draw(renderer, viewport) {
-		super.draw(renderer, viewport);
-	}
-
 	/**
 	 *
 	 * @returns {boolean}
