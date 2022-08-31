@@ -1,10 +1,10 @@
-import { Renderable, BitmapText, game, event, Container, Vector2d, Color, Rect, RoundRect, Sprite} from "melonjs/dist/melonjs.module.js";
+import { BitmapText, game, event, Container, Vector2d, Color, Rect, RoundRect } from "melonjs/dist/melonjs.module.js";
 import BaseTerrainSprite from "../../renderables/terrain/terrain-sprite";
 
 import GlobalGameState from "../../util/global-game-state";
 import { BONUS_TILE, PLAYER_COLORS } from "../../util/constants";
 import MultiplayerManager from "../../util/multiplayer";
-
+import PlayerEntity from "../../renderables/player";
 
 class ScoreItem extends Container {
 	/**
@@ -13,19 +13,20 @@ class ScoreItem extends Container {
 	 * @param y
 	 */
 	constructor(x, y) {
-		super(x, y, 160, 34);
+		super(x, y, 240, 34);
 
 		this.text = new BitmapText(0,0, {
 			font: "Shadow",
 			textBaseline: "top",
-			text: "9999999",
+			
+			text: "99999999",
 		});
 
 		// persistent across level change
-		//this.isPersistent = true;
+		this.isPersistent = true;
 
 		// make sure we use screen coordinates
-		this.floating = true;
+		//this.floating = true;
 
 		this.z = 100;
 
@@ -39,45 +40,18 @@ class ScoreItem extends Container {
 			}.bind(this)
 		);
 
-		this.dogLeft = new Sprite(this.pos.x - 40, this.pos.y + 2, {
-			image: "player",
-			framewidth: 34,
-			frameheight: 39,
-			tint: PLAYER_COLORS[MultiplayerManager.get().getMultiplayerPlayerNumber()],
-		});
+		this.dogLeft = new PlayerEntity(0,  0, true);
+		this.dogRight= new PlayerEntity(7, 0, true);
+		this.dogLeft.tint.copy(PLAYER_COLORS[MultiplayerManager.get().getMultiplayerPlayerNumber()]);
+		this.dogRight.tint.copy(PLAYER_COLORS[MultiplayerManager.get().getMultiplayerPlayerNumber()]);
+		this.dogRight.flipX(true);
 
-		
-		this.catRight = new Sprite(this.pos.x + 150, this.pos.y + 2, {
-			image: "cat_left",
-			framewidth: 40,
-			frameheight: 39,
-			flipX: true,
-		});
-		/*
-		this.catRight = new Sprite(this.pos.x + 150, this.pos.y + 2, {
-			image: "player",
-			framewidth: 34,
-			frameheight: 39,
-			tint: PLAYER_COLORS[MultiplayerManager.get().getMultiplayerPlayerNumber()],
-			flipX: true,
-		});
-		*/
+		this.addChild(this.dogLeft);
+		this.addChild(this.dogRight);
+		this.addChild(this.text);
 
-	}
+		this.text.pos.x = (this.width - this.text.measureText().width) / 2;
 
-	draw(renderer) {	
-//		console.log("ScoreItem.draw()")	;
-		let width = this.text.measureText(renderer).width;		
-		renderer.setTint(this.text.tint, this.text.getOpacity());
-		this.text.draw(renderer, this.scoretext, 24 + (game.viewport.width - width) / 2, this.pos.y + 12);
-
-		renderer.setTint(this.dogLeft.tint, this.dogLeft.getOpacity());
-		this.dogLeft.draw(renderer);
-
-		renderer.setTint(this.catRight.tint, this.catRight.getOpacity());
-
-		this.catRight.draw(renderer);
-		super.draw(renderer);
 	}
 
 	/**
@@ -90,7 +64,8 @@ class ScoreItem extends Container {
 		if (this.score != GlobalGameState.score) {
 			this.score = GlobalGameState.score;
 			this.isDirty = true;
-			this.scoretext = this.score.toString().padStart(7, "0");
+			this.scoretext = this.score.toString().padStart(8, "0");
+			this.text.setText(this.scoretext);
 		}
 		return this.isDirty;
 	}
@@ -152,7 +127,7 @@ class EnergyItem extends Container {
 		return this.isDirty;
 	}
 
-	draw(renderer) {
+	draw(renderer, viewport) {
 //		console.log("EnergyBar.draw()");
 		// draw energy bar background
 		renderer.setGlobalAlpha(0.5);
@@ -182,7 +157,7 @@ class EnergyItem extends Container {
 		// draw energy bar text
 		renderer.setTint(this.energyText.tint, this.energyText.getOpacity());
 		this.energyText.draw(renderer, "Energy:", 6, 8);
-		super.draw(renderer);
+		super.draw(renderer, viewport);
 
 	}
 }
@@ -196,65 +171,64 @@ class WeaponsItem extends Container {
 	constructor(x, y, w, h) {
 		super(x,y, w, h);
 			
-		this.textField = new BitmapText(0,0, {						
+		this.bombsText = new BitmapText(8,28, {						
 			font: "12Outline",
 			textAlign: "left",
 			textBaseline: "top",
 			text: "99",
 		});
-		
-		this.relative = new Vector2d(x, y);
+
+		this.boltText = new BitmapText(40, 28, {
+			font: "12Outline",
+			textAlign: "left",
+			textBaseline: "top",
+			text: "99",
+		});
+
+		this.fireText = new BitmapText(72, 28, {
+			font: "12Outline",
+			textAlign: "left",
+			textBaseline: "top",
+			text: "99",
+		});
+
+		this.nebuText = new BitmapText(104, 28, {
+			font: "12Outline",
+			textAlign: "left",
+			textBaseline: "top",
+			text: "99",
+		});
+
+		this.protText = new BitmapText(136, 28, {
+			font: "12Outline",
+			textAlign: "left",
+			textBaseline: "top",
+			text: "99",
+		});
+
 		this.bombs = -1;
 		this.magicBolts = -1;
 		this.magicFirespins = -1;
 		this.magicNebulas = -1;
 		this.magicProtections = -1;
 	
-		this.bombImg = new BaseTerrainSprite(this.pos.x + 2, this.pos.y + 2, [BONUS_TILE.bomb0-1], true );
-		this.boltImg = new BaseTerrainSprite(this.pos.x + 2 + 32, this.pos.y + 2, [BONUS_TILE.magicBolt - 1], true);
-		this.fireImg = new BaseTerrainSprite(this.pos.x + 2 + 64, this.pos.y + 2, [BONUS_TILE.magicFirespin - 1], true);
-		this.nebuImg = new BaseTerrainSprite(this.pos.x + 2 + 96, this.pos.y + 2, [BONUS_TILE.magicNebula - 1], true);
-		this.protImg = new BaseTerrainSprite(this.pos.x + 2 + 128, this.pos.y + 2, [BONUS_TILE.magicProtectionCircle - 1], true);
+		this.bombImg = new BaseTerrainSprite(2,       2, [BONUS_TILE.bomb0-1], true );
+		this.boltImg = new BaseTerrainSprite(2 + 32,  2, [BONUS_TILE.magicBolt - 1], true);
+		this.fireImg = new BaseTerrainSprite(2 + 64,  2, [BONUS_TILE.magicFirespin - 1], true);
+		this.nebuImg = new BaseTerrainSprite(2 + 96,  2, [BONUS_TILE.magicNebula - 1], true);
+		this.protImg = new BaseTerrainSprite(2 + 128, 2, [BONUS_TILE.magicProtectionCircle - 1], true);
 
-		this.images = [];
-		this.images.push(this.bombImg);
-		this.images.push(this.boltImg);
-		this.images.push(this.fireImg);
-		this.images.push(this.nebuImg);
-		this.images.push(this.protImg);
+		this.addChild(this.bombImg);
+		this.addChild(this.boltImg);
+		this.addChild(this.fireImg);
+		this.addChild(this.nebuImg);
+		this.addChild(this.protImg);
 
-		event.on(
-			event.CANVAS_ONRESIZE,
-			function (w, h) {
-				this.pos.set(w, h, 0).add(this.relative);
-			}.bind(this)
-		);
-	}
-
-	draw(renderer, viewport) {
-		// draw those images
-//		console.log("WeaponsItem.draw()");
-		let x = this.pos.x + 2;
-		let y = this.pos.y + 2;
-		for( let i = 0; i < this.images.length; i++ ) {
-			this.images[i].draw(renderer)
-			renderer.drawImage(this.images[i].image, 
-				this.images[i].offset.x + this.images[i].current.offset.x,
-				this.images[i].offset.y + this.images[i].current.offset.y,
-				32, 32,
-				this.pos.x + 2 + (i * 32), 
-				this.pos.y + 2,
-				32, 32
-			);
-		}
-		// draw texts
-		renderer.setTint(this.textField.tint, this.textField.getOpacity());
-		this.textField.draw(renderer, this.bombs.toString().padStart(2, '0'), this.pos.x + 10, this.pos.y + 30);
-		this.textField.draw(renderer, this.magicBolts.toString().padStart(2, "0"), this.pos.x + 42, this.pos.y + 30);
-		this.textField.draw(renderer, this.magicFirespins.toString().padStart(2, "0"), this.pos.x + 74, this.pos.y + 30);
-		this.textField.draw(renderer, this.magicNebulas.toString().padStart(2, "0"), this.pos.x + 106, this.pos.y + 30);
-		this.textField.draw(renderer, this.magicProtections.toString().padStart(2, "0"), this.pos.x + 138, this.pos.y + 30);
-		super.draw(renderer, viewport);
+		this.addChild(this.bombsText);
+		this.addChild(this.boltText);
+		this.addChild(this.fireText);
+		this.addChild(this.nebuText);
+		this.addChild(this.protText);
 	}
 
 	/**
@@ -266,26 +240,31 @@ class WeaponsItem extends Container {
 		super.update(dt);
 		if (this.bombs != GlobalGameState.bombs) {
 			this.bombs = GlobalGameState.bombs;
+			this.bombsText.setText(this.bombs.toString().padStart(2, "0"));
 			this.isDirty = true;				
 		}
 
 		if( this.magicBolts != GlobalGameState.magicBolts) {
 			this.magicBolts = GlobalGameState.magicBolts;
+			this.boltText.setText(this.magicBolts.toString().padStart(2, "0"));
 			this.isDirty = true;				
 		}
 
 		if( this.magicFirespins != GlobalGameState.magicFirespins ) {
 			this.magicFirespins = GlobalGameState.magicFirespins;
+			this.fireText.setText(this.magicFirespins.toString().padStart(2, "0"));
 			this.isDirty = true;				
 		}
 
 		if( this.magicNebulas != GlobalGameState.magicNebulas ) {
 			this.magicNebulas = GlobalGameState.magicNebulas;
+			this.nebuText.setText(this.magicNebulas.toString().padStart(2, "0"));
 			this.isDirty = true;				
 		}
 
 		if (this.magicProtections != GlobalGameState.magicProtections) {
-			this.magicProtections = GlobalGameState.magicProtections;;
+			this.magicProtections = GlobalGameState.magicProtections;
+			this.protText.setText(this.magicProtections.toString().padStart(2, "0"));
 			this.isDirty = true;
 		}
 
@@ -343,7 +322,7 @@ export default class HUDContainer extends Container {
 		this.backBox = new Rect(this.pos.x + 1, this.pos.y, game.viewport.width - 2, this.height);
 
 		// persistent across level change
-		//this.isPersistent = true;
+		this.isPersistent = true;
 		this.clipping = true;
 
 		// make sure we use screen coordinates
@@ -369,7 +348,7 @@ export default class HUDContainer extends Container {
 		this.pauseText.updateWhenPaused = true;
 
 		// add our child score object at the top left corner
-		this.addChild(new ScoreItem((game.viewport.width - 160 ) /2, this.pos.y +1));
+		this.addChild(new ScoreItem((game.viewport.width - 240 ) /2, this.pos.y +1));
 		this.addChild(new EnergyItem(5, this.pos.y + 1));
 		this.addChild(new WeaponsItem(game.viewport.width - 170, this.pos.y + 1, 168, 34));
 
@@ -381,7 +360,7 @@ export default class HUDContainer extends Container {
 		this.pauseText.setText("");
 	}
 
-	draw(renderer) {
+	draw(renderer, viewport) {
 		//console.log("HUD.draw()");
 		renderer.setGlobalAlpha(0.5);
 		renderer.setColor(this.backColor);
@@ -389,7 +368,7 @@ export default class HUDContainer extends Container {
 
 		renderer.setGlobalAlpha(1.0);
 		renderer.setColor(this.boxColor);
-		super.draw(renderer);
+		super.draw(renderer, viewport);
 	}
 
 	setPaused(paused, text = "") {
