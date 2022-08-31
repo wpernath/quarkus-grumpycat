@@ -1,5 +1,5 @@
 const CONFIG = {
-	environment: "prod", // change this TO PROD on deployment
+	environment: "local", // change this TO PROD on deployment
 
 	appName: "{{applicationName}}",
 	appVersion: "{{applicationVersion}}",
@@ -7,10 +7,12 @@ const CONFIG = {
 	baseURL: "",
 
 	local: {
-		//baseURL: "http://172.20.10.2:8080/",
-		baseURL: "http://localhost:8080/",
+		// Use localhost if you don't care about multiplayer 
+		//baseURL: "http://localhost:8080/",		
 		//baseURL: "http://192.168.2.171:8080/",
-		//baseURL: "http://192.168.2.198:8080/",
+
+		// Use a real IP address if you want to do multiplayer testing
+		baseURL: "http://192.168.2.198:8080/",
 	},
 
 	dev: {
