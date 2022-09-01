@@ -42,7 +42,7 @@ import MultiplayerGameOverScreen from './js/stage/multiplayer/mp-game-over';
 import { MultiplayerMessage } from './js/util/multiplayer';
 
 import HowToPlayScreen from './js/stage/how-to-play'
-
+import screenfull from "screenfull";
 
 
 
@@ -52,7 +52,7 @@ device.onReady(() => {
     //video.
     if (!video.init(1024, 768, { 
         parent: "screen", 
-        scaleMethod: "fit", 
+        scaleMethod: "flex-width", 
         renderer: video.AUTO, 
         subPixel: false, 
         //doubleBuffering: true 
@@ -60,6 +60,7 @@ device.onReady(() => {
 		alert("Your browser does not support HTML5 canvas.");
 		return;
 	}
+
 
     // initialize the debug plugin in development mode.
     if (process.env.NODE_ENV === 'development') {
@@ -71,6 +72,13 @@ device.onReady(() => {
 
     // Initialize the audio.
     audio.init("mp3,ogg");
+
+    if( device.isMobile ) {
+        if( screenfull.isEnabled ) {
+            console.log("INFO: Requesting full screen...");
+            screenfull.request();
+        }
+    }
 
     // allow cross-origin for image/texture loading
     let environment = CONFIG.environment;
