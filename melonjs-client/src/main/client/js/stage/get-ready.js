@@ -1,44 +1,30 @@
-import { Container, Sprite, BitmapText, game,loader, Vector2d, Stage, input,event, state, ParticleEmitter, Color, pool } from "melonjs/dist/melonjs.module.js";
-//import { Math } from "melonjs/dist/melonjs.module.js";
-import CONFIG from "../../config";
-import GlobalGameState from "../util/global-game-state";
-import SpiderEnemy from "../renderables/spider-enemy";
+import { Container, BitmapText, game,loader, Stage, input,event, state, ParticleEmitter } from "melonjs/dist/melonjs.module.js";
 import { LevelManager } from "../util/level";
 import NetworkManager from "../util/network";
-import PlayerEntity from "../renderables/player";
-import { my_state, PLAYER_COLORS } from "../util/constants";
+import { my_state } from "../util/constants";
 import { StateBackground } from "./state_background";
 import { BaseContainer } from "../util/base-container";
 
 
 class LevelDescription extends BaseContainer {
 	constructor(x,y,width,height) {
-		super(x,y,width,height);
-		this.setOpacity(1);
-		this.levelName = new BitmapText(4, 8, {
-			font: "24Outline",
-			size: "1",
-			fillStyle: "white",
-			textAlign: "left",
-			text: LevelManager.getInstance().getCurrentLevel().longName,
-			offScreenCanvas: false,
-		});
+		super(x,y,width,height, {
+			titleText: LevelManager.getInstance().getCurrentLevel().longName,
+			titleColor: "#ff1010"
+		});		
 
-		this.levelDescr = new BitmapText(4, 52, {
+		this.levelDescr = new BitmapText(this.contentContainer.pos.x,this.contentContainer.pos.y, {
 			font: "18Outline",
-			size: "1",
 			lineHeight: 1.5,
 			fillStyle: "white",
 			textAlign: "left",
+			wordWrapWidth: this.contentContainer.width,
 			text: LevelManager.getInstance().getCurrentLevel().description,
-			offScreenCanvas: false,
 		});
-
-		console.log(this.levelDescr.measureText());
-		this.addChild(this.levelName);
 		this.addChild(this.levelDescr);
 	}
 }
+
 class GetReadyBack extends Container {
 	constructor() {
 		super();
@@ -57,32 +43,10 @@ class GetReadyBack extends Container {
 		this.addChild(new StateBackground("GET READY"));
 
 		let w = 644;
-		let h = 250;
+		let h = 300;
 		let x = (game.viewport.width - w)/2;
-		let y = (game.viewport.height - h)/2;
+		let y = (game.viewport.height - 350);
 		this.addChild(new LevelDescription(x, y, w, h));
-
-		let player1 = new PlayerEntity(13, 9, true);
-		player1.tint.copy(PLAYER_COLORS[0]);
-		player1.name = "Player 1";
-		this.addChild(player1);
-
-		let player2 = new PlayerEntity(17, 9, true);
-		player2.tint=PLAYER_COLORS[1];
-		player2.name = "Player 2";
-		player2.flipX(true);		
-		this.addChild(player2);
-
-		let player3 = new PlayerEntity(15, 7, true);
-		player3.tint = PLAYER_COLORS[2];
-		player3.name = "Player 3";
-		this.addChild(player3);
-
-		let player4 = new PlayerEntity(15, 11, true);
-		player4.tint= PLAYER_COLORS[3];
-		player4.name = "Player 4";
-		this.addChild(player4);
-
 	}	
 }
 
@@ -97,15 +61,16 @@ export default class GetReadyScreen extends Stage {
 		this.back = new GetReadyBack();
 		game.world.addChild(this.back);
 
-		this.emitter = new ParticleEmitter(game.viewport.width/2, game.viewport.height / 2 + 100, {			
-			tint: "#1010ff",
-			width: 64,
-			height: 64,
+		this.emitter = new ParticleEmitter(game.viewport.width/2, game.viewport.height / 2-30, {			
+			image: loader.getImage("player"),
+			//tint: "#1010ff",
+			width: 32,
+			height: 32,
 			totalParticles: 30,
-			gravity: 0.02,
+			gravity: 0.03,
 			angle: 0,
             angleVariation: 6.283185307179586,			
-			speed: 2,
+			speed: 3,
 			//wind: -1,
 		} );
 		game.world.addChild(this.emitter);
