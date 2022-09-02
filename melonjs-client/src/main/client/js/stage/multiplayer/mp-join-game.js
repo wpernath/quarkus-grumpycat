@@ -44,17 +44,8 @@ class MenuComponent extends Container {
 
 		// give a name
 		this.name = "TitleBack";
-		this.addChild(new StateBackground("JOIN GAME", false, false));
-		this.addChild(
-			new BitmapText(game.viewport.width - 75, 170, {
-				font: "24Outline",
-				textAlign: "right",
-				text: MultiplayerManager.get().multiplayerPlayer.name,
-			})
-		);
-
+		this.addChild(new StateBackground("JOIN GAME", false, false, true));
 		this.addChild(new BackButton(5, game.viewport.height - 60));
-
 
 		MultiplayerManager.get()
 			.listOpenGames()

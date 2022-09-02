@@ -51,16 +51,7 @@ class MenuComponent extends Container {
 		this.name = "TitleBack";
 
 		this.levelChooser = new ChooserComponent(MultiplayerManager.get().allLevels());
-        this.addChild(new StateBackground("HOST GAME", false, false));
-
-		this.addChild(
-			new BitmapText(game.viewport.width - 75, 170, {
-				font: "24Outline",
-				textAlign: "right",
-				text: MultiplayerManager.get().multiplayerPlayer.name,
-			})
-		);
-
+        this.addChild(new StateBackground("HOST GAME", false, false, true));
 		this.addChild(this.levelChooser);
 
 		this.addChild(new BackButton(5, game.viewport.height - 60));

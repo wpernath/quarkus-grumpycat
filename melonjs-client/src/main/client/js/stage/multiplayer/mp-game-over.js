@@ -152,15 +152,7 @@ class GameOverBack extends Container {
 		});
 		this.sensaSprite.setOpacity(0.6);
 		this.addChild(this.sensaSprite, 1);
-		this.addChild(new StateBackground(this.isGameOver ? "LOOOOOOSER!" : "CONGRATS! WINNER!", false), 0);
-		this.addChild(
-			new BitmapText(game.viewport.width - 75, 170, {
-				font: "24Outline",
-				textAlign: "right",
-				text: MultiplayerManager.get().multiplayerPlayer.name,
-			}), 1
-		);
-
+		this.addChild(new StateBackground(this.isGameOver ? "LOOOOOOSER!" : "CONGRATS! WINNER!", false, true, true), 0);
 
 		for( let i = 0; i < this.players.length; i++ ) {
 			if( this.players[i] !== null ) {
