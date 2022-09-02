@@ -1,6 +1,6 @@
 {
   "name": "grumpycat-melonjs",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "main": "src/main/client/index.js",
   "author": "Wanja Pernath",
   "license": "GPL",
@@ -26,16 +26,15 @@
     "docker-build": "docker build -f src/main/docker/Dockerfile.nginx -t quay.io/wpernath/grumpycat-melonjs:latest .",
     "docker-push": "docker push quay.io/wpernath/grumpycat-melonjs -a"
   },
-
-  "browserslist": "defaults", 
-
-  "dependencies": {    
+  "browserslist": "defaults",
+  "dependencies": {
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "core-js": "^3.24.1",
     "css-loader": "^6.7.1",
     "melonjs": "^13.3.0",
     "rollup": "^2.75.7",
+    "screenfull": "^6.0.2",
     "style-loader": "^3.3.1"
   }
 }
