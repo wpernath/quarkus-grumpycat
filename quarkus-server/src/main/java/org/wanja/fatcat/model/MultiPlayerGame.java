@@ -21,6 +21,10 @@ public class MultiPlayerGame extends PanacheEntity {
 
     @Column(name = "is_closed")
     public boolean isClosed;
+
+    @Column(name = "is_finished")
+    public boolean isFinished;
+
     public int level; // multiplayer level, eg, level from MapResource.mpLevel(x)
     
     @Column(name = "time_started")
@@ -31,6 +35,10 @@ public class MultiPlayerGame extends PanacheEntity {
 
     @Column(name = "time_playing")
     public Date timePlaying;
+
+    @Column(name="time_finished")
+    public Date timeFinished;
+
 
     // we only support up to 4 players 
     @ManyToOne

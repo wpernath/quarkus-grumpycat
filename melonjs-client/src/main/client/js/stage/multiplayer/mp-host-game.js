@@ -29,7 +29,7 @@ class StartGameButton extends BaseTextButton {
 	}
 
 	onClick() {
-		MultiplayerManager.get().createGame(0).then( (game) => {
+		MultiplayerManager.get().createGame().then( (game) => {
 			state.change(my_state.MULTIPLAYER_LOBBY);
 		});		
 	}
