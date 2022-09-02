@@ -120,11 +120,11 @@ export class MultiplayerMessage {
 			this.multiplayerGame = null;
 			this.multiplayerPlayer = null;
 
-			this.selectedLevelForGame = null;
-			this.selectedLevelIndex = 0;
 			this.multiplayerLevels = this.levelManager.allMultiplayerLevels();
 			this.weAreHost = false;
 			this.multiplayerGameToJoin = null;
+			this.selectedLevelForGame = null;
+			this.selectedLevelIndex = 0;
 
 			// callbacks for socket
 			this.eventEmitter = new EventEmitter();
@@ -176,7 +176,10 @@ export class MultiplayerMessage {
 				this.multiplayerGame = null;
 			}
 
-			this.eventEmitter.reset();
+			this.weAreHost = false;
+			this.multiplayerGameToJoin = null;
+			this.selectedLevelForGame = null;
+			this.selectedLevelIndex = 0;
 		}
 
 		/**

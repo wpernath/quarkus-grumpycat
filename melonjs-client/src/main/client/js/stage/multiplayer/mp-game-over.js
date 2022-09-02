@@ -297,6 +297,6 @@ export default class MultiplayerGameOverScreen extends Stage {
 		game.world.removeChild(this.back);
 		game.world.removeChild(this.emitter);
 		GlobalGameState.reset();
-		MultiplayerManager.get().reset();
+		MultiplayerManager.get().closeActiveGame();
 	}
 }

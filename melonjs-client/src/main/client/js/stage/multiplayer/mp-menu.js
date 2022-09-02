@@ -74,6 +74,8 @@ export default class MultiplayerMenuScreen extends Stage {
 	onResetEvent() {
 		this.multiplayerManager = MultiplayerManager.get();
 		this.menu = null;
+		GlobalGameState.reset();
+		
 		this.multiplayerManager.createPlayerFromMe().then((player) => {			
 			console.log("  Got new MultiPlayer: " + player.id);			
 			this.menu = new MenuComponent();
