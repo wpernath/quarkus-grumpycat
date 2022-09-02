@@ -8,9 +8,10 @@ import NetworkManager from "../util/network";
 import PlayerEntity from "../renderables/player";
 import { my_state, PLAYER_COLORS } from "../util/constants";
 import { StateBackground } from "./state_background";
+import { BaseContainer } from "../util/base-container";
 
 
-class LevelDescription extends Container {
+class LevelDescription extends BaseContainer {
 	constructor(x,y,width,height) {
 		super(x,y,width,height);
 		this.setOpacity(1);
@@ -33,9 +34,9 @@ class LevelDescription extends Container {
 			offScreenCanvas: false,
 		});
 
+		console.log(this.levelDescr.measureText());
 		this.addChild(this.levelName);
 		this.addChild(this.levelDescr);
-
 	}
 }
 class GetReadyBack extends Container {
@@ -54,7 +55,12 @@ class GetReadyBack extends Container {
 		this.name = "TitleBack";
 
 		this.addChild(new StateBackground("GET READY"));
-		this.addChild(new LevelDescription(190, game.viewport.height - 400), game.viewport.width - 400, game.viewport.height - 400);
+
+		let w = 644;
+		let h = 250;
+		let x = (game.viewport.width - w)/2;
+		let y = (game.viewport.height - h)/2;
+		this.addChild(new LevelDescription(x, y, w, h));
 
 		let player1 = new PlayerEntity(13, 9, true);
 		player1.tint.copy(PLAYER_COLORS[0]);
