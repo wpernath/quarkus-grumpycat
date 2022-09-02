@@ -151,8 +151,9 @@ class ChooserComponent extends Container {
         this.addChild(this.next);
         
 		LevelManager.getInstance().reset();
+		let x = (game.viewport.width - (game.viewport.width - 280)) / 2;
         for(let levelIndex = 0; levelIndex < LevelManager.getInstance().levelCount(); levelIndex++ ) {
-            let entry = new ListEntry(levelIndex, 130, 220);
+            let entry = new ListEntry(levelIndex, x, 220);
             entry.setCallbackOnClick(this.useSelectedGame.bind(this));
             entry.setOpacity(0.8);
             this.listComponents.push(entry);            
