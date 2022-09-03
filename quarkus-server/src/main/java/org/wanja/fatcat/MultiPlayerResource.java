@@ -44,6 +44,7 @@ public class MultiPlayerResource {
         game.player1Id = host.id;
         game.isClosed = false;
         game.isRunning = false;
+        game.isFinished = false;
         game.isOpen = true;
         game.timeStarted = new Date();
         game.persist();
@@ -57,28 +58,65 @@ public class MultiPlayerResource {
     public void closeGame(Long gameId, Long playerId) {
         MultiPlayerGame game = MultiPlayerGame.findById(gameId);
         if( game != null ) {
-            // remove player from game. If it's player1, we close the entire game
-            if(game.player1Id == playerId ) {
-                game.delete();
+            if( !game.isFinished ) {
+                // remove player from game. If it's player1, we close the entire game
+                if(game.player1Id == playerId ) {
+                    game.delete();
+                }
+                else{
+                    if( game.player2Id == playerId) {
+                        game.player2 = null;
+                        game.player2Id = null;
+                        game.persist();
+                    }
+                    else if( game.player3Id == playerId) {
+                        game.player3 = null;
+                        game.player3Id = null;
+                        game.persist();
+                    }
+                    else if (game.player3Id == playerId) {
+                        game.player4 = null;
+                        game.player4Id = null;
+                        game.persist();
+                    }
+                }
             }
-            else{
-                if( game.player2Id == playerId) {
-                    game.player2 = null;
-                    game.player2Id = null;
-                    game.persist();
-                }
-                else if( game.player3Id == playerId) {
-                    game.player3 = null;
-                    game.player3Id = null;
-                    game.persist();
-                }
-                else if (game.player3Id == playerId) {
-                    game.player4 = null;
-                    game.player4Id = null;
-                    game.persist();
-                }
+            else {
+                game.timeStopped = new Date();
+                game.persist();
             }
         }
+    }
+
+    @PUT
+    @Path("/finish/{gameId}")
+    @Transactional
+    public MultiPlayerGame finishGame(Long gameId, MultiPlayerGame g) {
+        MultiPlayerGame game = MultiPlayerGame.findById(gameId);
+        Log.info("Finishing MP game with ID " + gameId);
+        if( game != null ) {
+            game.isOpen = false;
+            game.isFinished = true;
+            game.isRunning = false;
+            game.isClosed = true;
+            game.timeFinished = new Date();
+
+            if( g.player1 != null ) {
+                game.player1 = updatePlayerData(g.player1.id, g.player1);
+            }
+            if (g.player2 != null) {
+                game.player2 = updatePlayerData(g.player2.id, g.player2);
+            }
+            if (g.player3 != null) {
+                game.player3 = updatePlayerData(g.player3.id, g.player3);
+            }
+            if (g.player4 != null) {
+                game.player4 = updatePlayerData(g.player4.id, g.player4);
+            }
+
+            game.persist();
+        }
+        return game;
     }
 
     @PUT
@@ -89,6 +127,7 @@ public class MultiPlayerResource {
         if (game != null) {
             game.isOpen = false;
             game.isRunning = true;
+            game.isFinished = false;
             game.timePlaying = new Date();
             game.persist();
         }
@@ -160,6 +199,8 @@ public class MultiPlayerResource {
         mp.stunnedGolems = player.stunnedGolems;
         mp.usedBombs = player.usedBombs;
         mp.bombsLeft = player.bombsLeft;
+        mp.hasWon    = player.hasWon;
+        mp.internalScore = player.internalScore;
         mp.persist();
         return mp;
     }
@@ -173,19 +214,33 @@ public class MultiPlayerResource {
     @GET
     @Path("/open")
     public List<MultiPlayerGame> listOpenGames() {
-        return MultiPlayerGame.list("isClosed=false and isRunning=false and isOpen=true order by timeStarted desc");
+        return MultiPlayerGame.list("isClosed=false and isFinished=false and isRunning=false and isOpen=true order by timeStarted desc");
     }
 
     @GET
     @Path("/running")
     public List<MultiPlayerGame> listRunningGames() {
-        return MultiPlayerGame.list("isClosed=false and isRunning=true and isOpen=false order by timeStarted desc");
+        return MultiPlayerGame.list("isClosed=false and isFinished=false and isRunning=true and isOpen=false order by timeStarted desc");
+    }
+
+    @GET
+    @Path("/finished")
+    public List<MultiPlayerGame> listFinishedGames() {
+        return MultiPlayerGame.list("isFinished=true and isRunning=false and isOpen=false order by timeFinished desc");
     }
 
     @GET
     @Path("/open/{playerId}")
-    public List<MultiPlayerGame> myOpenGame(Long playerId) {
+    public List<MultiPlayerGame> myOpenGames(Long playerId) {
         return MultiPlayerGame.find("isOpen = true and isClosed=false AND (player1Id = ?1 or player2Id = ?1 or player3Id = ?1 or player4Id = ?1)", playerId).list();
+    }
+
+    @GET
+    @Path("/finished/{playerId}")
+    public List<MultiPlayerGame> myFinishedGames(Long playerId) {
+        return MultiPlayerGame.find(
+                "isFinished = true and isClosed=false AND (player1Id = ?1 or player2Id = ?1 or player3Id = ?1 or player4Id = ?1)",
+                playerId).list();
     }
 
 }

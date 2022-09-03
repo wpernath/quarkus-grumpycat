@@ -1,7 +1,8 @@
 import { Container, game, Sprite, loader, BitmapText, Vector2d } from "melonjs";
+import MultiplayerManager from "../util/multiplayer";
 
 export class StateBackground extends Container {
-	constructor(title, drawRightCat = true, drawLeftCat = true) {
+	constructor(title, drawRightCat = true, drawLeftCat = true, drawMultiplayerName = false) {
 		super(0,0,game.viewport.width, game.viewport.height);
 
 		// make sure we use screen coordinates
@@ -42,6 +43,7 @@ export class StateBackground extends Container {
 			image: loader.getImage("title"),
 			anchorPoint: new Vector2d(0, 0),
 		});
+		this.titleImage.pos.x = (game.viewport.width - this.titleImage.width) / 2;
 
 		this.subTitleText = new BitmapText(126, 170, {
 			font: "Shadow",
@@ -49,6 +51,17 @@ export class StateBackground extends Container {
 			textAlign: "left",
 			text: title,			
 		});
+		this.subTitleText.pos.x = this.titleImage.pos.x + 40;
+
+		if( drawMultiplayerName ) {
+			this.addChild(
+				new BitmapText(this.titleImage.pos.x + this.titleImage.width - 20, 170, {
+					font: "24Outline",
+					textAlign: "right",
+					text: MultiplayerManager.get().multiplayerPlayer.name,
+				})
+			);
+		}
 
 		// add to the world container
 		this.addChild(this.backgroundImage, 0);

@@ -47,6 +47,13 @@ There are different bonus tiles to be collected.
   - green: +3 magic protection circles
   - violet: +3 magic nebula
 
+### Life demo
+There is a demo of this game running [here](http://cat-client-quarkus-grumpycat.apps.cat.rhepds.com/). 
+Please note, that I am using this server also for workshops etc. So the system might not be as stable as expected. But you can give it a try.
+
+If you have any suggestestions or want to contribute, please open an [issue here](https://github.com/wpernath/quarkus-grumpycat/issues). Thank you!
+
+
 ### Game Graphics
 
 ![the game](docs/game-title.png)

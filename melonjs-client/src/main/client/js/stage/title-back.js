@@ -77,7 +77,7 @@ export default class TitleBackground extends Container {
 			image: loader.getImage("title"),
 			anchorPoint: new Vector2d(0,0)
 		});
-		
+		this.titleText.pos.x = (game.viewport.width - this.titleText.width ) / 2;
 
 		this.subTitleText = new BitmapText(126, 170, {
 			font: "12Outline",
@@ -87,6 +87,7 @@ export default class TitleBackground extends Container {
 			text: "A JavaScript / melonJS client. Written by Wanja Pernath",
 			offScreenCanvas: false,
 		});
+		this.subTitleText.pos.x = this.titleText.pos.x + 40;
 
 		this.subVersionText = new BitmapText(126, 186, {
 			font: "12Outline",
@@ -96,6 +97,7 @@ export default class TitleBackground extends Container {
 			text: "Server API: " + GlobalGameState.globalServerVersion.appName + "@" + GlobalGameState.globalServerVersion.appVersion + " at " + CONFIG.baseURL,
 			offScreenCanvas: false,
 		});
+		this.subVersionText.pos.x = this.titleText.pos.x + 40;
 
 		// add to the world container
 		this.addChild(this.backgroundImage, 0);

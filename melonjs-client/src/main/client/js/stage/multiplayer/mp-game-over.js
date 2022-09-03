@@ -11,7 +11,6 @@ class PlayerStatistics extends Container {
 		this.player = player;
 		this.border = new RoundRect(x, y, width, height);
 		this.divider = new Rect(x+4, y+42, width-8, 2);
-		this.setOpacity(1);
 		this.playerEntity = new PlayerEntity(0, 0, true);
 		this.playerEntity.tint.copy(tint);
 
@@ -106,8 +105,6 @@ class PlayerStatistics extends Container {
 		renderer.stroke(this.border);
 		renderer.setColor("#ffffff");
 		renderer.fill(this.divider);
-		//renderer.setTint(this.font.tint, this.font.getOpacity());
-
 		super.draw(renderer, viewport);
 	}
 }
@@ -115,7 +112,7 @@ class GameOverBack extends Container {
 	constructor(theGame) {
 		super();
 		this.theGame = theGame;
-		this.players = this.playersFromGame(theGame);
+		this.players = GameOverBack.playersFromGame(theGame);
 		this.isGameOver = true;
 
 		// where to position each box of statistics
@@ -127,7 +124,7 @@ class GameOverBack extends Container {
 		];
 
 		for( let i = 0; i < this.players.length; i++ ) {
-			if( this.players[i].hasWon ) {
+			if( this.players[i] !== null && this.players[i].hasWon ) {
 				if( MultiplayerManager.get().multiplayerPlayer.id === this.players[i].id ) {
 
 					// we are the winner
@@ -142,8 +139,6 @@ class GameOverBack extends Container {
 		// always on toppest
 		this.z = 10;
 
-		this.setOpacity(1.0);
-
 		// give a name
 		this.name = "TitleBack";
 
@@ -152,15 +147,7 @@ class GameOverBack extends Container {
 		});
 		this.sensaSprite.setOpacity(0.6);
 		this.addChild(this.sensaSprite, 1);
-		this.addChild(new StateBackground(this.isGameOver ? "LOOOOOOSER!" : "CONGRATS! WINNER!", false), 0);
-		this.addChild(
-			new BitmapText(game.viewport.width - 75, 170, {
-				font: "24Outline",
-				textAlign: "right",
-				text: MultiplayerManager.get().multiplayerPlayer.name,
-			}), 1
-		);
-
+		this.addChild(new StateBackground(this.isGameOver ? "LOOOOOOSER!" : "CONGRATS! WINNER!", false, true, true), 0);
 
 		for( let i = 0; i < this.players.length; i++ ) {
 			if( this.players[i] !== null ) {
@@ -184,7 +171,7 @@ class GameOverBack extends Container {
 	 * @param {*} theGame
 	 * @returns array of player
 	 */
-	playersFromGame(theGame) {
+	static playersFromGame(theGame) {
 		let players = [];
 		players[0] = theGame.player1 !== undefined ? theGame.player1 : null;
 		players[1] = theGame.player2 !== undefined ? theGame.player2 : null;
@@ -199,8 +186,8 @@ class GameOverBack extends Container {
 				score += p.potionsLeft > 0 ? (p.potionsLeft * 5) : 0;
 				score += p.bombsLeft > 0 ? (p.bombsLeft * 5) : 0;
 
-				p.internalScore = score;
-				p.hasWon = false;				
+				players[i].internalScore = score;
+				players[i].hasWon = false;				
 			}
 		}
 
@@ -236,43 +223,66 @@ export default class MultiplayerGameOverScreen extends Stage {
 	onResetEvent() {
 		console.log("GameOver.OnEnter()");
 
-		MultiplayerManager.get()
-			.refreshGameData()
-			.then((theGame) => {
-				this.theGame = theGame;
+		if( MultiplayerManager.get().weAreHost ) {		
+			console.log("We are host, so we are sending updated data to the host and finishing this game");	
+			MultiplayerManager.get()
+				.refreshGameData()
+				.then((theGame) => {
+				
+				GameOverBack.playersFromGame(theGame);
 
-				this.back = new GameOverBack(theGame);
-				game.world.addChild(this.back);
-
-				this.emitter = new ParticleEmitter(game.viewport.width / 2, game.viewport.height / 2 + 100, {
-					//image: loader.getImage("player"),
-					tint: new Color(255, 0, 0),
-					width: 64,
-					height: 64,
-					totalParticles: 30,
-					gravity: 0.02,
-					angle: 0,
-					angleVariation: 6.283185307179586,
-					speed: 2,
-					wind: 0.25,
+				MultiplayerManager.get()
+					.finishGame(theGame)
+					.then((theGame) => {
+						this.theGame = theGame;
+						this.buildUI(theGame);
 				});
-				game.world.addChild(this.emitter);
-				this.emitter.streamParticles();
+			});
+		}
+		else {
+			console.log("We are no host, so we are NOT sending updated data to the host and finishing this game");
+			MultiplayerManager.get()
+				.refreshGameData()
+				.then((theGame) => {
+					this.theGame = theGame;
+					this.buildUI(theGame);		
+			});
+		}
+	}
 
-				// change to play state on press Enter or click/tap
-				input.bindKey(input.KEY.ENTER, "enter", true);
-				input.bindPointer(input.pointer.LEFT, input.KEY.ENTER);
+	buildUI(theGame) {
+		this.back = new GameOverBack(theGame);
+		game.world.addChild(this.back);
 
-				this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
-					if (!state.isCurrent(my_state.MULTIPLAYER_GAME_OVER)) return;
-					console.log("GameOver.EventHandler()");
-					if (action === "enter" || action === "bomb") {
-						state.change(my_state.MULTIPLAYER_MENU);
-					}
-					if (action === "exit") {
-						state.change(my_state.MULTIPLAYER_MENU);
-					}
-				});		
+		this.emitter = new ParticleEmitter(game.viewport.width / 2, game.viewport.height / 2 + 100, {
+			//image: loader.getImage("player"),
+			tint: new Color(255, 0, 0),
+			width: 64,
+			height: 64,
+			totalParticles: 30,
+			gravity: 0.02,
+			angle: 0,
+			angleVariation: 6.283185307179586,
+			speed: 2,
+			wind: 0.25,
+		});
+		game.world.addChild(this.emitter);
+		this.emitter.streamParticles();
+
+		// change to play state on press Enter or click/tap
+		input.bindKey(input.KEY.ENTER, "enter", true);
+		input.bindPointer(input.pointer.LEFT, input.KEY.ENTER);
+
+		this.handler = event.on(event.KEYUP, function (action, keyCode, edge) {
+			if (!state.isCurrent(my_state.MULTIPLAYER_GAME_OVER))
+				return;
+			console.log("GameOver.EventHandler()");
+			if (action === "enter" || action === "bomb") {
+				state.change(my_state.MULTIPLAYER_MENU);
+			}
+			if (action === "exit") {
+				state.change(my_state.MULTIPLAYER_MENU);
+			}
 		});
 	}
 
@@ -286,5 +296,7 @@ export default class MultiplayerGameOverScreen extends Stage {
 		event.off(event.KEYUP, this.handler);
 		game.world.removeChild(this.back);
 		game.world.removeChild(this.emitter);
+		GlobalGameState.reset();
+		MultiplayerManager.get().closeActiveGame();
 	}
 }

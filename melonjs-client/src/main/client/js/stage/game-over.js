@@ -1,17 +1,14 @@
-import { Stage, game, input, Sprite, Color, loader, event, state, Container,Vector2d,BitmapText, ParticleEmitter } from "melonjs/dist/melonjs.module.js";
+import { Stage, game, input, Sprite, loader, event, state, Container,Vector2d,BitmapText, ParticleEmitter } from "melonjs/dist/melonjs.module.js";
 import { LevelManager } from "../util/level";
 import GlobalGameState from "../util/global-game-state";
 import NetworkManager from "../util/network";
 import { StateBackground } from "./state_background";
-class LevelStatistics extends Container {
+import { BaseContainer } from "../util/base-container";
+class LevelStatistics extends BaseContainer {
 	constructor(x, y, width, height, isGameOver=true) {
-		super(x, y, width, height);
-		this.setOpacity(1);
-		this.levelName = new BitmapText(14, 8, {
-			font: "24Outline",
-			size: "1",
-			textAlign: "left",
-			text: GlobalGameState.globalServerGame.player.name + " - Statistics",
+		super(x, y, width, height, {
+			titleText: GlobalGameState.globalServerGame.player.name + " - Statistics",
+			titleColor: "#ffffff",			
 		});
 
 
@@ -47,32 +44,25 @@ class LevelStatistics extends Container {
 			GlobalGameState.stunnedGolems + "\n"+
  			"";
 
-		this.levelDescr = new BitmapText(14, 40, {
+		this.levelDescr = new BitmapText(14, this.contentContainer.pos.y, {
 			font: "18Outline",
 			textAlign: "left",
 			text: textL,
 		});
 
-		this.levelDescr2 = new BitmapText(324, 40, {
+		this.levelDescr2 = new BitmapText(324, this.contentContainer.pos.y, {
 			font: "18Outline",
 			textAlign: "right",
 			text: textR,
 		});
 
-		this.sensaSprite = new Sprite(600, 50, {
-			image: isGameOver ? "sensa_nee" : "sensa_jaa"
-		});
-		this.sensaSprite.setOpacity(0.8);
-
-		this.addChild(this.levelName,1);
 		this.addChild(this.levelDescr,1);
-		this.addChild(this.levelDescr2,1);
-		this.addChild(this.sensaSprite,0);
+		this.addChild(this.levelDescr2,1);		
 	}
 }
 class GameOverBack extends Container {
 	constructor(isGameOver=true) {
-		super();
+		super(0, 0);
 
 		// make sure we use screen coordinates
 		this.floating = true;
@@ -80,22 +70,36 @@ class GameOverBack extends Container {
 		// always on toppest
 		this.z = 10;
 
-		this.setOpacity(1.0);
-
 		// give a name
 		this.name = "TitleBack";
 
-		this.addChild(new StateBackground(isGameOver ? "GAME OVER!" : "CONGRATS! You won!", false));
+		// dog NOOOOOOOO 
+		this.sensaSprite = new Sprite(600, game.viewport.height - 300, {
+			image: loader.getImage(isGameOver ? "sensa_nee" : "sensa_jaa"),
+			anchorPoint: new Vector2d(0,0),
+		});
+		this.sensaSprite.setOpacity(0.8);
+
+		let w = 460;
+		let h = 300;
+		let x = (game.viewport.width - w) / 2;
+		let y = game.viewport.height - 350;
+
+		this.addChild(new StateBackground(isGameOver ? "You LOOOOOSE!" : "CONGRATS! You won!", false), 0);
 		this.addChild(
 			new LevelStatistics(
-				190, 
-				game.viewport.height - 400, 
-				game.viewport.width - 400, 
-				game.viewport.height - 400, 
+				x, 
+				y, 
+				w, 
+				h, 
 				isGameOver
 			), 
 			6
 		);
+
+		this.sensaSprite.pos.x = game.viewport.width - this.sensaSprite.width + 50;
+		this.sensaSprite.pos.y = game.viewport.height - this.sensaSprite.height ;
+		this.addChild(this.sensaSprite, 1);		
 	}
 }
 
@@ -114,17 +118,17 @@ export default class GameOverScreen extends Stage {
 		this.back = new GameOverBack(this.isGameOver);
 		game.world.addChild(this.back);
 
-		this.emitter = new ParticleEmitter(game.viewport.width / 2, game.viewport.height / 2 + 100, {
-			//image: loader.getImage("player"),
-			tint: new Color(255, 0, 0),
-			width: 64,
-			height: 64,
-			totalParticles: 30,
-			gravity: 0.02,
+		this.emitter = new ParticleEmitter(game.viewport.width / 2, game.viewport.height / 2 - 50, {
+			image: loader.getImage("cat_left"),
+			tint: "#ffffff33",
+			width: 32,
+			height: 32,
+			totalParticles: 34,
+			gravity: 0.04,
 			angle: 0,
 			angleVariation: 6.283185307179586,
 			speed: 2,
-			wind: 0.25,
+			wind: 0.15,
 		});
 		game.world.addChild(this.emitter);
 		this.emitter.streamParticles();

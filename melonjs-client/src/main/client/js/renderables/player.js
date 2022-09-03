@@ -1,6 +1,6 @@
 import { game, input, state } from 'melonjs/dist/melonjs.module.js';
 import BombEntity from './bomb';
-import ExplosionEntity from './explosion';
+
 import GlobalGameState from '../util/global-game-state';
 import { LevelManager } from '../util/level';
 

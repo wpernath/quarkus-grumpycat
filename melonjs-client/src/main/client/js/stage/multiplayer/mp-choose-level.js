@@ -194,7 +194,7 @@ export class ChooserComponent extends Container {
 
 	useSelectedGame(levelIndex) {
         if( !this.levelChosen ) {
-            console.log("  selected level = " + levelIndex );
+            console.log("  selected level = " + this.levelIndex );
 			MultiplayerManager.get().useSelectedLevel(this.levelIndex);            
             this.levelChosen = true;
         }

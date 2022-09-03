@@ -4,36 +4,15 @@ import { StateBackground } from "./state_background";
 import BaseTextButton from "../util/base-text-button";
 import BaseTerrainSprite from "../renderables/terrain/terrain-sprite";
 import { BONUS_TILE } from "../util/constants";
+import { BaseContainer } from "../util/base-container";
 
-class BaseHelpComponent extends Container {
+class BaseHelpComponent extends BaseContainer {
 	constructor(x, y, w, h, title) {
-		super(x, y, w, h);
-
-		this.header = new BitmapText(4, 4, {
-			font: "18Outline",
-			fillStyle: "#ff0000",
-			textAlign: "left",
-			text: title,
+		super(x, y, w, h, {
+			titleFont: "18Outline", 
+			titleColor: "#ff0000",
+			titleText: title
 		});
-
-		this.border = new RoundRect(x, y, w, h);
-		this.divider = new Rect(x + 5, y + 30, w - 10, 2);
-
-		this.header.pos.x = (w - this.header.measureText().width) / 2;
-		this.addChild(this.header);
-	}
-
-	draw(renderer, viewport) {
-		renderer.setGlobalAlpha(0.3);
-		renderer.setColor("#008800");
-		renderer.fill(this.border);
-		renderer.setGlobalAlpha(1);
-		renderer.setColor("#000000");
-		renderer.stroke(this.divider);
-		renderer.stroke(this.border);
-		renderer.setColor("#ffffff");
-		renderer.fill(this.divider);
-		super.draw(renderer, viewport);
 	}
 }
 class KeyHelpComponent extends BaseHelpComponent {

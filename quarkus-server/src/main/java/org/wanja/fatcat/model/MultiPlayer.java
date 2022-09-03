@@ -19,6 +19,9 @@ public class MultiPlayer extends PanacheEntity {
 
     public long score;    
 
+    @Column(name="internal_score")
+    public long internalScore;
+
     @Column(name="energy_left")
     public int energyLeft;
 
@@ -63,6 +66,9 @@ public class MultiPlayer extends PanacheEntity {
 
     @Column(name = "bonus_collected")
     public int bonusCollected;
+
+    @Column(name = "has_won")
+    public boolean hasWon;
 
     public MultiPlayer() {        
     }

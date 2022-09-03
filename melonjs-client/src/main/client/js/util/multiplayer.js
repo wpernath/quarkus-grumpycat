@@ -110,7 +110,8 @@ export class MultiplayerMessage {
 			this.closeGameURL = baseURL + "mp-game/close/"; // append gameId/playerId
 			this.getGameURL = baseURL + "mp-game/"; // append gameId
 			this.startGameURL = baseURL + "mp-game/start/"; // append gameId
-
+			this.finishGameURL= baseURL + "mp-game/finish/"; // append gameId
+			
 			// the websocket
 			this.multiplayerSocket = null;
 			this.socketBaseURL = baseURL.substring(baseURL.indexOf("://") + 3);
@@ -119,11 +120,11 @@ export class MultiplayerMessage {
 			this.multiplayerGame = null;
 			this.multiplayerPlayer = null;
 
-			this.selectedLevelForGame = null;
-			this.selectedLevelIndex = 0;
 			this.multiplayerLevels = this.levelManager.allMultiplayerLevels();
 			this.weAreHost = false;
 			this.multiplayerGameToJoin = null;
+			this.selectedLevelForGame = null;
+			this.selectedLevelIndex = 0;
 
 			// callbacks for socket
 			this.eventEmitter = new EventEmitter();
@@ -175,7 +176,10 @@ export class MultiplayerMessage {
 				this.multiplayerGame = null;
 			}
 
-			this.eventEmitter.reset();
+			this.weAreHost = false;
+			this.multiplayerGameToJoin = null;
+			this.selectedLevelForGame = null;
+			this.selectedLevelIndex = 0;
 		}
 
 		/**
@@ -215,6 +219,28 @@ export class MultiplayerMessage {
 
 			this.weAreHost = true;
 			return this.multiplayerGame;
+		}
+
+		/**
+		 * Finishes the game on the server.
+		 * 
+		 * @returns the game instance filled with all players
+		 */
+		async finishGame(theGame) {
+			if( this.multiplayerGame !== null ) {
+				console.log("Finishing MP game " + this.multiplayerGame.id);
+				let res = await fetch(this.finishGameURL + this.multiplayerGame.id, {
+					method: "PUT",
+					mode: "cors",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(theGame),
+				});
+				this.multiplayerGame = await res.json();
+				return this.multiplayerGame;
+			}
+			return null;
 		}
 
 		/**
