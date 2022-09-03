@@ -146,9 +146,12 @@ class MenuComponent extends Container {
 		this.name = "mp-lobby";
 		this.addChild(new StateBackground("LOBBY", false, false, true));
 		this.addChild(new BackButton(5, game.viewport.height - 60));
-		this.startButton = new StartGameButton(game.viewport.width - 155, game.viewport.height - 60);
-		this.addChild(this.startButton);
 
+		if( MultiplayerManager.get().weAreHost ) {
+			this.startButton = new StartGameButton(game.viewport.width - 155, game.viewport.height - 60);
+			this.addChild(this.startButton);
+		}
+		
 		let w = 600;
 		let h = 100;
 		let x = (game.viewport.width - w) / 2;
