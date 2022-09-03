@@ -10,7 +10,7 @@ class BackButton extends BaseTextButton {
 	constructor(x, y) {
 		super(x, y, {
 			text: "Back",
-			borderWidth: 100,
+			borderWidth: 150,
 		});
 	}
 
@@ -24,7 +24,7 @@ class StartGameButton extends BaseTextButton {
 	constructor(x, y) {
 		super(x, y, {
 			text: "Start",
-			borderWidth: 100,
+			borderWidth: 150,
 		});
 	}
 
@@ -55,7 +55,7 @@ class MenuComponent extends Container {
 		this.addChild(this.levelChooser);
 
 		this.addChild(new BackButton(5, game.viewport.height - 60));
-        this.addChild(new StartGameButton(game.viewport.width - 105, game.viewport.height - 60));
+        //this.addChild(new StartGameButton(game.viewport.width - 155, game.viewport.height - 60));
 	}
 }
 

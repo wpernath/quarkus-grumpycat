@@ -2,14 +2,15 @@ import { Stage, event, game, state, Container, BitmapText, Rect } from "melonjs"
 import PlayerEntity from "../../renderables/player";
 import BaseTextButton from "../../util/base-text-button";
 import { my_state, PLAYER_COLORS } from "../../util/constants";
-import MultiplayerManager from "../../util/multiplayer";
+import MultiplayerManager, { MultiplayerMessage } from "../../util/multiplayer";
 import { StateBackground } from "../state_background";
+import {BaseContainer} from "../../util/base-container";
 
 class BackButton extends BaseTextButton {
 	constructor(x, y) {
 		super(x, y, {
 			text: "Back",
-			borderWidth: 100,
+			borderWidth: 150,
 		});
 	}
 
@@ -23,7 +24,7 @@ class StartGameButton extends BaseTextButton {
 	constructor(x, y) {
 		super(x, y, {
 			text: "Start",
-			borderWidth: 100,
+			borderWidth: 150,
 		});
 	}
 
@@ -79,8 +80,53 @@ class PlayerEntry extends Container {
 			this.playerNameText.setText("waiting...");
 		}
 	}
+}
 
-	destroy() {
+class MessageContainer extends BaseContainer {
+	constructor(x, y, w, h, status ) {
+		super(x, y, w, h, {
+			titleText: "Status:",
+			titleColor: "#ffa000",
+			titlePos: "left",
+			backgroundAlpha: 0.3,
+			backgroundColor: "#005500",
+		});
+
+		this.statusMessage = new BitmapText(this.contentContainer.pos.x, this.contentContainer.pos.y, {
+			font: "18Outline",						
+		});
+
+		this.addChild(this.statusMessage);
+		this.updateMessage(status);
+	}
+
+	updateMessage(text) {
+		this.statusMessage.setText(text);
+	}
+}
+
+class PlayerContainer extends BaseContainer {
+	constructor(x, y, w) {
+		super(x, y, w, 224, {
+			titleText: "Players in the Game",
+			titleColor: "#ffa000",
+			titlePos: "left",
+			backgroundAlpha: 0.1,
+			backgroundColor: "#101010",
+		});
+
+		this.playerComponents = [];
+	}
+
+	addPlayer(player, num) {
+		let pe = new PlayerEntry(this.contentContainer.pos.x, this.contentContainer.pos.y + (num * 42), player, num);					
+		this.playerComponents.push(pe);
+		this.addChild(pe, 100);
+	}
+
+	updatePlayer(player, num) {
+		let pe = this.playerComponents[num];
+		pe.updatePlayer(player);
 	}
 }
 
@@ -90,31 +136,29 @@ class MenuComponent extends Container {
 
 		// make sure we use screen coordinates
 		this.floating = true;
+		this.setOpacity(1.0);
 
 		// always on toppest
-		this.z = 10;
-
-		this.setOpacity(1.0);
+		this.z = 20;
 		
-		this.players = [];
-		this.playerComponents = [];
-		this.startButton = new StartGameButton(game.viewport.width - 105, game.viewport.height - 60);
+		this.players = [];		
+		this.startButton = new StartGameButton(game.viewport.width - 155, game.viewport.height - 60);
 		this.addChild(this.startButton);
 
+		let w = 600;
+		let h = 100;
+		let x = ( game.viewport.width - w ) / 2;
+		let y = 236;
+		this.statusContainer = new MessageContainer(x, y, w, h, "Waiting........");		
+		this.addChild(this.statusContainer);
 
-		this.addChild(new BitmapText(126, 250, {
-			font: "18Outline",
-			fillStyle: "#ffa000",
-			text: "Status:"
-		}));
+		this.playerContainer = new PlayerContainer(x, y + h + 8, w);
+		this.addChild(this.playerContainer);
 
-		
-		this.statusMessage = new BitmapText(126, 276, {
-			font: "12Outline",
-			text: "Waiting..."
-		});
-
-		this.addChild(this.statusMessage);
+		this.players = this.playersFromGame(MultiplayerManager.get().multiplayerGame);
+		for (let i = 0; i < 4; i++) {		
+			this.playerContainer.addPlayer(this.players[i], i);			
+		}
 
 		// give a name
 		this.name = "mp-lobby";
@@ -127,12 +171,6 @@ class MenuComponent extends Container {
 		MultiplayerManager.get().setOnBroadcastCallback(this.broadcasted.bind(this));
 		MultiplayerManager.get().setOnGameStartedCallback(this.gameStarted.bind(this));
 		
-		this.players = this.playersFromGame(MultiplayerManager.get().multiplayerGame);
-		for( let i = 0; i < 4; i++ ) {
-			let pe = new PlayerEntry(130, 330 + i * 42, this.players[i], i);
-			this.playerComponents.push(pe);
-			this.addChild(pe);
-		}
 	}	
 
 	playersFromGame(theGame) {
@@ -147,8 +185,7 @@ class MenuComponent extends Container {
 	updatePlayers(theGame) {
 		this.players = this.playersFromGame(MultiplayerManager.get().multiplayerGame);
 		for (let i = 0; i < 4; i++) {
-			let pe = this.playerComponents[i];
-			pe.updatePlayer(this.players[i]);
+			this.playerContainer.updatePlayer(this.players[i], i);
 		}
 	}
 
@@ -156,14 +193,14 @@ class MenuComponent extends Container {
 	// event handlers
 	gameStarted(event) {
 		let message = event.message;
-		this.statusMessage.setText("Game starting now!");
+		this.statusContainer.updateMessage("Game starting now!");
 		state.change(my_state.MULTIPLAYER_PLAY);
 	}
 
 	playerJoined(event) {
 		let message = event.message;
 		let theGame = event.game;
-		this.statusMessage.setText(message.message);
+		this.statusContainer.updateMessage(message.message);
 		if( MultiplayerManager.get().weAreHost ) {
 			if( this.startButton === null ) {
 				this.startButton = new StartGameButton(game.viewport.width - 105, game.viewport.height - 60);			
@@ -177,7 +214,7 @@ class MenuComponent extends Container {
 		let message = event.message;
 		let theGame = event.game;
 
-		this.statusMessage.setText(message.message);
+		this.statusContainer.updateMessage(message.message);
 		if( MultiplayerManager.get().weAreHost ) {
 			if ((this.startButton !== null && theGame.player1 !== undefined) || theGame.player2 === undefined || theGame.player3 === undefined || theGame.player4 === undefined) {
 				//this.removeChild(this.startButton);				

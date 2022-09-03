@@ -197,6 +197,13 @@ export class ChooserComponent extends Container {
             console.log("  selected level = " + this.levelIndex );
 			MultiplayerManager.get().useSelectedLevel(this.levelIndex);            
             this.levelChosen = true;
+
+			MultiplayerManager.get()
+				.createGame()
+				.then((game) => {
+					state.change(my_state.MULTIPLAYER_LOBBY);
+				});		
+
         }
 	}
 }
