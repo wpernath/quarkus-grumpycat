@@ -89,7 +89,6 @@ class MessageContainer extends BaseContainer {
 			titleColor: "#ffa000",
 			titlePos: "left",
 			backgroundAlpha: 0.3,
-			backgroundColor: "#005500",
 		});
 
 		this.statusMessage = new BitmapText(this.contentContainer.pos.x, this.contentContainer.pos.y, {
@@ -111,8 +110,8 @@ class PlayerContainer extends BaseContainer {
 			titleText: "Players in the Game",
 			titleColor: "#ffa000",
 			titlePos: "left",
-			backgroundAlpha: 0.1,
-			backgroundColor: "#101010",
+			backgroundAlpha: 0.3,
+			backgroundColor: "#202020",
 		});
 
 		this.playerComponents = [];
@@ -140,37 +139,36 @@ class MenuComponent extends Container {
 
 		// always on toppest
 		this.z = 20;
-		
-		this.players = [];		
+
+		this.players = [];
+
+		// give a name
+		this.name = "mp-lobby";
+		this.addChild(new StateBackground("LOBBY", false, false, true));
+		this.addChild(new BackButton(5, game.viewport.height - 60));
 		this.startButton = new StartGameButton(game.viewport.width - 155, game.viewport.height - 60);
 		this.addChild(this.startButton);
 
 		let w = 600;
 		let h = 100;
-		let x = ( game.viewport.width - w ) / 2;
+		let x = (game.viewport.width - w) / 2;
 		let y = 236;
-		this.statusContainer = new MessageContainer(x, y, w, h, "Waiting........");		
+		this.statusContainer = new MessageContainer(x, y, w, h, "Waiting........");
 		this.addChild(this.statusContainer);
 
 		this.playerContainer = new PlayerContainer(x, y + h + 8, w);
 		this.addChild(this.playerContainer);
 
 		this.players = this.playersFromGame(MultiplayerManager.get().multiplayerGame);
-		for (let i = 0; i < 4; i++) {		
-			this.playerContainer.addPlayer(this.players[i], i);			
+		for (let i = 0; i < 4; i++) {
+			this.playerContainer.addPlayer(this.players[i], i);
 		}
-
-		// give a name
-		this.name = "mp-lobby";
-		this.addChild(new StateBackground("LOBBY", false, false, true));
-		this.addChild(new BackButton(5, game.viewport.height - 60));
 
 		MultiplayerManager.get().setOnJoinCallback(this.playerJoined.bind(this));
 		MultiplayerManager.get().setOnLeaveCallback(this.playerLeft.bind(this));
 		MultiplayerManager.get().setOnGameCloseCallback(this.gameClosed.bind(this));
 		MultiplayerManager.get().setOnBroadcastCallback(this.broadcasted.bind(this));
 		MultiplayerManager.get().setOnGameStartedCallback(this.gameStarted.bind(this));
-		
 	}	
 
 	playersFromGame(theGame) {
