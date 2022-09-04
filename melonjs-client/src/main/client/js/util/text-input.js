@@ -6,9 +6,11 @@ export class TextInput extends Renderable {
  
         super(x, y, length, 16);
 
-        this.$input = $('<input type="' + type + '" required>' + def + '</input>').css({
+        this.$input = $('<input type="' + type + '" required value="' + def + '">').css({
             "left" : x,
-            "top" : y
+            "top" : y,
+            "position": "absolute",
+            "z-index": "2",
         });
 
         switch (type) {

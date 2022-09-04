@@ -19,17 +19,19 @@ class ChangeNamePopup extends BaseContainer {
 		super(x, y, w, h, {
 			titleText: "Change Name",
 			titlePos: "left",
-			backgroundAlpha: 0.9,
+			backgroundAlpha: 0.95,
 			dividerColor: "#005500"
 		});
-		let absPos = this.getAbsolutePosition();
-		this.textInput = new TextInput(
-			absPos.x + this.contentContainer.pos.x, 
-			absPos.y + this.contentContainer.pos.y, 
-			"text", 
-			MultiplayerManager.get().multiplayerPlayer.name,
-			32
-		);
+		let absPos = new Vector2d(x,y);
+		x = absPos.x + this.contentContainer.pos.x;
+		y = absPos.y + this.contentContainer.pos.y;
+		console.log ("x: " + x + " - y: " + y);
+		this.textInput = new TextInput(x, y, "text", 32, MultiplayerManager.get().multiplayerPlayer.name);
+
+		this.addChild(new BitmapText(x,y, {
+			text: "Hallo???",
+			font: "24Outline",
+		}));
 		this.addChild(this.textInput);
 		unbindKeys();
 	}
@@ -108,8 +110,8 @@ class MenuComponent extends Container {
 		this.addChild(new StateBackground("MULTIPLAYER", true, true, true));
         this.addChild(new StartGameButton((game.viewport.width - 250)/2, 300));
         this.addChild(new JoinGameButton((game.viewport.width - 250) / 2, 360));
-		this.addChild(new ChangeNameButton((game.viewport.width - 250) / 2, 420));
-        this.addChild(new BackButton((game.viewport.width - 250) / 2, 480));        		
+		//this.addChild(new ChangeNameButton((game.viewport.width - 250) / 2, 420));
+        this.addChild(new BackButton((game.viewport.width - 250) / 2, 420));        		
 	}
 }
 
