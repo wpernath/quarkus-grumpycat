@@ -18,7 +18,7 @@ export class BaseContainer extends Container {
 	 * @param {Color}  [options.backgroundColor] Background color (default #008800)
 	 * @param {Color}  [options.backgroundBorderColor] background border (default #000000)
 	 * @param {number} [options.backgroundAlpha] background alpha (default 0.3)
-	 * @param {string} [options.dividerColor] color of the divider between headline and content (white)
+	 * @param {string} [options.dividerColor] color of the divider between headline and content (#008800)
 	 *
 	 */
 	constructor(x, y, w, h, options) {
@@ -32,6 +32,7 @@ export class BaseContainer extends Container {
 		this.options.backgroundBorderColor = options.backgroundBorderColor || "#000000";
 		this.options.backgroundAlpha = options.backgroundAlpha || 0.3;
 		this.options.dividerColor = options.dividerColor || "#008800";
+
 		this.clipping = true;
 
 		this.header = new BitmapText(4, 6, {

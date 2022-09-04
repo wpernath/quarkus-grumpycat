@@ -7,8 +7,7 @@ import {
     utils,
     game,
     plugin,
-    Vector2d,
-    input,
+    Vector2d,    
     TextureAtlas,
     pool,
 } from 'melonjs/dist/melonjs.module.js';
@@ -43,7 +42,7 @@ import { MultiplayerMessage } from './js/util/multiplayer';
 
 import HowToPlayScreen from './js/stage/how-to-play'
 import screenfull from "screenfull";
-
+import {bindKeys, unbindKeys} from "./js/util/constants";
 
 
 device.onReady(() => {
@@ -135,27 +134,7 @@ device.onReady(() => {
             state.transition("fade", "#000000", 500);
 
             // bind keys
-            input.bindKey(input.KEY.ALT, "magic");
-            input.bindKey(input.KEY.Q, "damage");
-            input.bindKey(input.KEY.E, "magic-barrier");
-            input.bindKey(input.KEY.R, "magic-nebula");
-            input.bindKey(input.KEY.SHIFT, "barrier");
-            input.bindKey(input.KEY.LEFT, "left",);
-            input.bindKey(input.KEY.A, "left");
-            input.bindKey(input.KEY.RIGHT, "right");
-            input.bindKey(input.KEY.D, "right");
-            input.bindKey(input.KEY.UP, "up");
-            input.bindKey(input.KEY.W, "up");
-            input.bindKey(input.KEY.DOWN, "down");
-            input.bindKey(input.KEY.S, "down");
-
-            //input.bindKey(input.KEY.E, "explode", true);
-            input.bindKey(input.KEY.P, "pause", true);
-            
-            input.bindKey(input.KEY.SPACE, "bomb", true);
-            input.bindKey(input.KEY.ESC, "exit", true);
-            input.bindKey(input.KEY.F, "fullscreen", true);
-                
+            bindKeys();
             NetworkManager.getInstance().createGameOnServer()
                 .then(function() {
                     // we don't use gravity here
