@@ -41,6 +41,7 @@ class MenuComponent extends Container {
 
 		// make sure we use screen coordinates
 		this.floating = true;
+		this.enableChildBoundsUpdate = true;
 
 		// always on toppest
 		this.z = 10;
@@ -54,8 +55,8 @@ class MenuComponent extends Container {
         this.addChild(new StateBackground("HOST GAME", false, false, true));
 		this.addChild(this.levelChooser);
 
-		this.addChild(new BackButton(5, game.viewport.height - 60));
-        //this.addChild(new StartGameButton(game.viewport.width - 155, game.viewport.height - 60));
+		this.addChild(new BackButton(5, game.viewport.height - 55));        
+		this.updateBounds(true);
 	}
 }
 
@@ -75,8 +76,7 @@ export default class HostGameScreen extends Stage {
 	}
 
 	onDestroyEvent() {
-		event.off(event.KEYUP, this.handler);
-		//input.unbindPointer(input.pointer.LEFT);
+		event.off(event.KEYUP, this.handler);		
 		game.world.removeChild(this.menu);
 	}
 }

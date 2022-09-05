@@ -27,12 +27,10 @@ class MenuComponent extends Container {
 		// always on toppest
 		this.z = 10;
 
-		this.setOpacity(1.0);
-
 		// give a name
 		this.name = "TitleBack";
 		this.addChild(new StateBackground("JOIN GAME", false, false, true));
-		this.addChild(new BackButton(5, game.viewport.height - 60));
+		this.addChild(new BackButton(5, game.viewport.height - 55));
 
 		MultiplayerManager.get()
 			.listOpenGames()

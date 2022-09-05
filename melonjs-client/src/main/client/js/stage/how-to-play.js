@@ -10,7 +10,7 @@ class BaseHelpComponent extends BaseContainer {
 	constructor(x, y, w, h, title) {
 		super(x, y, w, h, {
 			titleFont: "18Outline", 
-			titleColor: "#ff0000",
+			//titleColor: "#ff0000",
 			titleText: title
 		});
 	}

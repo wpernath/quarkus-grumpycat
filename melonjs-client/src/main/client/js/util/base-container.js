@@ -14,7 +14,7 @@ export class BaseContainer extends Container {
 	 * @param {string} [options.titleFont] Name of the bitmap font for drawing title
 	 * @param {string} [options.titleText] title text
 	 * @param {string} [options.titlePos] Position of the title (left, right, center)
-	 * @param {Color}  [options.titleColor] Color of the title text (default #ff0000)
+	 * @param {Color}  [options.titleColor] Color of the title text (default #ffa000)
 	 * @param {Color}  [options.backgroundColor] Background color (default #008800)
 	 * @param {Color}  [options.backgroundBorderColor] background border (default #000000)
 	 * @param {number} [options.backgroundAlpha] background alpha (default 0.3)
@@ -27,13 +27,15 @@ export class BaseContainer extends Container {
 		this.options.titleFont = options.titleFont || "24Outline";
 		this.options.titlePos  = options.titlePos || "center";
 		this.options.titleText = options.titleText || "Header";
-		this.options.titleColor = options.titleColor || "#ff0000";
+		this.options.titleColor = options.titleColor || "#ffa000";
 		this.options.backgroundColor = options.backgroundColor || "#008800";
 		this.options.backgroundBorderColor = options.backgroundBorderColor || "#000000";
 		this.options.backgroundAlpha = options.backgroundAlpha || 0.3;
 		this.options.dividerColor = options.dividerColor || "#008800";
 
 		this.clipping = true;
+		this.floating = false;
+		this.enableChildBoundsUpdate = true;
 
 		this.header = new BitmapText(4, 6, {
 			font: this.options.titleFont,

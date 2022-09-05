@@ -14,14 +14,16 @@ export default class BaseTextButton extends BaseClickableComponent {
 		settings.fillStyle = settings.fillStyle || "#ffffff";
 		settings.lineWidth = settings.lineWidth || 1;
 		settings.anchorPoint = settings.anchorPoint || new Vector2d(0, 0);
+		settings.extraHeight = settings.extraHeight || 18; 
+		settings.extraWidth  = settings.extraWidth || 16;
 		this.onClickCallback = settings.onClick || null;
 
 		let font = new BitmapText(x, y, settings);
 		font.fillStyle = settings.fillStyle;
 		let dimensions = font.measureText();
 
-		settings.borderWidth = settings.borderWidth || dimensions.width + 16;
-		settings.borderHeight = settings.borderHeight || dimensions.height + 16;
+		settings.borderWidth = settings.borderWidth || dimensions.width + settings.extraWidth;
+		settings.borderHeight = settings.borderHeight || dimensions.height + settings.extraHeight;
 
 		let border = new RoundRect(x, y, settings.borderWidth, settings.borderHeight);
 		super.setShape(x, y, border.getBounds().width, border.getBounds().height);
