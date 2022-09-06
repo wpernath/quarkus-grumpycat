@@ -11,7 +11,7 @@ import { LevelManager } from "../util/level.js";
 import NetworkManager from "../util/network";
 import { BONUS_TILE } from "../util/constants.js";
 import ChestBonusSprite from "../renderables/terrain/chest-sprite.js";
-
+import { LevelObject } from "../util/level.js";
 
 export class BasePlayScreen extends Stage {
 	player;

@@ -8,25 +8,12 @@ class BackButton extends BaseTextButton {
 	constructor(x, y) {
 		super(x, y, {
 			text: "Back",
-			borderWidth: 100,
+			borderWidth: 150,
 		});
 	}
 
 	onClick() {
 		state.change(my_state.MULTIPLAYER_MENU);
-	}
-}
-
-class StartGameButton extends BaseTextButton {
-	constructor(x, y) {
-		super(x, y, {
-			text: "Start",
-			borderWidth: 100,
-		});
-	}
-
-	onClick() {
-		state.change(my_state.MULTIPLAYER_LOBBY);
 	}
 }
 
@@ -40,12 +27,10 @@ class MenuComponent extends Container {
 		// always on toppest
 		this.z = 10;
 
-		this.setOpacity(1.0);
-
 		// give a name
 		this.name = "TitleBack";
 		this.addChild(new StateBackground("JOIN GAME", false, false, true));
-		this.addChild(new BackButton(5, game.viewport.height - 60));
+		this.addChild(new BackButton(5, game.viewport.height - 55));
 
 		MultiplayerManager.get()
 			.listOpenGames()
@@ -75,8 +60,7 @@ export default class JoinGameScreen extends Stage {
 	}
 
 	onDestroyEvent() {
-		event.off(event.KEYUP, this.handler);
-		//input.unbindPointer(input.pointer.LEFT);
+		event.off(event.KEYUP, this.handler);		
 		game.world.removeChild(this.menu);
 	}
 }

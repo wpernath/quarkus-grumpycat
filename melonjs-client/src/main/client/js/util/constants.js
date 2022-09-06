@@ -1,4 +1,4 @@
-import { collision, state, pool, Color } from "melonjs";
+import { collision, state, input } from "melonjs";
 
 export const my_state = {
 	/**
@@ -109,4 +109,43 @@ export const ENEMY_TILE = {
 	golem: 996,
 };
 
+export function bindKeys() {
+	input.bindKey(input.KEY.ALT, "magic");
+	input.bindKey(input.KEY.Q, "damage");
+	input.bindKey(input.KEY.E, "magic-barrier");
+	input.bindKey(input.KEY.R, "magic-nebula");
+	input.bindKey(input.KEY.SHIFT, "barrier");
+	input.bindKey(input.KEY.LEFT, "left");
+	input.bindKey(input.KEY.A, "left");
+	input.bindKey(input.KEY.RIGHT, "right");
+	input.bindKey(input.KEY.D, "right");
+	input.bindKey(input.KEY.UP, "up");
+	input.bindKey(input.KEY.W, "up");
+	input.bindKey(input.KEY.DOWN, "down");
+	input.bindKey(input.KEY.S, "down");
+	input.bindKey(input.KEY.P, "pause", true);
+	input.bindKey(input.KEY.SPACE, "bomb", true);
+	input.bindKey(input.KEY.ESC, "exit", true);
+	input.bindKey(input.KEY.F, "fullscreen", true);
+}
 
+export function unbindKeys() {
+	input.unbindKey(input.KEY.ALT);
+	input.unbindKey(input.KEY.Q);
+	input.unbindKey(input.KEY.E);
+	input.unbindKey(input.KEY.R);
+	input.unbindKey(input.KEY.SHIFT);
+	input.unbindKey(input.KEY.LEFT);
+	input.unbindKey(input.KEY.A);
+	input.unbindKey(input.KEY.RIGHT);
+	input.unbindKey(input.KEY.D);
+	input.unbindKey(input.KEY.UP);
+	input.unbindKey(input.KEY.W);
+	input.unbindKey(input.KEY.DOWN);
+	input.unbindKey(input.KEY.S);
+	input.unbindKey(input.KEY.P);
+	input.unbindKey(input.KEY.SPACE);
+	input.unbindKey(input.KEY.ESC);
+	input.unbindKey(input.KEY.F);
+
+}

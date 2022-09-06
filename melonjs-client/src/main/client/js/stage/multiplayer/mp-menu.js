@@ -6,6 +6,36 @@ import { my_state } from "../../util/constants";
 import MultiplayerManager  from "../../util/multiplayer";
 import { StateBackground } from "../state_background";
 import GlobalGameState from "../../util/global-game-state";
+import { BaseContainer } from "../../util/base-container";
+import { TextInput } from "../../util/text-input";
+import {bindKeys, unbindKeys} from "../../util/constants";
+
+class ChangeNamePopup extends BaseContainer {
+	constructor() {
+		let h = 160;
+		let w = 320;
+		let x = (game.viewport.width - w) / 2;
+		let y = 200;
+		super(x, y, w, h, {
+			titleText: "Change Name",
+			titlePos: "left",
+			backgroundAlpha: 0.95,
+			dividerColor: "#005500"
+		});
+		let absPos = new Vector2d(x,y);
+		x = absPos.x + this.contentContainer.pos.x;
+		y = absPos.y + this.contentContainer.pos.y;
+		console.log ("x: " + x + " - y: " + y);
+		this.textInput = new TextInput(x, y, "text", 32, MultiplayerManager.get().multiplayerPlayer.name);
+
+		this.addChild(new BitmapText(x,y, {
+			text: "Hallo???",
+			font: "24Outline",
+		}));
+		this.addChild(this.textInput);
+		unbindKeys();
+	}
+}
 
 class StartGameButton extends BaseTextButton {
     constructor(x,y) {
@@ -34,6 +64,20 @@ class JoinGameButton extends BaseTextButton {
 	}
 }
 
+class ChangeNameButton extends BaseTextButton {
+	constructor(x,y) {
+		super(x, y, {
+			text: "Change Name",
+			borderWidth: 250
+		})
+	}
+
+	onClick() {
+		this.window = new ChangeNamePopup();
+		this.ancestor.addChild(this.window);
+		return false;
+	}
+}
 class BackButton extends BaseTextButton {
 	constructor(x, y) {
 		super(x, y, {
@@ -66,6 +110,7 @@ class MenuComponent extends Container {
 		this.addChild(new StateBackground("MULTIPLAYER", true, true, true));
         this.addChild(new StartGameButton((game.viewport.width - 250)/2, 300));
         this.addChild(new JoinGameButton((game.viewport.width - 250) / 2, 360));
+		//this.addChild(new ChangeNameButton((game.viewport.width - 250) / 2, 420));
         this.addChild(new BackButton((game.viewport.width - 250) / 2, 420));        		
 	}
 }
@@ -75,7 +120,7 @@ export default class MultiplayerMenuScreen extends Stage {
 		this.multiplayerManager = MultiplayerManager.get();
 		this.menu = null;
 		GlobalGameState.reset();
-		
+
 		this.multiplayerManager.createPlayerFromMe().then((player) => {			
 			console.log("  Got new MultiPlayer: " + player.id);			
 			this.menu = new MenuComponent();

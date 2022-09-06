@@ -59,7 +59,7 @@ export class StateBackground extends Container {
 					font: "24Outline",
 					textAlign: "right",
 					text: MultiplayerManager.get().multiplayerPlayer.name,
-				})
+				}), 5
 			);
 		}
 
