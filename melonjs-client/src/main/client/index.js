@@ -54,7 +54,8 @@ device.onReady(() => {
         scaleMethod: "flex-width", 
         renderer: video.AUTO, 
         subPixel: false, 
-        //doubleBuffering: true 
+        antiAlias: true,
+        doubleBuffering: true 
     })) {
 		alert("Your browser does not support HTML5 canvas.");
 		return;

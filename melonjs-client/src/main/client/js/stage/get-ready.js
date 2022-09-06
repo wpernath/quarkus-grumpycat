@@ -10,7 +10,7 @@ class LevelDescription extends BaseContainer {
 	constructor(x,y,width,height) {
 		super(x,y,width,height, {
 			titleText: LevelManager.getInstance().getCurrentLevel().longName,
-			titleColor: "#ff1010"
+			titleColor: "#ffa000"
 		});		
 
 		this.levelDescr = new BitmapText(this.contentContainer.pos.x,this.contentContainer.pos.y, {

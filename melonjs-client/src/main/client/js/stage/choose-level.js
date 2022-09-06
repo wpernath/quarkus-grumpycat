@@ -4,12 +4,14 @@ import { LevelManager } from "../util/level";
 import GlobalGameState from "../util/global-game-state";
 import { my_state } from "../util/constants";
 import { StateBackground } from "./state_background";
+import { BaseContainer } from "../util/base-container";
 
 class LeftButton extends GUI_Object {
 	constructor(x, y, callback) {
 		super(x, y, {
 			image: GlobalGameState.screenControlsTexture,
 			region: "shadedDark24",
+			anchorPoint: new Vector2d(0,0),
 		});
         this.callback = callback
 		this.setOpacity(0.5);
@@ -36,6 +38,7 @@ class RightButton extends GUI_Object {
 		super(x, y, {
 			image: GlobalGameState.screenControlsTexture,
 			region: "shadedDark25",
+			anchorPoint: new Vector2d(0, 0),
 		});
         this.callback = callback;
 		this.setOpacity(0.5);
@@ -65,10 +68,10 @@ class ListEntry extends BaseClickableComponent {
     image;
 	callbackOnClick;
 
-	constructor(levelIndex, x, y) {
-		super(x, y, game.viewport.width - 280, 500);
+	constructor(levelIndex, x, y, w, h) {
+		super(x, y, w, h);
 
-        this.clipping = true;
+        this.clipping = false;
         this.floating = false;
         this.levelIndex = levelIndex;
 		this.currentLevel = LevelManager.getInstance().setCurrentLevel(levelIndex);
@@ -77,35 +80,51 @@ class ListEntry extends BaseClickableComponent {
 		this.mapSize = "Map size: " + this.currentLevel.mapWidth + " x " + this.currentLevel.mapHeight;
         this.image = loader.getImage(this.currentLevel.previewImage);
 
-		console.log("  creating LevelEntry(" + this.name + ")");
-		this.titleFont = new BitmapText(15+348+15, 20, {
-			font: "18Outline",		
-			text: this.name,
-			anchorPoint: new Vector2d(0, 0),
-		});
+		
+		this.addChild(
+			new BitmapText(358, 0, {
+				font: "18Outline",
+				text: "Map information",
+				fillStyle: "#ffa000",
+			})
+		);
 
-		this.descriptionFont = new BitmapText(15+348+15, 60, {
-			font: "12Outline",
-            lineHeight: 1.5,
-            text: this.description,
-			anchorPoint: new Vector2d(0, 0),
-		});
+		this.addChild(
+			new BitmapText(358, 30, {
+				font: "12Outline",
+				text: "Name: " + this.name,
+			})
+		);
 
-		this.mapSizeFont = new BitmapText(15 + 348 + 15, 450, {
-			font: "18Outline",
-			text: this.mapSize,
-			//fillStyle: "#ff0000",
-			anchorPoint: new Vector2d(0, 0),
-		});
+		this.addChild(
+			new BitmapText(358, 50, {
+				font: "12Outline",
+				text: this.mapSize,
+			})
+		);
 
-        this.addChild(this.titleFont);
-        this.addChild(this.descriptionFont);
-		this.addChild(this.mapSizeFont);
+		this.addChild(
+			new BitmapText(358, 90, {
+				font: "18Outline",
+				text: "Description: ",
+				fillStyle: "#ffa000",
+			})
+		);
+
+		this.addChild(
+			new BitmapText(358, 120, {
+				font: "12Outline",
+				lineHeight: 1.5,
+				wordWrapWidth: w-358,
+				text: this.description,
+			})
+		);
+
 		this.callbackOnClick = undefined;
 	}
 
 	draw(renderer) {
-        renderer.drawImage(this.image, this.pos.x + 15, this.pos.y + 20, 348, 444);
+        renderer.drawImage(this.image, this.pos.x + 5, this.pos.y, 348, 444);
         super.draw(renderer);
 	}
 
@@ -126,14 +145,23 @@ class ListEntry extends BaseClickableComponent {
 	}
 }
 
-class ChooserComponent extends Container {
+class ChooserComponent extends BaseContainer {
 	listComponents = [];
     levelChosen = false;
 	constructor() {
-		super();
+		let w = 900;
+		let h = 505;
+		let x = (game.viewport.width - w) / 2;
+		let y = game.viewport.height - h - 60;
+		super(x, y, w, h, {
+			titleText: "Choose a Level",
+			backgroundAlpha: 0.4,
+			backgroundColor: "#202020",
+		});
 
 		// make sure we use screen coordinates
-		this.floating = true;
+		this.floating = false;
+		this.clipping = false;
 
 		// always on toppest
 		this.z = 10;
@@ -142,18 +170,15 @@ class ChooserComponent extends Container {
 
 		// give a name
 		this.name = "TitleBack";
-
-		this.addChild(new StateBackground("Choose Level", false, false));
-
-        this.prev = new LeftButton(86, 360, this.prevLevel.bind(this));
-        this.next = new RightButton(game.viewport.width - 86, 360, this.nextLevel.bind(this));
+		y = (h - 77) / 2;
+		this.prev = new LeftButton(this.pos.x + 2, this.pos.y + y, this.prevLevel.bind(this));
+		this.next = new RightButton(this.pos.x + w - 80, this.pos.y + y, this.nextLevel.bind(this));
         this.addChild(this.prev);
         this.addChild(this.next);
         
-		LevelManager.getInstance().reset();
-		let x = (game.viewport.width - (game.viewport.width - 280)) / 2;
+		LevelManager.getInstance().reset();		
         for(let levelIndex = 0; levelIndex < LevelManager.getInstance().levelCount(); levelIndex++ ) {
-            let entry = new ListEntry(levelIndex, x, 220);
+            let entry = new ListEntry(levelIndex, this.contentContainer.pos.x + 80, this.contentContainer.pos.y, w - 180, h - 50);
             entry.setCallbackOnClick(this.useSelectedGame.bind(this));
             entry.setOpacity(0.8);
             this.listComponents.push(entry);            
@@ -196,6 +221,9 @@ export class ChooseLevelScreen extends Stage {
 
 	onResetEvent() {
         console.log("ChooserLevel.onEnter()")
+		this.back = new StateBackground("Choose Level", false, false);
+		game.world.addChild(this.back);
+
 		this.chooserComponent = new ChooserComponent();
 		game.world.addChild(this.chooserComponent);
 
@@ -221,5 +249,6 @@ export class ChooseLevelScreen extends Stage {
         console.log("ChooserLevel.onExit()");
 		event.off(event.KEYUP, this.handler);		
 		game.world.removeChild(this.chooserComponent);        
+		game.world.removeChild(this.back);
 	}
 }
