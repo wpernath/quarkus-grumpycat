@@ -215,6 +215,9 @@ export default class MultiplayerGameOverScreen extends Stage {
 	constructor(isGameOver = true) {
 		super();
 		this.isGameOver = isGameOver;
+		this.back = null;
+		this.emitter = null;
+		this.handler = null;
 	}
 
 	/**
@@ -294,8 +297,12 @@ export default class MultiplayerGameOverScreen extends Stage {
 		input.unbindKey(input.KEY.ENTER);
 		input.unbindPointer(input.pointer.LEFT);
 		event.off(event.KEYUP, this.handler);
-		game.world.removeChild(this.back);
-		game.world.removeChild(this.emitter);
+		if( this.back !== null ) {
+			game.world.removeChild(this.back);
+		}
+		if( this.emitter !== null ) {
+			game.world.removeChild(this.emitter);
+		}
 		GlobalGameState.reset();
 		MultiplayerManager.get().closeActiveGame();
 	}

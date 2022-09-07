@@ -30,6 +30,12 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 				else if( message.magicBolt ) {
 					this.throwMagicSpell(message.x, message.y, message.dx, message.dy, false);
 				}
+				else if( message.chestCollected ) {
+					this.pos.x = message.x * 32 + 16;
+					this.pos.y = message.y * 32 + 16;
+
+
+				}
 				else if (message.magicNebula) {
 					this.pos.x = message.x * 32 + 16;
 					this.pos.y = message.y * 32 + 16;
@@ -55,7 +61,8 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 					bomb.tint.copy(this.color);
 					bomb.thrownByPlayer = this.player;
 					game.world.addChild(bomb);
-				} else {
+				} 
+				else {
 					//console.log(" updating pos of " + this.name + " to " + this.pos );
 					// just movement
 					this.pos.x = message.x * 32 + 16;
