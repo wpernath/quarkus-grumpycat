@@ -277,29 +277,27 @@ class MultiplayerMessageCenter extends Container {
 		super(x,y,w,h);
 
 		this.currentMessage = "Test message: Hallo, echo!";
-		this.backColor = new Color(50,50,50);
-		this.boxColor  = new Color(10,10,10);
-		this.backBox   = new Rect(this.pos.x + 2, this.pos.y, w-4, h);
+		this.clipping = true;
+		this.floating = false;
 
-		this.textBox   = new BitmapText(this.pos.x + 4, this.pos.y + 4, {
-			font: "12Outline",
-			textBaseline: "bottom"
+		this.textBox   = new BitmapText(this.pos.x + 4, 0, {
+			font: "24Outline",
+			textBaseline: "top",
+			text: this.currentMessage,
 		});
-
+		this.addChild(this.textBox);
 		this.gradient = null;
-	}
 
-	draw(renderer) {
-		renderer.setGlobalAlpha(0.3);
-		renderer.setColor(this.backColor);
-		renderer.fill(this.backBox);
+		MultiplayerManager.get().addOnMessageCallback(async (event) => {
+			let message = event.message;
 
-		renderer.setGlobalAlpha(1.0);
-		renderer.setColor(this.boxColor);
-		renderer.stroke(this.backBox);
-		renderer.setTint(this.textBox.tint, this.textBox.getOpacity());
-		this.textBox.draw(renderer, this.currentMessage, this.textBox.pos.x, this.textBox.pos.y);
-		super.draw(renderer);
+			if( message.playerId !== MultiplayerManager.get().multiplayerPlayer.id ) {
+				if( message.message !== null ) {
+					console.log("message: " + message.message);
+					this.textBox.setText(message.message);
+				}
+			}
+		}, this);
 	}
 }
 
@@ -352,9 +350,9 @@ export default class HUDContainer extends Container {
 		this.addChild(new EnergyItem(5, this.pos.y + 1));
 		this.addChild(new WeaponsItem(game.viewport.width - 170, this.pos.y + 1, 168, 34));
 
-		//if( GlobalGameState.isMultiplayerMatch ) {
-		//this.addChild(new MultiplayerMessageCenter(0,50, game.viewport.width, 26));
-		//}
+		if( GlobalGameState.isMultiplayerMatch ) {
+			this.addChild(new MultiplayerMessageCenter(0, 42, game.viewport.width, 30));
+		}
 
 		this.addChild(this.pauseText);
 		this.pauseText.setText("");
