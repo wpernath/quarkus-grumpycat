@@ -418,8 +418,10 @@ export class MultiplayerMessage {
 		 * @returns the refreshed game data
 		 */
 		async refreshGameData() {
-			let res = await fetch(this.getGameURL + this.multiplayerGame.id);
-			this.multiplayerGame = await res.json();
+			if( this.multiplayerGame !== null ) {
+				let res = await fetch(this.getGameURL + this.multiplayerGame.id);
+				this.multiplayerGame = await res.json();
+			}
 			return this.multiplayerGame;
 		}
 
@@ -629,5 +631,23 @@ export class MultiplayerMessage {
 				}
 			}
 			return playerNum;
+		}
+
+		/**
+		 * Returns an array of players which are in this game. Each array entry
+		 * could be NULL or a player instance.
+		 * 
+		 * @returns the array of players (zero based) in this game
+		 */
+		getPlayersFromGame() {
+			let players = [];
+			let theGame = this.multiplayerGame;
+			if( theGame !== null ) {
+				players[0] = theGame.player1 !== undefined ? theGame.player1 : null;
+				players[1] = theGame.player2 !== undefined ? theGame.player2 : null;
+				players[2] = theGame.player3 !== undefined ? theGame.player3 : null;
+				players[3] = theGame.player4 !== undefined ? theGame.player4 : null;
+			}
+			return players;
 		}
  }

@@ -3,7 +3,7 @@ import BaseTerrainSprite from "../../renderables/terrain/terrain-sprite";
 
 import GlobalGameState from "../../util/global-game-state";
 import { BONUS_TILE, PLAYER_COLORS } from "../../util/constants";
-import MultiplayerManager from "../../util/multiplayer";
+import MultiplayerManager, { MultiplayerMessageType } from "../../util/multiplayer";
 import PlayerEntity from "../../renderables/player";
 
 class ScoreItem extends Container {
@@ -288,13 +288,62 @@ class MultiplayerMessageCenter extends Container {
 		this.addChild(this.textBox);
 		this.gradient = null;
 
-		MultiplayerManager.get().addOnMessageCallback(async (event) => {
-			let message = event.message;
+		let events = [
+			MultiplayerMessageType.ERROR,
+			MultiplayerMessageType.GAME_UPDATE,
+			MultiplayerMessageType.PLAYER_GAVE_UP,
+			//MultiplayerMessageType.
+		];
 
-			if( message.playerId !== MultiplayerManager.get().multiplayerPlayer.id ) {
-				if( message.message !== null ) {
-					console.log("message: " + message.message);
-					this.textBox.setText(message.message);
+		MultiplayerManager.get().addEventListener(events, async (event) => {
+			let message   = event.message;
+			let players   = MultiplayerManager.get().getPlayersFromGame();
+			let player    = null;
+			let playerNum = 0;
+			let playerCol;
+
+			if( message.type === MultiplayerMessageType.ERROR ) {
+				this.textBox.setText("INTERNAL ERROR: " + message.message);
+			}
+			else {
+				if( message.playerId !== MultiplayerManager.get().multiplayerPlayer.id ) {
+					for( let i = 0; i < players.length; i++ ) {
+						if( players[i] !== null && players[i].id === message.playerId ) {
+							playerNum = i;
+							player = players[i];
+							playerCol = PLAYER_COLORS[playerNum];
+							break;
+						}
+					}
+
+					if( player === null ) return false;
+
+					this.textBox.tint = playerCol;
+
+					if( message.message !== null ) {
+						console.log("message: " + message.message);
+						this.textBox.setText(message.message);
+					}
+					else if( message.type === MultiplayerMessageType.GAME_UPDATE ) {
+						if( message.bombPlaced ){
+							this.textBox.setText(player.name + " has placed a bomb!");
+						}
+						else if( message.chestCollected ) {
+							this.textBox.setText(player.name + " has found a chest!");
+						}
+						else if( message.magicBolt ) {
+							this.textBox.setText(player.name + " has fired a magic bolt!");
+						}
+						else if( message.magicNebula ) {
+							this.textBox.setText(player.name + " has placed a magic nebula!");
+						}
+						else if( message.magicFirespin ) {
+							this.textBox.setText(player.name + " has casted a magic firespin!");
+						}
+						else if( message.magicProtectionCircle ) {
+							this.textBox.setText(player.name + " has casted a magic protection circle!");
+						}
+					} 
 				}
 			}
 		}, this);

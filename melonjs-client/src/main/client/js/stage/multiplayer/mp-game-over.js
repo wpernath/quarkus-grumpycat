@@ -172,12 +172,9 @@ class GameOverBack extends Container {
 	 * @returns array of player
 	 */
 	static playersFromGame(theGame) {
-		let players = [];
-		players[0] = theGame.player1 !== undefined ? theGame.player1 : null;
-		players[1] = theGame.player2 !== undefined ? theGame.player2 : null;
-		players[2] = theGame.player3 !== undefined ? theGame.player3 : null;
-		players[3] = theGame.player4 !== undefined ? theGame.player4 : null;
-
+		let players = MultiplayerManager.get().getPlayersFromGame();
+		if( players === null ) return;
+		
 		for( let i=0; i < players.length; i++ ) {
 			if( players[i] !== null ) {
 				let p = players[i];
