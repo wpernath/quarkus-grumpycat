@@ -37,6 +37,8 @@ public class MultiplayerMessage {
     public boolean magicProtectionCircle = false;
     
     public boolean chestCollected = false;
+    public boolean injuredByEnemy = false;
+    public String enemyType;
     
     public long score = 0L;
     public int energy;

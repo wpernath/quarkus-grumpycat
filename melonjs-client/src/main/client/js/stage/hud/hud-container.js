@@ -5,6 +5,7 @@ import GlobalGameState from "../../util/global-game-state";
 import { BONUS_TILE, PLAYER_COLORS } from "../../util/constants";
 import MultiplayerManager, { MultiplayerMessageType } from "../../util/multiplayer";
 import PlayerEntity from "../../renderables/player";
+import { ENEMY_TYPES } from "../../renderables/base-enemy";
 
 class ScoreItem extends Container {
 	/**
@@ -276,14 +277,13 @@ class MultiplayerMessageCenter extends Container {
 	constructor(x,y,w,h) {
 		super(x,y,w,h);
 
-		this.currentMessage = "Test message: Hallo, echo!";
 		this.clipping = true;
 		this.floating = false;
 
 		this.textBox   = new BitmapText(this.pos.x + 4, 0, {
 			font: "24Outline",
 			textBaseline: "top",
-			text: this.currentMessage,
+			text: "",
 		});
 		this.addChild(this.textBox);
 		this.gradient = null;
@@ -342,6 +342,21 @@ class MultiplayerMessageCenter extends Container {
 						}
 						else if( message.magicProtectionCircle ) {
 							this.textBox.setText(player.name + " has casted a magic protection circle!");
+						}
+						else if( message.injuredByEnemy ) {
+							let text = "Oh nooo... " + player.name + " has been ";
+							switch(message.enemyType) {
+								case ENEMY_TYPES.cat:
+									text += "catched by a cat!";
+									break;
+								case ENEMY_TYPES.spider:
+									text += "bitten by a spider!";
+									break;
+								case ENEMY_TYPES.golem:
+									text += "in touch with a golem!";
+									break;								
+							}
+							this.textBox.setText(text);
 						}
 					} 
 				}

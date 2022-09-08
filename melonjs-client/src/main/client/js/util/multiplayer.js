@@ -1,4 +1,5 @@
 import CONFIG from "../../config";
+import { ENEMY_TYPES } from "../renderables/base-enemy";
 import { EventEmitter } from "./eventemitter";
 import GlobalGameState from "./global-game-state";
 import { LevelManager } from "./level";
@@ -77,6 +78,8 @@ export class MultiplayerMessage {
 		this.magicProtectionCircle = false;
 		this.magicFirespin = false;
 		this.chestCollected = false;
+		this.injuredByEnemy = false;
+		this.enemyType = null;
 		this.score = 0;
 		this.energy = 0;
         

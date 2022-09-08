@@ -23,6 +23,9 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 
 			// make sure we only interpret movements for THIS sprite
 			if (message.playerId === this.player.id) {
+				this.pos.x = message.x * 32 + 16;
+				this.pos.y = message.y * 32 + 16;
+
 				// only ours
 				if (message.gutterThrown) {
 					this.placeBorderTile(message.x + message.dx, message.y + message.dy, false);
@@ -31,30 +34,18 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 					this.throwMagicSpell(message.x, message.y, message.dx, message.dy, false);
 				}
 				else if( message.chestCollected ) {
-					this.pos.x = message.x * 32 + 16;
-					this.pos.y = message.y * 32 + 16;
-
 
 				}
 				else if (message.magicNebula) {
-					this.pos.x = message.x * 32 + 16;
-					this.pos.y = message.y * 32 + 16;
 					this.throwMagicNebula(message.x, message.y, false);
 				} 
 				else if (message.magicProtectionCircle) {
-					this.pos.x = message.x * 32 + 16;
-					this.pos.y = message.y * 32 + 16;
 					this.throwMagicProtectionCircle(message.x, message.y, false);
 				} 
 				else if (message.magicFirespin) {
-					this.pos.x = message.x * 32 + 16;
-					this.pos.y = message.y * 32 + 16;
 					this.throwMagicFireSpin(message.x, message.y, false);
 				} 
 				else if (message.bombPlaced) {
-					this.pos.x = message.x * 32 + 16;
-					this.pos.y = message.y * 32 + 16;
-
 					let bomb = new BombEntity(this.pos.x, this.pos.y);
 					bomb.body.collisionType = my_collision_types.REMOTE_BOMB;
 					bomb.body.setCollisionMask(collision.types.PLAYER_OBJECT | collision.types.ENEMY_OBJECT);
@@ -63,10 +54,7 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 					game.world.addChild(bomb);
 				} 
 				else {
-					//console.log(" updating pos of " + this.name + " to " + this.pos );
 					// just movement
-					this.pos.x = message.x * 32 + 16;
-					this.pos.y = message.y * 32 + 16;
 					this.checkBonusTile(this.pos.x, this.pos.y, false);
 				}
 			}

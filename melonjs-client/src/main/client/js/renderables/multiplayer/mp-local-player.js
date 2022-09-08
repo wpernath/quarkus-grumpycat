@@ -230,12 +230,13 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 	 * (called when colliding with other objects)
 	 */
 	onCollision(response, other) {
-		if (other.body.collisionType === collision.types.COLLECTABLE_OBJECT && !other.isCollected) {
-			let mapX = Math.floor(this.pos.x / 32);
-			let mapY = Math.floor(this.pos.y / 32);
+		let mapX = Math.floor(this.pos.x / 32);
+		let mapY = Math.floor(this.pos.y / 32);
 
+		if (other.body.collisionType === collision.types.COLLECTABLE_OBJECT && !other.isCollected) {
 			console.log("other.type: " + other.type);
 			console.log("other.isCollected: " + other.isCollected);
+			other.isCollected = true;
 			if (other.type === BONUS_TILE.closedChest ) {
 				GlobalGameState.score += GlobalGameState.scoreForChest;
 				GlobalGameState.collectedChests += 1;
@@ -251,23 +252,33 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 
 		if (GlobalGameState.invincible) return false;
 		if (other.body.collisionType === collision.types.ENEMY_OBJECT && !other.isStunned && !other.isDead && !GlobalGameState.isGameOver) {
+			let mm = MultiplayerMessage.gameUpdate();
+			mm.injuredByEnemy = true;
+			mm.x = mapX;
+			mm.y = mapY;
+
 			if (other.enemyType === ENEMY_TYPES.cat) {
 				GlobalGameState.catchedByCats++;
 				GlobalGameState.energy -= GlobalGameState.energyLostByCat;
+				mm.enemyType = ENEMY_TYPES.cat;
 			} 
 			else if (other.enemyType === ENEMY_TYPES.spider) {
 				GlobalGameState.bittenBySpiders++;
 				GlobalGameState.energy -= GlobalGameState.energyLostBySpider;
+				mm.enemyType = ENEMY_TYPES.spider;
 			} 
 			else if (other.enemyType === ENEMY_TYPES.golem) {
 				GlobalGameState.catchedByGolems++;
 				GlobalGameState.energy -= GlobalGameState.energyLostByGolem;
+				mm.enemyType = ENEMY_TYPES.golem;
 			}
 
 			GlobalGameState.invincible = true;
 			this.flicker(GlobalGameState.playerInvincibleTime, () => {
 				GlobalGameState.invincible = false;
 			});
+
+			MultiplayerManager.get().sendAction(mm);
 		} 
 		else if (other.body.collisionType === my_collision_types.REMOTE_BOMB) {
 			if (other.isExploding) {
