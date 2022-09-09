@@ -23,7 +23,8 @@ export default class MagicProtectionCircle extends Sprite {
 		});
 
 		this.owner = owner;
-
+		this.thrownByPlayer = null;
+		
 		this.body = new Body(this);
 		this.body.addShape(new Rect(28, 32, 34, 30));
 		this.body.ignoreGravity = true;

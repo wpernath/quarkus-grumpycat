@@ -238,11 +238,15 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 			console.log("other.isCollected: " + other.isCollected);
 			other.isCollected = true;
 			if (other.type === BONUS_TILE.closedChest ) {
-				GlobalGameState.score += GlobalGameState.scoreForChest;
+				GlobalGameState.score += other.score;
+				GlobalGameState.bombs += other.numBombs;
+				GlobalGameState.magicBolts += other.numMagicBolts;
+				GlobalGameState.magicFirespins += other.numMagicFirespins;
+				GlobalGameState.magicNebulas += other.numMagicNebulas;
+				GlobalGameState.magicProtections += other.numMagicProtectionCircles;
 				GlobalGameState.collectedChests += 1;
 
-				let mm = MultiplayerMessage.gameUpdate();
-				mm.message = this.player.name + " has opened a CHEST!";
+				let mm = MultiplayerMessage.gameUpdate();				
 				mm.chestCollected = true;
 				mm.x = mapX;
 				mm.y = mapY;
@@ -286,6 +290,12 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 				GlobalGameState.energy -= GlobalGameState.energyLostByRemoteBomb;
 				GlobalGameState.hitByRemotePlayerBomb++;
 				GlobalGameState.invincible = true;
+
+				let mm = MultiplayerMessage.gameUpdate();
+				mm.hurtByBomb = true;
+				mm.x = mapX;
+				mm.y = mapY;
+
 				this.flicker(GlobalGameState.playerInvincibleTime, () => {
 					GlobalGameState.invincible = false;
 				});

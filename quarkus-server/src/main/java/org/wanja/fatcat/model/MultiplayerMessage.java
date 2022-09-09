@@ -29,16 +29,24 @@ public class MultiplayerMessage {
     public int x;
     public int y;
 
+    // Actions I did
     public boolean bombPlaced = false;
     public boolean gutterThrown = false;
     public boolean magicBolt = false;
     public boolean magicFirespin = false;
     public boolean magicNebula = false;
     public boolean magicProtectionCircle = false;
-    
     public boolean chestCollected = false;
     public boolean injuredByEnemy = false;
     public String enemyType;
+
+    // I was hurt by a remote player
+    public boolean hurtByBomb=false;
+    public boolean hurtByNebula=false;
+    public boolean hurtByBolt=false;
+    public boolean hurtByFirespin=false;
+    public Long remotePlayerIdWhoHurtMe=null;
+
     
     public long score = 0L;
     public int energy;

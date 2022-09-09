@@ -21,6 +21,7 @@ export default class MagicFirespin extends Sprite {
 			anchorPoint: new Vector2d(0.5, 0.5),
 		});
 
+		this.thrownByPlayer = null;
 		this.owner = owner;
 
 		this.body = new Body(this);

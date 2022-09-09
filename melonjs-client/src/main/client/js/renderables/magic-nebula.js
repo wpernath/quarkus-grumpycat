@@ -26,7 +26,8 @@ export default class MagicNebula extends Sprite {
 		this.mapX  = x;
 		this.mapY  = y;
 		this.owner = owner;
-
+		this.thrownByPlayer = null;
+		
 		this.body = new Body(this);
 		this.body.addShape(new Rect(28, 32, 34, 30));
 		this.body.ignoreGravity = true;

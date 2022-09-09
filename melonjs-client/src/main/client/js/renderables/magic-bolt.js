@@ -20,6 +20,8 @@ export default class MagicBolt extends Sprite {
             anchorPoint: new Vector2d(0.5,0.5),
 		});
 
+        this.thrownByPlayer = null;
+        
         this.owner = owner;
 		this.dx = dx;
 		this.dy = dy;

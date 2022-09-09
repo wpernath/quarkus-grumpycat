@@ -62,16 +62,6 @@ class BombEntity extends Sprite {
 	}
 
 	/**
-	 * update the entity
-	 */
-	update(dt) {
-		// call the parent method
-
-		super.update(dt);
-		return true;
-	}
-
-	/**
 	 * colision handler
 	 * (called when colliding with other objects)
 	 */

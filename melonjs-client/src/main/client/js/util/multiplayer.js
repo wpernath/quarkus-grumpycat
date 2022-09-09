@@ -71,6 +71,8 @@ export class MultiplayerMessage {
 		this.y = 0;
 		this.dx = 0;
 		this.dy = 0;
+
+		// actions I did
 		this.bombPlaced = false;
 		this.gutterThrown = false;
 		this.magicBolt = false;
@@ -80,6 +82,14 @@ export class MultiplayerMessage {
 		this.chestCollected = false;
 		this.injuredByEnemy = false;
 		this.enemyType = null;
+
+		// Being hurt by a remote player
+		this.hurtByBomb = false;
+		this.hurtByNebula = false;
+		this.hurtByBolt = false;
+		this.hurtByFirespin = false;
+		this.remotePlayerIdWhoHurtMe = null;
+
 		this.score = 0;
 		this.energy = 0;
         
