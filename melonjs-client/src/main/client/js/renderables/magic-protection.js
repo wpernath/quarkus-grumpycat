@@ -45,7 +45,7 @@ export default class MagicProtectionCircle extends BaseWeapon {
 				this.owner.spell = null;
 				GlobalGameState.invincible = false;
 			},
-			15000,
+			GlobalGameState.magicDurationTime,
 			true
 		);
 

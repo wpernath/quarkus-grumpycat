@@ -51,7 +51,7 @@ export default class MagicNebula extends BaseWeapon {
 				this.owner.spell = null;
 				this.owner.hasPlacedNebula = false;
 			},
-			15000,
+			GlobalGameState.magicDurationTime,
 			true
 		);
 	}

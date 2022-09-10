@@ -18,7 +18,8 @@ const GlobalGameState = {
 	// some configs
 	enemyStunnedTime: 5000, // ms
 	playerInvincibleTime: 3000, // ms
-
+	magicDurationTime: 15000,
+	
 	// adding score for different elements
 	scoreForPills: 10,
 	scoreForBombs: 50,

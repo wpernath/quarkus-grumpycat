@@ -42,7 +42,7 @@ export default class MagicFirespin extends BaseWeapon {
 				game.world.removeChild(this);
 				this.owner.spell = null;
 			},
-			10000,
+			GlobalGameState.magicDurationTime,
 			true
 		);
 
