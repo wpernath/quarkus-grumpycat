@@ -1,9 +1,8 @@
 import { collision, level, game, Sprite, Body, Rect } from "melonjs/dist/melonjs.module.js";
 import { BARRIER_TILE } from "../util/constants";
+import { BaseWeapon } from "./base-weapon";
 
-class ExplosionEntity extends Sprite {
-	borderLayer;
-	isExploding = false;
+class ExplosionEntity extends BaseWeapon {
 
 	/**
 	 * constructor
@@ -18,19 +17,6 @@ class ExplosionEntity extends Sprite {
 			frameheight: 256,
 		});
 
-		let layers = level.getCurrentLevel().getLayers();
-		layers.forEach((l) => {
-			if (l.name === "Frame") this.borderLayer = l;
-		});
-
-		this.body = new Body(this);
-		this.body.addShape(new Rect(0, 0, 96, 96));
-		this.body.ignoreGravity = true;
-		this.body.collisionType = collision.types.PROJECTILE_OBJECT;
-		this.body.setCollisionMask(collision.types.ENEMY_OBJECT);
-
-		// add animations
-		this.alwaysUpdate = true;
 		this.addAnimation("boom", [
             0,  1,  2 , 3 , 4 , 5 , 6 , 7 ,
             8,  9,  10, 11, 12, 13, 14, 15,
@@ -70,26 +56,6 @@ class ExplosionEntity extends Sprite {
 		});
 
         game.viewport.shake(50, 62*16);
-	}
-
-	/**
-	 * update the entity
-	 */
-	update(dt) {
-		// call the parent method
-
-		super.update(dt);
-		return true;
-	}
-
-	/**
-	 * colision handler
-	 * (called when colliding with other objects)
-	 */
-	onCollision(response, other) {
-		// Make all other objects solid
-
-		return false;
 	}
 }
 

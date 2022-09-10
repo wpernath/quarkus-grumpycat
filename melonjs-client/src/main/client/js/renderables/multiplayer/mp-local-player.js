@@ -25,7 +25,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 		this.tint = color;
 
 		// overwrite what type of collisions we want to see
-		this.body.setCollisionMask(my_collision_types.REMOTE_BOMB | my_collision_types.REMOTE_PLAYER | collision.types.ENEMY_OBJECT | collision.types.COLLECTABLE_OBJECT);
+		this.body.setCollisionMask(my_collision_types.REMOTE_PROJECTILE | my_collision_types.REMOTE_PLAYER | collision.types.ENEMY_OBJECT | collision.types.COLLECTABLE_OBJECT);
 
 		// set the display to follow our position on both axis
 		game.viewport.follow(this.pos, game.viewport.AXIS.BOTH, 0.1);
@@ -284,7 +284,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 
 			MultiplayerManager.get().sendAction(mm);
 		} 
-		else if (other.body.collisionType === my_collision_types.REMOTE_BOMB) {
+		else if (other.body.collisionType === my_collision_types.REMOTE_PROJECTILE ) {
 			if (other.isExploding) {
 				// we got hit by an exploding bomb thrown by a remote player
 				GlobalGameState.energy -= GlobalGameState.energyLostByRemoteBomb;

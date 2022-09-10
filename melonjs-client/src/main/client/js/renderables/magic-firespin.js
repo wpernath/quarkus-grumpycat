@@ -1,15 +1,15 @@
 import { Sprite, Body, Rect, collision, game, level, Vector2d, timer } from "melonjs";
 import { my_collision_types } from "../util/constants";
+import { BaseWeapon } from "./base-weapon";
 import ExplosionEntity from "./explosion";
 
 /**
  * Magic FireSpin: A firespin around your player's body. Anybody who is coming
  * too close to you will get burned.
  */
-export default class MagicFirespin extends Sprite {
+export default class MagicFirespin extends BaseWeapon {
 	VELOCITY = 0.5;
 	isStopped = false;
-	isExploding = true;
 
 	constructor(owner, x, y) {
 		super(x * 32 + 16, y * 32 + 16, {
@@ -21,15 +21,9 @@ export default class MagicFirespin extends Sprite {
 			anchorPoint: new Vector2d(0.5, 0.5),
 		});
 
-		this.thrownByPlayer = null;
 		this.owner = owner;
 
-		this.body = new Body(this);
 		this.body.addShape(new Rect(28, 32, 34, 30));
-		this.body.ignoreGravity = true;
-		this.body.collisionType = collision.types.PROJECTILE_OBJECT;
-		this.body.setCollisionMask(collision.types.ENEMY_OBJECT | my_collision_types.REMOTE_PLAYER);
-		this.body.isStatic = true;
 		this.alwaysUpdate = true;
 
 		this.addAnimation(
@@ -40,14 +34,6 @@ export default class MagicFirespin extends Sprite {
 			],
 			24
 		);
-
-		let layers = level.getCurrentLevel().getLayers();
-		this.mapWidth = level.getCurrentLevel().cols;
-		this.mapHeight = level.getCurrentLevel().rows;
-
-		layers.forEach((l) => {
-			if (l.name === "Frame") this.borderLayer = l;
-		});
 
 		this.setCurrentAnimation("spin");
 		this.timerId = timer.setTimeout(
@@ -60,17 +46,18 @@ export default class MagicFirespin extends Sprite {
 			true
 		);
 
+		this.isExploding = true;
 		this.currentStep = 0;
 		this.maxSteps = 45;
 		this.radius = 48;
 		this.maxHits = 5;
-		this.scale(2, 2);
+		//this.scale(2, 2);
 	}
 
 	update(dt) {
 		if (!this.isStopped) {
-			let x = 0; //this.radius * Math.cos(2 * Math.PI * this.currentStep / this.maxSteps);
-			let y = 0; //this.radius * Math.sin(2 * Math.PI * this.currentStep / this.maxSteps);
+			let x = this.radius * Math.cos(2 * Math.PI * this.currentStep / this.maxSteps);
+			let y = this.radius * Math.sin(2 * Math.PI * this.currentStep / this.maxSteps);
 
 			this.pos.x = this.owner.pos.x + x;
 			this.pos.y = this.owner.pos.y + y;
@@ -78,15 +65,6 @@ export default class MagicFirespin extends Sprite {
 			if (this.currentStep >= this.maxSteps) this.currentStep = 0;
 		}
 		return super.update(dt);
-	}
-
-	isWalkable(x, y) {
-		if (x < 0 || x >= this.mapWidth || y < 0 || y >= this.mapHeight) {
-			return false;
-		}
-		let tile = this.borderLayer.cellAt(x, y);
-		if (tile !== null) return false;
-		else return true;
 	}
 
 	onCollision(response, other) {

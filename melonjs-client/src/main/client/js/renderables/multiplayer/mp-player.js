@@ -16,7 +16,7 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 		this.invincible = false;
 
 		this.body.collisionType = my_collision_types.REMOTE_PLAYER;
-		this.body.setCollisionMask(collision.types.ENEMY_OBJECT | my_collision_types.REMOTE_BOMB | collision.types.PROJECTILE_OBJECT);
+		this.body.setCollisionMask(collision.types.ENEMY_OBJECT | my_collision_types.REMOTE_PROJECTILE | collision.types.PROJECTILE_OBJECT);
 
 		MultiplayerManager.get().addOnMessageCallback(async (event) => {
 			let message = event.message;
@@ -47,7 +47,7 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 				} 
 				else if (message.bombPlaced) {
 					let bomb = new BombEntity(this.pos.x, this.pos.y);
-					bomb.body.collisionType = my_collision_types.REMOTE_BOMB;
+					bomb.body.collisionType = my_collision_types.REMOTE_PROJECTILE;
 					bomb.body.setCollisionMask(collision.types.PLAYER_OBJECT | collision.types.ENEMY_OBJECT);
 					bomb.tint.copy(this.color);
 					bomb.thrownByPlayer = this.player;
