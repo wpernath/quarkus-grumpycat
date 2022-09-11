@@ -1,14 +1,14 @@
-import { NineSliceSprite, level, collision, Body, Rect } from "melonjs";
+import { NineSliceSprite, level, collision, Body, Rect, Sprite } from "melonjs";
 import { my_collision_types } from "../util/constants";
 
 
-export class BaseWeapon extends NineSliceSprite {
+export class BaseWeapon extends Sprite {
 	constructor(x, y, options) {
 		super(x, y, options);
 
 		// set the bodx for collision etc.
 		this.body = new Body(this);
-		this.body.addShape(new Rect(0, 0, options.width, options.height));
+		//this.body.addShape(new Rect(0, 0, options.width, options.height));
 		this.body.ignoreGravity = true;
         this.body.isStatic = true;
 		this.body.collisionType = collision.types.PROJECTILE_OBJECT;
