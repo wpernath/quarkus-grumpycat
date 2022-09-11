@@ -8,7 +8,7 @@ export class BaseWeapon extends Sprite {
 
 		// set the bodx for collision etc.
 		this.body = new Body(this);
-		//this.body.addShape(new Rect(0, 0, options.width, options.height));
+		this.body.addShape(new Rect(0, 0, options.width, options.height));
 		this.body.ignoreGravity = true;
         this.body.isStatic = true;
 		this.body.collisionType = collision.types.PROJECTILE_OBJECT;
