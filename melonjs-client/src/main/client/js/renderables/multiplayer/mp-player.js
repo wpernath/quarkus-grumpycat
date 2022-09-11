@@ -32,18 +32,34 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 				} 
 				else if( message.magicBolt ) {
 					this.throwMagicSpell(message.x, message.y, message.dx, message.dy, false);
+					this.spell.body.collisionType = my_collision_types.REMOTE_PROJECTILE;
+					this.spell.body.setCollisionMask(collision.types.PLAYER_OBJECT | collision.types.ENEMY_OBJECT);
+					this.spell.tint.copy(this.color);
+					this.spell.thrownByPlayer = this.player;
 				}
 				else if( message.chestCollected ) {
 
 				}
 				else if (message.magicNebula) {
 					this.throwMagicNebula(message.x, message.y, false);
+					this.spell.body.collisionType = my_collision_types.REMOTE_PROJECTILE;
+					this.spell.body.setCollisionMask(collision.types.PLAYER_OBJECT | collision.types.ENEMY_OBJECT);
+					this.spell.tint.copy(this.color);
+					this.spell.thrownByPlayer = this.player;
 				} 
 				else if (message.magicProtectionCircle) {
 					this.throwMagicProtectionCircle(message.x, message.y, false);
+					this.spell.body.collisionType = my_collision_types.REMOTE_PROJECTILE;
+					this.spell.body.setCollisionMask(collision.types.PLAYER_OBJECT | collision.types.ENEMY_OBJECT);
+					this.spell.tint.copy(this.color);
+					this.spell.thrownByPlayer = this.player;
 				} 
 				else if (message.magicFirespin) {
 					this.throwMagicFireSpin(message.x, message.y, false);
+					this.spell.body.collisionType = my_collision_types.REMOTE_PROJECTILE;
+					this.spell.body.setCollisionMask(collision.types.PLAYER_OBJECT | collision.types.ENEMY_OBJECT);
+					this.spell.tint.copy(this.color);
+					this.spell.thrownByPlayer = this.player;
 				} 
 				else if (message.bombPlaced) {
 					let bomb = new BombEntity(this.pos.x, this.pos.y);
@@ -76,7 +92,8 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 			this.flicker(GlobalGameState.playerInvincibleTime, () => {
 				this.invincible = false;
 			});
-		} else if (other.body.collisionType === collision.types.PROJECTILE_OBJECT) {
+		} 
+		else if (other.body.collisionType === collision.types.PROJECTILE_OBJECT) {
 			// a remote player is touched by our bomb
 			if (other.isExploding) {
 				this.invincible = true;

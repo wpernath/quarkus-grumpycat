@@ -101,6 +101,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 					let bY = mapY + dy;
 					
 					if ( this.spell == null && this.throwMagicSpell(bX, bY, dx, dy)) {
+						this.spell.tint.copy(this.color);
 						GlobalGameState.magicBolts--;
 						action.dx = dx;
 						action.dy = dy;
@@ -131,6 +132,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 			if (input.isKeyPressed("damage")) {
 				if( GlobalGameState.magicFirespins > 0 ) {
 					this.throwMagicFireSpin(mapX, mapY);
+					this.spell.tint.copy(this.color);
 					GlobalGameState.magicFirespins--;
 					action.magicFirespin = true;
 					MultiplayerManager.get().sendAction(action);
@@ -140,6 +142,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 			if (input.isKeyPressed("magic-barrier")) {
 				if( GlobalGameState.magicProtections > 0 ) {
 					this.throwMagicProtectionCircle(mapX, mapY);
+					this.spell.tint.copy(this.color);
 					GlobalGameState.magicProtections--;
 					action.magicProtectionCircle = true;
 					MultiplayerManager.get().sendAction(action);
@@ -149,6 +152,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 			if (input.isKeyPressed("magic-nebula")) {
 				if( GlobalGameState.magicNebulas > 0 ) {
 					this.throwMagicNebula(mapX, mapY);
+					this.spell.tint.copy(this.color);
 					GlobalGameState.magicNebulas--;
 					action.magicNebula = true;
 					MultiplayerManager.get().sendAction(action);
