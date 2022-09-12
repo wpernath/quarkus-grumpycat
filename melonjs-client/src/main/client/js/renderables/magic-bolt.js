@@ -59,7 +59,7 @@ export default class MagicBolt extends BaseWeapon {
 	}
 
     onCollision(response, other) {
-        if( other.body.collisionType === collision.types.ENEMY_OBJECT) {
+        if( other.body.collisionType === collision.types.ENEMY_OBJECT || other.body.collisionType === collision.types.PLAYER_OBJECT) {
             this.isStopped = true;
             this.pos.x = other.pos.x;
             this.pos.y = other.pos.y;
