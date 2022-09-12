@@ -1,5 +1,6 @@
 import { Sprite, Body, Rect, collision, game, level, Vector2d } from "melonjs";
 import { my_collision_types } from "../util/constants";
+import GlobalGameState from "../util/global-game-state";
 import { BaseWeapon } from "./base-weapon";
 import ExplosionEntity from "./explosion";
 
@@ -40,7 +41,7 @@ export default class MagicBolt extends BaseWeapon {
 	}
 
 	update(dt) {
-        if( !this.isStopped ) {
+        if( !this.isStopped && !GlobalGameState.isGameOver) {
             this.pos.x += this.dx * (dt * this.VELOCITY);
             this.pos.y += this.dy * (dt * this.VELOCITY);
             let mapX = Math.floor(this.pos.x / 32);

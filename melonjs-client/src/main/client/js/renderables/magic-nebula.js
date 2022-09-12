@@ -31,7 +31,8 @@ export default class MagicNebula extends BaseWeapon {
 		
 		this.body.addShape(new Rect(28, 32, 34, 30));
 		this.alwaysUpdate = true;
-
+		this.isExploding = true;
+		
 		this.addAnimation(
 			"spin",
 			[

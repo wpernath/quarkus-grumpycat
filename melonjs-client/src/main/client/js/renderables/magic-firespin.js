@@ -56,7 +56,7 @@ export default class MagicFirespin extends BaseWeapon {
 	}
 
 	update(dt) {
-		if (!this.isStopped) {
+		if (!this.isStopped && !GlobalGameState.isGameOver) {
 			let x = this.radius * Math.cos(2 * Math.PI * this.currentStep / this.maxSteps);
 			let y = this.radius * Math.sin(2 * Math.PI * this.currentStep / this.maxSteps);
 
