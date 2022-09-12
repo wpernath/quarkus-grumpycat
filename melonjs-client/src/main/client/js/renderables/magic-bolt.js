@@ -33,6 +33,10 @@ export default class MagicBolt extends BaseWeapon {
             this.isExploding = true;
             this.setCurrentAnimation("bruzzel");
         });
+
+        if( dy !== 0 ) {
+            this.rotate(1.5708);
+        }
 	}
 
 	update(dt) {
