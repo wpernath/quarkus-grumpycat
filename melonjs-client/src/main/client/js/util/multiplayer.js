@@ -1,4 +1,5 @@
 import CONFIG from "../../config";
+import { ENEMY_TYPES } from "../renderables/base-enemy";
 import { EventEmitter } from "./eventemitter";
 import GlobalGameState from "./global-game-state";
 import { LevelManager } from "./level";
@@ -70,6 +71,8 @@ export class MultiplayerMessage {
 		this.y = 0;
 		this.dx = 0;
 		this.dy = 0;
+
+		// actions I did
 		this.bombPlaced = false;
 		this.gutterThrown = false;
 		this.magicBolt = false;
@@ -77,6 +80,16 @@ export class MultiplayerMessage {
 		this.magicProtectionCircle = false;
 		this.magicFirespin = false;
 		this.chestCollected = false;
+		this.injuredByEnemy = false;
+		this.enemyType = null;
+
+		// Being hurt by a remote player
+		this.hurtByBomb = false;
+		this.hurtByNebula = false;
+		this.hurtByBolt = false;
+		this.hurtByFirespin = false;
+		this.remotePlayerIdWhoHurtMe = null;
+
 		this.score = 0;
 		this.energy = 0;
         
@@ -418,8 +431,10 @@ export class MultiplayerMessage {
 		 * @returns the refreshed game data
 		 */
 		async refreshGameData() {
-			let res = await fetch(this.getGameURL + this.multiplayerGame.id);
-			this.multiplayerGame = await res.json();
+			if( this.multiplayerGame !== null ) {
+				let res = await fetch(this.getGameURL + this.multiplayerGame.id);
+				this.multiplayerGame = await res.json();
+			}
 			return this.multiplayerGame;
 		}
 
@@ -629,5 +644,23 @@ export class MultiplayerMessage {
 				}
 			}
 			return playerNum;
+		}
+
+		/**
+		 * Returns an array of players which are in this game. Each array entry
+		 * could be NULL or a player instance.
+		 * 
+		 * @returns the array of players (zero based) in this game
+		 */
+		getPlayersFromGame() {
+			let players = [];
+			let theGame = this.multiplayerGame;
+			if( theGame !== null ) {
+				players[0] = theGame.player1 !== undefined ? theGame.player1 : null;
+				players[1] = theGame.player2 !== undefined ? theGame.player2 : null;
+				players[2] = theGame.player3 !== undefined ? theGame.player3 : null;
+				players[3] = theGame.player4 !== undefined ? theGame.player4 : null;
+			}
+			return players;
 		}
  }

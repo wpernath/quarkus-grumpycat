@@ -16,50 +16,61 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 		this.invincible = false;
 
 		this.body.collisionType = my_collision_types.REMOTE_PLAYER;
-		this.body.setCollisionMask(collision.types.ENEMY_OBJECT | my_collision_types.REMOTE_BOMB | collision.types.PROJECTILE_OBJECT);
+		this.body.setCollisionMask(collision.types.ENEMY_OBJECT | my_collision_types.REMOTE_PROJECTILE | collision.types.PROJECTILE_OBJECT);
 
 		MultiplayerManager.get().addOnMessageCallback(async (event) => {
 			let message = event.message;
 
 			// make sure we only interpret movements for THIS sprite
 			if (message.playerId === this.player.id) {
+				this.pos.x = message.x * 32 + 16;
+				this.pos.y = message.y * 32 + 16;
+
 				// only ours
 				if (message.gutterThrown) {
 					this.placeBorderTile(message.x + message.dx, message.y + message.dy, false);
 				} 
 				else if( message.magicBolt ) {
 					this.throwMagicSpell(message.x, message.y, message.dx, message.dy, false);
+					this.spell.body.collisionType = my_collision_types.REMOTE_PROJECTILE;
+					this.spell.body.setCollisionMask(collision.types.PLAYER_OBJECT | collision.types.ENEMY_OBJECT);
+					this.spell.tint.copy(this.color);
+					this.spell.thrownByPlayer = this.player;
+				}
+				else if( message.chestCollected ) {
+
 				}
 				else if (message.magicNebula) {
-					this.pos.x = message.x * 32 + 16;
-					this.pos.y = message.y * 32 + 16;
 					this.throwMagicNebula(message.x, message.y, false);
+					this.spell.body.collisionType = my_collision_types.REMOTE_PROJECTILE;
+					this.spell.body.setCollisionMask(collision.types.PLAYER_OBJECT | collision.types.ENEMY_OBJECT);
+					this.spell.tint.copy(this.color);
+					this.spell.thrownByPlayer = this.player;
 				} 
 				else if (message.magicProtectionCircle) {
-					this.pos.x = message.x * 32 + 16;
-					this.pos.y = message.y * 32 + 16;
 					this.throwMagicProtectionCircle(message.x, message.y, false);
+					this.spell.body.collisionType = my_collision_types.REMOTE_PROJECTILE;
+					this.spell.body.setCollisionMask(collision.types.PLAYER_OBJECT | collision.types.ENEMY_OBJECT);
+					this.spell.tint.copy(this.color);
+					this.spell.thrownByPlayer = this.player;
 				} 
 				else if (message.magicFirespin) {
-					this.pos.x = message.x * 32 + 16;
-					this.pos.y = message.y * 32 + 16;
 					this.throwMagicFireSpin(message.x, message.y, false);
+					this.spell.body.collisionType = my_collision_types.REMOTE_PROJECTILE;
+					this.spell.body.setCollisionMask(collision.types.PLAYER_OBJECT | collision.types.ENEMY_OBJECT);
+					this.spell.tint.copy(this.color);
+					this.spell.thrownByPlayer = this.player;
 				} 
 				else if (message.bombPlaced) {
-					this.pos.x = message.x * 32 + 16;
-					this.pos.y = message.y * 32 + 16;
-
 					let bomb = new BombEntity(this.pos.x, this.pos.y);
-					bomb.body.collisionType = my_collision_types.REMOTE_BOMB;
+					bomb.body.collisionType = my_collision_types.REMOTE_PROJECTILE;
 					bomb.body.setCollisionMask(collision.types.PLAYER_OBJECT | collision.types.ENEMY_OBJECT);
 					bomb.tint.copy(this.color);
 					bomb.thrownByPlayer = this.player;
 					game.world.addChild(bomb);
-				} else {
-					//console.log(" updating pos of " + this.name + " to " + this.pos );
+				} 
+				else {
 					// just movement
-					this.pos.x = message.x * 32 + 16;
-					this.pos.y = message.y * 32 + 16;
 					this.checkBonusTile(this.pos.x, this.pos.y, false);
 				}
 			}
@@ -81,7 +92,8 @@ export class MPRemotePlayerSprite extends BasePlayerSprite {
 			this.flicker(GlobalGameState.playerInvincibleTime, () => {
 				this.invincible = false;
 			});
-		} else if (other.body.collisionType === collision.types.PROJECTILE_OBJECT) {
+		} 
+		else if (other.body.collisionType === collision.types.PROJECTILE_OBJECT) {
 			// a remote player is touched by our bomb
 			if (other.isExploding) {
 				this.invincible = true;

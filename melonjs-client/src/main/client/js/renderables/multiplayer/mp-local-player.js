@@ -25,7 +25,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 		this.tint = color;
 
 		// overwrite what type of collisions we want to see
-		this.body.setCollisionMask(my_collision_types.REMOTE_BOMB | my_collision_types.REMOTE_PLAYER | collision.types.ENEMY_OBJECT | collision.types.COLLECTABLE_OBJECT);
+		this.body.setCollisionMask(my_collision_types.REMOTE_PROJECTILE | my_collision_types.REMOTE_PLAYER | collision.types.ENEMY_OBJECT | collision.types.COLLECTABLE_OBJECT);
 
 		// set the display to follow our position on both axis
 		game.viewport.follow(this.pos, game.viewport.AXIS.BOTH, 0.1);
@@ -101,6 +101,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 					let bY = mapY + dy;
 					
 					if ( this.spell == null && this.throwMagicSpell(bX, bY, dx, dy)) {
+						this.spell.tint.copy(this.color);
 						GlobalGameState.magicBolts--;
 						action.dx = dx;
 						action.dy = dy;
@@ -131,6 +132,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 			if (input.isKeyPressed("damage")) {
 				if( GlobalGameState.magicFirespins > 0 ) {
 					this.throwMagicFireSpin(mapX, mapY);
+					this.spell.tint.copy(this.color);
 					GlobalGameState.magicFirespins--;
 					action.magicFirespin = true;
 					MultiplayerManager.get().sendAction(action);
@@ -140,6 +142,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 			if (input.isKeyPressed("magic-barrier")) {
 				if( GlobalGameState.magicProtections > 0 ) {
 					this.throwMagicProtectionCircle(mapX, mapY);
+					this.spell.tint.copy(this.color);
 					GlobalGameState.magicProtections--;
 					action.magicProtectionCircle = true;
 					MultiplayerManager.get().sendAction(action);
@@ -149,6 +152,7 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 			if (input.isKeyPressed("magic-nebula")) {
 				if( GlobalGameState.magicNebulas > 0 ) {
 					this.throwMagicNebula(mapX, mapY);
+					this.spell.tint.copy(this.color);
 					GlobalGameState.magicNebulas--;
 					action.magicNebula = true;
 					MultiplayerManager.get().sendAction(action);
@@ -230,18 +234,23 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 	 * (called when colliding with other objects)
 	 */
 	onCollision(response, other) {
-		if (other.body.collisionType === collision.types.COLLECTABLE_OBJECT && !other.isCollected) {
-			let mapX = Math.floor(this.pos.x / 32);
-			let mapY = Math.floor(this.pos.y / 32);
+		let mapX = Math.floor(this.pos.x / 32);
+		let mapY = Math.floor(this.pos.y / 32);
 
+		if (other.body.collisionType === collision.types.COLLECTABLE_OBJECT && !other.isCollected) {
 			console.log("other.type: " + other.type);
 			console.log("other.isCollected: " + other.isCollected);
+			other.isCollected = true;
 			if (other.type === BONUS_TILE.closedChest ) {
-				GlobalGameState.score += GlobalGameState.scoreForChest;
+				GlobalGameState.score += other.score;
+				GlobalGameState.bombs += other.numBombs;
+				GlobalGameState.magicBolts += other.numMagicBolts;
+				GlobalGameState.magicFirespins += other.numMagicFirespins;
+				GlobalGameState.magicNebulas += other.numMagicNebulas;
+				GlobalGameState.magicProtections += other.numMagicProtectionCircles;
 				GlobalGameState.collectedChests += 1;
 
-				let mm = MultiplayerMessage.gameUpdate();
-				mm.message = this.player.name + " has opened a CHEST!";
+				let mm = MultiplayerMessage.gameUpdate();				
 				mm.chestCollected = true;
 				mm.x = mapX;
 				mm.y = mapY;
@@ -251,30 +260,46 @@ export class MPLocalPlayerSprite extends BasePlayerSprite {
 
 		if (GlobalGameState.invincible) return false;
 		if (other.body.collisionType === collision.types.ENEMY_OBJECT && !other.isStunned && !other.isDead && !GlobalGameState.isGameOver) {
+			let mm = MultiplayerMessage.gameUpdate();
+			mm.injuredByEnemy = true;
+			mm.x = mapX;
+			mm.y = mapY;
+
 			if (other.enemyType === ENEMY_TYPES.cat) {
 				GlobalGameState.catchedByCats++;
 				GlobalGameState.energy -= GlobalGameState.energyLostByCat;
+				mm.enemyType = ENEMY_TYPES.cat;
 			} 
 			else if (other.enemyType === ENEMY_TYPES.spider) {
 				GlobalGameState.bittenBySpiders++;
 				GlobalGameState.energy -= GlobalGameState.energyLostBySpider;
+				mm.enemyType = ENEMY_TYPES.spider;
 			} 
 			else if (other.enemyType === ENEMY_TYPES.golem) {
 				GlobalGameState.catchedByGolems++;
 				GlobalGameState.energy -= GlobalGameState.energyLostByGolem;
+				mm.enemyType = ENEMY_TYPES.golem;
 			}
 
 			GlobalGameState.invincible = true;
 			this.flicker(GlobalGameState.playerInvincibleTime, () => {
 				GlobalGameState.invincible = false;
 			});
+
+			MultiplayerManager.get().sendAction(mm);
 		} 
-		else if (other.body.collisionType === my_collision_types.REMOTE_BOMB) {
+		else if (other.body.collisionType === my_collision_types.REMOTE_PROJECTILE ) {
 			if (other.isExploding) {
 				// we got hit by an exploding bomb thrown by a remote player
 				GlobalGameState.energy -= GlobalGameState.energyLostByRemoteBomb;
 				GlobalGameState.hitByRemotePlayerBomb++;
 				GlobalGameState.invincible = true;
+
+				let mm = MultiplayerMessage.gameUpdate();
+				mm.hurtByBomb = true;
+				mm.x = mapX;
+				mm.y = mapY;
+
 				this.flicker(GlobalGameState.playerInvincibleTime, () => {
 					GlobalGameState.invincible = false;
 				});

@@ -63,7 +63,7 @@ export const my_collision_types = {
 	/**
 	 * A remote bomb in multiplayer games
 	 */
-	REMOTE_BOMB: collision.types.USER << 1,
+	REMOTE_PROJECTILE: collision.types.USER << 1,
 };
 
 /**
@@ -111,9 +111,9 @@ export const ENEMY_TILE = {
 
 export function bindKeys() {
 	input.bindKey(input.KEY.ALT, "magic");
-	input.bindKey(input.KEY.Q, "damage");
-	input.bindKey(input.KEY.E, "magic-barrier");
-	input.bindKey(input.KEY.R, "magic-nebula");
+	input.bindKey(input.KEY.Q, "damage", true);
+	input.bindKey(input.KEY.E, "magic-barrier", true);
+	input.bindKey(input.KEY.R, "magic-nebula", true);
 	input.bindKey(input.KEY.SHIFT, "barrier");
 	input.bindKey(input.KEY.LEFT, "left");
 	input.bindKey(input.KEY.A, "left");

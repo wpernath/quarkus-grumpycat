@@ -172,12 +172,9 @@ class GameOverBack extends Container {
 	 * @returns array of player
 	 */
 	static playersFromGame(theGame) {
-		let players = [];
-		players[0] = theGame.player1 !== undefined ? theGame.player1 : null;
-		players[1] = theGame.player2 !== undefined ? theGame.player2 : null;
-		players[2] = theGame.player3 !== undefined ? theGame.player3 : null;
-		players[3] = theGame.player4 !== undefined ? theGame.player4 : null;
-
+		let players = MultiplayerManager.get().getPlayersFromGame();
+		if( players === null ) return;
+		
 		for( let i=0; i < players.length; i++ ) {
 			if( players[i] !== null ) {
 				let p = players[i];
@@ -215,6 +212,9 @@ export default class MultiplayerGameOverScreen extends Stage {
 	constructor(isGameOver = true) {
 		super();
 		this.isGameOver = isGameOver;
+		this.back = null;
+		this.emitter = null;
+		this.handler = null;
 	}
 
 	/**
@@ -294,8 +294,12 @@ export default class MultiplayerGameOverScreen extends Stage {
 		input.unbindKey(input.KEY.ENTER);
 		input.unbindPointer(input.pointer.LEFT);
 		event.off(event.KEYUP, this.handler);
-		game.world.removeChild(this.back);
-		game.world.removeChild(this.emitter);
+		if( this.back !== null ) {
+			game.world.removeChild(this.back);
+		}
+		if( this.emitter !== null ) {
+			game.world.removeChild(this.emitter);
+		}
 		GlobalGameState.reset();
 		MultiplayerManager.get().closeActiveGame();
 	}

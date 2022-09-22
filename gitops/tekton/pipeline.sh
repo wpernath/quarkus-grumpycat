@@ -203,7 +203,7 @@ echo "   FORCE_SETUP  : $FORCE_SETUP "
   # install secret and configmap for accessing ARgoCD
   if [ -n $ARGO_USER ]; then
     info "Installing ArgoCD Secret and ConfigMap..."
-    cat > /tmp/secret.yaml <<-EOF
+    cat > /tmp/secret-argo.yaml <<-EOF
 apiVersion: v1
 kind: Secret
 metadata:
@@ -219,7 +219,6 @@ metadata:
 data:
   ARGOCD_SERVER: $ARGO_SERVER
 EOF
-    oc apply -f /tmp/secret.yaml -n $TARGET_NAMESPACE
   fi
 
   # installing secrets to access github and quay.io
@@ -260,6 +259,10 @@ EOF
   fi
 
   oc apply -f /tmp/secret.yaml -n $TARGET_NAMESPACE
+
+  if [ -n $ARGO_USER ]; then
+    oc apply -f /tmp/secret-argo.yaml -n $TARGET_NAMESPACE
+  fi
 }
 
 

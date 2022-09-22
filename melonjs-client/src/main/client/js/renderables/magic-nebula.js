@@ -1,5 +1,7 @@
 import { Sprite, Body, Rect, collision, game, level, Vector2d, timer } from "melonjs";
 import { my_collision_types } from "../util/constants";
+import GlobalGameState from "../util/global-game-state";
+import { BaseWeapon } from "./base-weapon";
 
 
 /**
@@ -8,7 +10,7 @@ import { my_collision_types } from "../util/constants";
  * think this would be the player and are trying to reach it. 
  * If they reached it, they get injured (spiders) or stunned (cat, golem)
  */
-export default class MagicNebula extends Sprite {
+export default class MagicNebula extends BaseWeapon {
 	isExploding = true;
 	mapX;
 	mapY;
@@ -26,16 +28,11 @@ export default class MagicNebula extends Sprite {
 		this.mapX  = x;
 		this.mapY  = y;
 		this.owner = owner;
-
-		this.body = new Body(this);
+		
 		this.body.addShape(new Rect(28, 32, 34, 30));
-		this.body.ignoreGravity = true;
-		this.body.isStatic = true;
-				
-		this.body.collisionType = collision.types.PROJECTILE_OBJECT;
-		this.body.setCollisionMask(collision.types.ENEMY_OBJECT | my_collision_types.REMOTE_PLAYER);
 		this.alwaysUpdate = true;
-
+		this.isExploding = true;
+		
 		this.addAnimation(
 			"spin",
 			[
@@ -45,14 +42,7 @@ export default class MagicNebula extends Sprite {
 			24
 		);
 
-		let layers = level.getCurrentLevel().getLayers();
-		this.mapWidth = level.getCurrentLevel().cols;
-		this.mapHeight = level.getCurrentLevel().rows;
 		this.maxHits = 5;
-
-		layers.forEach((l) => {
-			if (l.name === "Frame") this.borderLayer = l;
-		});
 
 		this.owner.hasPlacedNebula = true;
 		this.setCurrentAnimation("spin");
@@ -63,22 +53,9 @@ export default class MagicNebula extends Sprite {
 				this.owner.spell = null;
 				this.owner.hasPlacedNebula = false;
 			},
-			15000,
+			GlobalGameState.magicDurationTime,
 			true
 		);
-	}
-
-	update(dt) {
-		return super.update(dt);
-	}
-
-	isWalkable(x, y) {
-		if (x < 0 || x >= this.mapWidth || y < 0 || y >= this.mapHeight) {
-			return false;
-		}
-		let tile = this.borderLayer.cellAt(x, y);
-		if (tile !== null) return false;
-		else return true;
 	}
 
 	onCollision(response, other) {

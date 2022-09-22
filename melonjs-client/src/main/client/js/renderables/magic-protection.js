@@ -1,16 +1,16 @@
 import { Sprite, Body, Rect, collision, game, level, Vector2d, timer } from "melonjs";
 import { my_collision_types } from "../util/constants";
 import GlobalGameState from "../util/global-game-state";
+import { BaseWeapon } from "./base-weapon";
 
 
 /**
  * Magic Protection Circle: This is a spell which circles around the player and
  * protects him 15sec long from being injured
  */
-export default class MagicProtectionCircle extends Sprite {
+export default class MagicProtectionCircle extends BaseWeapon {
 	VELOCITY = 0.5;
 	isStopped = false;
-	isExploding = true;
 
 	constructor(owner, x, y) {
 		super(x * 32 + 16, y * 32 + 16, {
@@ -23,13 +23,8 @@ export default class MagicProtectionCircle extends Sprite {
 		});
 
 		this.owner = owner;
-
-		this.body = new Body(this);
+		
 		this.body.addShape(new Rect(28, 32, 34, 30));
-		this.body.ignoreGravity = true;
-		this.body.isStatic = true;
-		this.body.collisionType = collision.types.PROJECTILE_OBJECT;
-		this.body.setCollisionMask(collision.types.NO_OBJECT);
 		this.alwaysUpdate = true;
 
 		this.addAnimation(
@@ -41,14 +36,6 @@ export default class MagicProtectionCircle extends Sprite {
 			24
 		);
 
-		let layers = level.getCurrentLevel().getLayers();
-		this.mapWidth = level.getCurrentLevel().cols;
-		this.mapHeight = level.getCurrentLevel().rows;
-
-		layers.forEach((l) => {
-			if (l.name === "Frame") this.borderLayer = l;
-		});
-
 		this.setCurrentAnimation("spin");
 		GlobalGameState.invincible = true;
 		this.timerId = timer.setTimeout(
@@ -58,7 +45,7 @@ export default class MagicProtectionCircle extends Sprite {
 				this.owner.spell = null;
 				GlobalGameState.invincible = false;
 			},
-			15000,
+			GlobalGameState.magicDurationTime,
 			true
 		);
 
@@ -80,15 +67,6 @@ export default class MagicProtectionCircle extends Sprite {
 			if (this.currentStep >= this.maxSteps) this.currentStep = 0;
 		}
 		return super.update(dt);
-	}
-
-	isWalkable(x, y) {
-		if (x < 0 || x >= this.mapWidth || y < 0 || y >= this.mapHeight) {
-			return false;
-		}
-		let tile = this.borderLayer.cellAt(x, y);
-		if (tile !== null) return false;
-		else return true;
 	}
 
 	onCollision(response, other) {
