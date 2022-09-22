@@ -15,12 +15,13 @@ images:
 
 # generate a configmap 
 configMapGenerator:
-  # Cat - Client ConfigMap, note that the client app runs entirely on the browser, 
-  # so we need to use the external URL of the grumpycat server service
+  # !!! Cat - Client ConfigMap, note that the client app runs entirely on the browser, 
+  # !!! so we need to use the external URL of the grumpycat server service as
+  # !!! APPLICATION_BASESERVERURL
   # 
   - name: client-config
     literals:
-      - APPLICATION_BASESERVERURL=http://cat-server-grumpycat.apps.work.ocp.lan/
+      - APPLICATION_BASESERVERURL=http://cat-server-grumpycat.apps.cluster-bqcwr.bqcwr.sandbox1125.opentlc.com/
   # Grumpycat Server configmap, just point to the internal service name of the kafka service
   - name: server-config
     literals:

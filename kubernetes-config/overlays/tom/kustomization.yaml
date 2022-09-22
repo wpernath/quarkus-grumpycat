@@ -1,6 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
+namespace: grumpycat
 resources:
 - ../../base
 
@@ -20,7 +20,7 @@ configMapGenerator:
   # 
   - name: client-config
     literals:
-      - APPLICATION_BASESERVERURL=http://cat-server-quarkus-grumpycat.apps.cat.rhepds.com/
+      - APPLICATION_BASESERVERURL=http://cat-server-grumpycat.apps.cat.rhepds.com/
   # Grumpycat Server configmap, just point to the internal service name of the kafka service
   - name: server-config
     literals:
