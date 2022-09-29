@@ -50,7 +50,7 @@ services:
       - catsdb
       - zookeeper
       - kafka
-    image: quay.io/wpernath/quarkus-grumpycat:v0.6.3
+    image: quay.io/wpernath/quarkus-grumpycat:v0.6.4
     ports:
       - "9001:8080"
     restart: always
@@ -65,7 +65,7 @@ services:
   cat-client: 
     depends_on:
       - cat-server
-    image: quay.io/wpernath/grumpycat-melonjs:v0.6.3
+    image: quay.io/wpernath/grumpycat-melonjs:v0.6.4
     ports:
       - "8086:8088"
     restart: always
