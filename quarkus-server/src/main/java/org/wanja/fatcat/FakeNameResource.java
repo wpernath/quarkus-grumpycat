@@ -3,7 +3,7 @@ package org.wanja.fatcat;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
-import com.github.javafaker.Faker;
+import net.datafaker.Faker;
 
 @Path("/faker")
 public class FakeNameResource {

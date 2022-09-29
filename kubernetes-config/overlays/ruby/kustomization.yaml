@@ -20,7 +20,7 @@ configMapGenerator:
   # 
   - name: client-config
     literals:
-      - APPLICATION_BASESERVERURL=http://cat-server-grumpycat.apps.work.ocp.lan/
+      - APPLICATION_BASESERVERURL=http://cat-server-grumpycat.apps.ruby.rhepds.com/
   # Grumpycat Server configmap, just point to the internal service name of the kafka service
   - name: server-config
     literals:
