@@ -1,4 +1,4 @@
-
+# Quarkus GrumpyCat
 ![Quarkus GrumpyCat](./melonjs-client/src/main/client/data/img/GrumpyCat-Title.png)
 
 This Game uses Quarkus, the Supersonic Subatomic Java Framework and HTML 5 / JavaScript.
@@ -81,13 +81,6 @@ The winner of the match is the player who has a higher score than all others or 
 
 And do not forget: There are still other enemies who can hit you!
 
-### Future of multi player
-I am currently working on specialied multi player features for the player
-- A magic bolt (flying into the direction where they were fired, killing or stunning enemies and players)
-- A magic protection shield around yourself (15 seconds). Enemies or other players can't hurt you
-- A magic fire circle around yourself (15 seconds or hitting up to 5 enemies / players). 
-- A magic invisible nebula around yourself (enemies can see and thus can't attack you, enemies might find another player to attack them in this time)
-
 
 ## Running the applications in dev mode
 You need at least Java 11 and Maven 3.8.5 to develop for this project. You also need to install NodeJS for the client. 
@@ -138,11 +131,8 @@ To make use of all GitOps features, have a look at the documentation inside the 
 
 ## Roadmap
 
-- In the near future there will also be an EnemyMovementResource to store - well - the enemy's movements, as my plan to calculate new positions of the enemies based on current PlayerMovement doesn't work properly (timing issue).
-
 - Refactoring of the JavaScript stuff. I mainly have used this project to learn some JavaScript. Now it's time to refactor everything and to use some more fancy methods to do the same.
 
-- Do not directly use the Player- / EnemyMovement to store the data in the database, but use Apache Kafka or Streams to take the data and then use a Consumer to store the data asynchronously in the database. 
 
 ## About the graphics
 The map graphics are coming from [LPC Terrain](https://opengameart.org/content/tiled-terrains) and all its authors. Special thanks to all of them!
