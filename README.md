@@ -1,6 +1,5 @@
 
-
-#![Quarkus GrumpyCat](./melonjs-client/src/main/client/data/img/GrumpyCat-Title.png)
+![Quarkus GrumpyCat](./melonjs-client/src/main/client/data/img/GrumpyCat-Title.png)
 
 This Game uses Quarkus, the Supersonic Subatomic Java Framework and HTML 5 / JavaScript.
 
@@ -11,6 +10,8 @@ All client game logic is currently coded with JavaScript and [MelonJS](https://g
 ## The Game
 
 This game was inspired by the old Fat-Cat game and by PacMan. You're controlling a dog in a maze which needs to eat all food without being caught by a grumpy cat or other enemies. 
+
+It also supports multi player gaming. A host can invite up to 3 other players who can join a multi player session. The winner of such a session is "last dog standing" or the player who has collected most points.
 
 ### How to play (single player)
 Right now you can control the dog with arrow keys UP, DOWN, LEFT & RIGHT and with W, A, S, D. More keys are:
@@ -48,6 +49,8 @@ There are different bonus tiles to be collected.
   - brown: +3 magic firespins
   - green: +3 magic protection circles
   - violet: +3 magic nebula
+
+![Bonus Tiles](./docs/37E7903F-54F1-40A4-8E73-9DB6198D4BD2.jpeg)
 
 ### Life demo
 There is a demo of this game running [here](http://cat-client-grumpycat.apps.ruby.rhepds.com). 
@@ -87,13 +90,16 @@ I am currently working on specialied multi player features for the player
 
 
 ## Running the applications in dev mode
+You need at least Java 11 and Maven 3.8.5 to develop for this project. You also need to install NodeJS for the client. 
 
+### Compiling & Running server
 First you need to startup the server by getting into `quarkus-server` and executing:
 ```shell script
 cd quarkus-server
 ./mvnw compile quarkus:dev
 ```
 
+### Compiling & Running client
 Then you need to open another terminal window and need to get into the client and executing:
 ```shell script
 cd melonjs-client
@@ -123,70 +129,12 @@ The app is then available under `http://localhost:8085` in your browser.
 ## Running on Kubernetes / OpenShift
 
 ### OpenShift / Kubernetes image deployment in a GitOps way
-There are precompiled images available on `quay.io/wpernath/quarkus-grumpycat`. You can either use `latest` tag or use one of the `vx.y.z` tags.
-
-NOTE, for this approach, you need to have the following Operators installed in your OpenShift / Kubernetes cluster:
-
-- [Crunchy Data Postgres Operator](https://operatorhub.io/operator/postgresql)
-- [Strimzi Kafka Operator](https://operatorhub.io/operator/strimzi-kafka-operator)  
-
-Just have a look into the [kubernetes-config directory](kubernetes-config). Then apply the `overlays/dev` configuration as usual, after making sure the config maps are set according to your target namespace
-
-```shell
-oc login <log into your openshift cluster>
-oc new-project grumpy-test
-oc apply -k kubernetes-config/overlays/dev
-```
-
-This will automatically install a database, the Kafka service and the latest DEV versions of the App.
-
-To delete the app, use:
-
-```shell 
-oc delete -k kubernetes-config/overlays/dev
-```
-
+Please have a look [here](./kubernetes-config/README.md)
 
 ### Using full featured GitOps
-To make use of all GitOps features, have a look at the `gitops` folder of this project. 
+To make use of all GitOps features, have a look at the documentation inside the [gitops](./gitops/README.md) folder of this project. 
 
-Your OpenShift / Kubernetes cluster needs to have the following Operators installed (in addition to Strimzi and Crunchy PGO):
 
-- [OpenShift Pipeline (or Tekton Pipeline)](https://operatorhub.io/operator/tektoncd-operator)
-- [OpenShift GitOps (or an ArgoCD instance)](https://operatorhub.io/operator/argocd-operator)
-
-To install the `cat-ci` project, call:
-
-```shell
-./gitops/tekton/pipeline.sh init \
-	--force \
-	--git-user <your git user> \
-	--git-password <your git password> \
-	--registry-user <your quay.io user> \
-	--registry-password <your quay.io password>
-```
-
-To install the `cat-dev` and `cat-stage` projects, call
-
-```shell
-oc apply -k ./gitops/argocd
-```
-
-To start a pipeline build, call
-
-```shell
-./gitops/tekton/pipeline.sh build \
-	-u <your quay.io user>
-	-p <your quay.io password>
-```
-
-To stage your version of quarkus-grumpycat, call something like
-
-```shell
-./gitops/tekton/pipeline.sh stage -r v0.2.4
-```
-
-This creates a new branch in github.com and tags the current images on quay.io.
 
 ## Roadmap
 

@@ -1,6 +1,14 @@
 # Kubernetes Configuration files
 This folder is a quick copy of the [grumpycat-config](https://github.com/wpernath/grumpycat-config) repository. It's here to make things easier for you to consume the app on OpenShift.
 
+## Preparation
+There are precompiled images available on `quay.io/wpernath/quarkus-grumpycat`. You can either use `latest` tag or use one of the `vx.y.z` tags.
+
+NOTE, for this approach, you need to have the following Operators installed in your OpenShift / Kubernetes cluster:
+
+- [Crunchy Data Postgres Operator](https://operatorhub.io/operator/postgresql)
+- [Strimzi Kafka Operator](https://operatorhub.io/operator/strimzi-kafka-operator)  
+
 ## Installation
 Simply log into your OpenShift cluster and then execute
 

@@ -1,9 +1,6 @@
-# Getting GitOps. 
-## GitOps sample
-
-This is the sample discussed in chapter 5. It's about using Tekton and ArgoCD. 
-
+# GitOps Setup
 You have to do the following three steps in order to setup the environment. 
+If you want to understand what is going on here, please have a look at the following book, which you can download for free [here](https://developers.redhat.com/e-books/getting-gitops-practical-platform-openshift-argo-cd-and-tekton)
 
 ## 1. Prepare your environment
 
