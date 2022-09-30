@@ -1,4 +1,6 @@
-# quarkus-grumpycat game
+# Quarkus GrumpyCat
+
+![Quarkus GrumpyCat](./melonjs-client/src/main/client/data/img/GrumpyCat-Title.png)
 
 This Game uses Quarkus, the Supersonic Subatomic Java Framework and HTML 5 / JavaScript.
 
