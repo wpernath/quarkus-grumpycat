@@ -83,24 +83,7 @@ And do not forget: There are still other enemies who can hit you!
 
 
 ## Running the applications in dev mode
-You need at least Java 11 and Maven 3.8.5 to develop for this project. You also need to install NodeJS for the client. 
-
-### Compiling & Running server
-First you need to startup the server by getting into `quarkus-server` and executing:
-```shell script
-cd quarkus-server
-./mvnw compile quarkus:dev
-```
-
-### Compiling & Running client
-Then you need to open another terminal window and need to get into the client and executing:
-```shell script
-cd melonjs-client
-npm install
-npm run dev
-```
-
-Make sure that the `environment` variable in `melonjs-client/src/config.js` is set to `local`. 
+Please have a look at the [contributors guide](./CONTRIBUTING.md).
 
 ## Running on Docker / Podman
 There are container images ready to be used on [Quay.io](https://quay.io/wpernath/quarkus-grumpycat). Use this command to pull the images to your local repository:
