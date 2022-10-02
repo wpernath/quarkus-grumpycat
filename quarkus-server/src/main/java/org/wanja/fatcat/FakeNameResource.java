@@ -10,7 +10,7 @@ public class FakeNameResource {
     
     @GET
     public String fakeName() {
-        Faker f = Faker.instance();
+        Faker f = new Faker();
         return f.ancient().hero() + " " + f.cat().name();
     }
 }
