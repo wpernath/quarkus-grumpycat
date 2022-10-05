@@ -1,4 +1,4 @@
-package org.wanja.fatcat.map;
+package org.wanja.grumpycat.map;
 
 import java.util.List;
 import java.util.Set;

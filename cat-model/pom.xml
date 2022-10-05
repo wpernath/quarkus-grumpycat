@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.wanja.grumpycat</groupId>
   <artifactId>cat-model-parent</artifactId>
-  <version>v0.6.5</version>
+  <version>0.6.5</version>
   <packaging>pom</packaging>
   <name>Cat Model - Parent</name>
   <modules>

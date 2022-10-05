@@ -1,4 +1,4 @@
-package org.wanja.fatcat.map;
+package org.wanja.grumpycat.map;
 
 public class LayerProperty {
     public String name;

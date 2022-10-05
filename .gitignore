@@ -49,7 +49,19 @@ melonjs-client/package-lock.json
 melonjs-client/target/
 melonjs-client/src/main/client/config.js
 
+cat-client/node/
+cat-client/node_modules/
+cat-client/public/
+cat-client/dist/
+cat-client/src/main/resources/META-INF/resources/generated/*
+.DS_Store
+cat-client/package-lock.json
+cat-client/target/
+cat-client/src/main/client/config.js
+
 quarkus-server/target/
+cat-server/target/
+
 *.class
 
 
