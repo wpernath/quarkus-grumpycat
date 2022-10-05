@@ -1,0 +1,54 @@
+/*!
+	 *  Spatial Plugin - Adds support for stereo and 3D audio where Web Audio is supported.
+	 *  
+	 *  howler.js v2.2.3
+	 *  howlerjs.com
+	 *
+	 *  (c) 2013-2020, James Simpson of GoldFire Studios
+	 *  goldfirestudios.com
+	 *
+	 *  MIT License
+	 */
+
+/*!
+ *  howler.js v2.2.3
+ *  howlerjs.com
+ *
+ *  (c) 2013-2020, James Simpson of GoldFire Studios
+ *  goldfirestudios.com
+ *
+ *  MIT License
+ */
+
+/*!
+ * Sizzle CSS Selector Engine v2.3.6
+ * https://sizzlejs.com/
+ *
+ * Copyright JS Foundation and other contributors
+ * Released under the MIT license
+ * https://js.foundation/
+ *
+ * Date: 2021-02-16
+ */
+
+/*!
+ * jQuery JavaScript Library v3.6.1
+ * https://jquery.com/
+ *
+ * Includes Sizzle.js
+ * https://sizzlejs.com/
+ *
+ * Copyright OpenJS Foundation and other contributors
+ * Released under the MIT license
+ * https://jquery.org/license
+ *
+ * Date: 2022-08-26T17:52Z
+ */
+
+/*!
+ * melonJS Game Engine - v13.4.0
+ * http://www.melonjs.org
+ * melonjs is licensed under the MIT License.
+ * http://www.opensource.org/licenses/mit-license
+ * @copyright (C) 2011 - 2022 Olivier Biot (AltByte Pte Ltd)
+ */
