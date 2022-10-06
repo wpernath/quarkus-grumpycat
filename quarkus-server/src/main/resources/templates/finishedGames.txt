@@ -1,0 +1,7 @@
+This report lists all currently finished games
+
+ID,Time,player1name,player2name,player3name,player4name
+{#for game in games}
+    {game.id},{game.timeStarted},{game.player1.name},{game.player2 ? game.player2.name : "Unused"},{game.player3 ? game.player3.name : "Unused"},{game.player4 ? game.player4.name : "Unused"}
+{/for}
+

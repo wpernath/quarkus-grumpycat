@@ -1,0 +1,24 @@
+{! this is a comment !}
+Report for: {config:['quarkus.application.name']} {config:['application.version']}
+
+This report lists all currently open games
+{! the same as !}
+{|This section is not parsed by qute|}
+
+{#if !games.isEmpty }
+ID,Time,player1name,player2name,player3name,player4name
+
+{#each games}
+    {#let game=it}
+    {game.id},{game.timeStarted},{game.player1.name},{game.player2 ? game.player2.name : "Unused"},{game.player3 ? game.player3.name : "Unused"},{game.player4 ? game.player4.name : "Unused"}
+    {/let}
+{/each}
+
+
+{#for game in games}
+    this could be done as well, instead of #each ..
+{/for}
+
+{#else}
+There are NO open games available
+{/if}
