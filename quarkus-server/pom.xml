@@ -49,6 +49,10 @@
       <version>1.0.3</version>
     </dependency>
 
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-resteasy-reactive-qute</artifactId>
+    </dependency>
     
     <dependency>
       <groupId>io.quarkus</groupId>
