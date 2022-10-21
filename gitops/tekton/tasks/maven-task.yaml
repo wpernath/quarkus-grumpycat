@@ -36,7 +36,8 @@ spec:
       default: "."
   steps:
     - name: mvn-setup
-      image: docker.io/maven:3.8-eclipse-temurin-17-focal
+      #image: docker.io/maven:3.8-eclipse-temurin-17-focal
+      image: registry.access.redhat.com/ubi8/openjdk-17:1.14-4.1665493371
       workingDir: $(workspaces.source.path)/$(params.CONTEXT_DIR)
       script: |
         echo "Maven version:"
@@ -45,8 +46,11 @@ spec:
         echo "Java version:"
         java -version
 
+        echo "Home dir: $HOME"
+
     - name: mvn-goals
-      image: docker.io/maven:3.8-eclipse-temurin-17-focal
+      #image: docker.io/maven:3.8-eclipse-temurin-17-focal
+      image: registry.access.redhat.com/ubi8/openjdk-17:1.14-4.1665493371
       workingDir: $(workspaces.source.path)/$(params.CONTEXT_DIR)
       command: ["/usr/bin/mvn"]
       args:
