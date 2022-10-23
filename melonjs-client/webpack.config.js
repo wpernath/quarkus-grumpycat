@@ -8,8 +8,7 @@ require("@babel/register");
 module.exports = {
 	entry: ["./src/main/client/index.js"],
 	target: "web",
-	output: {
-		//path: __dirname + "/src/main/resources/META-INF/resources/generated/",
+	output: {		
 		path: __dirname + "/target/classes/META-INF/resources/generated/",
 		filename: "grumpycat.bundle.js",
 	},

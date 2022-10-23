@@ -33,7 +33,7 @@
     "core-js": "^3.24.1",
     "css-loader": "^6.7.1",
     "jquery": "^3.6.1",
-    "melonjs": "^14.0.0",
+    "melonjs": "^14.0.2",
     "rollup": "^2.75.7",
     "screenfull": "^6.0.2",
     "style-loader": "^3.3.1"
