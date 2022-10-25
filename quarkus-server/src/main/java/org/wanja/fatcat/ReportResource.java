@@ -8,7 +8,6 @@ import javax.ws.rs.core.MediaType;
 
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
-import io.quarkus.security.identity.SecurityIdentity;
 import io.smallrye.common.annotation.Blocking;
 
 @Path("/reports")
@@ -21,7 +20,7 @@ public class ReportResource {
     @Inject
     SecurityIdentity identity;
     */
-    
+
     @Inject
     MultiPlayerResource multiPlayerResource;
 
