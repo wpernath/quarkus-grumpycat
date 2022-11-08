@@ -20,8 +20,8 @@ public class ReportResource {
     @Inject
     Template openGames;
 
-    @Inject
-    SecurityIdentity identity;
+    //@Inject
+    //SecurityIdentity identity;
 
     @Inject
     MultiPlayerResource multiPlayerResource;
