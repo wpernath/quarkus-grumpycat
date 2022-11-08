@@ -76,7 +76,7 @@
             </goals>
             <phase>generate-resources</phase>
             <configuration>
-              <arguments>install --unsafe-perm</arguments>
+              <arguments>install --unsafe-perm --unsafe-perm</arguments>
             </configuration>
           </execution>
 
