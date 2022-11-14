@@ -1,4 +1,4 @@
-import { Stage, state, game, event, level, Light2d, Vector2d, ColorLayer } from "melonjs"
+import { Stage, state, game, event, level, Light2d, Vector2d, ColorLayer } from "melonjs/dist/melonjs.module.js";
 import GlobalGameState from "../util/global-game-state";
 import { LevelManager } from "../util/level";
 import HUDContainer from "./hud/hud-container.js";

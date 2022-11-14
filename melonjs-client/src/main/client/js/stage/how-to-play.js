@@ -1,4 +1,4 @@
-import { Stage, game, event, state, Container, input, BitmapText, RoundRect, Rect } from "melonjs";
+import { Stage, game, event, state, Container, input, BitmapText, RoundRect, Rect } from "melonjs/dist/melonjs.module.js";
 import { ENEMY_TILE, my_state } from "../util/constants";
 import { StateBackground } from "./state_background";
 import BaseTextButton from "../util/base-text-button";

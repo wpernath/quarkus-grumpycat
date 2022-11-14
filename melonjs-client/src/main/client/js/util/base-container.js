@@ -1,4 +1,4 @@
-import { Color, Container, RoundRect, Rect, BitmapText, Vector2d } from "melonjs";
+import { Color, Container, RoundRect, Rect, BitmapText, Vector2d } from "melonjs/dist/melonjs.module.js";
 
 /**
  * A simple container which fills with transparent background and a 

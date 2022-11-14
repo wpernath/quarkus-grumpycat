@@ -1,6 +1,6 @@
 import { BasePlayerSprite } from "../base-player";
 import GlobalGameState from "../../util/global-game-state";
-import { collision, game, state } from "melonjs";
+import { collision, game, state } from "melonjs/dist/melonjs.module.js";
 import BombEntity from "../bomb";
 import MultiplayerManager from "../../util/multiplayer";
 import { my_collision_types } from "../../util/constants";

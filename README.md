@@ -7,6 +7,11 @@ If you want to learn more about Quarkus, please visit its website: https://quark
 
 All client game logic is currently coded with JavaScript and [MelonJS](https://github.com/melonjs/melonjs).
 
+If you want to learn how to setup and develop this game, please have a look at the following blog entries:
+
+- [Chapter #1 - Initial Setup](https://www.opensourcerers.org/2022/10/24/using-quarkus-to-develop-a-multiplayer-game-chapter-1-initial-setup/)
+- 
+
 ## The Game
 
 This game was inspired by the old Fat-Cat game and by PacMan. You're controlling a dog in a maze which needs to eat all food without being caught by a grumpy cat or other enemies. 

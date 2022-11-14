@@ -1,4 +1,4 @@
-import { NineSliceSprite, level, collision, Body, Rect, Sprite } from "melonjs";
+import { NineSliceSprite, level, collision, Body, Rect, Sprite } from "melonjs/dist/melonjs.module.js";
 import { my_collision_types } from "../util/constants";
 
 

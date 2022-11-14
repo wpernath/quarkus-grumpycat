@@ -1,5 +1,5 @@
 import { BONUS_TILE } from "../../util/constants";
-import { collision, Sprite, Vector2d, Body, level, Rect } from "melonjs";
+import { collision, Sprite, Vector2d, Body, level, Rect } from "melonjs/dist/melonjs.module.js";
 import { my_collision_types } from "../../util/constants";
 import GlobalGameState from "../../util/global-game-state";
 

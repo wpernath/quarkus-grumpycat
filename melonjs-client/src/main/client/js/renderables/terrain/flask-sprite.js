@@ -1,6 +1,6 @@
 import { BONUS_TILE } from "../../util/constants";
 import BaseTerrainSprite from "./terrain-sprite";
-import { collision } from "melonjs";
+import { collision } from "melonjs/dist/melonjs.module.js";
 
 export default class FlaskBonusSprite extends BaseTerrainSprite {
 	/**

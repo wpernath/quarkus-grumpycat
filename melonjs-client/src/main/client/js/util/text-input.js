@@ -1,4 +1,4 @@
-import { Renderable, video } from "melonjs";
+import { Renderable, video } from "melonjs/dist/melonjs.module.js";
 import $ from "jquery";
 
 export class TextInput extends Renderable {

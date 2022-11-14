@@ -1,4 +1,4 @@
-import { Sprite, Body, Rect, collision, game, level, Vector2d } from "melonjs";
+import { Sprite, Body, Rect, collision, game, level, Vector2d } from "melonjs/dist/melonjs.module.js";
 import { my_collision_types } from "../../util/constants";
 
 

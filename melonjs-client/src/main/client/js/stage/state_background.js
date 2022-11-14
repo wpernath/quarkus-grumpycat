@@ -1,4 +1,4 @@
-import { Container, game, Sprite, loader, BitmapText, Vector2d } from "melonjs";
+import { Container, game, Sprite, loader, BitmapText, Vector2d } from "melonjs/dist/melonjs.module.js";
 import MultiplayerManager from "../util/multiplayer";
 
 export class StateBackground extends Container {
