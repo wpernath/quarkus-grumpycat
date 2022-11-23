@@ -7,10 +7,18 @@ If you want to learn more about Quarkus, please visit its website: https://quark
 
 All client game logic is currently coded with JavaScript and [MelonJS](https://github.com/melonjs/melonjs).
 
-If you want to learn how to setup and develop this game, please have a look at the following blog entries:
+There is a demo of this game running [here](http://cat-client-grumpycat.apps.ruby.rhepds.com). 
+
+
+## Technical Blog entries
+I am currently blogging about the creation of this game as it's still meant to be educational.
+
+Here are the current articles:
 
 - [Chapter #1 - Initial Setup](https://www.opensourcerers.org/2022/10/24/using-quarkus-to-develop-a-multiplayer-game-chapter-1-initial-setup/)
-- 
+- The server feeds the client
+(To be released end of Nov 2022)
+
 
 ## The Game
 
