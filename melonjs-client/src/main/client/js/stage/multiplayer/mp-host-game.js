@@ -1,4 +1,4 @@
-import { Stage, event, game, state, Container, BitmapText } from "melonjs";
+import { Stage, event, game, state, Container, BitmapText } from "melonjs/dist/melonjs.module.js";
 import BaseTextButton from "../../util/base-text-button";
 import { my_state } from "../../util/constants";
 import GlobalGameState from "../../util/global-game-state";

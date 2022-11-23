@@ -1,4 +1,4 @@
-import { Stage, game, event, state, level, pool, BitmapText } from "melonjs";
+import { Stage, game, event, state, level, pool, BitmapText } from "melonjs/dist/melonjs.module.js";
 import MultiplayerManager, { MultiplayerMessageType } from "../../util/multiplayer";
 import CatEnemy from "../../renderables/cat-enemy.js";
 import { SpiderEnemy } from "../../renderables/spider-enemy.js";

@@ -1,4 +1,4 @@
-import { Vector2d } from "melonjs";
+import { Vector2d } from "melonjs/dist/melonjs.module.js";
 
 export class WayPoint {
 

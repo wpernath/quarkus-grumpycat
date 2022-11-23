@@ -6,6 +6,7 @@ import MagicBolt from "./magic-bolt";
 import MagicFirespin from "./magic-firespin";
 import MagicProtectionCircle from "./magic-protection";
 import MagicNebula from "./magic-nebula";
+import PillBonusSprite from "./terrain/pill-sprite";
 import { BONUS_TILE, BARRIER_TILE } from "../util/constants";
 
 export class BasePlayerSprite extends Sprite {
@@ -122,13 +123,13 @@ export class BasePlayerSprite extends Sprite {
 		return 0;
 	}
 
-	/*
+	
 	_clearBonusTile(x,y) {
 		let realX = Math.floor(x / 32);
 		let realY = Math.floor(y / 32);
 		this.bonusLayer.clearTile(realX, realY);
 	}	
-	*/
+	
 
 	checkBonusTile(x, y, update = true) {
 		let bonus = this._collectBonusTile(this.pos.x, this.pos.y, update);
@@ -149,6 +150,8 @@ export class BasePlayerSprite extends Sprite {
 				else if (bonus === BONUS_TILE.cactus) {
 					// cactus
 					GlobalGameState.score += GlobalGameState.scoreForPills;
+					//let b = new PillBonusSprite(Math.floor(this.pos.x/32), Math.floor(this.pos.y / 32));
+					//game.world.addChild(b);
 				} 
 				else if (bonus === BONUS_TILE.meat) {
 					// meat

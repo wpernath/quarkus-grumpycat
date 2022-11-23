@@ -1,4 +1,4 @@
-import { Stage, state, pool, game, event, BitmapText, Container, loader, input, GUI_Object, Vector2d } from "melonjs";
+import { Stage, state, pool, game, event, BitmapText, Container, loader, input, GUI_Object, Vector2d } from "melonjs/dist/melonjs.module.js";
 import BaseClickableComponent from "../../util/base-clickable-component";
 import { LevelManager } from "../../util/level";
 import GlobalGameState from "../../util/global-game-state";

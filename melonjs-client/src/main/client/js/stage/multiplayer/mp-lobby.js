@@ -1,4 +1,4 @@
-import { Stage, event, game, state, Container, BitmapText, Rect } from "melonjs";
+import { Stage, event, game, state, Container, BitmapText, Rect } from "melonjs/dist/melonjs.module.js";
 import PlayerEntity from "../../renderables/player";
 import BaseTextButton from "../../util/base-text-button";
 import { my_state, PLAYER_COLORS } from "../../util/constants";

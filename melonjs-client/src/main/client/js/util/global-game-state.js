@@ -108,10 +108,10 @@ const GlobalGameState = {
 		this.isSlowed = false;
 		this.isHasted = false;
 		
-		this.magicBolts = 50;
-		this.magicNebulas = 50;
-		this.magicProtections=50;
-		this.magicFirespins=50;
+		this.magicBolts = 0;
+		this.magicNebulas = 0;
+		this.magicProtections=0;
+		this.magicFirespins=0;
 	},
 };
 

@@ -1,4 +1,4 @@
-import { collision, state, input } from "melonjs";
+import { collision, state, input } from "melonjs/dist/melonjs.module.js";
 
 export const my_state = {
 	/**

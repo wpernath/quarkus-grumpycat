@@ -71,7 +71,7 @@ device.onReady(() => {
     }
 
     // Initialize the audio.
-    audio.init("mp3,ogg");
+    audio.init("mp3,ogg,wav");
 
     if( device.isMobile ) {
         if( screenfull.isEnabled ) {

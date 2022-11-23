@@ -15,9 +15,7 @@ I am currently blogging about the creation of this game as it's still meant to b
 
 Here are the current articles:
 
-- Initial setup: Using quarkus 
-https://www.opensourcerers.org/2022/10/24/using-quarkus-to-develop-a-multiplayer-game-chapter-1-initial-setup/
-
+- [Chapter #1 - Initial Setup](https://www.opensourcerers.org/2022/10/24/using-quarkus-to-develop-a-multiplayer-game-chapter-1-initial-setup/)
 - The server feeds the client
 (To be released end of Nov 2022)
 

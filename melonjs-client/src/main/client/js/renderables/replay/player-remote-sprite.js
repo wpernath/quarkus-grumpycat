@@ -1,6 +1,6 @@
 import { BasePlayerSprite } from "../base-player";
 import GlobalGameState from "../../util/global-game-state";
-import { game, state } from "melonjs";
+import { game, state } from "melonjs/dist/melonjs.module.js";
 import BombEntity from "../bomb";
 
 

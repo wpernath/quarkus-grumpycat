@@ -1,4 +1,4 @@
-import { Vector2d,BitmapText, RoundRect,  } from "melonjs";
+import { Vector2d, BitmapText, RoundRect } from "melonjs/dist/melonjs.module.js";
 import BaseClickableComponent from "./base-clickable-component";
 export default class BaseTextButton extends BaseClickableComponent {
 	constructor(x, y, settings) {

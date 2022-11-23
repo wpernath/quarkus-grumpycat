@@ -1,4 +1,4 @@
-import { game, Sprite, timer } from "melonjs";
+import { game, Sprite, timer } from "melonjs/dist/melonjs.module.js";
 import SpiderEnemy from "../spider-enemy";
 import BaseTerrainSprite from "./terrain-sprite";
 
