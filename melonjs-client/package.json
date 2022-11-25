@@ -26,14 +26,14 @@
     "html-webpack-plugin": "^5.5.0",
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.11.1"
+    "webpack-dev-server": "^4.11.1",
+    "cross-env": "7.0.3"
   },
   "scripts": {
-    "dev": "webpack-dev-server --mode=development --config webpack.config.js",
+    "dev": "cross-env CONFIG=local webpack-dev-server --mode=development --config webpack.config.js",
     "build": "webpack --mode=production --config webpack.config.js",
-    "clean": "",
-    "docker-build": "docker build -f src/main/docker/Dockerfile.nginx -t quay.io/wpernath/grumpycat-melonjs:latest .",
-    "docker-push": "docker push quay.io/wpernath/grumpycat-melonjs -a"
+    "clean": "mvn clean",
+    "docker-push": "mvn clean package -Dquarkus.container-image.push=true"    
   },
   "browserslist": "defaults",
   "dependencies": {

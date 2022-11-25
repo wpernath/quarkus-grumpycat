@@ -63,7 +63,7 @@ device.onReady(() => {
 
 
     // initialize the debug plugin in development mode.
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === 'development') {        
         import('js/plugin/debug/debugPanel.js').then((debugPlugin) => {
             // automatically register the debug panel
             utils.function.defer(plugin.register, this, debugPlugin.DebugPanelPlugin, "debugPanel");
@@ -81,12 +81,15 @@ device.onReady(() => {
     }
 
     // allow cross-origin for image/texture loading
-    let environment = CONFIG.environment;
+    let environment = "prod";
+    if( process.env.NODE_ENV === 'development') {
+        environment = "local";        
+    }
+    
     let baseURL;
+
     if (environment === "local") baseURL = CONFIG.local.baseURL;
-		else if (environment === "dev") baseURL = CONFIG.dev.baseURL;
-		else if (environment === "test") baseURL = CONFIG.test.baseURL;
-		else if (environment === "prod") baseURL = CONFIG.prod.baseURL;
+    else if (environment === "prod") baseURL = CONFIG.prod.baseURL;
     
     loader.setBaseURL("tmx", baseURL);
     CONFIG.baseURL = baseURL;
