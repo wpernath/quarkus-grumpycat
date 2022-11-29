@@ -41,3 +41,25 @@ spec:
       prune: true
     syncOptions:
     - PruneLast=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cat-prod
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: cat-prod
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: config/overlays/prod
+    repoURL: https://github.com/wpernath/grumpycat-config.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+    syncOptions:
+    - PruneLast=true

@@ -23,3 +23,16 @@ metadata:
 spec:
   finalizers:
   - kubernetes
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    openshift.io/description: ""
+    openshift.io/display-name: "PRODUCTION"
+  labels:
+    kubernetes.io/metadata.name: cat-prod
+  name: cat-prod
+spec:
+  finalizers:
+  - kubernetes
