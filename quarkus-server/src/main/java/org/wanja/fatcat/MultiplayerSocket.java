@@ -22,6 +22,8 @@ import org.wanja.fatcat.model.MultiplayerMessageEncoder;
 import org.wanja.fatcat.model.MultiplayerMessageDecoder;
 
 import io.quarkus.logging.Log;
+import io.smallrye.common.annotation.Blocking;
+
 
 
 
@@ -138,7 +140,7 @@ public class MultiplayerSocket {
         onClose(session, gameId, playerId);
     }
 
-    @OnMessage
+    @OnMessage    
     public void onMessage(MultiplayerMessage message, @PathParam("gameId") Long gameId, @PathParam("playerId") Long playerId) {
         broadcastOthersInGame(gameId, message);
     }

@@ -271,108 +271,57 @@ command.logs() {
 }
 
 command.stage-server() {
-  cat > /tmp/stage-pr.yaml <<-EOF
-apiVersion: tekton.dev/v1beta1
-kind: PipelineRun
-metadata:
-  name: stage-pipeline-run-$(date "+%Y%m%d-%H%M%S")
-spec:
-  params:
-    - name: release-name
-      value: $GIT_REVISION
-  workspaces:
-    - name: shared-workspace
-      persistentVolumeClaim:
-        claimName: builder-pvc
-  pipelineRef:
-    name: stage-server
-  serviceAccountName: pipeline-bot
-EOF
+  info "Start staging server service on OpenShift..."
+  tkn pipeline start stage-server \
+            -s pipeline-bot \
+            -p release-name=$GIT_REVISION \
+            -w name=shared-workspace,claimName=builder-pvc \
+            --use-param-defaults
 
-    oc apply -f /tmp/stage-pr.yaml -n $TARGET_NAMESPACE
 }
 
 command.build-server() {
-  cat > /tmp/pipelinerun.yaml <<-EOF
-apiVersion: tekton.dev/v1beta1
-kind: PipelineRun
-metadata:
-  name: $PIPELINE-run-$(date "+%Y%m%d-%H%M%S")
-spec:
-  params:
-    - name: repo-password
-      value: $IMAGE_PASSWORD
-  workspaces:
-    - name: source
-      persistentVolumeClaim:
-        claimName: builder-pvc
-    - configMap:
-        name: maven-settings
-      name: maven-settings
-  pipelineRef:
-    name: build-server
-  serviceAccountName: pipeline-bot
-EOF
-
-    oc apply -f /tmp/pipelinerun.yaml -n $TARGET_NAMESPACE
+  info "Start building server service on OpenShift..."
+  tkn pipeline start build-server -s pipeline-bot \
+            -p repo-password=$IMAGE_PASSWORD \
+            -p git-revision=$GIT_REVISION \
+            -w name=source,claimName=builder-pvc \
+            -w name=maven-settings,config=maven-settings \
+            --use-param-defaults
 }
 
 command.stage-client() {
-  cat > /tmp/stage-pr.yaml <<-EOF
-apiVersion: tekton.dev/v1beta1
-kind: PipelineRun
-metadata:
-  name: stage-pipeline-run-$(date "+%Y%m%d-%H%M%S")
-spec:
-  params:
-    - name: release-name
-      value: $GIT_REVISION
-  workspaces:
-    - name: shared-workspace
-      persistentVolumeClaim:
-        claimName: client-builder-pvc
-  pipelineRef:
-    name: stage-client
-  serviceAccountName: pipeline-bot
-EOF
+  info "Start staging client on OpenShift..."
+  tkn pipeline start stage-client \
+            -s pipeline-bot \
+            -p release-name=$GIT_REVISION \
+            -w name=shared-workspace,claimName=client-builder-pvc \
+            --use-param-defaults
 
-    oc apply -f /tmp/stage-pr.yaml -n $TARGET_NAMESPACE
 }
 
 command.build-client() {
-  cat > /tmp/pipelinerun.yaml <<-EOF
-apiVersion: tekton.dev/v1beta1
-kind: PipelineRun
-metadata:
-  name: $PIPELINE-run-$(date "+%Y%m%d-%H%M%S")
-spec:
-  params:
-    - name: repo-password
-      value: $IMAGE_PASSWORD
-  workspaces:
-    - name: source
-      persistentVolumeClaim:
-        claimName: client-builder-pvc
-    - configMap:
-        name: maven-settings
-      name: maven-settings
-  pipelineRef:
-    name: build-client
-  serviceAccountName: pipeline-bot
-EOF
-
-    oc apply -f /tmp/pipelinerun.yaml -n $TARGET_NAMESPACE
+  info "Start building client on OpenShift..."
+  tkn pipeline start build-client -s pipeline-bot \
+            -p repo-password=$IMAGE_PASSWORD \
+            -p git-revision=$GIT_REVISION \
+            -w name=source,claimName=client-builder-pvc \
+            -w name=maven-settings,config=maven-settings \
+            --use-param-defaults
 }
 
 
 command.build-all() {
   info "Starting build-all pipeline..."
-  tkn pipeline start build-all -s pipeline-bot -p registry-password=$IMAGE_PASSWORD -p git-revision=$GIT_REVISION
+  tkn pipeline start build-all -s pipeline-bot \
+               -p registry-password=$IMAGE_PASSWORD \
+               -p git-revision=$GIT_REVISION
 }
 
 command.stage-all() {
   info "Starting stage-all pipeline..."
-  tkn pipeline start stage-all -s pipeline-bot -p release-name=$GIT_REVISION
+  tkn pipeline start stage-all -s pipeline-bot \
+                -p release-name=$GIT_REVISION
 }
 
 main() {
