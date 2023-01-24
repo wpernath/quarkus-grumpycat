@@ -25,4 +25,18 @@ subjects:
 - kind: ServiceAccount
   name: openshift-gitops-argocd-application-controller
   namespace: openshift-gitops  
-  
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: cat-prod-role-binding
+  namespace: cat-prod
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: admin
+subjects:
+- kind: ServiceAccount
+  name: openshift-gitops-argocd-application-controller
+  namespace: openshift-gitops  
+    
