@@ -106,6 +106,10 @@ const DataManifest = [
 		type: "image",
 		src: "./data/img/animals-walk.png",
 	},
+	
+	{
+		name: "bat", type: "image", src: "./data/img/32x32-bat-sprite.png",
+	},
 
 	{
 		name: "golem-walk",
