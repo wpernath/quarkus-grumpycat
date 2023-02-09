@@ -1,4 +1,4 @@
-package org.wanja.fatcat;
+package org.wanja.fatcat.mp;
 
 import java.util.Date;
 import java.util.List;

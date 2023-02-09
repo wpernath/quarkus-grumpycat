@@ -1,4 +1,4 @@
-package org.wanja.fatcat;
+package org.wanja.fatcat.mp;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;

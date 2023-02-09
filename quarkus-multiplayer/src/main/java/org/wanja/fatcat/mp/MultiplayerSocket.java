@@ -1,4 +1,4 @@
-package org.wanja.fatcat;
+package org.wanja.fatcat.mp;
 
 
 import java.util.HashSet;
@@ -18,11 +18,11 @@ import javax.websocket.server.ServerEndpoint;
 
 import org.wanja.fatcat.model.MultiPlayerGame;
 import org.wanja.fatcat.model.MultiplayerMessage;
-import org.wanja.fatcat.model.MultiplayerMessageEncoder;
-import org.wanja.fatcat.model.MultiplayerMessageDecoder;
+import org.wanja.fatcat.mp.model.MultiplayerMessageEncoder;
+import org.wanja.fatcat.mp.model.MultiplayerMessageDecoder;
 
 import io.quarkus.logging.Log;
-import io.smallrye.common.annotation.Blocking;
+
 
 
 

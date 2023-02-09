@@ -1,10 +1,12 @@
-package org.wanja.fatcat.model;
+package org.wanja.fatcat.mp.model;
 
 import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.wanja.fatcat.model.MultiplayerMessage;
 
 public class MultiplayerMessageDecoder implements Decoder.Text<MultiplayerMessage> {
 

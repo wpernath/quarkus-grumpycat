@@ -1,4 +1,4 @@
-package org.wanja.fatcat.model;
+package org.wanja.fatcat.mp.model;
 
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
@@ -6,6 +6,8 @@ import javax.websocket.EndpointConfig;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.wanja.fatcat.model.MultiplayerMessage;
 
 public class MultiplayerMessageEncoder implements Encoder.Text<MultiplayerMessage> {
     ObjectMapper om;

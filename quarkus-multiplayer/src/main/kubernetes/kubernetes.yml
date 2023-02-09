@@ -6,18 +6,18 @@ metadata:
     app.openshift.io/connects-to: >-
       [{"apiVersion":"apps/v1","kind":"Deployment","name":"grumpy-kafka-entity-operator"},{"apiVersion":"apps/v1","kind":"StatefulSet","name":"cat-repo-host"}]
   labels:
-    app: cat-server
-    app.kubernetes.io/component: cat-server
-    app.kubernetes.io/instance: cat-server
-    app.kubernetes.io/name: cat-server
+    app: cat-multiplayer
+    app.kubernetes.io/component: cat-multiplayer
+    app.kubernetes.io/instance: cat-multiplayer
+    app.kubernetes.io/name: cat-multiplayer
     app.kubernetes.io/part-of: grumpycat-app
-  name: cat-server
+  name: cat-multiplayer
 spec:
   port:
     targetPort: 8080-tcp
   to:
     kind: Service
-    name: cat-server
+    name: cat-multiplayer
     weight: 100
   wildcardPolicy: None
 ---
@@ -29,17 +29,17 @@ metadata:
       [{"apiVersion":"apps/v1","kind":"Deployment","name":"grumpy-kafka-entity-operator"},{"apiVersion":"apps/v1","kind":"StatefulSet","name":"cat-repo-host"}]
     app.openshift.io/route-disabled: "false"
   labels:
-    app: cat-server
-    app.kubernetes.io/component: cat-server
-    app.kubernetes.io/instance: cat-server
-    app.kubernetes.io/name: cat-server
+    app: cat-multiplayer
+    app.kubernetes.io/component: cat-multiplayer
+    app.kubernetes.io/instance: cat-multiplayer
+    app.kubernetes.io/name: cat-multiplayer
     app.kubernetes.io/part-of: grumpycat-app
-  name: cat-server
+  name: cat-multiplayer
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cat-server
+      app: cat-multiplayer
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -48,12 +48,12 @@ spec:
   template:
     metadata:
       labels:
-        app: cat-server        
+        app: cat-multiplayer        
     spec:
       containers:
       - image: quay.io/wpernath/quarkus-grumpycat:latest
         imagePullPolicy: Always
-        name: cat-server
+        name: cat-multiplayer
         envFrom:
           - secretRef:
               name: cat-pguser-cat
@@ -109,12 +109,12 @@ metadata:
     app.openshift.io/connects-to: >-
       [{"apiVersion":"apps/v1","kind":"Deployment","name":"grumpy-kafka-entity-operator"},{"apiVersion":"apps/v1","kind":"StatefulSet","name":"cat-repo-host"}]
   labels:
-    app: cat-server
-    app.kubernetes.io/component: cat-server
-    app.kubernetes.io/instance: cat-server
-    app.kubernetes.io/name: cat-server
+    app: cat-multiplayer
+    app.kubernetes.io/component: cat-multiplayer
+    app.kubernetes.io/instance: cat-multiplayer
+    app.kubernetes.io/name: cat-multiplayer
     app.kubernetes.io/part-of: grumpycat-app
-  name: cat-server
+  name: cat-multiplayer
 spec:
   internalTrafficPolicy: Cluster
   ipFamilies:
@@ -126,93 +126,6 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    app: cat-server    
+    app: cat-multiplayer    
   sessionAffinity: None
   type: ClusterIP
----
-apiVersion: postgres-operator.crunchydata.com/v1beta1
-kind: PostgresCluster
-metadata:
-  labels:
-    app.kubernetes.io/part-of: grumpycat-app
-  name: cat
-spec:
-  postgresVersion: 13
-  instances:
-    - name: instance1
-      dataVolumeClaimSpec:
-        accessModes:
-        - "ReadWriteOnce"
-        resources:
-          requests:
-            storage: 1Gi
-  backups:
-    pgbackrest:
-      repos:
-      - name: repo1
-        volume:
-          volumeClaimSpec:
-            accessModes:
-            - "ReadWriteOnce"
-            resources:
-              requests:
-                storage: 1Gi
----
-apiVersion: kafka.strimzi.io/v1beta2
-kind: Kafka
-metadata:
-  labels:
-    app.kubernetes.io/part-of: grumpycat-app
-  name: grumpy-kafka
-spec:
-  kafka:
-    version: 3.2.0
-    replicas: 1
-    listeners:
-      - name: plain
-        port: 9092
-        type: internal
-        tls: false
-      - name: tls
-        port: 9093
-        type: internal
-        tls: true
-        authentication:
-          type: tls
-    storage:
-      type: jbod
-      volumes:
-        - type: persistent-claim
-          id: 0
-          size: 5Gi
-          deleteClaim: true
-    config:
-      offsets.topic.replication.factor: 1
-      transaction.state.log.replication.factor: 1
-      transaction.state.log.min.isr: 1
-      default.replication.factor: 1
-      min.insync.replicas: 1
-      inter.broker.protocol.version: '3.2'
-  zookeeper:
-    replicas: 1
-    storage:
-      type: persistent-claim
-      size: 1Gi
-      deleteClaim: true
-  entityOperator:
-    topicOperator: {}
-    userOperator: {}
----
-apiVersion: kafka.strimzi.io/v1beta2
-kind: KafkaTopic
-metadata:
-  name: player-actions
-  labels:
-    strimzi.io/cluster: "grumpy-kafka"
-    app.kubernetes.io/part-of: grumpycat-app
-spec:
-  partitions: 1
-  replicas: 1
-  config:
-    retention.ms: 7200000
-    segment.bytes: 1073741824
