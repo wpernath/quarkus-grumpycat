@@ -51,7 +51,7 @@ spec:
         app: cat-multiplayer        
     spec:
       containers:
-      - image: quay.io/wpernath/quarkus-grumpycat:latest
+      - image: quay.io/wpernath/cat-multiplayer:latest
         imagePullPolicy: Always
         name: cat-multiplayer
         envFrom:
