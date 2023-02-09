@@ -3,13 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wanja.grumpycat</groupId>
     <artifactId>umbrella</artifactId>
-    <version>0.6.4</version>
+    <version>0.7.0</version>
     <packaging>pom</packaging>
 
     <modules>
-        <!--module>cat-model</module-->
+        <module>cat-model</module>
         <module>quarkus-server</module>
         <module>melonjs-client</module>
+        <module>quarkus-multiplayer</module>
     </modules>
 
     <properties>        

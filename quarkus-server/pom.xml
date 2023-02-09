@@ -5,13 +5,19 @@
   <parent>
     <groupId>org.wanja.grumpycat</groupId>
     <artifactId>umbrella</artifactId>
-    <version>0.6.4</version>
+    <version>0.7.0</version>
     <relativePath>../</relativePath>
   </parent> 
 
   <artifactId>cat-server</artifactId>
 
   <dependencies>
+    <dependency>
+      <groupId>org.wanja.grumpycat</groupId>
+      <artifactId>cat-model</artifactId>
+      <version>0.7.0</version>
+    </dependency>
+    
     <dependency>
       <groupId>net.datafaker</groupId>
       <artifactId>datafaker</artifactId>
