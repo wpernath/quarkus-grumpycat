@@ -126,7 +126,9 @@ To make use of all GitOps features, have a look at the documentation inside the 
 
 ## Roadmap
 
-- Refactoring of the JavaScript stuff. I mainly have used this project to learn some JavaScript. Now it's time to refactor everything and to use some more fancy methods to do the same.
+- Split cat-server to a cat-server and a cat-multiplayer service. 
+- Implement an Infispan service to make cat-multiplayer infinitely scalable
+- Make cat-multiplayer reactive to keep up with several concurrent sessions
 
 
 ## About the graphics
