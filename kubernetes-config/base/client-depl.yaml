@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"cat-server"}]'
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"cat-server"}, {"apiVersion":"apps/v1","kind":"Deployment","name":"cat-multiplayer"}]'
     app.openshift.io/route-disabled: "false"
   labels:
     app: cat-client

@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.openshift.io/connects-to: "[{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\"\
+      ,\"name\":\"grumpy-kafka-entity-operator\"},{\"apiVersion\":\"apps/v1\",\"kind\"\
+      :\"StatefulSet\",\"name\":\"cat-repo-host\"}]"
+    app.openshift.io/route-disabled: "false"
+    app.quarkus.io/commit-id: 4939dd6eec0b157aff443a1fe5684c07625094c8
+    app.quarkus.io/build-timestamp: 2023-02-10 - 10:27:11 +0000
+    prometheus.io/scrape: "true"
+    prometheus.io/path: /q/metrics
+    prometheus.io/port: "8080"
+    prometheus.io/scheme: http
+  labels:
+    app: cat-multiplayer
+    app.kubernetes.io/component: cat-multiplayer
+    app.kubernetes.io/instance: cat-multiplayer
+    app.kubernetes.io/name: cat-multiplayer
+    app.kubernetes.io/part-of: grumpycat-app
+    app.kubernetes.io/version: 0.7.0
+  name: cat-multiplayer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cat-multiplayer
+      app.kubernetes.io/name: cat-multiplayer
+      app.kubernetes.io/version: 0.7.0
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        app.quarkus.io/commit-id: 4939dd6eec0b157aff443a1fe5684c07625094c8
+        app.quarkus.io/build-timestamp: 2023-02-10 - 10:27:11 +0000
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /q/metrics
+        prometheus.io/port: "8080"
+        prometheus.io/scheme: http
+      labels:
+        app: cat-multiplayer
+        app.kubernetes.io/name: cat-multiplayer
+        app.kubernetes.io/version: 0.7.0
+    spec:
+      containers:
+        - envFrom:
+            - prefix: DB_
+              secretRef:
+                name: cat-pguser-cat
+            - configMapRef:
+                name: multiplayer-config
+          image: quay.io/wpernath/cat-multiplayer:v0.7.0
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /q/health/live
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 0
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 10
+          name: cat-multiplayer
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /q/health/ready
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 0
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 10
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1024Mi
+            requests:
+              cpu: 100m
+              memory: 512Mi
+          startupProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /q/health/started
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1

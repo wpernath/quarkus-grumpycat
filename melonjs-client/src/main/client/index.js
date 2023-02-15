@@ -87,12 +87,19 @@ device.onReady(() => {
     }
     
     let baseURL;
+    let baseMPURL;
 
-    if (environment === "local") baseURL = CONFIG.local.baseURL;
-    else if (environment === "prod") baseURL = CONFIG.prod.baseURL;
-    
+    if (environment === "local") {
+        baseURL = CONFIG.local.baseURL;
+        baseMPURL = CONFIG.local.baseMPURL;
+    }
+    else if (environment === "prod") {
+        baseURL = CONFIG.prod.baseURL;
+        baseMPURL= CONFIG.prod.baseMPURL;
+    }
     loader.setBaseURL("tmx", baseURL);
     CONFIG.baseURL = baseURL;
+    CONFIG.baseMPURL = baseMPURL;
 
     loader.crossOrigin = "anonymous";
 

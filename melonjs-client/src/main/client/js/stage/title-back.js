@@ -99,6 +99,16 @@ export default class TitleBackground extends Container {
 		});
 		this.subVersionText.pos.x = this.titleText.pos.x + 40;
 
+		this.multiVersionText = new BitmapText(126, 200, {
+			font: "12Outline",
+			size: "1",
+			fillStyle: "white",
+			textAlign: "left",
+			text: "Multiplayer API: " + GlobalGameState.globalServerVersion.appName + "@" + GlobalGameState.globalServerVersion.appVersion + " at " + CONFIG.baseMPURL,
+			offScreenCanvas: false,
+		});
+		this.multiVersionText.pos.x = this.titleText.pos.x + 40;
+
 		// add to the world container
 		this.addChild(this.backgroundImage, 0);
 		this.addChild(this.catLeftImage, 5);
@@ -107,6 +117,7 @@ export default class TitleBackground extends Container {
 
 		this.addChild(this.subTitleText,5 );
 		this.addChild(this.subVersionText, 5);
+		this.addChild(this.multiVersionText, 5);
 
 		this.addChild( new TextScroller(
 			"QUARKUS GRUMPYCAT. A GAME WRITTEN BY WANJA PERNATH, INSPIRED BY FAT CAT AND PAC MAN. THIS GAME IS USING A QUARKUS BACKEND TO LOAD AND STORE DATA FROM/TO A SERVER................................"

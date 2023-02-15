@@ -59,7 +59,7 @@ spec:
               name: cat-pguser-cat
             prefix: DB_        
           - configMapRef:
-              name: server-config
+              name: multiplayer-config
         ports:
         - containerPort: 8080
           protocol: TCP

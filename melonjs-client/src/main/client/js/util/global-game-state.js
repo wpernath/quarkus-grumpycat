@@ -8,6 +8,9 @@ const GlobalGameState = {
 	globalServerGame: null,
 	globalServerVersion: null,
 
+	// global multiplayer version
+	globalMultiplayerVersion: null,
+
 	// For replaying an allready played game
 	gameToReplay: null,
 	replayActions: null,

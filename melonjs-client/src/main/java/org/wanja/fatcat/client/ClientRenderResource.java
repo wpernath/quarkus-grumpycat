@@ -21,6 +21,9 @@ public class ClientRenderResource {
     @ConfigProperty(name = "application.baseServerURL")
     String baseURL;
 
+    @ConfigProperty(name = "application.baseMultiplayerServerURL")
+    String baseMPURL;
+    
     @ConfigProperty(name = "quarkus.application.name")
     String appName;
 
@@ -45,6 +48,7 @@ public class ClientRenderResource {
 
         line = sb.toString();
         this.rewrittenBundle = line.replaceAll("\\{\\{baseURL\\}\\}", baseURL)
+                .replaceAll("\\{\\{baseMPURL\\}\\}", baseMPURL)
                 .replaceAll("\\{\\{applicationName\\}\\}", appName)
                 .replaceAll("\\{\\{applicationVersion\\}\\}", appVersion);
 

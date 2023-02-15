@@ -3,6 +3,7 @@ const CONFIG = {
 	appVersion: "{{applicationVersion}}",
 
 	baseURL: "",
+	baseMPURL: "",
 
 	// if we are running in development, we are going to use a
 	// baseURL from local settings.
@@ -14,6 +15,8 @@ const CONFIG = {
 		// Use a real IP address if you want to do multiplayer testing
 		baseURL: "http://192.168.2.198:8080/",
 		//baseURL: "http://192.168.2.171:8080/",
+
+		baseMPURL: "http://192.168.2.198:8086/",
 	},
 
 	// use this one for the quarkus engine on production systems
@@ -21,6 +24,7 @@ const CONFIG = {
 	// ENVIRONMENT parameter, provided via ConfigMap
 	prod: {
 		baseURL: "{{baseURL}}",
+		baseMPURL: "{{baseMPURL}}",
 	},
 };
 

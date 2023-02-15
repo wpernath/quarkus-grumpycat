@@ -109,8 +109,9 @@ export class MultiplayerMessage {
 		}
 
 		constructor() {
-			let baseURL = CONFIG.baseURL;
-
+			let baseURL = CONFIG.baseMPURL;
+			console.log("Base URL for Multiplayer: " + baseURL);
+			
 			this.networkManager = NetworkManager.getInstance();
 			this.levelManager = LevelManager.getInstance();
 
