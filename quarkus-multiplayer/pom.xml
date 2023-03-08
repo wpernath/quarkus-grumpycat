@@ -2,45 +2,40 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-
   <parent>
     <groupId>org.wanja.grumpycat</groupId>
     <artifactId>umbrella</artifactId>
     <version>0.7.0</version>
     <relativePath>../</relativePath>
-  </parent> 
-
+  </parent>
   <artifactId>cat-multiplayer</artifactId>
-  
   <dependencies>
     <dependency>
       <groupId>org.wanja.grumpycat</groupId>
       <artifactId>cat-model</artifactId>
       <version>0.7.0</version>
     </dependency>
-
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-websockets</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-hibernate-orm-panache</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-jdbc-postgresql</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy-reactive-qute</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-infinispan-client</artifactId>
+    </dependency>
   </dependencies>
-
   <build>
     <plugins>
       <plugin>
@@ -63,8 +58,7 @@
         <version>${compiler-plugin.version}</version>
         <configuration>
           <compilerArgs>
-            <arg>
-              -parameters</arg>
+            <arg>-parameters</arg>
           </compilerArgs>
         </configuration>
       </plugin>
@@ -73,8 +67,7 @@
         <version>${surefire-plugin.version}</version>
         <configuration>
           <systemPropertyVariables>
-            <java.util.logging.manager>
-              org.jboss.logmanager.LogManager</java.util.logging.manager>
+            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
             <maven.home>${maven.home}</maven.home>
           </systemPropertyVariables>
         </configuration>
@@ -90,10 +83,8 @@
             </goals>
             <configuration>
               <systemPropertyVariables>
-                <native.image.path>
-                  ${project.build.directory}/${project.build.finalName}-runner</native.image.path>
-                <java.util.logging.manager>
-                  org.jboss.logmanager.LogManager</java.util.logging.manager>
+                <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
+                <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                 <maven.home>${maven.home}</maven.home>
               </systemPropertyVariables>
             </configuration>
@@ -111,8 +102,7 @@
         </property>
       </activation>
       <properties>
-        <skipITs>
-          false</skipITs>
+        <skipITs>false</skipITs>
         <quarkus.package.type>native</quarkus.package.type>
       </properties>
     </profile>

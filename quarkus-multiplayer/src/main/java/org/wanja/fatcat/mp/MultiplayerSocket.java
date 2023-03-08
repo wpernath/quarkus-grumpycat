@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.enterprise.context.ApplicationScoped;
-
+import javax.inject.Inject;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -16,15 +16,14 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-import org.wanja.fatcat.model.MultiPlayerGame;
+import org.infinispan.client.hotrod.RemoteCache;
 import org.wanja.fatcat.model.MultiplayerMessage;
 import org.wanja.fatcat.mp.model.MultiplayerMessageEncoder;
+import org.wanja.fatcat.mp.model.MultiPlayerGame;
 import org.wanja.fatcat.mp.model.MultiplayerMessageDecoder;
 
+import io.quarkus.infinispan.client.Remote;
 import io.quarkus.logging.Log;
-
-
-
 
 
 @ApplicationScoped
@@ -34,6 +33,11 @@ import io.quarkus.logging.Log;
     decoders = {MultiplayerMessageDecoder.class}
 )
 public class MultiplayerSocket {
+
+    @Inject
+    @Remote("cat-games")
+    RemoteCache<Long, MultiPlayerGame> gameCache;
+    
     
     // each player has its WebSocket session
     Map<Long, Session> playerSessions = new ConcurrentHashMap<>();

@@ -10,8 +10,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
 import org.wanja.fatcat.model.MultiPlayer;
-import org.wanja.fatcat.model.MultiPlayerGame;
 import org.wanja.fatcat.model.Player;
+import org.wanja.fatcat.mp.model.MultiPlayerGame;
 
 import io.quarkus.logging.Log;
 

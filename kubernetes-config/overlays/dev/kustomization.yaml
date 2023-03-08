@@ -25,8 +25,8 @@ configMapGenerator:
   # NOTE: This will automatically be read from client config map
   - name: client-config
     literals:
-      - APPLICATION_BASESERVERURL=http://cat-server-grumpycat.apps.cat.ocp.lan/
-      - APPLICATION_BASEMULTIPLAYERSERVERURL=http://cat-multiplayer-grumpycat.apps.cat.ocp.lan/
+      - APPLICATION_BASESERVERURL=http://cat-server-grumpycat.apps.cat2.ocp.lan/
+      - APPLICATION_BASEMULTIPLAYERSERVERURL=http://cat-multiplayer-grumpycat.apps.cat2.ocp.lan/
 
   # GrumpyCat Server configmap, just point to the internal service name of the kafka service
   - name: server-config

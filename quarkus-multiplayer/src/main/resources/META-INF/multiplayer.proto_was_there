@@ -1,0 +1,18 @@
+package multiplayer_game;
+
+message MultiPlayerGame {
+  required boolean isOpen = 1;
+  required boolean isRunning = 2;
+  required boolean isClosed = 3; 
+  required boolean isFinished = 4;
+  required int16 level = 5;
+  required int32 timeStarted = 6;
+  required int32 timeStopped = 7;
+  required int32 timePlaying = 8;
+  required int32 timeFinished = 9;
+
+  required int64 player1Id = 10;
+  required int64 player2Id = 11;
+  required int64 player3Id = 12;
+  required int64 player4Id = 13;
+}
