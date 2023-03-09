@@ -4,7 +4,6 @@ import java.util.Set;
 import java.util.Date;
 
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -34,12 +33,13 @@ public class InfinispanCacheResource {
     }
 
     @PUT
-    @Transactional
     @Path("{id}")
     public Set<Long> addGame(@PathParam("id") Long id) {
         MultiPlayerGame mpg = new MultiPlayerGame();
         mpg.id = id;
         mpg.timeStarted = new Date(System.currentTimeMillis());
+        mpg.isClosed = true;
+        mpg.player1Id= (long )165;
         gameCache.put(id, mpg);
         return allGames();
     }

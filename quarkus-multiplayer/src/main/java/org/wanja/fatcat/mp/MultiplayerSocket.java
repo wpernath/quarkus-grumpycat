@@ -36,7 +36,7 @@ public class MultiplayerSocket {
 
     @Inject
     @Remote("cat-games")
-    RemoteCache<Long, MultiPlayerGame> gameCache;
+    RemoteCache<Long, MultiPlayerGame> playersInGame2;
     
     
     // each player has its WebSocket session
