@@ -1,6 +1,7 @@
 package org.wanja.fatcat.mp;
 
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -36,17 +37,20 @@ public class MultiplayerSocket {
 
     @Inject
     @Remote("cat-games")
-    RemoteCache<Long, MultiPlayerGame> playersInGame2;
+    RemoteCache<Long, MultiPlayerGame> gameIdGames;
     
+    @Inject
+    @Remote("cat-players")
+    RemoteCache<Long, Set<Long>> playersInGame ;
     
     // each player has its WebSocket session
     Map<Long, Session> playerSessions = new ConcurrentHashMap<>();
 
     // a gameId / game list
-    Map<Long, MultiPlayerGame> gameIdGames = new ConcurrentHashMap<>();
+    //Map<Long, MultiPlayerGame> gameIdGames = new ConcurrentHashMap<>();
 
     // a map containing gameId --> Set of players in game
-    Map<Long, Set<Long>> playersInGame = new ConcurrentHashMap<>();
+    //Map<Long, Set<Long>> playersInGame = new ConcurrentHashMap<>();
 
     @OnOpen   
     public void onOpen(Session session, @PathParam("gameId") Long gameId, @PathParam("playerId") Long playerId ) {
@@ -63,9 +67,11 @@ public class MultiplayerSocket {
 
             // initialize a game
             game = new MultiPlayerGame();
-            game.id = gameId;            
-            gameIdGames.put(gameId, game);
+            game.id = gameId;       
+            game.isOpen = true;
             game.player1Id = playerId;
+            game.timeStarted = new Date();
+            gameIdGames.put(gameId, game);
         }
         else { // game is existing, we have another player for it
             game = gameIdGames.get(gameId);            
@@ -82,7 +88,7 @@ public class MultiplayerSocket {
                 return;
             }
             players.add(playerId);
-
+            playersInGame.put(gameId, players);
             broadcastOthersInGame(gameId, MultiplayerMessage.playerJoined(playerId, gameId));
             
         }        

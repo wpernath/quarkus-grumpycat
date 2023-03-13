@@ -65,7 +65,7 @@
             </goals>
             <configuration>
               <!-- See https://nodejs.org/en/download/ for latest node and npm (lts) versions -->
-              <nodeVersion>v16.18.0</nodeVersion>              
+              <nodeVersion>v19.7.0</nodeVersion>              
             </configuration>
           </execution>
 
