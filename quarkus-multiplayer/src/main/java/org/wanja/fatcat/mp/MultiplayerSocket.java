@@ -36,17 +36,20 @@ public class MultiplayerSocket {
 
     @Inject
     @Remote("cat-games")
-    RemoteCache<Long, MultiPlayerGame> playersInGame2;
+    RemoteCache<Long, MultiPlayerGame> gameIdGames;
     
-    
+    @Inject
+    @Remote("cat-players")
+    RemoteCache<Long, Set<Long>> playersInGame;
+
     // each player has its WebSocket session
     Map<Long, Session> playerSessions = new ConcurrentHashMap<>();
 
     // a gameId / game list
-    Map<Long, MultiPlayerGame> gameIdGames = new ConcurrentHashMap<>();
+    //Map<Long, MultiPlayerGame> gameIdGames = new ConcurrentHashMap<>();
 
     // a map containing gameId --> Set of players in game
-    Map<Long, Set<Long>> playersInGame = new ConcurrentHashMap<>();
+    //Map<Long, Set<Long>> playersInGame = new ConcurrentHashMap<>();
 
     @OnOpen   
     public void onOpen(Session session, @PathParam("gameId") Long gameId, @PathParam("playerId") Long playerId ) {
