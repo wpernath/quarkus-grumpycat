@@ -1,7 +1,6 @@
 import CONFIG from "../../config";
 import GlobalGameState from "./global-game-state";
 import { LevelManager } from "./level";
-//import { GameStateAction,EnemyAction } from "./game-updates";
 
 
 export var networkManager = null;

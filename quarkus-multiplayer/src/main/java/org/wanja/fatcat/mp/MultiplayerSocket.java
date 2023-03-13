@@ -36,7 +36,8 @@ public class MultiplayerSocket {
 
     @Inject
     @Remote("cat-games")
-    RemoteCache<Long, MultiPlayerGame> playersInGame1;
+    RemoteCache<Long, MultiPlayerGame> playersInGame2;
+    
     
     // each player has its WebSocket session
     Map<Long, Session> playerSessions = new ConcurrentHashMap<>();
