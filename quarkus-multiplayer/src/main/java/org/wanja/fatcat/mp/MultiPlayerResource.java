@@ -3,7 +3,6 @@ package org.wanja.fatcat.mp;
 import java.util.Date;
 import java.util.List;
 
-import javax.transaction.Transactional;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -13,7 +12,10 @@ import org.wanja.fatcat.model.MultiPlayer;
 import org.wanja.fatcat.model.Player;
 import org.wanja.fatcat.mp.model.MultiPlayerGame;
 
+import io.quarkus.hibernate.reactive.panache.Panache;
+import io.quarkus.hibernate.reactive.panache.common.runtime.ReactiveTransactional;
 import io.quarkus.logging.Log;
+import io.smallrye.mutiny.Uni;
 
 @Path("/mp-game")
 public class MultiPlayerResource {
@@ -35,8 +37,8 @@ public class MultiPlayerResource {
      */
     @POST
     @Path("/new")
-    @Transactional
-    public MultiPlayerGame createGame(MultiPlayerPlayerGame gamestr) {
+    @ReactiveTransactional
+    public Uni<MultiPlayerGame> createGame(MultiPlayerPlayerGame gamestr) {
         MultiPlayerGame game = gamestr.game;
         MultiPlayer     host = gamestr.host;
         
@@ -46,17 +48,18 @@ public class MultiPlayerResource {
         game.isRunning = false;
         game.isFinished = false;
         game.isOpen = true;
-        game.timeStarted = new Date();
-        game.persist();
-        Log.info("New Multiplayer game created with id: " + game.id);
-        return game;
+        game.timeStarted = new Date();        
+        return game.persist();
+        //Log.info("New Multiplayer game created with id: " + game.id);
+        //return game;
     }
 
     @PUT
     @Path("/close/{gameId}/{playerId}")
-    @Transactional
-    public void closeGame(Long gameId, Long playerId) {
-        MultiPlayerGame game = MultiPlayerGame.findById(gameId);
+    @ReactiveTransactional
+    public Uni<Void> closeGame(Long gameId, Long playerId) {
+        MultiPlayerGame.findById(gameId).onItem();
+        
         if( game != null ) {
             if( !game.isFinished ) {
                 // remove player from game. If it's player1, we close the entire game
@@ -90,7 +93,7 @@ public class MultiPlayerResource {
 
     @PUT
     @Path("/finish/{gameId}")
-    @Transactional
+    @ReactiveTransactional
     public MultiPlayerGame finishGame(Long gameId, MultiPlayerGame g) {
         MultiPlayerGame game = MultiPlayerGame.findById(gameId);
         Log.info("Finishing MP game with ID " + gameId);
@@ -121,7 +124,7 @@ public class MultiPlayerResource {
 
     @PUT
     @Path("/start/{gameId}")
-    @Transactional
+    @ReactiveTransactional
     public void startGame(Long gameId) {
         MultiPlayerGame game = MultiPlayerGame.findById(gameId);
         if (game != null) {
@@ -136,7 +139,7 @@ public class MultiPlayerResource {
 
     @PUT  
     @Path("/join/{gameId}/{playerId}")
-    @Transactional
+    @ReactiveTransactional
     public MultiPlayerGame joinGame(Long gameId, Long playerId ) {
         MultiPlayerGame game = MultiPlayerGame.findById(gameId);
         MultiPlayer     player = MultiPlayer.findById(playerId);
@@ -169,7 +172,7 @@ public class MultiPlayerResource {
      
     @POST
     @Path("/player")
-    @Transactional
+    @ReactiveTransactional
     public MultiPlayer createMultiPlayerFromPlayer(Player p) {
         MultiPlayer mp = new MultiPlayer(p);
         mp.persist();
@@ -179,7 +182,7 @@ public class MultiPlayerResource {
 
     @PUT
     @Path("/player/{playerId}")
-    @Transactional
+    @ReactiveTransactional
     public MultiPlayer updatePlayerData(Long playerId, MultiPlayer player) {
         Log.info("Persisting MP player with id " + playerId);
         MultiPlayer mp = MultiPlayer.findById(playerId);

@@ -15,26 +15,32 @@
       <artifactId>cat-model</artifactId>
       <version>0.7.0</version>
     </dependency>
+
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-websockets</artifactId>
     </dependency>
+
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-hibernate-reactive-panache</artifactId>
     </dependency>
+
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-reactive-pg-client</artifactId>
     </dependency>
+
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy-reactive-qute</artifactId>
     </dependency>
+
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-infinispan-client</artifactId>
     </dependency>
+    
   </dependencies>
   <build>
     <plugins>
@@ -58,7 +64,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${compiler-plugin.version}</version>
         <configuration>
-          <parameters>${maven.compiler.parameters}</parameters>
+          <parameters>true</parameters>
           <!--annotationProcessorPaths>
             <!- Your existing annotation processor(s)... ->
             <path>
@@ -67,11 +73,6 @@
               <version>${quarkus.platform.version}</version>
             </path>
           </annotationProcessorPaths-->
-
-          <compilerArgs>
-            <arg>
-              -parameters</arg>
-          </compilerArgs>
         </configuration>
       </plugin>
 
