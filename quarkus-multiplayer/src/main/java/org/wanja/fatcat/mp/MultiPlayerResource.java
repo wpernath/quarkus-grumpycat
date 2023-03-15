@@ -50,45 +50,50 @@ public class MultiPlayerResource {
         game.isOpen = true;
         game.timeStarted = new Date();        
         return game.persist();
-        //Log.info("New Multiplayer game created with id: " + game.id);
-        //return game;
+        /*
+        .subscribe().with( g -> {
+            Log.info("(with)New Multiplayer game created with id: " + g.id);
+        });
+        */
     }
 
     @PUT
     @Path("/close/{gameId}/{playerId}")
     @ReactiveTransactional
-    public Uni<Void> closeGame(Long gameId, Long playerId) {
-        MultiPlayerGame.findById(gameId).onItem();
-        
-        if( game != null ) {
-            if( !game.isFinished ) {
-                // remove player from game. If it's player1, we close the entire game
-                if(game.player1Id == playerId ) {
-                    game.delete();
-                }
-                else{
-                    if( game.player2Id == playerId) {
-                        game.player2 = null;
-                        game.player2Id = null;
-                        game.persist();
+    public void closeGame(Long gameId, Long playerId) {
+        MultiPlayerGame.findById(gameId).subscribe().with(g -> {
+            MultiPlayerGame game = (MultiPlayerGame )g;
+            if (game != null) {
+                if (!game.isFinished) {
+                    // remove player from game. If it's player1, we close the entire game
+                    if (game.player1Id == playerId) {
+                        game.delete();
+                    } 
+                    else {
+                        if (game.player2Id == playerId) {
+                            game.player2 = null;
+                            game.player2Id = null;
+                            game.persist();
+                        } 
+                        else if (game.player3Id == playerId) {
+                            game.player3 = null;
+                            game.player3Id = null;
+                            game.persist();
+                        } 
+                        else if (game.player3Id == playerId) {
+                            game.player4 = null;
+                            game.player4Id = null;
+                            game.persist();
+                        }
                     }
-                    else if( game.player3Id == playerId) {
-                        game.player3 = null;
-                        game.player3Id = null;
-                        game.persist();
-                    }
-                    else if (game.player3Id == playerId) {
-                        game.player4 = null;
-                        game.player4Id = null;
-                        game.persist();
-                    }
+                } 
+                else {
+                    game.timeStopped = new Date();
+                    game.persist();
                 }
             }
-            else {
-                game.timeStopped = new Date();
-                game.persist();
-            }
-        }
+
+        });
     }
 
     @PUT
