@@ -49,17 +49,15 @@ public class MultiPlayerResource {
         game.isFinished = false;
         game.isOpen = true;
         game.timeStarted = new Date();        
-        return game.persist();
-        /*
-        .subscribe().with( g -> {
-            Log.info("(with)New Multiplayer game created with id: " + g.id);
+        Uni<MultiPlayerGame> uni = game.persist();
+        uni.subscribe().with(g -> {
+            Log.info("New Multiplayer game created with id: " + ((MultiPlayerGame )g).id);
         });
-        */
+        return uni;
     }
 
     @PUT
-    @Path("/close/{gameId}/{playerId}")
-    @ReactiveTransactional
+    @Path("/close/{gameId}/{playerId}")    
     public void closeGame(Long gameId, Long playerId) {
         MultiPlayerGame.findById(gameId).subscribe().with(g -> {
             MultiPlayerGame game = (MultiPlayerGame )g;
@@ -67,13 +65,13 @@ public class MultiPlayerResource {
                 if (!game.isFinished) {
                     // remove player from game. If it's player1, we close the entire game
                     if (game.player1Id == playerId) {
-                        game.delete();
+                        Panache.withTransaction( () -> MultiPlayerGame.deleteById(gameId));
                     } 
                     else {
                         if (game.player2Id == playerId) {
                             game.player2 = null;
                             game.player2Id = null;
-                            game.persist();
+                            Panache.withTransaction( () -> MultiPlayerGame.persist(gameId));
                         } 
                         else if (game.player3Id == playerId) {
                             game.player3 = null;
@@ -92,7 +90,6 @@ public class MultiPlayerResource {
                     game.persist();
                 }
             }
-
         });
     }
 
@@ -100,7 +97,7 @@ public class MultiPlayerResource {
     @Path("/finish/{gameId}")
     @ReactiveTransactional
     public MultiPlayerGame finishGame(Long gameId, MultiPlayerGame g) {
-        MultiPlayerGame game = MultiPlayerGame.findById(gameId);
+        MultiPlayerGame.findById(gameId).onItem().ifNotNull().
         Log.info("Finishing MP game with ID " + gameId);
         if( game != null ) {
             game.isOpen = false;
