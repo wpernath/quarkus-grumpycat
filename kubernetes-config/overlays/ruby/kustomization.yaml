@@ -8,10 +8,10 @@ resources:
 images:
 - name: quay.io/wpernath/grumpycat-melonjs:latest
   newName: quay.io/wpernath/grumpycat-melonjs
-  newTag: v0.6.4
+  newTag: v0.6.5
 - name: quay.io/wpernath/quarkus-grumpycat:latest
   newName: quay.io/wpernath/quarkus-grumpycat
-  newTag: v0.6.4
+  newTag: v0.6.5
 
 # generate a configmap 
 configMapGenerator:
