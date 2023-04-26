@@ -28,7 +28,7 @@ spec:
   params:
     - name: TKN_IMAGE
       description: tkn CLI container image to run this task
-      default: registry.redhat.io/openshift-pipelines/pipelines-cli-tkn-rhel8:v1.7.2-3
+      default: registry.redhat.io/openshift-pipelines/pipelines-cli-tkn-rhel8:v1.10.0-19
     - name: ARGS
       type: array
       description: tkn CLI arguments to start a pipeline. See "tkn pipeline start --help"
