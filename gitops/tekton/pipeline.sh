@@ -6,7 +6,7 @@ declare -r SCRIPT_DIR=$(cd -P $(dirname $0) && pwd)
 declare COMMAND="help"
 
 GIT_URL=https://github.com/wpernath/grumpycat-config.git
-GIT_REVISION=main
+GIT_REVISION=release-v0.6.x
 GIT_USER=""
 GIT_PASSWORD=""
 ARGO_SERVER=""
