@@ -3,11 +3,11 @@ package org.wanja.fatcat.mp;
 import java.util.Set;
 import java.util.Date;
 
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 
 import org.infinispan.client.hotrod.RemoteCache;
 import org.wanja.fatcat.mp.model.MultiPlayerGame;
