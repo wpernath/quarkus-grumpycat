@@ -69,8 +69,8 @@
             "scale": 1.035,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 527.536231884058,
-                "y": 671.4975845410629
+                "x": 744.9275362318842,
+                "y": 1130.4347826086957
             }
         },
         "Level-Template.tmx": {
@@ -182,16 +182,19 @@
             "scale": 0.6356,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 1055.69540591567,
-                "y": 663.9395846444304
+                "x": 983.3228445563248,
+                "y": 874.7640025173065
             }
         },
         "multiplayer/mp_golems.tmx": {
+            "expandedObjectLayers": [
+                7
+            ],
             "scale": 1.1533,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 1007.1100320818523,
-                "y": 642.0705800745686
+                "x": 1192.230989334952,
+                "y": 557.5305644671812
             }
         },
         "multiplayer/mp_level-template.tmx": {
@@ -226,10 +229,10 @@
     "project": "grumpycat.tiled-project",
     "property.type": "int",
     "recentFiles": [
+        "Terrain.tsx",
         "FireAndDragons.tmx",
         "multiplayer/mp_arena.tmx",
         "Golems.tmx",
-        "Terrain.tsx",
         "spiders.tsx",
         "multiplayer/mp_level-template.tmx",
         "multiplayer/mp_golems.tmx",
