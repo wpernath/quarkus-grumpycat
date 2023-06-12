@@ -6,6 +6,7 @@ metadata:
     openshift.io/display-name: "DEV"
   labels:
     kubernetes.io/metadata.name: cat-dev
+    argocd.argoproj.io/managed-by: cat-ci
   name: cat-dev
 spec:
   finalizers:
@@ -19,6 +20,7 @@ metadata:
     openshift.io/display-name: "STAGE"
   labels:
     kubernetes.io/metadata.name: cat-stage
+    argocd.argoproj.io/managed-by: cat-ci
   name: cat-stage
 spec:
   finalizers:
@@ -32,6 +34,7 @@ metadata:
     openshift.io/display-name: "PRODUCTION"
   labels:
     kubernetes.io/metadata.name: cat-prod
+    argocd.argoproj.io/managed-by: cat-ci
   name: cat-prod
 spec:
   finalizers:

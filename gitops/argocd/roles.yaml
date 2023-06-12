@@ -9,8 +9,8 @@ roleRef:
   name: admin
 subjects:
 - kind: ServiceAccount
-  name: openshift-gitops-argocd-application-controller
-  namespace: openshift-gitops
+  name: argocd-argocd-application-controller
+  namespace: cat-ci
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -23,8 +23,8 @@ roleRef:
   name: admin
 subjects:
 - kind: ServiceAccount
-  name: openshift-gitops-argocd-application-controller
-  namespace: openshift-gitops  
+  name: argocd-argocd-application-controller
+  namespace: cat-ci  
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -37,6 +37,6 @@ roleRef:
   name: admin
 subjects:
 - kind: ServiceAccount
-  name: openshift-gitops-argocd-application-controller
-  namespace: openshift-gitops  
+  name: argocd-argocd-application-controller
+  namespace: cat-ci
     
