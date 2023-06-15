@@ -6,7 +6,7 @@ metadata:
     openshift.io/display-name: "Quarkus GrumpyCat"
   labels:
     kubernetes.io/metadata.name: grumpycat
-  name: grumpycat
+  name: paul
 spec:
   finalizers:
   - kubernetes

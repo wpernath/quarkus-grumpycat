@@ -11,6 +11,10 @@ metadata:
 spec:
   description: This Task can be used to update image digest in a Git repo using kustomize. It requires a secret with credentials for accessing the git repo.
   params:
+    - name: GIT_REVISION
+      type: string
+      default: main
+      description: Revision to be pulled
     - name: CURRENT_IMAGE
       type: string
     - name: NEW_IMAGE
@@ -33,8 +37,9 @@ spec:
       image: docker.io/alpine/git:v2.26.2
       workingDir: $(workspaces.workspace.path)/the-config
       script: |
+        git checkout ae-event
         git status
-        git pull origin main
+        git pull 
 
     - name: update-digest
       image: quay.io/wpernath/kustomize-ubi:latest
@@ -55,7 +60,7 @@ spec:
         git add $(params.KUSTOMIZATION_PATH)/kustomization.yaml
         git commit -am "[ci] Image digest updated"
         
-        git push origin HEAD:main
+        git push 
 
         RESULT_SHA="$(git rev-parse HEAD | tr -d '\n')"
         EXIT_CODE="$?"

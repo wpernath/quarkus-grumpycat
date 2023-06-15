@@ -275,6 +275,7 @@ command.stage-server() {
   tkn pipeline start stage-server \
             -s pipeline-bot \
             -p release-name=$GIT_REVISION \
+            -p git-revision=ae-event \
             -w name=shared-workspace,claimName=builder-pvc \
             --use-param-defaults
 
@@ -285,6 +286,7 @@ command.build-server() {
   tkn pipeline start build-server -s pipeline-bot \
             -p repo-password=$IMAGE_PASSWORD \
             -p git-revision=$GIT_REVISION \
+            -p config-git-revision=ae-event \
             -w name=source,claimName=builder-pvc \
             -w name=maven-settings,config=maven-settings \
             --use-param-defaults
@@ -305,6 +307,9 @@ command.build-client() {
   tkn pipeline start build-client -s pipeline-bot \
             -p repo-password=$IMAGE_PASSWORD \
             -p git-revision=$GIT_REVISION \
+
+            # to be removed after AE event
+            -p config-git-revision=ae-event \
             -w name=source,claimName=client-builder-pvc \
             -w name=maven-settings,config=maven-settings \
             --use-param-defaults

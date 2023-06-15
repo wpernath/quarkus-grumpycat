@@ -152,6 +152,23 @@ spec:
       workspaces:
         - name: workspace
           workspace: source
+
+    - name: start-argocd-sync-stage
+      params:
+        - name: application-name
+          value: cat-dev
+        - name: revision
+          value: "$(params.git-revision)"
+        - name: flags
+          value: '--insecure'
+        - name: argocd-version
+          value: v2.7.1
+      taskRef:
+        kind: Task
+        name: argocd-task-sync-and-wait
+      runAfter:
+        - git-update-config
+
   workspaces:
     - name: source
     - name: maven-settings
