@@ -1,7 +1,7 @@
 package org.wanja.fatcat;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.transaction.Transactional;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.wanja.fatcat.model.EnemyAction;

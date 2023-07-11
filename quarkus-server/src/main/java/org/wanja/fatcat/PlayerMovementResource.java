@@ -3,10 +3,10 @@ package org.wanja.fatcat;
 import java.util.List;
 import java.util.Set;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.WebApplicationException;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.WebApplicationException;
 
 import org.wanja.fatcat.model.EnemyAction;
 import org.wanja.fatcat.model.PlayerAction;
