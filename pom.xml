@@ -9,8 +9,8 @@
     <modules>
         <module>cat-model</module>
         <module>quarkus-server</module>
-        <module>melonjs-client</module>
         <module>quarkus-multiplayer</module>
+        <module>melonjs-client</module>        
     </modules>
 
     <properties>
@@ -20,7 +20,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-        <quarkus.platform.version>3.0.2.Final</quarkus.platform.version>
+        <quarkus.platform.version>3.2.0.Final</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.0.0</surefire-plugin.version>
     </properties>
