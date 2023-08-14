@@ -60,8 +60,7 @@ public class MultiPlayerResource {
     @PUT
     @Path("/close/{gameId}/{playerId}")    
     public void closeGame(Long gameId, Long playerId) {
-        MultiPlayerGame.findById(gameId).subscribe().with(g -> {
-            MultiPlayerGame game = (MultiPlayerGame )g;
+        MultiPlayerGame.<MultiPlayerGame> findById(gameId).subscribe().with(game -> {            
             if (game != null) {
                 if (!game.isFinished) {
                     // remove player from game. If it's player1, we close the entire game
@@ -72,23 +71,23 @@ public class MultiPlayerResource {
                         if (game.player2Id == playerId) {
                             game.player2 = null;
                             game.player2Id = null;
-                            Panache.withTransaction( () -> MultiPlayerGame.persist(gameId));
+                            Panache.withTransaction( () -> MultiPlayerGame.persist(game));
                         } 
                         else if (game.player3Id == playerId) {
                             game.player3 = null;
                             game.player3Id = null;
-                            game.persist();
+                            Panache.withTransaction( () -> MultiPlayerGame.persist(game));
                         } 
                         else if (game.player3Id == playerId) {
                             game.player4 = null;
                             game.player4Id = null;
-                            game.persist();
+                            Panache.withTransaction( () -> MultiPlayerGame.persist(game));
                         }
                     }
                 } 
                 else {
                     game.timeStopped = new Date();
-                    game.persist();
+                    Panache.withTransaction( () -> MultiPlayerGame.persist(game));
                 }
             }
         });
@@ -119,12 +118,12 @@ public class MultiPlayerResource {
                 if (g.player4 != null) {
                     game.player4 = updatePlayerData(g.player4.id, g.player4);
                 }
-
+                game.persist();
             })
-            .onItem().ifNull().continueWith(Response.ok().status(Status.NOT_FOUND)::build)
             .onItem().ifNull().invoke( () -> {
                 Log.info("Can't find MP game with ID " + gameId);
             })
+            .onItem().ifNull().continueWith(Response.ok().status(Status.NOT_FOUND)::build)
         );   
     }
 
@@ -139,6 +138,8 @@ public class MultiPlayerResource {
                 game.isRunning = true;
                 game.isFinished = false;
                 game.timePlaying = new Date();
+
+                game.persist();
             })
         );
     }
@@ -146,10 +147,12 @@ public class MultiPlayerResource {
 
     @PUT  
     @Path("/join/{gameId}/{playerId}")
-    @ReactiveTransactional
-    public MultiPlayerGame joinGame(Long gameId, Long playerId ) {
-        MultiPlayerGame game = MultiPlayerGame.findById(gameId);
-        MultiPlayer     player = MultiPlayer.findById(playerId);
+    public Uni<MultiPlayerGame> joinGame(Long gameId, Long playerId ) {
+
+        Panache.withTransaction( () -> MultiPlayerGame.<MultiPlayerGame> findById(gameId)
+            .onItem().ifNotNull().invoke( game -> {
+
+            MultiPlayer     player = MultiPlayer.findById(playerId);
         
         if( game != null && player != null) {
             Log.info(player.name + " (" + playerId + ") wants to join game " + gameId);
@@ -179,19 +182,22 @@ public class MultiPlayerResource {
      
     @POST
     @Path("/player")
-    @ReactiveTransactional
-    public MultiPlayer createMultiPlayerFromPlayer(Player p) {
-        MultiPlayer mp = new MultiPlayer(p);
-        mp.persist();
-        Log.info("New Multiplayer Player created with id " + mp.id);
-        return mp;
+    public Uni<MultiPlayer> createMultiPlayerFromPlayer(Player p) {
+        return Panache.withTransaction( () -> {
+            MultiPlayer mp = new MultiPlayer(p);
+            mp.persist();
+            Log.info("New Multiplayer Player created with id " + mp.id);
+        });
     }
 
     @PUT
     @Path("/player/{playerId}")
-    @ReactiveTransactional
     public MultiPlayer updatePlayerData(Long playerId, MultiPlayer player) {
         Log.info("Persisting MP player with id " + playerId);
+        Panache.withTransaction(
+                    () -> MultiPlayerGame.<MultiPlayerGame> findById(gameId)
+            .onItem().ifNotNull().invoke( game -> {
+
         MultiPlayer mp = MultiPlayer.findById(playerId);
         mp.bittenBySpiders = player.bittenBySpiders;
         mp.bonusCollected = player.bonusCollected;
