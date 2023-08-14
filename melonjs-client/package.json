@@ -1,6 +1,6 @@
 {
   "name": "grumpycat-melonjs",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "description": "MelonJS JavaScript client for Quarkus Grumpycat",
   "homepage": "https://github.com/wpernath/quarkus-grumpycat",
   "main": "src/main/client/index.js",
@@ -40,7 +40,7 @@
     "core-js": "^3.25.5",
     "css-loader": "^6.7.1",
     "jquery": "^3.6.1",
-    "melonjs": "^15.3.0",
+    "melonjs": "^15.8.0",
     "screenfull": "^6.0.2",
     "style-loader": "^3.3.1"
   }
