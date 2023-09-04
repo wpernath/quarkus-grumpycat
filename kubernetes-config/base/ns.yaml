@@ -4,6 +4,7 @@ metadata:
   annotations:
     openshift.io/description: ""
     openshift.io/display-name: "Quarkus GrumpyCat"
+    sidecar.istio.io/inject: 'true'
   labels:
     kubernetes.io/metadata.name: grumpycat
   name: grumpycat
