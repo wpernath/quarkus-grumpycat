@@ -314,8 +314,9 @@ command.build-client() {
 command.build-all() {
   info "Starting build-all pipeline..."
   tkn pipeline start build-all -s pipeline-bot \
-               -p registry-password=$IMAGE_PASSWORD \
-               -p git-revision=$GIT_REVISION
+               -p repository-password=$IMAGE_PASSWORD \
+               -p git-revision=$GIT_REVISION \
+               --use-param-defaults
 }
 
 command.stage-all() {

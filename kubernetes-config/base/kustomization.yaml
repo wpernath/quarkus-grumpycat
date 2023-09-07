@@ -3,6 +3,8 @@ kind: Kustomization
 
 resources:
 - ns.yaml
+- kafka-broker.yaml
+- kafka-topic.yaml
 - postgresql.yaml
 - deployment.yaml
 - service.yaml
@@ -10,5 +12,3 @@ resources:
 - client-depl.yaml
 - client-route.yaml
 - client-service.yaml
-- kafka-broker.yaml
-- kafka-topic.yaml

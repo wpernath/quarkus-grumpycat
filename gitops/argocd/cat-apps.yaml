@@ -1,8 +1,8 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cat-dev
-  namespace: openshift-gitops
+  name: cat-dev  
+  namespace: cat-ci
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -13,7 +13,7 @@ spec:
   source:
     path: config/overlays/dev
     repoURL: https://github.com/wpernath/grumpycat-config.git
-    targetRevision: HEAD
+    targetRevision: opentlc
   syncPolicy:
     automated:
       prune: true
@@ -23,8 +23,8 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cat-stage
-  namespace: openshift-gitops
+  name: cat-stage  
+  namespace: cat-ci
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -35,7 +35,7 @@ spec:
   source:
     path: config/overlays/stage
     repoURL: https://github.com/wpernath/grumpycat-config.git
-    targetRevision: HEAD
+    targetRevision: opentlc
   syncPolicy:
     automated:
       prune: true
@@ -45,8 +45,8 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cat-prod
-  namespace: openshift-gitops
+  name: cat-prod  
+  namespace: cat-ci
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -57,7 +57,7 @@ spec:
   source:
     path: config/overlays/prod
     repoURL: https://github.com/wpernath/grumpycat-config.git
-    targetRevision: HEAD
+    targetRevision: opentlc
   syncPolicy:
     automated:
       prune: true

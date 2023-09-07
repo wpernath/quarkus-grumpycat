@@ -5,6 +5,7 @@ namespace: cat-ci
 resources:
 # infra resources
 - infra/ns.yaml
+- infra/argocd.yaml
 - infra/roles.yaml
 - infra/sa.yaml
 - infra/maven-artifact-cache-pvc.yaml

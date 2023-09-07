@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   annotations:
     app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"cat-server"}]'
-    app.openshift.io/route-disabled: "false"
+    app.openshift.io/route-disabled: "false"    
   labels:
     app: cat-client
     app.kubernetes.io/component: cat-client
@@ -25,6 +25,8 @@ spec:
     type: RollingUpdate
   template:
     metadata:
+      annotations:
+        sidecar.istio.io/inject: 'true'
       labels:
         app: cat-client        
     spec:
