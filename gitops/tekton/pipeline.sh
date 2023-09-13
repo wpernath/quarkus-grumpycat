@@ -283,6 +283,7 @@ command.stage-server() {
 command.build-server() {
   info "Start building server service on OpenShift..."
   tkn pipeline start build-server -s pipeline-bot \
+            -p repo-username=$IMAGE_USER \
             -p repo-password=$IMAGE_PASSWORD \
             -p git-revision=$GIT_REVISION \
             -w name=source,claimName=builder-pvc \
@@ -303,6 +304,7 @@ command.stage-client() {
 command.build-client() {
   info "Start building client on OpenShift..."
   tkn pipeline start build-client -s pipeline-bot \
+            -p repo-username=$IMAGE_USER \
             -p repo-password=$IMAGE_PASSWORD \
             -p git-revision=$GIT_REVISION \
             -w name=source,claimName=client-builder-pvc \
