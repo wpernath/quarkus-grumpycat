@@ -89,7 +89,7 @@ public class GameResource {
     @Path("/version")
     //@Produces("text/plain")
     public AppVersion version() {
-        return new AppVersion("cat-server", this.appName, this.versionString);
+        return new AppVersion("cat-server (wanja)", this.appName, this.versionString);
     }
 
     final class AppVersion {
