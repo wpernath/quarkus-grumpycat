@@ -13,8 +13,7 @@ import jakarta.persistence.Table;
 import org.infinispan.protostream.annotations.ProtoField;
 import org.wanja.fatcat.model.MultiPlayer;
 
-import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
-
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
 
 
