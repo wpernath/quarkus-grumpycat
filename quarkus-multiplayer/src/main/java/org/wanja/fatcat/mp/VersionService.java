@@ -16,7 +16,7 @@ public class VersionService {
     @GET
     @Path("/version")
     public AppVersion version() {
-        return new AppVersion("multiplayer-server", this.appName, this.versionString);
+        return new AppVersion("cat-multiplayer", this.appName, this.versionString);
     }
 
     final class AppVersion {
