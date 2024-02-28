@@ -8,8 +8,6 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 
 import org.wanja.fatcat.model.MultiPlayer;
 import org.wanja.fatcat.model.Player;
@@ -54,7 +52,8 @@ public class MultiPlayerResource {
     }
 
     @PUT
-    @Path("/close/{gameId}/{playerId}")    
+    @Path("/close/{gameId}/{playerId}")   
+    @Transactional
     public void closeGame(Long gameId, Long playerId) {
         MultiPlayerGame game = MultiPlayerGame.findById(gameId);
 
