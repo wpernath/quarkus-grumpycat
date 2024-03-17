@@ -3,12 +3,16 @@ package org.wanja.fatcat.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.Data;
+
+import java.io.Serializable;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
 @Entity
 @Table(name = "enemy_action")
-public class EnemyAction extends PanacheEntity{    
+@Data
+public class EnemyAction extends PanacheEntity implements Serializable{    
 
     //@ManyToOne
     //@JoinColumn(name = "player_action_id", nullable = false, insertable = false, updatable = false)
