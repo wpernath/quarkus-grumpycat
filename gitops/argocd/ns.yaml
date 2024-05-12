@@ -9,8 +9,6 @@ metadata:
     argocd.argoproj.io/managed-by: cat-ci
   name: cat-dev
 spec:
-  finalizers:
-  - kubernetes
 ---
 apiVersion: v1
 kind: Namespace
@@ -23,8 +21,6 @@ metadata:
     argocd.argoproj.io/managed-by: cat-ci
   name: cat-stage
 spec:
-  finalizers:
-  - kubernetes
 ---
 apiVersion: v1
 kind: Namespace
@@ -37,5 +33,3 @@ metadata:
     argocd.argoproj.io/managed-by: cat-ci
   name: cat-prod
 spec:
-  finalizers:
-  - kubernetes
