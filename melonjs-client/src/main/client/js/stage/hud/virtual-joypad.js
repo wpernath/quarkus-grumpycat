@@ -1,9 +1,9 @@
-import { GUI_Object, Sprite, game, input, Vector2d, Container, event, device, plugins } from "melonjs/dist/melonjs.module.js";
+import { GUI_Object, Sprite, game, input, Vector2d, Container, event, device, plugins, UISpriteElement } from "melonjs/dist/melonjs.module.js";
 import GlobalGameState from "../../util/global-game-state";
 /**
  * a basic control to toggle fullscreen on/off
  */
-class ActionButton extends GUI_Object {
+class ActionButton extends UISpriteElement {
 	/**
 	 * constructor
 	 */
@@ -35,7 +35,7 @@ class ActionButton extends GUI_Object {
 	}
 }
 
-class FullScreenButton extends GUI_Object {
+class FullScreenButton extends UISpriteElement {
 	/**
 	 * constructor
 	 */
@@ -68,7 +68,7 @@ class FullScreenButton extends GUI_Object {
 	}
 }
 
-class PauseButton extends GUI_Object {
+class PauseButton extends UISpriteElement {
 	/**
 	 * constructor
 	 */
@@ -110,7 +110,7 @@ class PauseButton extends GUI_Object {
 	}
 }
 
-class ExitButton extends GUI_Object {
+class ExitButton extends UISpriteElement {
 	/**
 	 * constructor
 	 */
@@ -143,7 +143,7 @@ class ExitButton extends GUI_Object {
 }
 
 
-class OtherButton extends GUI_Object {
+class OtherButton extends UISpriteElement {
 	/**
 	 * constructor
 	 */
@@ -178,7 +178,7 @@ class OtherButton extends GUI_Object {
 /**
  * a virtual joypad
  */
-class Joypad extends GUI_Object {
+class Joypad extends UISpriteElement {
 	/**o
 	 * constructor
 	 */
@@ -388,14 +388,14 @@ class VirtualJoypad extends Container {
 		this.exitButton = new ExitButton(game.viewport.width - 48 - 20, yPos);
 
 		// instance of the virtual joypad
-		if( device.isMobile) {
+		// TODO: Uncomment if( device.isMobile) {
 			this.actionButton = new ActionButton(game.viewport.width - 200, game.viewport.height - 150);
 			this.otherButton = new OtherButton(game.viewport.width - 120, game.viewport.height - 200);
 			this.joypad = new Joypad(50, game.viewport.height - 200);
 			this.addChild(this.joypad);
 			this.addChild(this.actionButton);
 			this.addChild(this.otherButton);
-		}
+		//}
 		if( !device.isMobile) {
 			this.fullScreenButton = new FullScreenButton(90, yPos);
 			this.addChild(this.fullScreenButton);

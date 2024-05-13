@@ -94,7 +94,9 @@ device.onReady(() => {
     loader.setBaseURL("tmx", baseURL);
     CONFIG.baseURL = baseURL;
 
-    loader.crossOrigin = "anonymous";
+    //loader.crossOrigin = "anonymous";
+    // Since MelonJS 17.x
+    loader.setOptions( {crossOrigin: "anonymous"})
 
 
     // initialize NetworkManager

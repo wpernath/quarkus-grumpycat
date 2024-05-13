@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: grumpycat
+resources:
+- ../../base
+
+
+images:
+- name: quay.io/wpernath/grumpycat-melonjs:latest
+  newName: quay.io/wpernath/grumpycat-melonjs
+  newTag: v0.6.7
+- name: quay.io/wpernath/quarkus-grumpycat:latest
+  newName: quay.io/wpernath/quarkus-grumpycat
+  newTag: v0.6.7
+
+# generate a configmap 
+configMapGenerator:
+  # !!! Cat - Client ConfigMap, note that the client app runs entirely on the browser, 
+  # !!! so we need to use the external URL of the grumpycat server service as
+  # !!! APPLICATION_BASESERVERURL
+  # 
+  - name: client-config
+    literals:
+      - APPLICATION_BASESERVERURL=http://cat-server-grumpycat.apps.grumpycat.sandbox2134.opentlc.com/
+  # Grumpycat Server configmap, just point to the internal service name of the kafka service
+  - name: server-config
+    literals:
+      - KAFKA_BOOTSTRAP_SERVERS=grumpy-kafka-kafka-bootstrap:9092
