@@ -7,7 +7,7 @@ If you want to learn more about Quarkus, please visit its website: https://quark
 
 All client game logic is currently coded with JavaScript and [MelonJS](https://github.com/melonjs/melonjs).
 
-There is a demo of this game running [here](http://cat-client-grumpycat.apps.ruby.rhepds.com). 
+There is a demo of this game running [here](http://cat-client-grumpycat.apps.kelly.rhepds.com/generated/index). 
 
 
 ## Technical Blog entries

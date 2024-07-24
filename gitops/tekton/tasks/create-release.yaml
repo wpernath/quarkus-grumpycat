@@ -28,10 +28,11 @@ spec:
 
   steps:
     - name: git-pull
-      image: docker.io/alpine/git:v2.26.2
+      image: docker.io/bitnami/git:2.45.0
       onError: continue
       workingDir: $(workspaces.workspace.path)/the-config
       script: |
+        git config --global --add safe.directory /workspace/workspace/the-config
         git status
         # pull possible existing origin branch, but continue if not found
         git pull origin release-$(params.release-name) || true
@@ -42,15 +43,11 @@ spec:
       script: |        
         kustomize edit set image $(params.old-image)=$(params.new-image):$(params.release-name)@$(params.digest)
 
-        echo "##########################"
-        echo "### kustomization.yaml ###"
-        echo "##########################"
-        cat kustomization.yaml
-
     - name: git-commit
-      image: docker.io/alpine/git:v2.26.2
+      image: docker.io/bitnami/git:2.45.0
       workingDir: $(workspaces.workspace.path)/the-config
       script: |
+        git config --global --add safe.directory /workspace/workspace/the-config
         git config user.email "wpernath@redhat.com"
         git config user.name "My Tekton Bot"
 

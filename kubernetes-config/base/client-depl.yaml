@@ -24,10 +24,9 @@ spec:
       maxUnavailable: 25%
     type: RollingUpdate
   template:
-    metadata:
-      annotations:
-        sidecar.istio.io/inject: 'true'
+    metadata:        
       labels:
+        sidecar.istio.io/inject: 'true'
         app: cat-client        
     spec:
       containers:
