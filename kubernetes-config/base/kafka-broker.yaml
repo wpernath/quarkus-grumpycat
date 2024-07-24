@@ -4,7 +4,7 @@ metadata:
   name: grumpy-kafka
 spec:
   kafka:
-    version: 3.5.0
+    version: 3.6.0
     replicas: 1
     listeners:
       - name: plain
@@ -30,7 +30,7 @@ spec:
       transaction.state.log.min.isr: 1
       default.replication.factor: 1
       min.insync.replicas: 1
-      inter.broker.protocol.version: '3.5.0'
+      inter.broker.protocol.version: '3.6.0'
   zookeeper:
     replicas: 1
     storage:

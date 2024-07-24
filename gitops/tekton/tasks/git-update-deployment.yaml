@@ -6,7 +6,7 @@ metadata:
     tekton.dev/tags: git
   name: git-update-deployment
   labels:
-    app.kubernetes.io/version: '0.2'
+    app.kubernetes.io/version: '0.3'
     operator.tekton.dev/provider-type: community
 spec:
   description: This Task can be used to update image digest in a Git repo using kustomize. It requires a secret with credentials for accessing the git repo.
@@ -19,6 +19,9 @@ spec:
       type: string
     - name: KUSTOMIZATION_PATH
       type: string
+    - name: GIT_REVISION
+      type: string
+      default: main
 
   workspaces:
     - description: The workspace consisting of maven project.
@@ -30,11 +33,12 @@ spec:
 
   steps:
     - name: git-pull
-      image: docker.io/alpine/git:v2.26.2
+      image: docker.io/bitnami/git:2.45.0
       workingDir: $(workspaces.workspace.path)/the-config
       script: |
+        git config --global --add safe.directory /workspace/workspace/the-config
         git status
-        git pull origin main
+        git pull origin $(params.GIT_REVISION)
 
     - name: update-digest
       image: quay.io/wpernath/kustomize-ubi:latest
@@ -43,19 +47,18 @@ spec:
         cd $(params.KUSTOMIZATION_PATH)
         kustomize edit set image $(params.CURRENT_IMAGE)=$(params.NEW_IMAGE)@$(params.NEW_DIGEST)
 
-        cat kustomization.yaml
-
     - name: git-commit
-      image: docker.io/alpine/git:v2.26.2
+      image: docker.io/bitnami/git:2.45.0
       workingDir: $(workspaces.workspace.path)/the-config
       script: |
+        git config --global --add safe.directory /workspace/workspace/the-config
         git config user.email "wpernath@redhat.com"
         git config user.name "My Tekton Bot"
 
         git add $(params.KUSTOMIZATION_PATH)/kustomization.yaml
         git commit -am "[ci] Image digest updated"
         
-        git push origin HEAD:main
+        git push origin HEAD:$(params.GIT_REVISION)
 
         RESULT_SHA="$(git rev-parse HEAD | tr -d '\n')"
         EXIT_CODE="$?"
