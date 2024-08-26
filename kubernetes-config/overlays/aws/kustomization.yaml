@@ -13,6 +13,10 @@ images:
   newName: quay.io/wpernath/quarkus-grumpycat
   newTag: v0.6.7
 
+# we don't need name suffixes
+generatorOptions:
+  disableNameSuffixHash: true
+
 # generate a configmap 
 configMapGenerator:
   # !!! Cat - Client ConfigMap, note that the client app runs entirely on the browser, 
@@ -26,3 +30,8 @@ configMapGenerator:
   - name: server-config
     literals:
       - KAFKA_BOOTSTRAP_SERVERS=grumpy-kafka-kafka-bootstrap:9092
+
+  - name: cat-init-sql
+    files:
+      - init.sql
+    

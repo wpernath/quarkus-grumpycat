@@ -3,6 +3,9 @@ kind: PostgresCluster
 metadata:
   name: cat
 spec:
+  databaseInitSQL:
+    key: init.sql
+    name: cat-init-sql
   postgresVersion: 15
   instances:
     - name: instance1
