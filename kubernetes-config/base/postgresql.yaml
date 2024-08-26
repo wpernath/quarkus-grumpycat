@@ -3,9 +3,10 @@ kind: PostgresCluster
 metadata:
   name: cat
 spec:
-  postgresVersion: 14
+  postgresVersion: 15
   instances:
     - name: instance1
+      replicas: 1
       dataVolumeClaimSpec:
         accessModes:
         - "ReadWriteOnce"

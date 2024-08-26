@@ -3,8 +3,6 @@ kind: Application
 metadata:
   name: cat-dev  
   namespace: cat-ci
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
     namespace: cat-dev
@@ -13,7 +11,7 @@ spec:
   source:
     path: config/overlays/dev
     repoURL: https://github.com/wpernath/grumpycat-config.git
-    targetRevision: main
+    targetRevision: aws-grumpycat
   syncPolicy:
     automated:
       prune: true
@@ -25,8 +23,6 @@ kind: Application
 metadata:
   name: cat-stage  
   namespace: cat-ci
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
     namespace: cat-stage
@@ -35,7 +31,7 @@ spec:
   source:
     path: config/overlays/stage
     repoURL: https://github.com/wpernath/grumpycat-config.git
-    targetRevision: main
+    targetRevision: aws-grumpycat
   syncPolicy:
     automated:
       prune: true
@@ -47,8 +43,6 @@ kind: Application
 metadata:
   name: cat-prod  
   namespace: cat-ci
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
     namespace: cat-prod
@@ -57,7 +51,7 @@ spec:
   source:
     path: config/overlays/prod
     repoURL: https://github.com/wpernath/grumpycat-config.git
-    targetRevision: main
+    targetRevision: aws-grumpycat
   syncPolicy:
     automated:
       prune: true
