@@ -86,7 +86,7 @@ spec:
         - name: application-name
           value: cat-dev
         - name: revision
-          value: HEAD
+          value: "$(params.config-git-revision)"
         - name: flags
           value: '--insecure'
         - name: argocd-version
