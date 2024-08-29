@@ -38,6 +38,8 @@ spec:
       script: |
         git config --global --add safe.directory /workspace/workspace/the-config
         git status
+        git checkout $(params.GIT_REVISION)
+        echo
         git pull origin $(params.GIT_REVISION)
 
     - name: update-digest
