@@ -144,6 +144,8 @@ spec:
           value: $(tasks.extract-digest-from-build.results.DIGEST)
         - name: KUSTOMIZATION_PATH
           value: $(params.kustomize-dir)
+        - name: GIT_REVISION
+          value: "$(params.config-git-revision)"
       runAfter:
         - extract-digest-from-build
       taskRef:

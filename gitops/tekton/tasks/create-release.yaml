@@ -33,7 +33,7 @@ spec:
       workingDir: $(workspaces.workspace.path)/the-config
       script: |
         git config --global --add safe.directory /workspace/workspace/the-config
-        git status
+        
         # pull possible existing origin branch, but continue if not found
         git pull origin release-$(params.release-name) || true
 
@@ -42,7 +42,7 @@ spec:
       workingDir: $(workspaces.workspace.path)/the-config/$(params.kustomize-dir)
       script: |        
         kustomize edit set image $(params.old-image)=$(params.new-image):$(params.release-name)@$(params.digest)
-
+ 
     - name: git-commit
       image: docker.io/bitnami/git:2.45.0
       workingDir: $(workspaces.workspace.path)/the-config

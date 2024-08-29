@@ -3,9 +3,6 @@ kind: PostgresCluster
 metadata:
   name: cat
 spec:
-  databaseInitSQL:
-    key: init.sql
-    name: cat-init-sql
   postgresVersion: 15
   instances:
     - name: instance1
@@ -27,3 +24,9 @@ spec:
             resources:
               requests:
                 storage: 1Gi
+  # make sure that the cat user has access to the public schema
+  users:
+    - name: cat
+      databases:
+        - cat
+      options: 'SUPERUSER'
