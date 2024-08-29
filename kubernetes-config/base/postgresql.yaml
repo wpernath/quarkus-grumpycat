@@ -3,9 +3,10 @@ kind: PostgresCluster
 metadata:
   name: cat
 spec:
-  postgresVersion: 14
+  postgresVersion: 15
   instances:
     - name: instance1
+      replicas: 1
       dataVolumeClaimSpec:
         accessModes:
         - "ReadWriteOnce"
@@ -23,3 +24,9 @@ spec:
             resources:
               requests:
                 storage: 1Gi
+  # make sure that the cat user has access to the public schema
+  users:
+    - name: cat
+      databases:
+        - cat
+      options: 'SUPERUSER'

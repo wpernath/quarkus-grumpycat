@@ -11,6 +11,10 @@ spec:
       name: git-revision
       type: string
       default: main
+    - name: config-git-revision
+      type: string
+      description: The revision of the config repo to use
+      default: main
   tasks:
     - name: start-server-build
       params:
@@ -20,6 +24,7 @@ spec:
             - '-s pipeline-bot'
             - '-p repo-password=$(params.repository-password)'
             - '-p git-revision=$(params.git-revision)'
+            - '-p config-git-revision=$(params.config-git-revision)'
             - '-w name=source,claimName=builder-pvc'
             - '-w name=maven-settings,config=maven-settings'
             - '--use-param-defaults'
@@ -36,6 +41,7 @@ spec:
             - '-s pipeline-bot'
             - '-p repo-password=$(params.repository-password)'
             - '-p git-revision=$(params.git-revision)'
+            - '-p config-git-revision=$(params.config-git-revision)'
             - '-w name=source,claimName=client-builder-pvc'
             - '-w name=maven-settings,config=maven-settings'
             - '--use-param-defaults'
@@ -80,7 +86,7 @@ spec:
         - name: application-name
           value: cat-dev
         - name: revision
-          value: HEAD
+          value: "$(params.config-git-revision)"
         - name: flags
           value: '--insecure'
         - name: argocd-version

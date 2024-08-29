@@ -36,8 +36,17 @@ spec:
       image: docker.io/bitnami/git:2.45.0
       workingDir: $(workspaces.workspace.path)/the-config
       script: |
+        echo "git revision: $(params.GIT_REVISION)"
+        echo "config"
         git config --global --add safe.directory /workspace/workspace/the-config
+
+        echo "status"
         git status
+
+        echo "checkout"
+        git checkout $(params.GIT_REVISION)
+
+        echo "pull"
         git pull origin $(params.GIT_REVISION)
 
     - name: update-digest
