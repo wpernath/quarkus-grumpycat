@@ -272,9 +272,13 @@ command.logs() {
 
 command.stage-server() {
   info "Start staging server service on OpenShift..."
+
+  # note: if you want to staging pipeline to use a different revision 
+  # please make sure the -p git-revision=aws-grumpycat parameter works
   tkn pipeline start stage-server \
             -s pipeline-bot \
             -p release-name=$GIT_REVISION \
+            -p git-revision=aws-grumpycat \
             -w name=shared-workspace,claimName=builder-pvc \
             --use-param-defaults
 
@@ -293,9 +297,12 @@ command.build-server() {
 
 command.stage-client() {
   info "Start staging client on OpenShift..."
+  # note: if you want to staging pipeline to use a different revision 
+  # please make sure the -p git-revision=aws-grumpycat parameter works
   tkn pipeline start stage-client \
             -s pipeline-bot \
             -p release-name=$GIT_REVISION \
+            -p git-revision=aws-grumpycat \
             -w name=shared-workspace,claimName=client-builder-pvc \
             --use-param-defaults
 

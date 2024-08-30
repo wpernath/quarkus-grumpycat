@@ -29,7 +29,7 @@ spec:
       type: string
       description: Release name will be used as image tag in quay.io and feature branch in Git
   tasks:
-    - name: git-clone
+    - name: git-clone 
       params:
         - name: url
           value: $(params.git-url)
@@ -136,7 +136,7 @@ spec:
         - name: HEAD
           value: 'release-$(params.release-name)'
         - name: BASE
-          value: main
+          value: "$(params.git-revision)"
         - name: BODY
           value: 'Digest updates for images '
         - name: TITLE
