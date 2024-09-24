@@ -9,7 +9,7 @@ All client game logic is currently coded with JavaScript and [MelonJS](https://g
 
 There is a demo of this game running [here](http://cat-client-grumpycat.apps.kelly.rhepds.com/generated/index). 
 
-
+TEST
 ## Technical Blog entries
 I am currently blogging about the creation of this game as it's still meant to be educational.
 
