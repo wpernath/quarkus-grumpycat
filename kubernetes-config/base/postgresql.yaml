@@ -3,6 +3,7 @@ kind: PostgresCluster
 metadata:
   name: cat
 spec:
+  openshift: true
   postgresVersion: 15
   instances:
     - name: instance1
