@@ -81,12 +81,15 @@ spec:
         # params in the taskrun.
         #
         if [ "$(params.srcImageURL)" != "" ] && [ "$(params.destImageURL)" != "" ] ; then
+          cat ~/.docker/config.json
+          ### TODO REMOVE THIS EXPLICIT LOGIN!
+          skopeo login quay.io -u wpernath -p K3RPfZNucU1LC+8bzQkIc9w6VXYna14tJTMfJnNob76/6japY4qwsyQsTEwK/Nq/
           skopeo copy --multi-arch="$(params.multiArch)" "$(params.srcImageURL)" "$(params.destImageURL)" --src-tls-verify="$(params.srcTLSverify)" --dest-tls-verify="$(params.destTLSverify)"
         else
           # If file is provided as a configmap in the workspace then multiple images can be copied.
           #
           copyimages
         fi
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 65532
+      #securityContext:
+      #  runAsNonRoot: true
+      #  runAsUser: 65532
