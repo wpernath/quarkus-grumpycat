@@ -28,6 +28,8 @@ resources:
 - tasks/kubernetes-actions-task.yaml
 - tasks/gh_open_pr.yaml
 - tasks/git-clone.yaml
+- tasks/git-cli.yaml
+- tasks/skopeo-copy.yaml
 
 # pipelines
 - pipelines/build-server.yaml

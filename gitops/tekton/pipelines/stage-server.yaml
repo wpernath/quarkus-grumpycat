@@ -57,7 +57,7 @@ spec:
       runAfter:
         - git-clone
       taskRef:
-        kind: ClusterTask
+        kind: Task
         name: git-cli
       workspaces:
         - name: source
@@ -94,7 +94,7 @@ spec:
       runAfter:
         - extract-digest
       taskRef:
-        kind: ClusterTask
+        kind: Task
         name: skopeo-copy
       workspaces:
         - name: images-url
