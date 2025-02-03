@@ -42,7 +42,7 @@ spec:
         - name: subdirectory
           value: the-config
       taskRef:
-        kind: ClusterTask
+        kind: Task
         name: git-clone
       workspaces:
         - name: output

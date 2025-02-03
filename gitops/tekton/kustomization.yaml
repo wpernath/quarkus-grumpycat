@@ -27,6 +27,7 @@ resources:
 - tasks/start-pipeline-task.yaml
 - tasks/kubernetes-actions-task.yaml
 - tasks/gh_open_pr.yaml
+- tasks/git-clone.yaml
 
 # pipelines
 - pipelines/build-server.yaml

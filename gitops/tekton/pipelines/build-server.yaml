@@ -55,7 +55,7 @@ spec:
         - name: verbose
           value: 'false'
       taskRef:
-        kind: ClusterTask
+        kind: Task
         name: git-clone
       workspaces:
         - name: output
@@ -117,7 +117,7 @@ spec:
         - name: verbose
           value: 'false'
       taskRef:
-        kind: ClusterTask
+        kind: Task
         name: git-clone
       workspaces:
         - name: output
