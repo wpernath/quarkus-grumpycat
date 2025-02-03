@@ -3,13 +3,12 @@
 
 This Game uses Quarkus, the Supersonic Subatomic Java Framework and HTML 5 / JavaScript.
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+If you want to learn more about Quarkus, please visit its website: https://quarkus.io/.
 
 All client game logic is currently coded with JavaScript and [MelonJS](https://github.com/melonjs/melonjs).
 
 There is a demo of this game running [here](http://cat-client-grumpycat.apps.kelly.rhepds.com/generated/index). 
 
-TEST
 ## Technical Blog entries
 I am currently blogging about the creation of this game as it's still meant to be educational.
 
