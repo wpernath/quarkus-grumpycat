@@ -4,7 +4,7 @@ metadata:
   name: cat
 spec:
   openshift: true
-  postgresVersion: 15
+  postgresVersion: 16
   instances:
     - name: instance1
       replicas: 1
