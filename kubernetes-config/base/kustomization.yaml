@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
 - ns.yaml
+- kafka-pool.yaml
 - kafka-broker.yaml
 - kafka-topic.yaml
 - postgresql.yaml
