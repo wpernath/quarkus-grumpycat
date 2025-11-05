@@ -33,7 +33,7 @@ spec:
 
   steps:
     - name: git-pull
-      image: docker.io/bitnami/git:2.45.0
+      image: docker.io/bitnami/git:latest
       workingDir: $(workspaces.workspace.path)/the-config
       script: |
         echo "git revision: $(params.GIT_REVISION)"
@@ -57,7 +57,7 @@ spec:
         kustomize edit set image $(params.CURRENT_IMAGE)=$(params.NEW_IMAGE)@$(params.NEW_DIGEST)
 
     - name: git-commit
-      image: docker.io/bitnami/git:2.45.0
+      image: docker.io/bitnami/git:latest
       workingDir: $(workspaces.workspace.path)/the-config
       script: |
         git config --global --add safe.directory /workspace/workspace/the-config
